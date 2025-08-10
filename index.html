@@ -243,6 +243,73 @@
             font-style: italic;
         }
 
+        /* Urbit Embed Section */
+        .urbit-embed {
+            background: #1e1e1e;
+            padding: 60px 0;
+        }
+
+        .urbit-container {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #3a3a3a;
+        }
+
+        .urbit-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .urbit-title {
+            color: #e0e0e0;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .urbit-subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .urbit-iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #404040;
+            background: #1a1a1a;
+        }
+
+        .urbit-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .urbit-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .urbit-link a {
+            color: #64b5f6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 1px solid #64b5f6;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .urbit-link a:hover {
+            background: #64b5f6;
+            color: #1a1a1a;
+        }
+
         /* Footer */
         footer {
             background: #1a1a1a;
@@ -376,7 +443,7 @@
                             <div class="nft-stat-value" id="milady-floor">Loading...</div>
                         </div>
                         <div class="nft-stat">
-                            <div class="nft-stat-label">Volume (24h)</div>
+                            <div class="nft-stat-label">Volume (Total)</div>
                             <div class="nft-stat-value" id="milady-volume">Loading...</div>
                         </div>
                     </div>
@@ -401,7 +468,7 @@
                             <div class="nft-stat-value" id="remilio-floor">Loading...</div>
                         </div>
                         <div class="nft-stat">
-                            <div class="nft-stat-label">Volume (24h)</div>
+                            <div class="nft-stat-label">Volume (Total)</div>
                             <div class="nft-stat-value" id="remilio-volume">Loading...</div>
                         </div>
                     </div>
@@ -426,7 +493,7 @@
                             <div class="nft-stat-value" id="schizo-floor">Loading...</div>
                         </div>
                         <div class="nft-stat">
-                            <div class="nft-stat-label">Volume (24h)</div>
+                            <div class="nft-stat-label">Volume (Total)</div>
                             <div class="nft-stat-value" id="schizo-volume">Loading...</div>
                         </div>
                     </div>
@@ -437,6 +504,27 @@
                         <a href="https://opensea.io/collection/schizoposters" target="_blank" class="nft-link">OpenSea</a>
                         <a href="https://schizoposters.xyz" target="_blank" class="nft-link">Website</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Urbit Embed Section -->
+    <section id="urbit-embed" class="urbit-embed">
+        <div class="container">
+            <div class="urbit-container">
+                <div class="urbit-iframe-wrapper">
+                    <iframe 
+                        src="http://urbit.tylerirl.com/~~/radbro/" 
+                        class="urbit-iframe"
+                        title="Urbit Interface"
+                        loading="lazy">
+                        <p>Your browser does not support iframes. <a href="http://urbit.tylerirl.com/~~/radbro/" target="_blank">Visit the Urbit interface directly</a>.</p>
+                    </iframe>
+                </div>
+                <div class="urbit-header">
+                    <h2 class="urbit-title">Guest Book</h2>
+                    <p class="urbit-subtitle">Leave a message on my urbit node</p>
                 </div>
             </div>
         </div>
