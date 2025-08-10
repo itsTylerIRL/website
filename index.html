@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://unpkg.com/embeddable-nfts/dist/nft-card.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler (in real life)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 50%, #0d47a1 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        /* Sections */
+        section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #e0e0e0;
+        }
+
+        /* About Section */
+        .about {
+            background: #2a2a2a;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-image {
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #3a3a3a;
+            border: 3px solid #64b5f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            overflow: hidden;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-card {
+            background: #3a3a3a;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #4a4a4a;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(100, 181, 246, 0.2);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 1rem;
+            color: #64b5f6;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Hello, I'm Tyler</h1>
+            <p>Blockchain Enjoyer & Neochibi Enthusiast</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="profile-pic">
+                        <img src="assets/5031.png" alt="Tyler's Profile Picture">
+                    </div>
+                </div>
+                <div class="about-text">
+                    <p>Welcome to my personal website! I'm Tyler, a passionate web developer with a love for creating innovative digital solutions. I enjoy turning complex problems into simple, beautiful, and intuitive solutions.</p>
+                    <p>I'm always excited to collaborate on interesting projects and connect with fellow developers and creators.</p>
+                    <div style="margin-top: 2rem;">
+                        <a href="https://x.com/itsTylerIRL" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; margin-right: 2rem; display: inline-block;">Follow me on X →</a>
+                        <a href="http://gallery.so/tylerirl" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; display: inline-block;">View my NFT Gallery →</a>
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: center; padding: 1rem; background: #3a3a3a; border-radius: 8px; border: 1px solid #4a4a4a;">
+                        <a href="https://schizoposters.xyz" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500;">← Prev</a>
+                        <span style="color: #e0e0e0; margin: 0 1rem;">|</span>
+                        <span style="color: #e0e0e0; font-weight: 500;">Radbro Webring</span>
+                        <span style="color: #e0e0e0; margin: 0 1rem;">|</span>
+                        <a href="https://radbro.xyz" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500;">Next →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Projects & Interests</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="assets/sigil.png" alt="Urbit Sigil" style="width: 60px; height: 60px; border-radius: 8px;">
+                    </div>
+                    <h3>~nosfyl</h3>
+                    <p>Personal Urbit node - decentralized computing platform</p>
+                    <a href="http://urbit.tylerirl.com" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; margin-top: 1rem; display: inline-block;">Visit Urbit →</a>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="assets/cult.png" alt="Remilia Corporation" style="width: 60px; height: 60px; border-radius: 8px;">
+                    </div>
+                    <h3>Remilia Corporation</h3>
+                    <p>Digital art collective and cultural movement</p>
+                    <a href="https://www.remilia.org" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; margin-top: 1rem; display: inline-block;">Visit Remilia →</a>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="assets/miladycraft.gif" alt="Miladycraft" style="width: 60px; height: 60px; border-radius: 8px;">
+                    </div>
+                    <h3>Miladycraft</h3>
+                    <p>Minecraft server and community for the Milady ecosystem</p>
+                    <a href="https://miladycraft.net" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; margin-top: 1rem; display: inline-block;">Visit Miladycraft →</a>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <img src="assets/chainlink.png" alt="Chainlink" style="width: 60px; height: 60px; border-radius: 8px;">
+                    </div>
+                    <h3>Chainlink</h3>
+                    <p>Decentralized oracle network connecting blockchains to real-world data</p>
+                    <a href="https://chain.link" target="_blank" style="color: #64b5f6; text-decoration: none; font-weight: 500; margin-top: 1rem; display: inline-block;">Visit Chainlink →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tyler. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
