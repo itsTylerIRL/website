@@ -80,14 +80,44 @@
             margin-bottom: 1.5rem;
         }
 
+        .enlarged-pic-container {
+            display: none;
+            margin-bottom: 1rem;
+            justify-content: flex-start;
+        }
+
+        .enlarged-pic-container.active {
+            display: flex;
+        }
+
+        .profile-pics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 0.5rem;
+            position: relative;
+        }
+
         .profile-pic {
-            width: 120px;
-            height: 120px;
+            width: 100%;
+            aspect-ratio: 1;
+            min-width: 60px;
+            max-width: 120px;
             border-radius: 0;
             background: #161616;
             border: 1px solid #232323;
-            display: inline-block;
             overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-pic.enlarged {
+            width: 100%;
+            aspect-ratio: 1;
+            min-width: 160px;
+            max-width: 240px;
+            border-color: #8be9fd;
         }
 
         .profile-pic img {
@@ -198,28 +228,31 @@
         }
 
         .nft-stats {
-            display: flex;
-            gap: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
             margin-bottom: 1rem;
         }
 
         .nft-stat {
             background: #111;
-            padding: 0.5rem 0.7rem;
+            padding: 0.4rem 0.5rem;
             border-radius: 0;
             border: 1px solid #232323;
         }
 
         .nft-stat-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #888;
             margin-bottom: 0.1rem;
         }
 
         .nft-stat-value {
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #8be9fd;
+            line-height: 1.2;
+            word-break: break-word;
         }
 
         .nft-description {
@@ -361,14 +394,42 @@
             <h2 class="section-title">about</h2>
             <div class="about-content">
                 <div class="about-image">
-                    <div class="profile-pic">
-                        <img src="assets/5031.png" alt="Tyler's Profile Picture">
+                    <div class="enlarged-pic-container" id="enlargedContainer">
+                        <!-- Enlarged picture will be inserted here -->
+                    </div>
+                    <div class="profile-pics-row">
+                        <div class="profile-pic">
+                            <img src="assets/5031 1.png" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031.png" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031 5.png" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031 0.jpeg" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031 4.jpg" alt="Tyler's Profile Picture">
+                        </div>
+                        
+                        <div class="profile-pic">
+                            <img src="assets/5031 6.png" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031 3.png" alt="Tyler's Profile Picture">
+                        </div>
+                        <div class="profile-pic">
+                            <img src="assets/5031 2.png" alt="Tyler's Profile Picture">
+                        </div>
                     </div>
                 </div>
                 <div class="about-text">
                     <p>personal site of tyler. building on-chain, urbit, and digital culture. open to collab & chat.</p>
                     <div style="margin-top: 1.2rem;">
                         <a href="https://x.com/itsTylerIRL" target="_blank" class="nft-link">X</a>
+                        <a href="https://www.youtube.com/@itsTylerIRL" target="_blank" class="nft-link">YouTube</a>
                         <a href="http://gallery.so/tylerirl" target="_blank" class="nft-link">NFT Gallery</a>
                     </div>
                 </div>
@@ -420,6 +481,14 @@
                     </div>
                     <p>urbit blockchain</p>
                     <a href="https://www.nockchain.org" target="_blank" class="nft-link">nockchain.org</a>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <img src="https://app.aave.com/icons/tokens/aave.svg" alt="Aave">
+                        <h3>aave</h3>
+                    </div>
+                    <p>defi lending protocol</p>
+                    <a href="https://aave.com" target="_blank" class="nft-link">aave.com</a>
                 </div>
             </div>
         </div>
@@ -529,7 +598,7 @@
         <div class="container">
             <center>
             <div style="text-align: center; margin-bottom: 1rem;">
-                <img src="assets/SMART.png" alt="Smart" style="width: 80px; height: auto; border: 0px solid #232323;">
+                <img src="assets/smart.png" alt="Smart" style="width: 80px; height: auto; border: 0px solid #232323;">
             </div>
             <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
             <span style="font-size: 0.95rem;">radbro webring</span>
@@ -687,7 +756,39 @@
 
         // Refresh data every 5 minutes
         setInterval(fetchNFTData, 5 * 60 * 1000);
+
+        // Profile picture click functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const profilePics = document.querySelectorAll('.profile-pic');
+            const enlargedContainer = document.getElementById('enlargedContainer');
+            let currentEnlarged = null;
+            
+            profilePics.forEach(pic => {
+                pic.addEventListener('click', function() {
+                    const imgSrc = this.querySelector('img').src;
+                    const imgAlt = this.querySelector('img').alt;
+                    
+                    // If clicking the same picture that's already enlarged, remove it
+                    if (currentEnlarged === this) {
+                        enlargedContainer.classList.remove('active');
+                        enlargedContainer.innerHTML = '';
+                        currentEnlarged = null;
+                        return;
+                    }
+                    
+                    // Create enlarged picture
+                    enlargedContainer.innerHTML = `
+                        <div class="profile-pic enlarged">
+                            <img src="${imgSrc}" alt="${imgAlt}">
+                        </div>
+                    `;
+                    
+                    // Show the enlarged container
+                    enlargedContainer.classList.add('active');
+                    currentEnlarged = this;
+                });
+            });
+        });
     </script>
 </body>
 </html>
-
