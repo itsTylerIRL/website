@@ -162,21 +162,56 @@
             color: #bdbdbd;
         }
 
+        /* Quote Block */
+        .quote-block {
+            background: #161616;
+            border: 1px solid #232323;
+            border-left: 3px solid #8be9fd;
+            padding: 1rem 1.2rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        .quote-text {
+            color: #eaeaea;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-attribution {
+            color: #888;
+            font-size: 0.85rem;
+            font-style: normal;
+        }
+
+        .quote-attribution a {
+            color: #8be9fd;
+            text-decoration: none;
+        }
+
+        .quote-attribution a:hover {
+            text-decoration: underline;
+        }
+
         /* Skills Section */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 1.2rem;
         }
 
         .skill-card {
             background: #161616;
-            padding: 1.2rem 1rem;
+            padding: 1rem;
             border-radius: 0;
             text-align: left;
             border: 1px solid #232323;
             box-shadow: none;
             transition: border 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .skill-card:hover {
@@ -187,25 +222,59 @@
             display: none;
         }
 
-        .skill-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+        .skill-image {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
         }
 
-        .skill-header img {
-            width: 24px;
-            height: 24px;
+        .skill-image img {
+            width: 100%;
+            height: 100%;
             border-radius: 0;
-            border: none;
+            border: 0px solid #232323;
             object-fit: cover;
         }
 
+        .skill-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .skill-header {
+            display: none;
+        }
+
         .skill-card h3 {
-            margin-bottom: 0.5rem;
+            margin: 0;
             color: #8be9fd;
             font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .skill-card p {
+            margin: 0;
+            color: #bdbdbd;
+            font-size: 0.9rem;
+        }
+
+        .skill-card a {
+            color: #8be9fd;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.5rem;
+            border: 1px solid #232323;
+            border-radius: 0;
+            transition: border 0.2s;
+            align-self: flex-start;
+            margin-top: 0.2rem;
+        }
+
+        .skill-card a:hover {
+            border: 1px solid #8be9fd;
         }
 
         /* NFT Section */
@@ -463,6 +532,12 @@
                 </div>
                 <div class="about-text">
                     <p>personal site of tyler. building on-chain, urbit, and digital culture. open to collab & chat.</p>
+<!--                     
+                    <div class="quote-block">
+                        <div class="quote-text">"in my mind, I am gilded, divine, and always reeling towards perfection"</div>
+                        <div class="quote-attribution">— <a href="https://twitter.com/itsTylerIRL/status/1635667920121393157" target="_blank">TylerIRL, March 14, 2023</a></div>
+                    </div> -->
+                    
                     <div style="margin-top: 1.2rem;">
                         <a href="https://x.com/itsTylerIRL" target="_blank" class="nft-link">𝕏</a>
                         <a href="https://www.youtube.com/@itsTylerIRL" target="_blank" class="nft-link">YouTube</a>
@@ -479,68 +554,84 @@
             <h2 class="section-title">things I like</h2>
             <div class="skills-grid">
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/sigil.png" alt="Urbit Sigil">
+                    </div>
+                    <div class="skill-content">
                         <h3>~nosfyl</h3>
+                        <p>personal urbit star</p>
+                        <a href="http://urbit.tylerirl.com" target="_blank">~nosfyl</a>
                     </div>
-                    <p>personal urbit star</p>
-                    <a href="http://urbit.tylerirl.com" target="_blank" class="nft-link">~nosfyl</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/eth.png" alt="Ethereum">
+                    </div>
+                    <div class="skill-content">
                         <h3>ethereum</h3>
+                        <p>the world computer</p>
+                        <a href="https://ethereum.org/en" target="_blank">ethereum.org</a>
                     </div>
-                    <p>the world computer</p>
-                    <a href="https://ethereum.org/en" target="_blank" class="nft-link">ethereum.org</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/cult.png" alt="Remilia Corporation">
+                    </div>
+                    <div class="skill-content">
                         <h3>remilia</h3>
+                        <p>digital art collective</p>
+                        <a href="https://www.remilia.org" target="_blank">remilia.org</a>
                     </div>
-                    <p>digital art collective</p>
-                    <a href="https://www.remilia.org" target="_blank" class="nft-link">remilia.org</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/miladycraft.gif" alt="Miladycraft">
+                    </div>
+                    <div class="skill-content">
                         <h3>miladycraft</h3>
+                        <p>minecraft server</p>
+                        <a href="https://miladycraft.net" target="_blank">miladycraft</a>
                     </div>
-                    <p>minecraft server</p>
-                    <a href="https://miladycraft.net" target="_blank" class="nft-link">miladycraft</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/chainlink.png" alt="Chainlink">
+                    </div>
+                    <div class="skill-content">
                         <h3>chainlink</h3>
+                        <p>oracle network</p>
+                        <a href="https://chain.link" target="_blank">chain.link</a>
                     </div>
-                    <p>oracle network</p>
-                    <a href="https://chain.link" target="_blank" class="nft-link">chain.link</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="assets/nock.jpg" alt="Nockchain">
+                    </div>
+                    <div class="skill-content">
                         <h3>nockchain</h3>
+                        <p>urbit blockchain</p>
+                        <a href="https://www.nockchain.org" target="_blank">nockchain.org</a>
                     </div>
-                    <p>urbit blockchain</p>
-                    <a href="https://www.nockchain.org" target="_blank" class="nft-link">nockchain.org</a>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="https://app.aave.com/icons/tokens/aave.svg" alt="Aave">
-                        <h3>aave</h3>
                     </div>
-                    <p>defi lending protocol</p>
-                    <a href="https://aave.com" target="_blank" class="nft-link">aave.com</a>
+                    <div class="skill-content">
+                        <h3>aave</h3>
+                        <p>defi lending protocol</p>
+                        <a href="https://aave.com" target="_blank">aave.com</a>
+                    </div>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-header">
+                    <div class="skill-image">
                         <img src="https://pbs.twimg.com/profile_images/1663333506666180608/9wj2EM1L_400x400.jpg" alt="Radbro Webring">
-                        <h3>radbro webring</h3>
                     </div>
-                    <p>check the chain</p>
-                    <a href="https://radbro.xyz" target="_blank" class="nft-link">radbro.xyz</a>
+                    <div class="skill-content">
+                        <h3>radbro webring</h3>
+                        <p>check the chain</p>
+                        <a href="https://radbro.xyz" target="_blank">radbro.xyz</a>
+                    </div>
                 </div>
             </div>
         </div>
