@@ -198,7 +198,8 @@
             width: 24px;
             height: 24px;
             border-radius: 0;
-            border: 1px solid #232323;
+            border: none;
+            object-fit: cover;
         }
 
         .skill-card h3 {
@@ -228,6 +229,9 @@
             transition: border 0.2s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .nft-card:hover {
@@ -290,12 +294,14 @@
             font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 1rem;
+            flex-grow: 1;
         }
 
         .nft-links {
             display: flex;
             gap: 0.7rem;
             flex-wrap: wrap;
+            margin-top: auto;
         }
 
         .nft-link {
@@ -482,6 +488,14 @@
                 </div>
                 <div class="skill-card">
                     <div class="skill-header">
+                        <img src="assets/eth.png" alt="Ethereum">
+                        <h3>ethereum</h3>
+                    </div>
+                    <p>the world computer</p>
+                    <a href="https://ethereum.org/en" target="_blank" class="nft-link">ethereum.org</a>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
                         <img src="assets/cult.png" alt="Remilia Corporation">
                         <h3>remilia</h3>
                     </div>
@@ -520,6 +534,14 @@
                     <p>defi lending protocol</p>
                     <a href="https://aave.com" target="_blank" class="nft-link">aave.com</a>
                 </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <img src="https://pbs.twimg.com/profile_images/1663333506666180608/9wj2EM1L_400x400.jpg" alt="Radbro Webring">
+                        <h3>radbro webring</h3>
+                    </div>
+                    <p>check the chain</p>
+                    <a href="https://radbro.xyz" target="_blank" class="nft-link">radbro.xyz</a>
+                </div>
             </div>
         </div>
     </section>
@@ -527,7 +549,7 @@
     <!-- NFT Collection Section -->
     <section id="nfts" class="nfts">
         <div class="container">
-            <h2 class="section-title">nft collections</h2>
+            <h2 class="section-title">neochibi markets</h2>
             <div class="nft-grid">
                 <div class="nft-card">
                     <div class="nft-header">
@@ -831,4 +853,3 @@
     </script>
 </body>
 </html>
-
