@@ -84,10 +84,40 @@
             display: none;
             margin-bottom: 1rem;
             justify-content: flex-start;
+            align-items: flex-start;
+            gap: 1rem;
         }
 
         .enlarged-pic-container.active {
             display: flex;
+        }
+
+        .enlarged-pic-info {
+            flex: 1;
+            padding-top: 0.5rem;
+        }
+
+        .enlarged-pic-info h4 {
+            color: #8be9fd;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .enlarged-pic-info p {
+            color: #bdbdbd;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .enlarged-pic-info a {
+            color: #8be9fd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .enlarged-pic-info a:hover {
+            text-decoration: underline;
         }
 
         .profile-pics-row {
@@ -398,29 +428,29 @@
                         <!-- Enlarged picture will be inserted here -->
                     </div>
                     <div class="profile-pics-row">
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Oh...I've Seen" data-artist="Shiro" data-twitter="shiro57102" data-description="I waited for a year and some change for Shiro to finally draw 5031 into the Oh..I see collections">
                             <img src="assets/5031 1.png" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Remilio #5031" data-artist="Remilia Collective" data-twitter="RemilioBaby" data-description="The Original! Obtained in a trade negotiation with Cyberprince, Remilio 5031 is a cornerstone of the collection.">
                             <img src="assets/5031.png" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Mista's 1/1s" data-artist="Mista" data-twitter="remilia_agent" data-description="In Ultra HD">
                             <img src="assets/5031 5.png" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Silly Jitz #5031" data-artist="Kira" data-twitter="kiraachu_" data-description="In the Happy Hapa style, custom by Kira">
                             <img src="assets/5031 0.jpeg" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Remilio 5031" data-artist="Avery Famous Artist" data-twitter="secretlyaveryf1" data-description="Casual variant">
                             <img src="assets/5031 4.jpg" alt="Tyler's Profile Picture">
                         </div>
                         
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Milady #5031" data-artist="Max the Chicken" data-twitter="MaxIsAChicken" data-description="goober ahh jit">
                             <img src="assets/5031 6.png" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Milady #5031" data-artist="Catnip" data-twitter="lookupcatnip" data-description="An AI Remix of 5031 by Catnip">
                             <img src="assets/5031 3.png" alt="Tyler's Profile Picture">
                         </div>
-                        <div class="profile-pic">
+                        <div class="profile-pic" data-name="Milady #5031" data-artist="Hyuna" data-twitter="insertdisclaimr" data-description="Classic awawa style, customized by Hyuna">
                             <img src="assets/5031 2.png" alt="Tyler's Profile Picture">
                         </div>
                     </div>
@@ -767,6 +797,10 @@
                 pic.addEventListener('click', function() {
                     const imgSrc = this.querySelector('img').src;
                     const imgAlt = this.querySelector('img').alt;
+                    const name = this.dataset.name;
+                    const artist = this.dataset.artist;
+                    const twitter = this.dataset.twitter;
+                    const description = this.dataset.description;
                     
                     // If clicking the same picture that's already enlarged, remove it
                     if (currentEnlarged === this) {
@@ -776,10 +810,15 @@
                         return;
                     }
                     
-                    // Create enlarged picture
+                    // Create enlarged picture with info
                     enlargedContainer.innerHTML = `
                         <div class="profile-pic enlarged">
                             <img src="${imgSrc}" alt="${imgAlt}">
+                        </div>
+                        <div class="enlarged-pic-info">
+                            <h4>${name}</h4>
+                            <p><strong>artist:</strong> <a href="https://x.com/${twitter}" target="_blank">${artist}</a></p>
+                            <p><strong>info:</strong> ${description}</p>
                         </div>
                     `;
                     
@@ -792,4 +831,3 @@
     </script>
 </body>
 </html>
-
