@@ -779,6 +779,18 @@
         });
 
         // NFT pricing data fetcher
+        function formatUSD(amount) {
+            if (amount >= 1000000) {
+                return `$${(amount / 1000000).toFixed(2)}M`;
+            } else {
+                return amount.toLocaleString('en-US', { 
+                    style: 'currency', 
+                    currency: 'USD', 
+                    maximumFractionDigits: 0 
+                });
+            }
+        }
+
         async function fetchNFTData() {
             try {
                 const apiKey = '5a79fc7192de4ababec6b822f0ca4635';
@@ -817,11 +829,7 @@
                         maximumFractionDigits: 0 
                     });
                     
-                    const miladyVolumeUSD = (miladyVolume * ethPriceUSD).toLocaleString('en-US', { 
-                        style: 'currency', 
-                        currency: 'USD', 
-                        maximumFractionDigits: 0 
-                    });
+                    const miladyVolumeUSD = formatUSD(miladyVolume * ethPriceUSD);
                     
                     document.getElementById('milady-floor').textContent = 
                         `${miladyFloor.toFixed(2)} ETH (${miladyFloorUSD})`;
@@ -849,11 +857,7 @@
                         maximumFractionDigits: 0 
                     });
                     
-                    const remilioVolumeUSD = (remilioVolume * ethPriceUSD).toLocaleString('en-US', { 
-                        style: 'currency', 
-                        currency: 'USD', 
-                        maximumFractionDigits: 0 
-                    });
+                    const remilioVolumeUSD = formatUSD(remilioVolume * ethPriceUSD);
                     
                     document.getElementById('remilio-floor').textContent = 
                         `${remilioFloor.toFixed(2)} ETH (${remilioFloorUSD})`;
@@ -881,11 +885,7 @@
                         maximumFractionDigits: 0 
                     });
                     
-                    const schizoVolumeUSD = (schizoVolume * ethPriceUSD).toLocaleString('en-US', { 
-                        style: 'currency', 
-                        currency: 'USD', 
-                        maximumFractionDigits: 0 
-                    });
+                    const schizoVolumeUSD = formatUSD(schizoVolume * ethPriceUSD);
                     
                     document.getElementById('schizo-floor').textContent = 
                         `${schizoFloor.toFixed(2)} ETH (${schizoFloorUSD})`;
@@ -899,11 +899,11 @@
                 console.error('Error fetching NFT data:', error);
                 // Fallback to reasonable static data if API fails
                 document.getElementById('milady-floor').textContent = '2.5 ETH ($6,250)';
-                document.getElementById('milady-volume').textContent = '45.2 ETH ($113,000)';
+                document.getElementById('milady-volume').textContent = `45.2 ETH (${formatUSD(113000)})`;
                 document.getElementById('remilio-floor').textContent = '1.8 ETH ($4,500)';
-                document.getElementById('remilio-volume').textContent = '32.1 ETH ($80,250)';
+                document.getElementById('remilio-volume').textContent = `32.1 ETH (${formatUSD(80250)})`;
                 document.getElementById('schizo-floor').textContent = '0.8 ETH ($2,000)';
-                document.getElementById('schizo-volume').textContent = '15.3 ETH ($38,250)';
+                document.getElementById('schizo-volume').textContent = `15.3 ETH (${formatUSD(38250)})`;
             }
         }
 
