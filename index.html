@@ -137,9 +137,14 @@
             border: 1px solid #232323;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border 0.2s, box-shadow 0.2s;
             position: relative;
             z-index: 1;
+        }
+
+        .profile-pic:hover {
+            border: 1px solid #8be9fd;
+            box-shadow: 0 0 0 2px #8be9fd33;
         }
 
         .profile-pic.enlarged {
@@ -231,16 +236,7 @@
         .skill-image img {
             width: 100%;
             height: 100%;
-            border-radius: 0;
-            border: 0px solid #232323;
             object-fit: contain;
-        }
-
-        .skill-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
         }
 
         .skill-header {
@@ -542,6 +538,7 @@
                         <a href="https://x.com/itsTylerIRL" target="_blank" class="nft-link">𝕏</a>
                         <a href="https://www.youtube.com/@itsTylerIRL" target="_blank" class="nft-link">YouTube</a>
                         <a href="http://gallery.so/tylerirl" target="_blank" class="nft-link">NFT Gallery</a>
+                        <a href="https://opensea.io/profile/tylerirl/galleries" target="_blank" class="nft-link">OpenSea</a>
                     </div>
                 </div>
             </div>
