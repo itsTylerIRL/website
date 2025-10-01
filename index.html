@@ -586,6 +586,168 @@
             border: 1px solid #8be9fd;
         }
 
+        /* Remilia ID Card Section */
+        .remilia-id {
+            background: #181818;
+            padding: 20px 0;
+            margin: 1.5rem auto;
+            border-radius: 8px;
+            max-width: 420px;
+            width: fit-content;
+        }
+
+        .card-wrapper {
+            max-width: 400px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-wrapper:hover {
+            transform: translateY(-3px);
+        }
+
+        .card-container {
+            background: linear-gradient(135deg, #161616 0%, #1a1a1a 100%);
+            border: 1px solid #232323;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #eaeaea;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-main {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .card-header {
+            font-size: 0.75rem;
+            color: #8be9fd;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-picture {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #8be9fd;
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+            flex-shrink: 0;
+        }
+
+        .profile-picture-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-info {
+            flex: 1;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .user-info .section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .user-info .section span:first-child {
+            color: #888;
+            font-weight: 500;
+            min-width: 30px;
+        }
+
+        .user-info .section span:last-child,
+        .username-text {
+            color: #8be9fd;
+            font-weight: 600;
+        }
+
+        .card-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .code {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(139, 233, 253, 0.03);
+            border-radius: 6px;
+            border: 1px solid #232323;
+        }
+
+        .code svg {
+            filter: invert(1);
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .code p {
+            font-size: 0.7rem;
+            color: #bdbdbd;
+            line-height: 1.3;
+            margin: 0;
+            font-style: italic;
+            max-width: 200px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.6rem;
+            color: #666;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #232323;
+        }
+
+        .silver-plaque {
+            position: absolute;
+            bottom: -15px;
+            right: 1rem;
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            font-size: 0.6rem;
+            color: #ccc;
+            white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        }
+
         /* Footer */
         footer {
             background: #111;
@@ -653,6 +815,59 @@
                 top: 0.5rem;
                 right: 0.5rem;
             }
+            
+            /* Mobile Remilia ID Card */
+            .card-wrapper {
+                max-width: 95vw;
+                margin: 0 auto;
+            }
+            
+            .card-container {
+                padding: 0.8rem;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .card-left {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .card-right {
+                justify-content: center;
+            }
+            
+            .profile-picture {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .user-info .section {
+                font-size: 0.75rem;
+                justify-content: center;
+                gap: 0.3rem;
+            }
+            
+            .code {
+                padding: 0.6rem;
+            }
+            
+            .code svg {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .code p {
+                font-size: 0.65rem;
+                max-width: 150px;
+            }
+            
+            .silver-plaque {
+                font-size: 0.5rem;
+                padding: 0.25rem 0.6rem;
+                bottom: -12px;
+                right: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -668,7 +883,6 @@
     <!-- PFP Section -->
     <section class="pfp-section">
         <div class="container">
-            <h2 class="section-title">pfps</h2>
             <div class="pfp-grid">
                 <div class="pfp-card" data-name="Remilio #5031" data-artist="Remilia Collective" data-twitter="RemilioBaby">
                     <img src="assets/5031.png" alt="Remilio #5031">
@@ -725,6 +939,51 @@
                     <h4>LittlePeople</h4>
                     <p>P0TYT0</p>
                 </div>
+            </div>
+            <!-- Remilia ID Card -->
+            <div class="remilia-id">
+                <a href="https://remilia.com/~tyler" target="_blank" class="card-wrapper">
+                    <div class="card-container">
+                        <div class="card-main">
+                            <div class="card-left">
+                                <div class="profile-picture">
+                                    <div class="profile-picture-image loaded" style="background-image: url('https://pfp.remilia.com/pfp/remilio/5031');"></div>
+                                </div>
+                                <div class="card-info">
+                                    <div class="card-header">
+                                        <span>REMILIA<br>集团存在证明</span>
+                                    </div>
+                                    <div class="user-info">
+                                        <div class="section display-name">
+                                            <span>名</span>
+                                            <span>tylerirl</span>
+                                        </div>
+                                        <div class="section username">
+                                            <span>用户</span>
+                                            <span class="username-text">~tyler</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-right">
+                                <div class="code">
+                                    <svg height="40" width="40" viewBox="0 0 25 25" role="img">
+                                        <path fill="transparent" d="M0,0 h25v25H0z" shape-rendering="crispEdges"></path>
+                                        <path fill="#000000" d="M0 0h7v1H0zM10 0h1v1H10zM13 0h1v1H13zM16 0h1v1H16zM18,0 h7v1H18zM0 1h1v1H0zM6 1h1v1H6zM9 1h1v1H9zM11 1h1v1H11zM13 1h4v1H13zM18 1h1v1H18zM24,1 h1v1H24zM0 2h1v1H0zM2 2h3v1H2zM6 2h1v1H6zM8 2h2v1H8zM12 2h1v1H12zM14 2h1v1H14zM18 2h1v1H18zM20 2h3v1H20zM24,2 h1v1H24zM0 3h1v1H0zM2 3h3v1H2zM6 3h1v1H6zM8 3h2v1H8zM12 3h4v1H12zM18 3h1v1H18zM20 3h3v1H20zM24,3 h1v1H24zM0 4h1v1H0zM2 4h3v1H2zM6 4h1v1H6zM8 4h2v1H8zM11 4h3v1H11zM16 4h1v1H16zM18 4h1v1H18zM20 4h3v1H20zM24,4 h1v1H24zM0 5h1v1H0zM6 5h1v1H6zM8 5h1v1H8zM11 5h2v1H11zM14 5h2v1H14zM18 5h1v1H18zM24,5 h1v1H24zM0 6h7v1H0zM8 6h1v1H8zM10 6h1v1H10zM12 6h1v1H12zM14 6h1v1H14zM16 6h1v1H16zM18,6 h7v1H18zM8 7h2v1H8zM11 7h1v1H11zM14 7h1v1H14zM16 7h1v1H16zM0 8h1v1H0zM2 8h5v1H2zM9 8h3v1H9zM13 8h1v1H13zM18 8h5v1H18zM0 9h1v1H0zM4 9h2v1H4zM7 9h1v1H7zM11 9h1v1H11zM13 9h1v1H13zM19 9h1v1H19zM23 9h1v1H23zM1 10h2v1H1zM6 10h1v1H6zM8 10h2v1H8zM13 10h6v1H13zM20 10h2v1H20zM23,10 h2v1H23zM3 11h3v1H3zM7 11h1v1H7zM9 11h1v1H9zM11 11h1v1H11zM14 11h2v1H14zM17 11h2v1H17zM24,11 h1v1H24zM0 12h1v1H0zM2 12h1v1H2zM5 12h3v1H5zM9 12h1v1H9zM11 12h5v1H11zM17 12h4v1H17zM22,12 h3v1H22zM0 13h1v1H0zM4 13h2v1H4zM7 13h1v1H7zM10 13h1v1H10zM12 13h3v1H12zM16 13h1v1H16zM19 13h1v1H19zM21 13h1v1H21zM23 13h1v1H23zM0 14h1v1H0zM2 14h3v1H2zM6 14h1v1H6zM8 14h2v1H8zM12 14h6v1H12zM19 14h3v1H19zM23,14 h2v1H23zM0 15h1v1H0zM3 15h2v1H3zM7 15h2v1H7zM10 15h3v1H10zM15 15h1v1H15zM17 15h4v1H17zM24,15 h1v1H24zM0 16h1v1H0zM2 16h1v1H2zM6 16h3v1H6zM10 16h1v1H10zM13 16h2v1H13zM16 16h5v1H16zM22 16h1v1H22zM8 17h1v1H8zM10 17h2v1H10zM14 17h3v1H14zM20 17h2v1H20zM0 18h7v1H0zM9 18h1v1H9zM14 18h1v1H14zM16 18h1v1H16zM18 18h1v1H18zM20 18h1v1H20zM22,18 h3v1H22zM0 19h1v1H0zM6 19h1v1H6zM8 19h2v1H8zM16 19h1v1H16zM20 19h2v1H20zM0 20h1v1H0zM2 20h3v1H2zM6 20h1v1H6zM8 20h1v1H8zM12 20h9v1H12zM22 20h1v1H22zM0 21h1v1H0zM2 21h3v1H2zM6 21h1v1H6zM8 21h2v1H8zM11 21h1v1H11zM13 21h3v1H13zM17 21h2v1H17zM20,21 h5v1H20zM0 22h1v1H0zM2 22h3v1H2zM6 22h1v1H6zM8 22h1v1H8zM12 22h1v1H12zM16 22h1v1H16zM21 22h2v1H21zM24,22 h1v1H24zM0 23h1v1H0zM6 23h1v1H6zM9 23h2v1H9zM14 23h3v1H14zM19 23h3v1H19zM24,23 h1v1H24zM0 24h7v1H0zM8 24h2v1H8zM11 24h4v1H11zM17,24 h8v1H17z" shape-rendering="crispEdges"></path>
+                                    </svg>
+                                    <p>我是上帝的小战士。我与网络合为一体。我想在网上玩得开心。本人特此证明上述内容属实。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <span>©Remilia.Corp:2K5</span>
+                            <span>NOT FOR SALE</span>
+                        </div>
+                    </div>
+                    <!-- <div class="silver-plaque">
+                        <div class="silver-plaque__content">this user is gilded, divine, and always reeling towards perfection</div>
+                    </div> -->
+                </a>
             </div>
             <!-- About Content (merged with PFP section) -->
             <div class="about-content">
