@@ -118,7 +118,7 @@
         .pfp-card {
             background: #161616;
             padding: 1rem;
-            border-radius: 0;
+            border-radius: 8px;
             text-align: center;
             border: 1px solid #232323;
             box-shadow: none;
@@ -173,6 +173,7 @@
         .pfp-popup-content {
             background: #161616;
             border: 1px solid #232323;
+            border-radius: 8px;
             padding: 2rem;
             max-width: 90vw;
             max-height: 90vh;
@@ -308,6 +309,7 @@
             background: #161616;
             border: 1px solid #232323;
             border-left: 3px solid #8be9fd;
+            border-radius: 8px;
             padding: 1rem 1.2rem;
             margin: 1.5rem 0;
             font-style: italic;
@@ -345,7 +347,7 @@
         .skill-card {
             background: #161616;
             padding: 1rem;
-            border-radius: 0;
+            border-radius: 8px;
             text-align: left;
             border: 1px solid #232323;
             box-shadow: none;
@@ -423,7 +425,7 @@
 
         .nft-card {
             background: #181818;
-            border-radius: 0;
+            border-radius: 8px;
             padding: 1rem 0.8rem;
             border: 1px solid #232323;
             box-shadow: none;
@@ -533,7 +535,7 @@
 
         .urbit-container {
             background: #161616;
-            border-radius: 0;
+            border-radius: 8px;
             padding: 1.2rem 1rem;
             border: 1px solid #232323;
         }
@@ -609,6 +611,10 @@
 
         .card-wrapper:hover {
             transform: translateY(-3px);
+        }
+
+        .card-wrapper:hover .card-container {
+            border: 1px solid #8be9fd;
         }
 
         .card-container {
@@ -929,10 +935,10 @@
     <section class="pfp-section">
         <div class="container">
             <div class="pfp-grid">
-                <div class="pfp-card" data-name="Remilio #5031" data-artist="Remilia Corporation" data-twitter="RemilioBaby">
+                <div class="pfp-card" data-name="Remilio #5031" data-artist="Remilia Collective" data-twitter="RemilioBaby">
                     <img src="assets/5031.png" alt="Remilio #5031">
                     <h4>Remilio #5031</h4>
-                    <p>Remilia Corporation</p>
+                    <p>Remilia Collective</p>
                 </div>
                 <div class="pfp-card" data-name="Oh...I've Seen" data-artist="Shiro" data-twitter="shiro57102">
                     <img src="assets/5031 1.png" alt="Oh...I've Seen">
@@ -959,9 +965,9 @@
                     <h4>Avery Famous 5031</h4>
                     <p>Avery Famous Artist</p>
                 </div>
-                <div class="pfp-card" data-name="Creature" data-artist="Max the Chicken" data-twitter="MaxIsAChicken">
-                    <img src="assets/5031 6.png" alt="Creature">
-                    <h4>Creature #5031</h4>
+                <div class="pfp-card" data-name="Goobers" data-artist="Max the Chicken" data-twitter="MaxIsAChicken">
+                    <img src="assets/5031 6.png" alt="Goober">
+                    <h4>Goober #5031</h4>
                     <p>Max the Chicken</p>
                 </div>
                 <div class="pfp-card" data-name="Repatterns" data-artist="Catnip" data-twitter="lookupcatnip">
@@ -1473,7 +1479,5 @@
     </script>
 </body>
 </html>
-
-
 
 
