@@ -804,6 +804,46 @@
                 font-size: 0.75rem;
             }
             
+            /* Mobile Skills Layout */
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .skill-card {
+                padding: 0.8rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.6rem;
+            }
+            
+            .skill-image {
+                width: 36px;
+                height: 36px;
+                align-self: center;
+            }
+            
+            .skill-content {
+                text-align: center;
+            }
+            
+            .skill-card h3 {
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .skill-card p {
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .skill-card a {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.4rem;
+                align-self: center;
+                margin-top: 0;
+            }
+            
             /* Mobile popup adjustments */
             .pfp-popup-content {
                 padding: 1.5rem;
@@ -967,7 +1007,7 @@
                 </div>
                 <div class="pfp-card" data-name="Creature" data-artist="Max the Chicken" data-twitter="MaxIsAChicken">
                     <img src="assets/5031 6.png" alt="Creature">
-                    <h4>Creature 5031</h4>
+                    <h4>Creature #5031</h4>
                     <p>Max the Chicken</p>
                 </div>
                 <div class="pfp-card" data-name="Repatterns" data-artist="Catnip" data-twitter="lookupcatnip">
@@ -1479,6 +1519,5 @@
     </script>
 </body>
 </html>
-
 
 
