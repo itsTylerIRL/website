@@ -199,6 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = this.getAttribute('data-name');
             const artist = this.getAttribute('data-artist');
             const description = this.getAttribute('data-description');
+            const opensea = this.getAttribute('data-opensea');
+            const etherscan = this.getAttribute('data-etherscan');
             const imgSrc = this.querySelector('img').src;
             
             // Update popup content
@@ -206,6 +208,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('popupName').textContent = name;
             document.getElementById('popupArtist').textContent = `by ${artist}`;
             document.getElementById('popupDescription').textContent = description;
+            
+            // Update icon links
+            const openseaLink = document.getElementById('openseaLink');
+            const etherscanLink = document.getElementById('etherscanLink');
+            
+            if (opensea) {
+                openseaLink.href = opensea;
+                openseaLink.style.display = 'inline-flex';
+            } else {
+                openseaLink.style.display = 'none';
+            }
+            
+            if (etherscan) {
+                etherscanLink.href = etherscan;
+                etherscanLink.style.display = 'inline-flex';
+            } else {
+                etherscanLink.style.display = 'none';
+            }
             
             // Show popup
             popup.classList.add('active');

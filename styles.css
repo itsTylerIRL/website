@@ -207,6 +207,53 @@ section {
     border-color: #8be9fd;
 }
 
+/* PFP Name Container with Inline Icons */
+.pfp-name-container {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.pfp-icons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.pfp-icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.pfp-icon-link:hover {
+    background: rgba(139, 233, 253, 0.1);
+    transform: scale(1.1);
+}
+
+.pfp-icon {
+    width: 24px !important;
+    height: 24px !important;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    display: inline-block;
+}
+
+.pfp-icon-link:hover .pfp-icon {
+    opacity: 1;
+}
+
+.pfp-name-container h3 {
+    margin: 0;
+    text-align: center;
+}
+
 .enlarged-pic-container {
     display: none;
     margin-bottom: 1rem;
@@ -885,6 +932,31 @@ footer {
         font-size: 1.3rem;
         top: 0.5rem;
         right: 0.5rem;
+    }
+    
+    /* Mobile popup adjustments */
+    .pfp-name-container {
+        margin-bottom: 0.4rem;
+    }
+    
+    .pfp-icons-container {
+        gap: 0.8rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .pfp-icon-link {
+        padding: 0.05rem;
+    }
+    
+    .pfp-icon {
+        width: 20px !important;
+        height: 20px !important;
+        max-width: 20px !important;
+        max-height: 20px !important;
+    }
+    
+    .pfp-name-container h3 {
+        font-size: 1.1rem;
     }
     
     /* Mobile Remilia ID Card */
