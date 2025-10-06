@@ -471,7 +471,6 @@
                 'assets/sfx/alien-computer-program-blip-03.mp3',
                 'assets/sfx/button-press-synthetic-short-hi-tech-button-beep-zvinbergsa.mp3',
                 'assets/sfx/hi-tech-beepsbuzz-com.mp3',
-                'assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3',
                 'assets/sfx/killswitch.mp3',
                 'assets/sfx/multimedia-page-turn-blip-beep-high-tech-02.mp3',
                 'assets/sfx/poe-laugh.mp3',
@@ -479,6 +478,28 @@
                 'assets/sfx/tech-rollover-5.mp3',
                 'assets/sfx/the-undertaker-bell-meme-sound-effect-soundboard-link.mp3'
             ];
+
+            // Hover sound effect for PFPs
+            const hoverSound = new Audio('assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3');
+            hoverSound.volume = 0.3;
+            let isPlayingHoverSound = false;
+
+            // Function to play hover sound
+            function playHoverSound() {
+                if (!isPlayingHoverSound) {
+                    isPlayingHoverSound = true;
+                    hoverSound.currentTime = 0; // Reset to start
+                    hoverSound.play().then(() => {
+                        // Reset flag when sound finishes or fails
+                        setTimeout(() => {
+                            isPlayingHoverSound = false;
+                        }, 200); // Prevent too rapid firing
+                    }).catch(e => {
+                        console.log('Hover audio play failed:', e);
+                        isPlayingHoverSound = false;
+                    });
+                }
+            }
 
             // Function to play random sound effect
             function playRandomSFX() {
@@ -492,6 +513,11 @@
             pfpCards.forEach(card => {
                 card.draggable = true;
                 card.style.transition = 'transform 0.2s ease, border 0.2s ease';
+
+                // Add hover sound effect
+                card.addEventListener('mouseenter', function() {
+                    playHoverSound();
+                });
 
                 // Drag start
                 card.addEventListener('dragstart', function(e) {
