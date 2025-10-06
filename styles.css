@@ -77,6 +77,72 @@ section {
     border-bottom: 1px solid #232323;
 }
 
+/* PFP Filter Buttons */
+.pfp-filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0;
+}
+
+.filter-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(139, 233, 253, 0.3);
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: #8be9fd;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(139, 233, 253, 0.3);
+}
+
+.filter-btn:hover img {
+    transform: scale(1.1);
+}
+
+.filter-btn.active {
+    border-color: #8be9fd;
+    box-shadow: 
+        0 0 20px rgba(139, 233, 253, 0.4),
+        inset 0 0 20px rgba(139, 233, 253, 0.1);
+    background: rgba(139, 233, 253, 0.05);
+}
+
+.filter-btn.active::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #8be9fd, transparent, #8be9fd);
+    z-index: -1;
+    animation: rotate-border 2s linear infinite;
+}
+
+@keyframes rotate-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .pfp-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -872,6 +938,23 @@ footer {
         height: 100%;
         margin: 0;
         border-radius: 8px;
+    }
+    
+    /* Mobile Filter Buttons */
+    .pfp-filter-buttons {
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 0.1rem 0;
+    }
+    
+    .filter-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .filter-btn img {
+        width: 28px;
+        height: 28px;
     }
     
     /* Mobile Skills Layout */
