@@ -578,10 +578,13 @@ section {
 }
 
 .urbit-iframe {
-    width: 100%;
-    height: 100%;
+    width: 375px;
+    height: 667px;
     border: none;
     border-radius: 0;
+    transform: scaleX(2.2) scaleY(1.1) translate(0px, 0px);
+    transform-origin: top left;
+    margin: 0;
 }
 
 .urbit-link {
