@@ -271,3 +271,67 @@ function closePfpPopup() {
         mainScanline.style.display = 'block';
     }
 }
+
+// PFP Filter Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const pfpCards = document.querySelectorAll('.pfp-card');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filterCategory = this.getAttribute('data-filter');
+            
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Filter PFP cards
+            pfpCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                
+                if (filterCategory === 'tyler' && cardCategory === 'tyler') {
+                    card.style.display = 'block';
+                } else if (filterCategory === 'schizo' && cardCategory === 'schizo') {
+                    card.style.display = 'block';
+                } else if (filterCategory === 'remilia' && cardCategory === 'remilia') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Handle remilia filter - show message if no images available
+            if (filterCategory === 'remilia') {
+                const pfpGrid = document.querySelector('.pfp-grid');
+                const remiliaCards = document.querySelectorAll('.pfp-card[data-category="remilia"]');
+                
+                if (remiliaCards.length === 0) {
+                    // Create temporary message if not exists
+                    let messageCard = document.querySelector('.remilia-message');
+                    if (!messageCard) {
+                        messageCard = document.createElement('div');
+                        messageCard.className = 'remilia-message';
+                        messageCard.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 2rem; color: #00ff41; font-family: "Courier New", monospace;';
+                        messageCard.innerHTML = '<p>Remilia PFPs coming soon...</p>';
+                        pfpGrid.appendChild(messageCard);
+                    }
+                    messageCard.style.display = 'block';
+                } else {
+                    // Hide message if remilia cards exist
+                    const messageCard = document.querySelector('.remilia-message');
+                    if (messageCard) {
+                        messageCard.style.display = 'none';
+                    }
+                }
+            } else {
+                // Hide message for other filters
+                const messageCard = document.querySelector('.remilia-message');
+                if (messageCard) {
+                    messageCard.style.display = 'none';
+                }
+            }
+        });
+    });
+});
