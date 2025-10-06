@@ -939,4 +939,17 @@ footer {
         bottom: -12px;
         right: 0.5rem;
     }
+    
+    /* Mobile Urbit iframe - normal resolution */
+    .urbit-iframe-wrapper {
+        height: 667px;
+        width: 375px;
+        margin: 0 auto;
+    }
+    
+    .urbit-iframe {
+        transform: none;
+        width: 375px;
+        height: 667px;
+    }
 }
