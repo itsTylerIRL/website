@@ -2,7 +2,7 @@
 <html lang="en">
 <script src="https://unpkg.com/embeddable-nfts/dist/nft-card.min.js"></script>
 <head>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyler (in real life)</title>
@@ -382,6 +382,124 @@
 
     <!-- External JavaScript -->
     <script src="script.js"></script>
+    
+    <!-- Drag and Drop Script for PFPs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pfpGrid = document.querySelector('.pfp-grid');
+            const pfpCards = document.querySelectorAll('.pfp-card');
+            let draggedElement = null;
+            let draggedOverElement = null;
+
+            // Add draggable attribute and event listeners to each PFP card
+            pfpCards.forEach(card => {
+                card.draggable = true;
+                card.style.transition = 'transform 0.2s ease, border 0.2s ease';
+
+                // Drag start
+                card.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    this.style.opacity = '0.5';
+                    this.style.transform = 'scale(0.95)';
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                // Drag end
+                card.addEventListener('dragend', function(e) {
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
+                    
+                    // Remove all drag indicators
+                    pfpCards.forEach(c => {
+                        c.classList.remove('drag-over');
+                        c.style.transform = 'scale(1)';
+                    });
+                    
+                    draggedElement = null;
+                    draggedOverElement = null;
+                });
+
+                // Drag over
+                card.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    
+                    if (this !== draggedElement) {
+                        draggedOverElement = this;
+                        this.style.transform = 'scale(1.05)';
+                        this.classList.add('drag-over');
+                    }
+                });
+
+                // Drag leave
+                card.addEventListener('dragleave', function(e) {
+                    this.style.transform = 'scale(1)';
+                    this.classList.remove('drag-over');
+                });
+
+                // Drop
+                card.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    
+                    if (this !== draggedElement && draggedElement) {
+                        // Swap the elements in the DOM
+                        const draggedParent = draggedElement.parentNode;
+                        const draggedSibling = draggedElement.nextSibling === this ? draggedElement : draggedElement.nextSibling;
+                        
+                        // Insert dragged element before the drop target
+                        this.parentNode.insertBefore(draggedElement, this);
+                        
+                        // Insert drop target where dragged element was
+                        draggedParent.insertBefore(this, draggedSibling);
+                        
+                        // Add a subtle animation to indicate the swap
+                        draggedElement.style.animation = 'pfpSwap 0.3s ease';
+                        this.style.animation = 'pfpSwap 0.3s ease';
+                        
+                        setTimeout(() => {
+                            draggedElement.style.animation = '';
+                            this.style.animation = '';
+                        }, 300);
+                    }
+                    
+                    this.style.transform = 'scale(1)';
+                    this.classList.remove('drag-over');
+                });
+            });
+
+            // Add CSS for drag states and animations
+            const dragStyles = document.createElement('style');
+            dragStyles.textContent = `
+                .pfp-card.drag-over {
+                    border-color: #8be9fd !important;
+                    box-shadow: 0 0 15px rgba(139, 233, 253, 0.3) !important;
+                }
+                
+                .pfp-card[draggable="true"] {
+                    cursor: grab;
+                }
+                
+                .pfp-card[draggable="true"]:active {
+                    cursor: grabbing;
+                }
+                
+                @keyframes pfpSwap {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                    100% { transform: scale(1); }
+                }
+                
+                .pfp-card:hover {
+                    transform: translateY(-2px) !important;
+                }
+                
+                .pfp-grid {
+                    user-select: none;
+                }
+            `;
+            document.head.appendChild(dragStyles);
+        });
+    </script>
 </body>
 </html>
 
