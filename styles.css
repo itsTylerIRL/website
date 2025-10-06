@@ -13,7 +13,7 @@ body {
     font-family: 'JetBrains Mono', 'Fira Mono', 'Menlo', 'Consolas', monospace;
     line-height: 1.7;
     color: #eaeaea;
-    background: #161616;
+    background: #000000;
     letter-spacing: 0.01em;
 }
 
@@ -25,7 +25,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background: #161616;
+    background: #000000;
     color: #eaeaea;
     padding: 20px 0;
     text-align: center;
@@ -73,7 +73,7 @@ section {
 
 /* PFP Section */
 .pfp-section {
-    background: #181818;
+    background: #000000;
     border-bottom: 1px solid #232323;
 }
 
@@ -84,7 +84,7 @@ section {
 }
 
 .pfp-card {
-    background: #161616;
+    background: #000000;
     padding: 0;
     border-radius: 8px;
     text-align: center;
@@ -147,7 +147,7 @@ section {
 }
 
 .pfp-popup-content {
-    background: #161616;
+    background: #000000;
     border: 1px solid #232323;
     border-radius: 8px;
     padding: 2rem;
@@ -321,7 +321,7 @@ section {
 }
 
 .skill-card {
-    background: #161616;
+    background: #000000;
     padding: 1rem;
     border-radius: 8px;
     text-align: left;
@@ -407,7 +407,7 @@ section {
 
 /* NFT Section */
 .nfts {
-    background: #111;
+    background: #000000;
 }
 
 .nft-grid {
@@ -418,7 +418,7 @@ section {
 }
 
 .nft-card {
-    background: #181818;
+    background: #000000;
     border-radius: 8px;
     padding: 1rem 0.8rem;
     border: 1px solid #232323;
@@ -539,12 +539,12 @@ section {
 
 /* Urbit Embed Section */
 .urbit-embed {
-    background: #181818;
+    background: #000000;
     padding: 32px 0;
 }
 
 .urbit-container {
-    background: #161616;
+    background: #000000;
     border-radius: 8px;
     padding: 1.2rem 1rem;
     border: 1px solid #232323;
@@ -574,7 +574,7 @@ section {
     border-radius: 0;
     overflow: hidden;
     border: 1px solid #232323;
-    background: #111;
+    background: #000000;
 }
 
 .urbit-iframe {
@@ -628,7 +628,7 @@ section {
 }
 
 .card-container {
-    background: linear-gradient(135deg, #161616 0%, #1a1a1a 100%);
+    background: linear-gradient(135deg, #000000 0%, #000000 100%);
     border: 1px solid #232323;
     border-radius: 8px;
     padding: 1rem;
@@ -785,7 +785,7 @@ section {
 
 /* Footer */
 footer {
-    background: #111;
+    background: #000000;
     color: #bdbdbd;
     text-align: left;
     padding: 1.2rem 0;
