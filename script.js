@@ -229,6 +229,16 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show popup
             popup.classList.add('active');
+            
+            // Show popup scanline and hide main scanline
+            const popupScanline = popup.querySelector('.scanline-popup');
+            const mainScanline = document.querySelector('.scanline');
+            if (popupScanline) {
+                popupScanline.style.display = 'block';
+            }
+            if (mainScanline) {
+                mainScanline.style.display = 'none';
+            }
         });
     });
     
@@ -248,5 +258,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function closePfpPopup() {
-    document.getElementById('pfpPopup').classList.remove('active');
+    const popup = document.getElementById('pfpPopup');
+    popup.classList.remove('active');
+    
+    // Hide popup scanline and show main scanline
+    const popupScanline = popup.querySelector('.scanline-popup');
+    const mainScanline = document.querySelector('.scanline');
+    if (popupScanline) {
+        popupScanline.style.display = 'none';
+    }
+    if (mainScanline) {
+        mainScanline.style.display = 'block';
+    }
 }

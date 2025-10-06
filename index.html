@@ -541,6 +541,16 @@
             const scanline = document.createElement('div');
             scanline.className = 'scanline';
             document.body.appendChild(scanline);
+            
+            // Create popup scanline
+            const popupScanline = document.createElement('div');
+            popupScanline.className = 'scanline-popup';
+            
+            // Add scanline to popup when it opens/closes
+            const popup = document.getElementById('pfpPopup');
+            if (popup) {
+                popup.querySelector('.pfp-popup-content').appendChild(popupScanline);
+            }
 
             const scanlineStyles = document.createElement('style');
             scanlineStyles.textContent = `
@@ -564,6 +574,34 @@
                     z-index: 9999;
                     pointer-events: none;
                 }
+                
+                /* Hide scanline on body when popup is active */
+                .pfp-popup.active ~ .scanline {
+                    display: none;
+                }
+                
+                /* Scanline for popup only */
+                .scanline-popup {
+                    position: absolute;
+                    top: -2px;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(139, 233, 253, 0.3) 20%, 
+                        rgba(139, 233, 253, 0.8) 50%, 
+                        rgba(139, 233, 253, 0.3) 80%, 
+                        transparent 100%);
+                    box-shadow: 
+                        0 0 10px rgba(139, 233, 253, 0.5),
+                        0 0 20px rgba(139, 233, 253, 0.3),
+                        0 0 30px rgba(139, 233, 253, 0.1);
+                    animation: scanline-move-popup 4s linear infinite;
+                    z-index: 10001;
+                    pointer-events: none;
+                    display: none;
+                }
 
                 @keyframes scanline-move {
                     0% {
@@ -578,6 +616,23 @@
                     }
                     100% {
                         top: 100vh;
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes scanline-move-popup {
+                    0% {
+                        top: -2px;
+                        opacity: 0;
+                    }
+                    5% {
+                        opacity: 1;
+                    }
+                    95% {
+                        opacity: 1;
+                    }
+                    100% {
+                        top: 100%;
                         opacity: 0;
                     }
                 }
