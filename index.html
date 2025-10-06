@@ -402,6 +402,28 @@
             let draggedElement = null;
             let draggedOverElement = null;
 
+            // Sound effects for drag and drop
+            const soundEffects = [
+                'assets/sfx/alien-computer-program-blip-03.mp3',
+                'assets/sfx/button-press-synthetic-short-hi-tech-button-beep-zvinbergsa.mp3',
+                'assets/sfx/hi-tech-beepsbuzz-com.mp3',
+                'assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3',
+                'assets/sfx/killswitch.mp3',
+                'assets/sfx/multimedia-page-turn-blip-beep-high-tech-02.mp3',
+                'assets/sfx/poe-laugh.mp3',
+                'assets/sfx/sound-design-multimedia-accent-error-message-negative-chime-beep-high-tech.mp3',
+                'assets/sfx/tech-rollover-5.mp3',
+                'assets/sfx/the-undertaker-bell-meme-sound-effect-soundboard-link.mp3'
+            ];
+
+            // Function to play random sound effect
+            function playRandomSFX() {
+                const randomIndex = Math.floor(Math.random() * soundEffects.length);
+                const audio = new Audio(soundEffects[randomIndex]);
+                audio.volume = 0.3; // Set volume to 30% to not be too loud
+                audio.play().catch(e => console.log('Audio play failed:', e));
+            }
+
             // Add draggable attribute and event listeners to each PFP card
             pfpCards.forEach(card => {
                 card.draggable = true;
@@ -462,6 +484,9 @@
                         
                         // Insert drop target where dragged element was
                         draggedParent.insertBefore(this, draggedSibling);
+                        
+                        // Play random sound effect
+                        playRandomSFX();
                         
                         // Add a subtle animation to indicate the swap
                         draggedElement.style.animation = 'pfpSwap 0.3s ease';
