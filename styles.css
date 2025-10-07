@@ -910,6 +910,61 @@ footer {
 
 /* Animations removed for minimalism */
 
+/* Lazy Loading Styles */
+.pfp-card img.lazy {
+    filter: blur(2px);
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.pfp-card img.loaded {
+    filter: none;
+}
+
+/* Loading placeholder animation */
+.pfp-card img[src*="data:image/svg+xml"] {
+    background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 2s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Performance optimization for animations */
+.pfp-card, .filter-btn, .skill-card, .nft-card {
+    will-change: transform;
+}
+
+.pfp-card:hover, .filter-btn:hover {
+    transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* Preload indicator */
+.preloading {
+    position: relative;
+}
+
+.preloading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid #8be9fd;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero h1 {
