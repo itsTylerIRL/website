@@ -165,4 +165,170 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(dragStyles);
+
+    // Custom Cursor Implementation
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    let isHoveringInteractive = false;
+    let isMouseDown = false;
+    let isDragging = false;
+
+    // Update mouse position
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // Detect if we're dragging (mouse down + movement)
+        if (isMouseDown) {
+            isDragging = true;
+        }
+        
+        // Check if hovering over interactive elements
+        const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
+        isHoveringInteractive = elementUnderCursor && (
+            elementUnderCursor.tagName === 'A' ||
+            elementUnderCursor.tagName === 'BUTTON' ||
+            elementUnderCursor.classList.contains('pfp-card') ||
+            elementUnderCursor.classList.contains('filter-btn') ||
+            elementUnderCursor.classList.contains('project-link') ||
+            elementUnderCursor.classList.contains('contact-link') ||
+            elementUnderCursor.style.cursor === 'pointer' ||
+            window.getComputedStyle(elementUnderCursor).cursor === 'pointer'
+        );
+        
+        // Always maintain hover state when over interactive elements
+        if (isHoveringInteractive) {
+            cursor.classList.add('hover');
+        } else if (!cursor.classList.contains('clicked')) {
+            cursor.classList.remove('hover');
+        }
+    });
+
+    // Smooth cursor animation
+    function updateCursor() {
+        // Add smooth easing to cursor movement
+        const ease = 0.15;
+        cursorX += (mouseX - cursorX) * ease;
+        cursorY += (mouseY - cursorY) * ease;
+        
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        
+        requestAnimationFrame(updateCursor);
+    }
+
+    updateCursor();
+
+    // Function to snap rotations to cardinal directions with animation
+    function snapToCardinalDirections() {
+        // Calculate elapsed time to determine current rotation angles
+        const now = Date.now();
+        const rotationDuration = 2000; // 2 seconds per full rotation
+        
+        // Calculate current angles based on animation timing
+        const outerAngle = ((now / rotationDuration) * 360) % 360;
+        const innerAngle = 360 - ((now / rotationDuration) * 360) % 360; // Counter-clockwise
+        
+        // Find nearest 45° increment for outer square (corners facing NSEW)
+        let outerTargetAngle;
+        const outerRemainder = outerAngle % 90;
+        if (outerRemainder <= 45) {
+            outerTargetAngle = Math.floor(outerAngle / 90) * 90 + 45;
+        } else {
+            outerTargetAngle = (Math.floor(outerAngle / 90) + 1) * 90 + 45;
+        }
+        
+        // Normalize to 0-360 range
+        outerTargetAngle = ((outerTargetAngle % 360) + 360) % 360;
+        
+        // Find nearest 45° increment for inner square
+        let innerTargetAngle;
+        const innerRemainder = innerAngle % 90;
+        if (innerRemainder <= 45) {
+            innerTargetAngle = Math.floor(innerAngle / 90) * 90 + 45;
+        } else {
+            innerTargetAngle = (Math.floor(innerAngle / 90) + 1) * 90 + 45;
+        }
+        
+        // Normalize to 0-360 range
+        innerTargetAngle = ((innerTargetAngle % 360) + 360) % 360;
+        
+        // Set current positions as animation start points
+        cursor.style.setProperty('--current-rotation-outer', `${outerAngle}deg`);
+        cursor.style.setProperty('--current-rotation-inner', `${innerAngle}deg`);
+        
+        // Set target positions for animation end points
+        cursor.style.setProperty('--frozen-rotation-outer', `${outerTargetAngle}deg`);
+        cursor.style.setProperty('--frozen-rotation-inner', `${innerTargetAngle}deg`);
+    }
+
+    // Click animation - snap to cardinal directions and maintain size
+    document.addEventListener('mousedown', () => {
+        isMouseDown = true;
+        isDragging = false; // Reset dragging state
+        cursor.classList.add('clicked');
+        cursor.classList.add('hover'); // Keep enlarged when clicked
+        snapToCardinalDirections();
+    });
+
+    document.addEventListener('mouseup', () => {
+        isMouseDown = false;
+        
+        // Only remove clicked state if we're not in the middle of a drag operation
+        // or if the drag has completed
+        setTimeout(() => {
+            // Small delay to ensure drag operations complete first
+            if (!isMouseDown) {
+                cursor.classList.remove('clicked');
+                cursor.style.removeProperty('--frozen-rotation-outer');
+                cursor.style.removeProperty('--frozen-rotation-inner');
+                
+                // Only remove hover if not actually hovering over interactive element
+                if (!isHoveringInteractive) {
+                    cursor.classList.remove('hover');
+                }
+            }
+            isDragging = false; // Reset dragging state
+        }, 50); // 50ms delay to handle drag completion
+    });
+
+    // Handle drag end events specifically
+    document.addEventListener('dragend', () => {
+        isMouseDown = false;
+        isDragging = false;
+        cursor.classList.remove('clicked');
+        cursor.style.removeProperty('--frozen-rotation-outer');
+        cursor.style.removeProperty('--frozen-rotation-inner');
+        
+        // Only remove hover if not actually hovering over interactive element
+        if (!isHoveringInteractive) {
+            cursor.classList.remove('hover');
+        }
+    });
+
+    // Also handle mouse leave during click/drag
+    document.addEventListener('mouseleave', () => {
+        isMouseDown = false;
+        isDragging = false;
+        cursor.classList.remove('clicked');
+        cursor.classList.remove('hover');
+        cursor.style.removeProperty('--frozen-rotation-outer');
+        cursor.style.removeProperty('--frozen-rotation-inner');
+    });
+
+    // Hide cursor when leaving window
+    document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+    });
 });

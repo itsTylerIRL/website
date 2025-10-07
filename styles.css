@@ -15,6 +15,124 @@ body {
     color: #eaeaea;
     background: #000000;
     letter-spacing: 0.01em;
+    cursor: none !important; /* Hide default cursor */
+}
+
+/* Hide all cursor variations */
+*, *:hover, *:active, *:focus {
+    cursor: none !important;
+}
+
+/* Override specific interactive elements */
+a, button, input, textarea, select, [role="button"], [onclick], .clickable {
+    cursor: none !important;
+}
+
+/* Override any remaining pointer cursors */
+[style*="cursor: pointer"], [style*="cursor:pointer"] {
+    cursor: none !important;
+}
+
+/* Custom Cursor */
+.custom-cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease;
+}
+
+/* Inner rotating square */
+.custom-cursor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #8be9fd;
+    mix-blend-mode: difference;
+    animation: rotateCursorReverse 2s linear infinite;
+    transform-origin: center;
+    transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-cursor.hover::after {
+    background: #ff5555;
+}
+
+.custom-cursor::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #8be9fd;
+    background: transparent;
+    animation: rotateCursor 2s linear infinite;
+    transform-origin: center;
+    transition: width 0.2s ease, height 0.2s ease, top 0.2s ease, left 0.2s ease;
+}
+
+.custom-cursor.hover {
+    width: 16px;
+    height: 16px;
+}
+
+.custom-cursor.hover::before {
+    width: 32px;
+    height: 32px;
+    top: -8px;
+    left: -8px;
+}
+
+.custom-cursor.clicked::before {
+    animation: snapToCardinal 0.2s ease-out forwards;
+    transform: rotate(var(--frozen-rotation-outer, 45deg));
+}
+
+.custom-cursor.clicked::after {
+    animation: snapToCardinalReverse 0.2s ease-out forwards;
+    transform: rotate(var(--frozen-rotation-inner, 45deg));
+}
+
+@keyframes snapToCardinal {
+    from {
+        transform: rotate(var(--current-rotation-outer, 0deg));
+    }
+    to {
+        transform: rotate(var(--frozen-rotation-outer, 45deg));
+    }
+}
+
+@keyframes snapToCardinalReverse {
+    from {
+        transform: rotate(var(--current-rotation-inner, 0deg));
+    }
+    to {
+        transform: rotate(var(--frozen-rotation-inner, 45deg));
+    }
+}
+
+@keyframes rotateCursor {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCursorReverse {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
 }
 
 .container {
@@ -93,7 +211,7 @@ section {
     background: transparent;
     border: 2px solid rgba(139, 233, 253, 0.3);
     padding: 0;
-    cursor: pointer;
+    cursor: none !important;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -157,7 +275,7 @@ section {
     border: 1px solid #232323;
     box-shadow: none;
     transition: border 0.2s, transform 0.2s;
-    cursor: pointer;
+    cursor: none !important;
     overflow: hidden;
     aspect-ratio: 1;
     position: relative;
@@ -258,7 +376,7 @@ section {
     border: 1px solid #232323;
     color: #8be9fd;
     font-size: 1.5rem;
-    cursor: pointer;
+    cursor: none !important;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -729,7 +847,7 @@ section {
 .card-wrapper {
     max-width: 400px;
     margin: 0 auto;
-    cursor: pointer;
+    cursor: none !important;
     transition: transform 0.3s ease;
     text-decoration: none;
     color: inherit;
