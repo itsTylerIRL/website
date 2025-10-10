@@ -166,7 +166,129 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(dragStyles);
 
-    // Custom Cursor Implementation
+    // Skill Cards Drag and Drop Functionality
+    const skillsGrid = document.querySelector('.skills-grid');
+    const skillCards = document.querySelectorAll('.skill-card');
+    let draggedSkillElement = null;
+    let draggedOverSkillElement = null;
+
+    // Add draggable attribute and event listeners to each skill card
+    skillCards.forEach(card => {
+        card.draggable = true;
+        card.style.transition = 'transform 0.2s ease, border 0.2s ease';
+
+        // Add hover sound effect
+        card.addEventListener('mouseenter', function() {
+            playHoverSound();
+        });
+
+        // Drag start
+        card.addEventListener('dragstart', function(e) {
+            draggedSkillElement = this;
+            this.style.opacity = '0.5';
+            this.style.transform = 'scale(0.95)';
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        // Drag end
+        card.addEventListener('dragend', function(e) {
+            this.style.opacity = '1';
+            this.style.transform = 'scale(1)';
+            
+            // Remove all drag indicators
+            skillCards.forEach(c => {
+                c.classList.remove('drag-over');
+                c.style.transform = 'scale(1)';
+            });
+            
+            draggedSkillElement = null;
+            draggedOverSkillElement = null;
+        });
+
+        // Drag over
+        card.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (this !== draggedSkillElement) {
+                draggedOverSkillElement = this;
+                this.style.transform = 'scale(1.05)';
+                this.classList.add('drag-over');
+            }
+        });
+
+        // Drag leave
+        card.addEventListener('dragleave', function(e) {
+            this.style.transform = 'scale(1)';
+            this.classList.remove('drag-over');
+        });
+
+        // Drop
+        card.addEventListener('drop', function(e) {
+            e.preventDefault();
+            
+            if (this !== draggedSkillElement && draggedSkillElement) {
+                // Swap the elements in the DOM
+                const draggedParent = draggedSkillElement.parentNode;
+                const draggedSibling = draggedSkillElement.nextSibling === this ? draggedSkillElement : draggedSkillElement.nextSibling;
+                
+                // Insert dragged element before the drop target
+                this.parentNode.insertBefore(draggedSkillElement, this);
+                
+                // Insert drop target where dragged element was
+                draggedParent.insertBefore(this, draggedSibling);
+                
+                // Play random sound effect
+                playRandomSFX();
+                
+                // Add a subtle animation to indicate the swap
+                draggedSkillElement.style.animation = 'pfpSwap 0.3s ease';
+                this.style.animation = 'pfpSwap 0.3s ease';
+                
+                setTimeout(() => {
+                    draggedSkillElement.style.animation = '';
+                    this.style.animation = '';
+                }, 300);
+            }
+            
+            this.style.transform = 'scale(1)';
+            this.classList.remove('drag-over');
+        });
+    });
+
+    // Add CSS for skill card drag states (reuse existing pfpSwap animation)
+    const skillDragStyles = document.createElement('style');
+    skillDragStyles.textContent = `
+        .skill-card.drag-over {
+            border-color: #8be9fd !important;
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.3) !important;
+        }
+        
+        .skill-card[draggable="true"] {
+            cursor: none !important;
+        }
+        
+        .skill-card[draggable="true"]:active {
+            cursor: none !important;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-2px) !important;
+        }
+        
+        .skills-grid {
+            user-select: none;
+        }
+    `;
+    document.head.appendChild(skillDragStyles);
+
+    // Custom Cursor Implementation - Only on desktop
+    const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isMobile) {
+        return; // Exit early, don't initialize custom cursor on mobile
+    }
+    
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
