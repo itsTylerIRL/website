@@ -283,15 +283,20 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(skillDragStyles);
 
     // Custom Cursor Implementation - Only on desktop
-    const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    console.log('Mobile detection:', isMobile, 'Width:', window.innerWidth, 'UserAgent:', navigator.userAgent);
     
     if (isMobile) {
+        console.log('Mobile detected, skipping custom cursor');
         return; // Exit early, don't initialize custom cursor on mobile
     }
     
+    console.log('Initializing custom cursor');
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
+    console.log('Custom cursor element added to DOM:', cursor);
 
     let mouseX = 0;
     let mouseY = 0;
