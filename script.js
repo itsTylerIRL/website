@@ -293,10 +293,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (filterCategory === 'tyler' && cardCategory === 'tyler') {
                     card.style.display = 'block';
+                    // Apply loading animation if image hasn't been processed
+                    const img = card.querySelector('img, video');
+                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
+                        img.classList.add('lazy');
+                        // Simulate loading delay for animation effect
+                        setTimeout(() => {
+                            img.classList.remove('lazy');
+                            img.classList.add('loaded');
+                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
+                    }
                 } else if (filterCategory === 'schizo' && cardCategory === 'schizo') {
                     card.style.display = 'block';
+                    // Apply loading animation if image hasn't been processed
+                    const img = card.querySelector('img, video');
+                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
+                        img.classList.add('lazy');
+                        // Simulate loading delay for animation effect
+                        setTimeout(() => {
+                            img.classList.remove('lazy');
+                            img.classList.add('loaded');
+                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
+                    }
                 } else if (filterCategory === 'remilia' && cardCategory === 'remilia') {
                     card.style.display = 'block';
+                    // Apply loading animation if image hasn't been processed
+                    const img = card.querySelector('img, video');
+                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
+                        img.classList.add('lazy');
+                        // Simulate loading delay for animation effect
+                        setTimeout(() => {
+                            img.classList.remove('lazy');
+                            img.classList.add('loaded');
+                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
+                    }
                 } else {
                     card.style.display = 'none';
                 }
