@@ -304,12 +304,26 @@ section {
     transform: translateY(-2px);
 }
 
-.pfp-card img {
+.pfp-card img,
+.pfp-card video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
     margin: 0;
+}
+
+/* Drag and drop effects for all PFP cards */
+.pfp-card.drag-over {
+    border: 2px solid #8be9fd !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(139, 233, 253, 0.4);
+}
+
+@keyframes pfpSwap {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(2deg); }
+    100% { transform: scale(1); }
 }
 
 
@@ -1031,12 +1045,14 @@ footer {
 /* Animations removed for minimalism */
 
 /* Lazy Loading Styles */
-.pfp-card img.lazy {
+.pfp-card img.lazy,
+.pfp-card video.lazy {
     filter: blur(2px);
     transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
-.pfp-card img.loaded {
+.pfp-card img.loaded,
+.pfp-card video.loaded {
     filter: none;
 }
 
