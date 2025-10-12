@@ -201,10 +201,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const description = this.getAttribute('data-description');
             const opensea = this.getAttribute('data-opensea');
             const etherscan = this.getAttribute('data-etherscan');
-            const imgSrc = this.querySelector('img').src;
             
-            // Update popup content
-            document.getElementById('popupImage').src = imgSrc;
+            // Check if it's a video or image
+            const mediaElement = this.querySelector('img, video');
+            const isVideo = mediaElement.tagName.toLowerCase() === 'video';
+            const mediaSrc = isVideo ? mediaElement.src : mediaElement.src;
+            
+            // Update popup content - show appropriate element
+            const popupImage = document.getElementById('popupImage');
+            const popupVideo = document.getElementById('popupVideo');
+            
+            if (isVideo) {
+                popupVideo.src = mediaSrc;
+                popupVideo.style.display = 'block';
+                popupImage.style.display = 'none';
+            } else {
+                popupImage.src = mediaSrc;
+                popupImage.style.display = 'block';
+                popupVideo.style.display = 'none';
+            }
             document.getElementById('popupName').textContent = name;
             document.getElementById('popupArtist').textContent = `by ${artist}`;
             document.getElementById('popupDescription').textContent = description;
