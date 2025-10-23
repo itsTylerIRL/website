@@ -268,6 +268,19 @@
         </div>
     </div>
 
+    <!-- Skill Popup -->
+    <div class="skill-popup" id="skillPopup">
+        <div class="skill-popup-content">
+            <button class="skill-close" onclick="closeSkillPopup()">&times;</button>
+            <div class="skill-popup-image">
+                <img id="skillPopupImage" src="" alt="">
+            </div>
+            <h3 id="skillPopupName"></h3>
+            <p class="description" id="skillPopupDescription"></p>
+            <a id="skillPopupLink" href="" target="_blank" class="link-button">Visit Site</a>
+        </div>
+    </div>
+
     <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="container">
@@ -283,283 +296,253 @@
             </div>
             <div class="skills-grid">
                 <!-- Row 1 -->
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="ethereum" data-description="the world computer" data-url="https://ethereum.org/en" data-image="assets/eth.png">
                     <div class="skill-image">
                         <img src="assets/eth.png" alt="Ethereum">
                     </div>
                     <div class="skill-content">
                         <h3>ethereum</h3>
                         <p>the world computer</p>
-                        <a href="https://ethereum.org/en" target="_blank">ethereum.org</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="chainlink" data-description="oracle network" data-url="https://chain.link" data-image="assets/chainlink.png">
                     <div class="skill-image">
                         <img src="assets/chainlink.png" alt="Chainlink">
                     </div>
                     <div class="skill-content">
                         <h3>chainlink</h3>
                         <p>oracle network</p>
-                        <a href="https://chain.link" target="_blank">chain.link</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="~nosfyl" data-description="personal urbit star" data-url="http://urbit.tylerirl.com" data-image="assets/sigil.png">
                     <div class="skill-image">
                         <img src="assets/sigil.png" alt="Urbit Sigil">
                     </div>
                     <div class="skill-content">
                         <h3>~nosfyl</h3>
                         <p>personal urbit star</p>
-                        <a href="http://urbit.tylerirl.com" target="_blank">~nosfyl</a>
                     </div>
                 </div>
                 <!-- Row 2 -->
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="remilia" data-description="digital art collective" data-url="https://www.remilia.org" data-image="assets/cult.png">
                     <div class="skill-image">
                         <img src="assets/cult.png" alt="Remilia Corporation">
                     </div>
                     <div class="skill-content">
                         <h3>remilia</h3>
                         <p>digital art collective</p>
-                        <a href="https://www.remilia.org" target="_blank">remilia.org</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="aave" data-description="defi lending protocol" data-url="https://app.aave.com/" data-image="https://app.aave.com/icons/tokens/aave.svg">
                     <div class="skill-image">
                         <img src="https://app.aave.com/icons/tokens/aave.svg" alt="Aave">
                     </div>
                     <div class="skill-content">
                         <h3>aave</h3>
                         <p>defi lending protocol</p>
-                        <a href="https://app.aave.com/" target="_blank">aave.com</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="nockchain" data-description="urbit blockchain" data-url="https://www.nockchain.org" data-image="assets/nock.jpg">
                     <div class="skill-image">
                         <img src="assets/nock.jpg" alt="Nockchain">
                     </div>
                     <div class="skill-content">
                         <h3>nockchain</h3>
                         <p>urbit blockchain</p>
-                        <a href="https://www.nockchain.org" target="_blank">nockchain.org</a>
                     </div>
                 </div>
                 <!-- Row 3 -->
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="miladycraft" data-description="minecraft server" data-url="https://miladycraft.net" data-image="assets/miladycraft.gif">
                     <div class="skill-image">
                         <img src="assets/miladycraft.gif" alt="Miladycraft">
                     </div>
                     <div class="skill-content">
                         <h3>miladycraft</h3>
                         <p>minecraft server</p>
-                        <a href="https://miladycraft.net" target="_blank">miladycraft</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="aavegotchi" data-description="defi nft game" data-url="https://dapp.aavegotchi.com/u/0x19e02B992c0295D27eeCfF941D5DBFAF85409D86/inventory?itemType=aavegotchis" data-image="https://dapp.aavegotchi.com/favicon.ico">
                     <div class="skill-image">
                         <img src="https://dapp.aavegotchi.com/favicon.ico" alt="Aavegotchi">
                     </div>
                     <div class="skill-content">
                         <h3>aavegotchi</h3>
                         <p>defi nft game</p>
-                        <a href="https://dapp.aavegotchi.com/u/0x19e02B992c0295D27eeCfF941D5DBFAF85409D86/inventory?itemType=aavegotchis" target="_blank">dapp</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="native planet" data-description="urbit hardware" data-url="https://www.nativeplanet.io/hardware" data-image="https://www.nativeplanet.io/favicon.ico">
                     <div class="skill-image">
                         <img src="https://www.nativeplanet.io/favicon.ico" alt="Native Planet" style="filter: invert(1);">
                     </div>
                     <div class="skill-content">
                         <h3>native planet</h3>
                         <p>urbit hardware</p>
-                        <a href="https://www.nativeplanet.io/hardware" target="_blank">nativeplanet.io</a>
                     </div>
                 </div>
                 <!-- Row 4 -->
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="radbro webring" data-description="check the chain" data-url="https://radbro.xyz" data-image="assets/radbro.png">
                     <div class="skill-image">
                         <img src="assets/radbro.png" alt="Radbro Webring">
                     </div>
                     <div class="skill-content">
                         <h3>radbro webring</h3>
                         <p>check the chain</p>
-                        <a href="https://radbro.xyz" target="_blank">radbro.xyz</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="gotchiverse" data-description="metaverse game" data-url="https://gv3d.gotchiverse.io" data-image="https://www.aavegotchi.com/brand/gotchiverse.png">
                     <div class="skill-image">
                         <img src="https://www.aavegotchi.com/brand/gotchiverse.png" alt="Gotchiverse">
                     </div>
                     <div class="skill-content">
                         <h3>gotchiverse</h3>
                         <p>metaverse game</p>
-                        <a href="https://gv3d.gotchiverse.io" target="_blank">play</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="nockpool" data-description="nock mining" data-url="https://nockpool.com/metrics" data-image="https://pbs.twimg.com/profile_images/1920144760913719296/oimcjjew_400x400.jpg">
                     <div class="skill-image">
                         <img src="https://pbs.twimg.com/profile_images/1920144760913719296/oimcjjew_400x400.jpg" alt="Nockpool">
                     </div>
                     <div class="skill-content">
                         <h3>nockpool</h3>
                         <p>nock mining</p>
-                        <a href="https://nockpool.com/metrics" target="_blank">nockpool.com</a>
                     </div>
                 </div>
                 <!-- Row 5 -->
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="VIP" data-description="very internet person" data-url="https://veryinter.net/person" data-image="assets/vip.png">
                     <div class="skill-image">
                         <img src="assets/vip.png" alt="Very Internet Person">
                     </div>
                     <div class="skill-content">
                         <h3>VIP</h3>
                         <p>very internet person</p>
-                        <a href="https://veryinter.net/person" target="_blank">veryinter.net</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="eth chan" data-description="saving ethereum" data-url="https://manifold.xyz/@shiro-15bf3400/contract/172822768" data-image="assets/ethchan.png">
                     <div class="skill-image">
                         <img src="assets/ethchan.png" alt="Eth Chan">
                     </div>
                     <div class="skill-content">
                         <h3>eth chan</h3>
                         <p>saving ethereum</p>
-                        <a href="https://manifold.xyz/@shiro-15bf3400/contract/172822768" target="_blank">manifold</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="eth phone" data-description="freedom factory" data-url="https://shop.freedomfactory.io/products/dgen1" data-image="assets/dgen1.gif">
                     <div class="skill-image">
                         <img src="assets/dgen1.gif" alt="ETH Phone">
                     </div>
                     <div class="skill-content">
                         <h3>eth phone</h3>
                         <p>freedom factory</p>
-                        <a href="https://shop.freedomfactory.io/products/dgen1" target="_blank">shop</a>
                     </div>
                 </div>
                 <!-- Row 6 -->
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="schizoposters" data-description="antichrist haters" data-url="https://schizoposters.xyz" data-image="assets/schizo_logo.png">
                     <div class="skill-image">
                         <img src="assets/schizo_logo.png" alt="Schizoposters">
                     </div>
                     <div class="skill-content">
                         <h3>schizoposters</h3>
                         <p>antichrist haters</p>
-                        <a href="https://schizoposters.xyz" target="_blank">schizoposters.xyz</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="curve" data-description="defi exchange" data-url="https://curve.fi" data-image="https://curve.fi/favicon.ico">
                     <div class="skill-image">
                         <img src="https://curve.fi/favicon.ico" alt="Curve Finance">
                     </div>
                     <div class="skill-content">
                         <h3>curve</h3>
                         <p>defi exchange</p>
-                        <a href="https://curve.fi" target="_blank">curve.fi</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="pwnagotchi" data-description="wifi hacking pet" data-url="https://pwnagotchi.ai" data-image="assets/pwn.jpg">
                     <div class="skill-image">
                         <img src="assets/pwn.jpg" alt="Pwnagotchi" style="filter: invert(1);">
                     </div>
                     <div class="skill-content">
                         <h3>pwnagotchi</h3>
                         <p>wifi hacking pet</p>
-                        <a href="https://pwnagotchi.ai" target="_blank">pwnagotchi.ai</a>
                     </div>
                 </div>
                 <!-- Row 7 -->
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="retart" data-description="retart world" data-url="https://opensea.io/collection/retarted" data-image="assets/retart.png">
                     <div class="skill-image">
                         <img src="assets/retart.png" alt="Retart">
                     </div>
                     <div class="skill-content">
                         <h3>retart</h3>
                         <p>retart world</p>
-                        <a href="https://opensea.io/collection/retarted" target="_blank">opensea</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="usgc" data-description="design studio" data-url="https://usgraphics.com" data-image="https://pbs.twimg.com/profile_images/1959880828621885440/AevS5y-8_400x400.png">
                     <div class="skill-image">
                         <img src="https://pbs.twimg.com/profile_images/1959880828621885440/AevS5y-8_400x400.png" alt="US Graphics Company">
                     </div>
                     <div class="skill-content">
                         <h3>usgc</h3>
                         <p>design studio</p>
-                        <a href="https://usgraphics.com" target="_blank">usgraphics.com</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="crypto">
+                <div class="skill-card" data-category="crypto" data-name="trezor" data-description="hardware wallet" data-url="https://trezor.io" data-image="https://trezor.io/favicon.ico">
                     <div class="skill-image">
                         <img src="https://trezor.io/favicon.ico" alt="Trezor">
                     </div>
                     <div class="skill-content">
                         <h3>trezor</h3>
                         <p>hardware wallet</p>
-                        <a href="https://trezor.io" target="_blank">trezor.io</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="arch linux" data-description="linux distribution" data-url="https://archlinux.org" data-image="https://archlinux.org/favicon.ico">
                     <div class="skill-image">
                         <img src="https://archlinux.org/favicon.ico" alt="Arch Linux">
                     </div>
                     <div class="skill-content">
                         <h3>arch linux</h3>
                         <p>linux distribution</p>
-                        <a href="https://archlinux.org" target="_blank">archlinux.org</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="KoL" data-description="browser mmo" data-url="https://www.kingdomofloathing.com/" data-image="https://www.kingdomofloathing.com/favicon.ico">
                     <div class="skill-image">
                         <img src="https://www.kingdomofloathing.com/favicon.ico" alt="Kingdom of Loathing">
                     </div>
                     <div class="skill-content">
                         <h3>KoL</h3>
                         <p>browser mmo</p>
-                        <a href="https://www.kingdomofloathing.com/" target="_blank">kingdomofloathing.com</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="fun">
+                <div class="skill-card" data-category="fun" data-name="miladychan" data-description="image board" data-url="https://boards.miladychan.org/all/catalog" data-image="https://miladychan.org/favicon/apple-touch-icon.png">
                     <div class="skill-image">
                         <img src="https://miladychan.org/favicon/apple-touch-icon.png" alt="Milady Chan">
                     </div>
                     <div class="skill-content">
                         <h3>miladychan</h3>
                         <p>image board</p>
-                        <a href="https://boards.miladychan.org/all/catalog" target="_blank">miladychan.org</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="lunarvim" data-description="neovim config" data-url="https://www.lunarvim.org" data-image="https://www.lunarvim.org/img/lunarvim_icon.png">
                     <div class="skill-image">
                         <img src="https://www.lunarvim.org/img/lunarvim_icon.png" alt="LunarVim">
                     </div>
                     <div class="skill-content">
                         <h3>lunarvim</h3>
                         <p>neovim config</p>
-                        <a href="https://www.lunarvim.org" target="_blank">lunarvim.org</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="starship" data-description="shell prompt" data-url="https://starship.rs" data-image="https://starship.rs/icon.png">
                     <div class="skill-image">
                         <img src="https://starship.rs/icon.png" alt="Starship">
                     </div>
                     <div class="skill-content">
                         <h3>starship</h3>
                         <p>shell prompt</p>
-                        <a href="https://starship.rs" target="_blank">starship.rs</a>
                     </div>
                 </div>
-                <div class="skill-card" data-category="tech">
+                <div class="skill-card" data-category="tech" data-name="home assistant" data-description="smart home platform" data-url="https://www.home-assistant.io" data-image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/New_Home_Assistant_logo.svg/600px-New_Home_Assistant_logo.svg.png">
                     <div class="skill-image">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/New_Home_Assistant_logo.svg/600px-New_Home_Assistant_logo.svg.png" alt="Home Assistant">
                     </div>
                     <div class="skill-content">
                         <h3>home assistant</h3>
                         <p>smart home platform</p>
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <a href="https://www.home-assistant.io" target="_blank" style="color: #8be9fd; text-decoration: none; font-size: 0.85rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8be9fd'">site</a>
-                            <a href="http://homeassistant.local:8123/dashboard-home/0" target="_blank" style="color: #8be9fd; text-decoration: none; font-size: 0.85rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8be9fd'">local</a>
-                        </div>
                     </div>
                 </div>
                 
@@ -744,11 +727,11 @@
                     // Filter cards
                     skillCards.forEach(card => {
                         if (filter === 'all') {
-                            card.style.display = 'block';
+                            card.style.display = 'flex';
                         } else {
                             const cardCategory = card.getAttribute('data-category');
                             if (cardCategory === filter) {
-                                card.style.display = 'block';
+                                card.style.display = 'flex';
                             } else {
                                 card.style.display = 'none';
                             }
@@ -773,7 +756,49 @@
                     }
                 });
             });
+            
+            // Skill card popup functionality
+            const skillCardsForPopup = document.querySelectorAll('.skill-card');
+            const skillPopup = document.getElementById('skillPopup');
+            
+            skillCardsForPopup.forEach(card => {
+                card.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    const description = this.getAttribute('data-description');
+                    const url = this.getAttribute('data-url');
+                    const image = this.getAttribute('data-image');
+                    
+                    // Update popup content
+                    document.getElementById('skillPopupName').textContent = name;
+                    document.getElementById('skillPopupDescription').textContent = description;
+                    document.getElementById('skillPopupLink').href = url;
+                    document.getElementById('skillPopupImage').src = image;
+                    
+                    // Show popup
+                    skillPopup.classList.add('active');
+                });
+            });
+            
+            // Close popup when clicking outside content
+            skillPopup.addEventListener('click', function(e) {
+                if (e.target === skillPopup) {
+                    closeSkillPopup();
+                }
+            });
+            
+            // Close with escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && skillPopup.classList.contains('active')) {
+                    closeSkillPopup();
+                }
+            });
         });
+        
+        // Close skill popup function
+        function closeSkillPopup() {
+            const popup = document.getElementById('skillPopup');
+            popup.classList.remove('active');
+        }
     </script>
 </body>
 </html>
