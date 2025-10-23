@@ -565,13 +565,13 @@ section {
 /* Skills Section */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.2rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
 }
 
 .skill-card {
     background: #000000;
-    padding: 1rem;
+    padding: 0.8rem;
     border-radius: 8px;
     text-align: left;
     border: 1px solid #232323;
@@ -579,9 +579,10 @@ section {
     transition: border 0.2s;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     position: relative;
     overflow: hidden;
+    min-height: 80px;
 }
 
 .skill-card::before {
@@ -610,8 +611,8 @@ section {
 
 .skill-image {
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
 }
 
 .skill-image img {
@@ -625,29 +626,30 @@ section {
 }
 
 .skill-card h3 {
-    margin: 0;
+    margin: 0 0 0.2rem 0;
     color: #8be9fd;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
 .skill-card p {
-    margin: 0;
+    margin: 0 0 0.3rem 0;
     color: #bdbdbd;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
 }
 
 .skill-card a {
     color: #8be9fd;
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.85rem;
-    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.4rem;
     border: 1px solid #232323;
     border-radius: 0;
     transition: border 0.2s;
     align-self: flex-start;
-    margin-top: 0.2rem;
+    margin-top: 0;
 }
 
 .skill-card a:hover {
@@ -1104,6 +1106,14 @@ footer {
 }
 
 /* Responsive Design */
+/* Tablet and Medium Screen Adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 1.3rem;
@@ -1157,37 +1167,45 @@ footer {
     }
     
     .skill-card {
-        padding: 0.8rem;
-        flex-direction: column;
-        text-align: center;
+        padding: 0.6rem;
         gap: 0.6rem;
+        min-height: 70px;
     }
     
     .skill-image {
-        width: 36px;
-        height: 36px;
-        align-self: center;
+        width: 32px;
+        height: 32px;
     }
     
     .skill-content {
-        text-align: center;
+        flex: 1;
     }
     
     .skill-card h3 {
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.1rem;
     }
     
     .skill-card p {
-        font-size: 0.8rem;
-        margin-bottom: 0.4rem;
+        font-size: 0.7rem;
+        margin-bottom: 0.2rem;
+        line-height: 1.1;
     }
     
     .skill-card a {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    /* Mobile header layout */
+    .skills-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.8rem !important;
+    }
+    
+    .skills-filter-buttons {
         align-self: center;
-        margin-top: 0;
     }
     
     /* Mobile popup adjustments */

@@ -271,10 +271,19 @@
     <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="container">
-            <h2 class="section-title">things I like</h2>
+            <div class="skills-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 class="section-title" style="margin: 0;">things I like</h2>
+                <!-- Skills Filter Buttons -->
+                <div class="skills-filter-buttons" style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                    <button class="skills-filter-btn active" data-filter="all" style="background: #232323; border: 1px solid #8be9fd; color: #8be9fd; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem;">All</button>
+                    <button class="skills-filter-btn" data-filter="crypto" style="background: #232323; border: 1px solid #555; color: #bdbdbd; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem;">Crypto</button>
+                    <button class="skills-filter-btn" data-filter="tech" style="background: #232323; border: 1px solid #555; color: #bdbdbd; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem;">Tech</button>
+                    <button class="skills-filter-btn" data-filter="fun" style="background: #232323; border: 1px solid #555; color: #bdbdbd; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem;">Fun</button>
+                </div>
+            </div>
             <div class="skills-grid">
                 <!-- Row 1 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="assets/eth.png" alt="Ethereum">
                     </div>
@@ -284,7 +293,7 @@
                         <a href="https://ethereum.org/en" target="_blank">ethereum.org</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="assets/chainlink.png" alt="Chainlink">
                     </div>
@@ -294,7 +303,7 @@
                         <a href="https://chain.link" target="_blank">chain.link</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="assets/sigil.png" alt="Urbit Sigil">
                     </div>
@@ -305,7 +314,7 @@
                     </div>
                 </div>
                 <!-- Row 2 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/cult.png" alt="Remilia Corporation">
                     </div>
@@ -315,7 +324,7 @@
                         <a href="https://www.remilia.org" target="_blank">remilia.org</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://app.aave.com/icons/tokens/aave.svg" alt="Aave">
                     </div>
@@ -325,7 +334,7 @@
                         <a href="https://app.aave.com/" target="_blank">aave.com</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="assets/nock.jpg" alt="Nockchain">
                     </div>
@@ -336,7 +345,7 @@
                     </div>
                 </div>
                 <!-- Row 3 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/miladycraft.gif" alt="Miladycraft">
                     </div>
@@ -346,7 +355,7 @@
                         <a href="https://miladycraft.net" target="_blank">miladycraft</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://dapp.aavegotchi.com/favicon.ico" alt="Aavegotchi">
                     </div>
@@ -356,7 +365,7 @@
                         <a href="https://dapp.aavegotchi.com/u/0x19e02B992c0295D27eeCfF941D5DBFAF85409D86/inventory?itemType=aavegotchis" target="_blank">dapp</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="https://www.nativeplanet.io/favicon.ico" alt="Native Planet" style="filter: invert(1);">
                     </div>
@@ -367,7 +376,7 @@
                     </div>
                 </div>
                 <!-- Row 4 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="assets/radbro.png" alt="Radbro Webring">
                     </div>
@@ -377,7 +386,7 @@
                         <a href="https://radbro.xyz" target="_blank">radbro.xyz</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://www.aavegotchi.com/brand/gotchiverse.png" alt="Gotchiverse">
                     </div>
@@ -387,7 +396,7 @@
                         <a href="https://gv3d.gotchiverse.io" target="_blank">play</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://pbs.twimg.com/profile_images/1920144760913719296/oimcjjew_400x400.jpg" alt="Nockpool">
                     </div>
@@ -398,7 +407,7 @@
                     </div>
                 </div>
                 <!-- Row 5 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/vip.png" alt="Very Internet Person">
                     </div>
@@ -408,7 +417,7 @@
                         <a href="https://veryinter.net/person" target="_blank">veryinter.net</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/ethchan.png" alt="Eth Chan">
                     </div>
@@ -418,7 +427,7 @@
                         <a href="https://manifold.xyz/@shiro-15bf3400/contract/172822768" target="_blank">manifold</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="assets/dgen1.gif" alt="ETH Phone">
                     </div>
@@ -429,7 +438,7 @@
                     </div>
                 </div>
                 <!-- Row 6 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/schizo_logo.png" alt="Schizoposters">
                     </div>
@@ -439,7 +448,7 @@
                         <a href="https://schizoposters.xyz" target="_blank">schizoposters.xyz</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://curve.fi/favicon.ico" alt="Curve Finance">
                     </div>
@@ -449,7 +458,7 @@
                         <a href="https://curve.fi" target="_blank">curve.fi</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="assets/pwn.jpg" alt="Pwnagotchi" style="filter: invert(1);">
                     </div>
@@ -460,7 +469,7 @@
                     </div>
                 </div>
                 <!-- Row 7 -->
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="assets/retart.png" alt="Retart">
                     </div>
@@ -470,7 +479,7 @@
                         <a href="https://opensea.io/collection/retarted" target="_blank">opensea</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="https://pbs.twimg.com/profile_images/1959880828621885440/AevS5y-8_400x400.png" alt="US Graphics Company">
                     </div>
@@ -480,7 +489,7 @@
                         <a href="https://usgraphics.com" target="_blank">usgraphics.com</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="crypto">
                     <div class="skill-image">
                         <img src="https://trezor.io/favicon.ico" alt="Trezor">
                     </div>
@@ -490,7 +499,7 @@
                         <a href="https://trezor.io" target="_blank">trezor.io</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="https://archlinux.org/favicon.ico" alt="Arch Linux">
                     </div>
@@ -500,7 +509,7 @@
                         <a href="https://archlinux.org" target="_blank">archlinux.org</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="https://www.kingdomofloathing.com/favicon.ico" alt="Kingdom of Loathing">
                     </div>
@@ -510,7 +519,7 @@
                         <a href="https://www.kingdomofloathing.com/" target="_blank">kingdomofloathing.com</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="fun">
                     <div class="skill-image">
                         <img src="https://miladychan.org/favicon/apple-touch-icon.png" alt="Milady Chan">
                     </div>
@@ -520,7 +529,7 @@
                         <a href="https://boards.miladychan.org/all/catalog" target="_blank">miladychan.org</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="https://www.lunarvim.org/img/lunarvim_icon.png" alt="LunarVim">
                     </div>
@@ -530,7 +539,7 @@
                         <a href="https://www.lunarvim.org" target="_blank">lunarvim.org</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="https://starship.rs/icon.png" alt="Starship">
                     </div>
@@ -540,7 +549,7 @@
                         <a href="https://starship.rs" target="_blank">starship.rs</a>
                     </div>
                 </div>
-                <div class="skill-card">
+                <div class="skill-card" data-category="tech">
                     <div class="skill-image">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/New_Home_Assistant_logo.svg/600px-New_Home_Assistant_logo.svg.png" alt="Home Assistant">
                     </div>
@@ -553,6 +562,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </section>
@@ -708,6 +718,63 @@
     <script src="performance.js"></script>
     <script src="interactions.js"></script>
     <script src="effects.js"></script>
+    
+    <!-- Skills Filter JavaScript -->
+    <script>
+        // Skills filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const skillsFilterButtons = document.querySelectorAll('.skills-filter-btn');
+            const skillCards = document.querySelectorAll('.skill-card');
+            
+            skillsFilterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update button states
+                    skillsFilterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.style.borderColor = '#555';
+                        btn.style.color = '#bdbdbd';
+                    });
+                    
+                    this.classList.add('active');
+                    this.style.borderColor = '#8be9fd';
+                    this.style.color = '#8be9fd';
+                    
+                    // Filter cards
+                    skillCards.forEach(card => {
+                        if (filter === 'all') {
+                            card.style.display = 'block';
+                        } else {
+                            const cardCategory = card.getAttribute('data-category');
+                            if (cardCategory === filter) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Add hover effects
+            skillsFilterButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.borderColor = '#8be9fd';
+                        this.style.color = '#fff';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.borderColor = '#555';
+                        this.style.color = '#bdbdbd';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 
