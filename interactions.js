@@ -458,4 +458,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('mouseleave', () => {
         cursor.style.opacity = '0';
     });
+
+    // Add hover sound effects to navigation cards on index page
+    const navCards = document.querySelectorAll('.nav-card');
+    console.log('Found nav cards:', navCards.length);
+    navCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            console.log('Nav card hover detected');
+            playHoverSound();
+        });
+    });
+
+    // Add hover sound effects to contact icons on index page
+    const contactIcons = document.querySelectorAll('.contact-icon-link');
+    console.log('Found contact icons:', contactIcons.length);
+    contactIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            console.log('Contact icon hover detected');
+            playHoverSound();
+        });
+    });
 });
