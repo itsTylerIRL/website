@@ -61,7 +61,7 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
 }
 
 .custom-cursor.hover::after {
-    background: #ff5555;
+    background: #8be9fd;
 }
 
 .custom-cursor::before {
@@ -167,7 +167,7 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
 
 /* Sections */
 section {
-    padding: 32px 0;
+    padding: 16px 0;
 }
 
 .section-title {
@@ -567,6 +567,7 @@ section {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
+    grid-auto-flow: dense;
 }
 
 .skill-card {
@@ -651,12 +652,28 @@ section {
 }
 
 .skill-card {
-    cursor: pointer;
+    cursor: grab;
+    user-select: none;
+}
+
+.skill-card:active {
+    cursor: grabbing;
 }
 
 .skill-card:hover {
     border: 1px solid #8be9fd;
     transform: translateY(-1px);
+}
+
+.skill-card.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg) scale(0.95);
+    z-index: 1000;
+}
+
+.skill-card.drag-over {
+    border: 2px solid #8be9fd;
+    background: rgba(139, 233, 253, 0.05);
 }
 
 /* Skill Popup */
@@ -749,7 +766,54 @@ section {
 }
 
 .skill-close:hover {
-    color: #ff5555;
+    color: #8be9fd;
+}
+
+/* KoL Badge Large Card */
+.kol-badge {
+    grid-column: span 3 !important;
+    grid-row: span 2 !important;
+    height: 220px !important;
+    background: #000000 !important;
+    border: 1px solid #232323;
+    padding: 1rem;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    transition: border 0.2s, transform 0.2s;
+}
+
+.kol-badge:active {
+    cursor: grabbing;
+}
+
+.kol-badge.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.kol-link {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.kol-image {
+    filter: invert(1) hue-rotate(180deg);
+    border: 0;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .skill-card a:hover {
@@ -1210,6 +1274,7 @@ footer {
 @media (max-width: 1024px) and (min-width: 769px) {
     .skills-grid {
         grid-template-columns: repeat(3, 1fr);
+        grid-auto-flow: dense;
     }
 }
 
@@ -1264,6 +1329,7 @@ footer {
     .skills-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.8rem;
+        grid-auto-flow: dense;
     }
     
     .skill-card {
@@ -1318,6 +1384,19 @@ footer {
     
     .skills-filter-buttons {
         align-self: center;
+    }
+    
+    /* Mobile KoL Badge */
+    .kol-badge {
+        grid-column: span 2 !important;
+        grid-row: span 2 !important;
+        height: 160px !important;
+        padding: 0.5rem;
+    }
+    
+    .kol-image {
+        max-width: 95%;
+        max-height: 95%;
     }
     
     /* Mobile skill popup adjustments */
@@ -1479,5 +1558,509 @@ footer {
     
     .custom-cursor {
         display: none !important;
+    }
+}
+
+/* Page Navigation Styles */
+.page-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+}
+
+.nav-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #eaeaea;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.nav-home:hover {
+    color: #8be9fd;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Guest Book Styles */
+.guestbook {
+    padding: 4rem 0 2rem 0;
+}
+
+.urbit-embed {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.embed-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #8be9fd;
+    margin-bottom: 1rem;
+}
+
+.embed-description {
+    color: #aaa;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.urbit-info {
+    margin-bottom: 1rem;
+}
+
+.urbit-id {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(139, 233, 253, 0.1);
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.urbit-prefix {
+    color: #8be9fd;
+    font-weight: bold;
+}
+
+.urbit-name {
+    color: #eaeaea;
+    margin-left: 0.2rem;
+}
+
+.urbit-description {
+    color: #aaa;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.iframe-container {
+    width: 100%;
+    height: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 2rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.urbit-chat-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.urbit-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.urbit-link {
+    color: #8be9fd;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.urbit-link:hover {
+    background: rgba(139, 233, 253, 0.1);
+    border-color: #8be9fd;
+}
+
+/* Contact Methods */
+.contact-methods {
+    margin-bottom: 1.5rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.1), transparent);
+    transition: left 0.5s;
+    z-index: 1;
+}
+
+.contact-card:hover {
+    border-color: rgba(139, 233, 253, 0.5);
+    background: rgba(139, 233, 253, 0.05);
+    transform: translateY(-2px);
+}
+
+.contact-card:hover::before {
+    left: 100%;
+}
+
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    color: #8be9fd;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.contact-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.contact-info {
+    position: relative;
+    z-index: 2;
+}
+
+.contact-info h4 {
+    font-size: 1rem;
+    color: #eaeaea;
+    margin-bottom: 0.3rem;
+}
+
+.contact-info a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #8be9fd;
+}
+
+.contact-info span {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Message Form */
+.message-form {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: #eaeaea;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #8be9fd;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #8be9fd, #50fa7b);
+    border: none;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 233, 253, 0.3);
+}
+
+/* Page Navigation Cards */
+.page-navigation {
+    margin: 2rem 0 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #8be9fd;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.nav-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.nav-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.1), transparent);
+    transition: left 0.5s;
+    z-index: 1;
+}
+
+.nav-card:hover {
+    border-color: rgba(139, 233, 253, 0.5);
+    background: rgba(139, 233, 253, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 233, 253, 0.15);
+}
+
+.nav-card:hover::before {
+    left: 100%;
+}
+
+.nav-card-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 233, 253, 0.1);
+    position: relative;
+    z-index: 2;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.nav-card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.nav-card-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #eaeaea;
+    margin-bottom: 0.5rem;
+}
+
+.nav-card-content p {
+    font-size: 0.9rem;
+    color: #aaa;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Responsive adjustments for new pages */
+@media (max-width: 768px) {
+    .guestbook {
+        padding: 3rem 0 1.5rem 0;
+    }
+    
+    .urbit-embed,
+    .message-form {
+        padding: 1.5rem;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .urbit-links {
+        flex-direction: column;
+    }
+    
+    .urbit-link {
+        text-align: center;
+    }
+    
+    .iframe-container {
+        height: 400px;
+    }
+    
+    .nav-links {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-card {
+        padding: 1.25rem;
+    }
+    
+    .nav-card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Floating Return Home Button */
+.floating-home {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.floating-home:hover {
+    border-color: rgba(139, 233, 253, 0.8);
+    background: rgba(139, 233, 253, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 233, 253, 0.15);
+}
+
+.floating-home-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.floating-home-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.floating-home-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.floating-home-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.floating-home-text h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #eaeaea;
+    margin: 0 0 0.2rem 0;
+}
+
+.floating-home-text p {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin: 0;
+}
+
+/* Mobile adjustments for floating button */
+@media (max-width: 768px) {
+    .floating-home {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.8rem;
+    }
+    
+    .floating-home-content {
+        gap: 0.5rem;
+    }
+    
+    .floating-home-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .floating-home-text h4 {
+        font-size: 0.8rem;
+    }
+    
+    .floating-home-text p {
+        font-size: 0.7rem;
     }
 }
