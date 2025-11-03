@@ -149,7 +149,7 @@ function createScanline() {
 
     // Add scanline border interaction
     function addScanlineInteraction() {
-        const elements = document.querySelectorAll('.skill-card, .nft-card, .card-container');
+        const elements = document.querySelectorAll('.skill-card, .nft-card, .card-container, .nav-card, .contact-card');
         
         function updateScanlineEffects() {
             const scanline = document.querySelector('.scanline');
