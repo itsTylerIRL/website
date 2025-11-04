@@ -1182,12 +1182,16 @@ section {
 
 .dual-card-container .qr-section {
     display: flex;
-    flex-direction: row; /* Horizontal layout */
-    align-items: flex-start; /* Align to top for multi-line text */
-    gap: 0.4rem; /* Tighter gap to prevent overflow */
+    flex-direction: row; /* Horizontal layout - QR and text side by side */
+    align-items: center; /* Vertically center both elements */
+    justify-content: center; /* Center horizontally within the section */
+    gap: 0.5rem; /* Space between QR code and text */
     width: 100%;
     max-width: 100%; /* Ensure it doesn't exceed container */
     overflow: hidden; /* Prevent text overflow */
+    background-color: #1a1a1a; /* Very dark background, almost black */
+    padding: 0.5rem; /* Add padding around the content */
+    border-radius: 4px; /* Slightly rounded corners */
 }
 
 .dual-card-container .qr-section .code {
@@ -1198,23 +1202,20 @@ section {
     width: 32px; /* Bigger QR code */
     height: 32px;
     margin-left: 0.1rem; /* Less margin to prevent overflow */
+    filter: invert(1); /* Invert QR code to white on dark background */
 }
 
 .dual-card-container .card-description {
     font-size: 0.6rem; /* Slightly larger for readability */
-    color: #bbb;
-    text-align: left;
+    color: #bbb; /* Light text for dark background to match page theme */
     margin: 0;
-    line-height: 1.2;
-    flex: 1; /* Take remaining space */
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem; /* Small gap between lines */
-}
-
-.dual-card-container .card-description div {
-    margin: 0;
-    white-space: nowrap; /* Keep each line on one row */
+    line-height: 1.3; /* Better line spacing for paragraph text */
+    max-width: 80px; /* Constrain width for wrapping next to QR */
+    word-wrap: break-word; /* Allow text to wrap */
+    overflow-wrap: break-word; /* Ensure text breaks properly */
+    hyphens: auto; /* Add hyphenation for better breaks */
+    text-align: left; /* Left align for better readability when wrapped */
+    flex: 1; /* Take remaining space next to QR code */
 }
 
 .dual-card-container .code {
