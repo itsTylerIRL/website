@@ -147,12 +147,36 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
     padding: 0 16px;
 }
 
+/* Hero container for index page - top aligned compact layout */
+.main-content .hero:only-of-type .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* Hero container for subpages - simple layout */
+.main-content .hero:not(:only-of-type) .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
 /* Hero Section */
 .hero {
     background: #000000;
     color: #eaeaea;
-    padding: 20px 0;
+    padding: 8px 0;
     text-align: center;
+}
+
+/* Index page hero - top aligned like other pages */
+.main-content .hero:only-of-type {
+    padding: 4px 0;
+}
+
+/* Subpage hero - compact */
+.main-content .hero:not(:only-of-type) {
+    padding: 4px 0;
 }
 
 .hero h1 {
@@ -170,13 +194,13 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
 
 /* Sections */
 section {
-    padding: 16px 0;
+    padding: 8px 0;
 }
 
 .section-title {
     text-align: left;
     font-size: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     color: #eaeaea;
     font-weight: 600;
     border-left: 3px solid #8be9fd;
@@ -191,12 +215,13 @@ section {
 
 .about-image {
     text-align: left;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* PFP Section */
 .pfp-section {
     background: #000000;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 /* PFP Filter Buttons */
@@ -825,13 +850,14 @@ section {
 /* NFT Section */
 .nfts {
     background: #000000;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 .nft-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.2rem;
-    margin-top: 1.2rem;
+    margin-top: 0.5rem;
 }
 
 .nft-card {
@@ -1205,6 +1231,8 @@ section {
 /* Main content area */
 .main-content {
     flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Footer */
@@ -1212,8 +1240,9 @@ footer {
     background: #000000;
     color: #bdbdbd;
     text-align: left;
-    padding: 1.2rem 0;
+    padding: 0.6rem 0;
     flex-shrink: 0;
+    margin-top: auto; /* Ensures footer stays at bottom */
 }
 
 /* Animations removed for minimalism */
@@ -1276,8 +1305,26 @@ footer {
 }
 
 /* Responsive Design */
+/* Large screen adjustments - maintain top alignment */
+@media (min-width: 1200px) {
+    .hero {
+        padding: 6px 0; /* Slightly more padding on large screens */
+    }
+}
+
+/* Ultra-wide/heavy zoom out adjustments - maintain top alignment */
+@media (min-width: 1400px) and (min-height: 800px) {
+    .hero {
+        padding: 8px 0; /* Still compact but with minimal breathing room */
+    }
+}
+
 /* Tablet and Medium Screen Adjustments */
 @media (max-width: 1024px) and (min-width: 769px) {
+    .hero {
+        padding: 4px 0; /* Maintain compact padding on tablets */
+    }
+    
     .skills-grid {
         grid-template-columns: repeat(3, 1fr);
         grid-auto-flow: dense;
@@ -1286,6 +1333,10 @@ footer {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    .hero {
+        padding: 2px 0; /* Very minimal padding on mobile */
+    }
+    
     .hero h1 {
         font-size: 1.3rem;
     }
@@ -1622,15 +1673,15 @@ footer {
 
 /* Guest Book Styles */
 .guestbook {
-    padding: 4rem 0 2rem 0;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 .urbit-embed {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .embed-title {
@@ -1717,16 +1768,16 @@ footer {
 
 /* Contact Methods */
 .contact-methods {
-    margin-bottom: 1.5rem;
-    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.1rem;
 }
 
 .contact-grid {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    gap: 1rem;
+    margin-top: 0.1rem;
 }
 
 .contact-card {
@@ -1929,8 +1980,8 @@ footer {
 
 /* Page Navigation Cards */
 .page-navigation {
-    margin: 2rem 0 0 0;
-    padding-top: 1.5rem;
+    margin: 0.5rem 0 0 0;
+    padding-top: 0.4rem;
 }
 
 .nav-section-title {
