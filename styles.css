@@ -1094,7 +1094,7 @@ section {
 
 /* Compact Remilia card in dual layout - Nav card style */
 .dual-card-container .card-container {
-    padding: 1.5rem; /* Match navigation card padding for alignment */
+    padding: 0.6rem 1.5rem; /* Minimal vertical, normal horizontal to match nav cards */
     font-size: 1rem;
     display: flex;
     flex-direction: column;
@@ -1108,7 +1108,7 @@ section {
     display: grid;
     grid-template-columns: 60px 1fr 185px; /* Slightly smaller right column to prevent overflow */
     align-items: center;
-    gap: 0.6rem; /* Even tighter gap to save space */
+    gap: 0.2rem; /* Much tighter gap for slim appearance */
     flex: 1;
     overflow: hidden; /* Prevent grid overflow */
 }
@@ -1132,7 +1132,7 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.1rem; /* Very compact spacing */
+    gap: 0.05rem; /* Ultra compact spacing for slimmer card */
     grid-column: 2; /* Second column */
     text-align: left; /* Match navigation card alignment */
 }
@@ -1142,7 +1142,7 @@ section {
 .dual-card-container .card-info {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem; /* Ultra condensed spacing */
+    gap: 0.05rem; /* Minimal spacing for slimmer appearance */
 }
 
 .dual-card-container .card-header span {
@@ -1154,7 +1154,7 @@ section {
 }
 
 .dual-card-container .user-info .section {
-    margin-bottom: 0.4rem; /* More space between user info sections */
+    margin-bottom: 0.1rem; /* Minimal space for very slim card */
     font-size: 0.8rem;
     display: flex;
     align-items: center;
@@ -1243,8 +1243,8 @@ section {
 
 .dual-card-container .footer {
     font-size: 0.7rem;
-    padding: 0.5rem 0 0 0; /* Reduced padding for more compact look */
-    margin-top: 0.5rem; /* Reduced margin */
+    padding: 0.15rem 0 0 0; /* Minimal padding for very slim card */
+    margin-top: 0.15rem; /* Minimal margin for very slim card */
     display: flex;
     justify-content: space-between;
     border-top: 1px solid #333;
