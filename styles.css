@@ -2090,8 +2090,27 @@ footer {
     }
     
     .contact-grid {
-        gap: 1rem;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+        justify-content: center;
+        max-width: 240px;
+        margin: 0 auto;
+        justify-items: center;
+    }
+    
+    .contact-grid .contact-icon-link {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .contact-grid .contact-icon-link svg,
+    .contact-grid .contact-icon-link img {
+        width: 28px !important;
+        height: 28px !important;
     }
     
     .urbit-links {
