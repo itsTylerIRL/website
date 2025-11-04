@@ -1049,7 +1049,244 @@ section {
     border: 1px solid #8be9fd;
 }
 
-/* Remilia ID Card Section */
+/* Dual Card Container - Same width as nav cards but taller */
+.dual-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exact same as nav-links */
+    gap: 1.5rem; /* Match nav-links gap */
+    max-width: 1000px; /* Match nav-links max-width */
+    margin: 1.5rem auto 0 auto; /* Center like nav-links */
+}
+
+/* Make dual cards match navigation card spacing and height */
+.dual-card-container > div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure both cards have identical width to navigation cards */
+.dual-card-container .remilia-id,
+.dual-card-container .kol-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dual-card-container .card-container,
+.dual-card-container .kol-badge {
+    width: 100%;
+    box-sizing: border-box; /* Include padding in height calculation */
+    flex: 1; /* Fill available height */
+}
+
+/* Remilia ID Card Section - Full grid width */
+.dual-card-container .remilia-id {
+    max-width: none !important; /* Override the global .remilia-id max-width */
+    width: 100% !important; /* Ensure it fills the grid cell */
+    margin: 0;
+}
+
+.dual-card-container .card-wrapper {
+    max-width: none !important; /* Override the card-wrapper max-width constraint */
+    width: 100% !important; /* Fill the full grid cell */
+    margin: 0; /* Remove centering margin */
+}
+
+/* Compact Remilia card in dual layout - Nav card style */
+.dual-card-container .card-container {
+    padding: 1.5rem; /* Match navigation card padding for alignment */
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.dual-card-container .card-main {
+    display: grid;
+    grid-template-columns: 60px 1fr 185px; /* Slightly smaller right column to prevent overflow */
+    align-items: center;
+    gap: 0.6rem; /* Even tighter gap to save space */
+    flex: 1;
+    overflow: hidden; /* Prevent grid overflow */
+}
+
+/* Left column - Profile picture (like nav card icon) */
+.dual-card-container .profile-picture {
+    width: 60px; /* Match nav card icon size exactly */
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    grid-column: 1; /* First column */
+    flex-shrink: 0;
+    background: rgba(139, 233, 253, 0.1); /* Match nav card icon background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center column - Text content */
+.dual-card-container .card-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem; /* Very compact spacing */
+    grid-column: 2; /* Second column */
+    text-align: left; /* Match navigation card alignment */
+}
+
+/* Remove old header-with-qr styles - no longer used */
+
+.dual-card-container .card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Ultra condensed spacing */
+}
+
+.dual-card-container .card-header span {
+    font-size: 1rem; /* Slightly larger for better nav card appearance */
+    color: #8be9fd; /* Match the nav card styling */
+    line-height: 1.2;
+    display: block;
+    font-weight: bold;
+}
+
+.dual-card-container .user-info .section {
+    margin-bottom: 0.4rem; /* More space between user info sections */
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dual-card-container .user-info .section span:first-child {
+    min-width: 24px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.dual-card-container .user-info .section span:last-child {
+    color: #eaeaea;
+}
+
+/* Right column - QR code and description text side by side */
+.dual-card-container .card-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    grid-column: 3; /* Third column */
+    overflow: hidden; /* Prevent overflow outside the card */
+}
+
+.dual-card-container .qr-section {
+    display: flex;
+    flex-direction: row; /* Horizontal layout */
+    align-items: flex-start; /* Align to top for multi-line text */
+    gap: 0.4rem; /* Tighter gap to prevent overflow */
+    width: 100%;
+    max-width: 100%; /* Ensure it doesn't exceed container */
+    overflow: hidden; /* Prevent text overflow */
+}
+
+.dual-card-container .qr-section .code {
+    flex-shrink: 0; /* Don't shrink the QR code */
+}
+
+.dual-card-container .qr-section .code svg {
+    width: 32px; /* Bigger QR code */
+    height: 32px;
+    margin-left: 0.1rem; /* Less margin to prevent overflow */
+}
+
+.dual-card-container .card-description {
+    font-size: 0.6rem; /* Slightly larger for readability */
+    color: #bbb;
+    text-align: left;
+    margin: 0;
+    line-height: 1.2;
+    flex: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Small gap between lines */
+}
+
+.dual-card-container .card-description div {
+    margin: 0;
+    white-space: nowrap; /* Keep each line on one row */
+}
+
+.dual-card-container .code {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.dual-card-container .code svg {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 0.4rem;
+    flex-shrink: 0;
+}
+
+.dual-card-container .code p {
+    font-size: 0.6rem;
+    margin: 0;
+    line-height: 1.2;
+    max-width: 90px;
+    text-align: center;
+    color: #bbb;
+}
+
+.dual-card-container .footer {
+    font-size: 0.7rem;
+    padding: 0.5rem 0 0 0; /* Reduced padding for more compact look */
+    margin-top: 0.5rem; /* Reduced margin */
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #333;
+    color: #aaa;
+}
+
+/* KoL Container - Half Width */
+.dual-card-container .kol-container {
+    flex: 1;
+    margin: 0;
+}
+
+/* KoL Badge matching Remilia card height */
+.dual-card-container .kol-badge {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem; /* Reduced from 1.5rem to match Remilia card */
+    overflow: hidden;
+}
+
+.dual-card-container .kol-link {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.dual-card-container .kol-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    border-radius: 4px;
+}
+
+/* Original Remilia ID Card Section (for other uses) */
 .remilia-id {
     max-width: 420px;
     width: fit-content;
@@ -1980,8 +2217,8 @@ footer {
 
 /* Page Navigation Cards */
 .page-navigation {
-    margin: 0.5rem 0 0 0;
-    padding-top: 0.4rem;
+    margin: 1.5rem 0 0 0; /* Consistent spacing from social icons */
+    padding-top: 0;
 }
 
 .nav-section-title {
@@ -2111,6 +2348,57 @@ footer {
     .contact-grid .contact-icon-link img {
         width: 28px !important;
         height: 28px !important;
+    }
+    
+    /* Stack dual cards vertically on mobile */
+    .dual-card-container {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    
+    /* Mobile responsive for dual cards */
+    .dual-card-container .remilia-id,
+    .dual-card-container .kol-container {
+        height: auto; /* Remove fixed height on mobile */
+    }
+    
+    .dual-card-container .card-container {
+        padding: 1.5rem;
+        font-size: 1rem;
+        height: auto;
+    }
+    
+    .dual-card-container .card-main {
+        flex-direction: row; /* Keep horizontal layout on mobile */
+        gap: 1rem;
+    }
+    
+    .dual-card-container .profile-picture {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .dual-card-container .code svg {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .dual-card-container .code p {
+        font-size: 0.75rem;
+        max-width: 120px;
+    }
+    
+    .dual-card-container .card-header span {
+        font-size: 1rem;
+    }
+    
+    .dual-card-container .user-info .section {
+        font-size: 0.9rem;
+    }
+    
+    .dual-card-container .kol-badge {
+        height: auto;
+        padding: 1.5rem;
     }
     
     .urbit-links {
