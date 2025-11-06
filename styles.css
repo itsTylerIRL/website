@@ -1828,10 +1828,29 @@ footer {
         width: 30px;
         height: 30px;
     }
-    
+
     .code p {
         font-size: 0.65rem;
         max-width: 150px;
+    }
+    
+    /* Hide Chinese text on mobile, keep only QR code */
+    .dual-card-container .card-description {
+        display: none;
+    }
+    
+    /* Mobile QR code centering */
+    .dual-card-container .qr-section {
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    
+    .dual-card-container .code {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 auto !important;
     }
     
     .silver-plaque {
