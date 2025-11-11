@@ -1933,12 +1933,18 @@ footer {
     padding: 0.5rem 0 0.5rem 0;
 }
 
+.guestbook .container {
+    max-width: 500px; /* Much more compact than the default 900px */
+    margin: 0 auto;
+}
+
 .urbit-embed {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 0.5rem;
+    margin: 0 auto;
 }
 
 .embed-title {
@@ -1989,10 +1995,11 @@ footer {
 
 .iframe-container {
     width: 100%;
-    height: 500px;
+    height: 400px; /* Use mobile-friendly height on desktop too */
+    max-width: 375px; /* Constrain width to mobile size on desktop */
+    margin: 2rem auto; /* Center the container */
     border-radius: 8px;
     overflow: hidden;
-    margin: 2rem 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -2341,6 +2348,10 @@ footer {
         padding: 3rem 0 1.5rem 0;
     }
     
+    .guestbook .container {
+        max-width: none; /* Remove width constraint on mobile */
+    }
+    
     .urbit-embed,
     .message-form {
         padding: 1.5rem;
@@ -2431,6 +2442,8 @@ footer {
     
     .iframe-container {
         height: 400px;
+        max-width: none; /* Remove width constraint on mobile */
+        margin: 2rem 0; /* Remove auto centering on mobile */
     }
     
     .nav-links {
