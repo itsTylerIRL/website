@@ -129,6 +129,62 @@ async function fetchNFTData() {
             throw new Error('Failed to fetch Schizoposters data');
         }
 
+        // Fetch Radbro Webring data
+        const radbroResponse = await fetch('https://api.opensea.io/api/v2/collections/radbro-webring/stats', {
+            headers: headers
+        });
+        
+        if (radbroResponse.ok) {
+            const radbroData = await radbroResponse.json();
+            console.log('Radbro data:', radbroData); // Debug log
+            
+            const radbroFloor = radbroData.total?.floor_price || 0;
+            const radbroVolume = radbroData.total?.volume || radbroData.total?.volume_1d || 0;
+            
+            const radbroFloorUSD = (radbroFloor * ethPriceUSD).toLocaleString('en-US', { 
+                style: 'currency', 
+                currency: 'USD', 
+                maximumFractionDigits: 0 
+            });
+            
+            const radbroVolumeUSD = formatUSD(radbroVolume * ethPriceUSD);
+            
+            document.getElementById('radbro-floor').textContent = 
+                `${radbroFloor.toFixed(2)} ETH (${radbroFloorUSD})`;
+            document.getElementById('radbro-volume').textContent = 
+                `${radbroVolume.toFixed(1)} ETH (${radbroVolumeUSD})`;
+        } else {
+            throw new Error('Failed to fetch Radbro Webring data');
+        }
+
+        // Fetch Fumo Baby 404 data
+        const fumoResponse = await fetch('https://api.opensea.io/api/v2/collections/milady-fumo-baby-404/stats', {
+            headers: headers
+        });
+        
+        if (fumoResponse.ok) {
+            const fumoData = await fumoResponse.json();
+            console.log('Fumo data:', fumoData); // Debug log
+            
+            const fumoFloor = fumoData.total?.floor_price || 0;
+            const fumoVolume = fumoData.total?.volume || fumoData.total?.volume_1d || 0;
+            
+            const fumoFloorUSD = (fumoFloor * ethPriceUSD).toLocaleString('en-US', { 
+                style: 'currency', 
+                currency: 'USD', 
+                maximumFractionDigits: 0 
+            });
+            
+            const fumoVolumeUSD = formatUSD(fumoVolume * ethPriceUSD);
+            
+            document.getElementById('fumo-floor').textContent = 
+                `${fumoFloor.toFixed(2)} ETH (${fumoFloorUSD})`;
+            document.getElementById('fumo-volume').textContent = 
+                `${fumoVolume.toFixed(1)} ETH (${fumoVolumeUSD})`;
+        } else {
+            throw new Error('Failed to fetch Fumo Baby 404 data');
+        }
+
     } catch (error) {
         console.error('Error fetching NFT data:', error);
         // Fallback to reasonable static data if API fails
@@ -138,6 +194,10 @@ async function fetchNFTData() {
         document.getElementById('remilio-volume').textContent = `32.1 ETH (${formatUSD(80250)})`;
         document.getElementById('schizo-floor').textContent = '0.8 ETH ($2,000)';
         document.getElementById('schizo-volume').textContent = `15.3 ETH (${formatUSD(38250)})`;
+        document.getElementById('radbro-floor').textContent = '0.5 ETH ($1,250)';
+        document.getElementById('radbro-volume').textContent = `8.7 ETH (${formatUSD(21750)})`;
+        document.getElementById('fumo-floor').textContent = '0.3 ETH ($750)';
+        document.getElementById('fumo-volume').textContent = `5.2 ETH (${formatUSD(13000)})`;
     }
 }
 
