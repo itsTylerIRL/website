@@ -1055,7 +1055,7 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exact same as nav-links */
     gap: 1.5rem; /* Match nav-links gap */
     max-width: 1000px; /* Match nav-links max-width */
-    margin: 1.5rem auto 0 auto; /* Center like nav-links */
+    margin: 1.5rem auto 1.5rem auto; /* Balanced vertical margins */
 }
 
 /* Make dual cards match navigation card spacing and height */
@@ -1094,7 +1094,7 @@ section {
 
 /* Compact Remilia card in dual layout - Nav card style */
 .dual-card-container .card-container {
-    padding: 0.6rem 1.5rem; /* Minimal vertical, normal horizontal to match nav cards */
+    padding: 1rem 1.5rem; /* Balanced padding to match nav cards */
     font-size: 1rem;
     display: flex;
     flex-direction: column;
@@ -1108,7 +1108,7 @@ section {
     display: grid;
     grid-template-columns: 60px 1fr 185px; /* Slightly smaller right column to prevent overflow */
     align-items: center;
-    gap: 0.2rem; /* Much tighter gap for slim appearance */
+    gap: 0.75rem; /* Better spacing between columns */
     flex: 1;
     overflow: hidden; /* Prevent grid overflow */
 }
@@ -1132,7 +1132,7 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.05rem; /* Ultra compact spacing for slimmer card */
+    gap: 0.25rem; /* Better spacing for readability */
     grid-column: 2; /* Second column */
     text-align: left; /* Match navigation card alignment */
 }
@@ -1142,7 +1142,7 @@ section {
 .dual-card-container .card-info {
     display: flex;
     flex-direction: column;
-    gap: 0.05rem; /* Minimal spacing for slimmer appearance */
+    gap: 0.3rem; /* Better spacing between elements */
 }
 
 .dual-card-container .card-header span {
@@ -1154,7 +1154,7 @@ section {
 }
 
 .dual-card-container .user-info .section {
-    margin-bottom: 0.1rem; /* Minimal space for very slim card */
+    margin-bottom: 0.2rem; /* Better spacing between sections */
     font-size: 0.8rem;
     display: flex;
     align-items: center;
@@ -1185,13 +1185,13 @@ section {
     flex-direction: row; /* Horizontal layout - QR and text side by side */
     align-items: center; /* Vertically center both elements */
     justify-content: center; /* Center horizontally within the section */
-    gap: 0.5rem; /* Space between QR code and text */
+    gap: 0.6rem; /* Space between QR code and text */
     width: 100%;
     max-width: 100%; /* Ensure it doesn't exceed container */
     overflow: hidden; /* Prevent text overflow */
-    background-color: #1a1a1a; /* Very dark background, almost black */
-    padding: 0.5rem; /* Add padding around the content */
-    border-radius: 4px; /* Slightly rounded corners */
+    background-color: rgba(26, 26, 26, 0.5); /* Subtle dark background */
+    padding: 0.6rem; /* Comfortable padding */
+    border-radius: 6px; /* Slightly more rounded corners */
 }
 
 .dual-card-container .qr-section .code {
@@ -1243,8 +1243,8 @@ section {
 
 .dual-card-container .footer {
     font-size: 0.7rem;
-    padding: 0.15rem 0 0 0; /* Minimal padding for very slim card */
-    margin-top: 0.15rem; /* Minimal margin for very slim card */
+    padding: 0.5rem 0 0 0; /* Better spacing from content above */
+    margin-top: 0.5rem; /* Balanced margin from card content */
     display: flex;
     justify-content: space-between;
     border-top: 1px solid #333;
