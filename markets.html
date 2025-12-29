@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://unpkg.com/embeddable-nfts/dist/nft-card.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +29,281 @@
     
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css?v=1.1">
+    
+    <style>
+        /* Bento Grid Styles for Markets */
+        .bento-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .bento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .bento-title {
+            font-size: 1.5rem;
+            color: #8be9fd;
+            text-transform: lowercase;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+        
+        .bento-title::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(200px, auto);
+            gap: 1rem;
+            position: relative;
+        }
+        
+        /* Scanline overlay */
+        .bento-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.5;
+        }
+        
+        /* Market Bento Items */
+        .market-bento {
+            background: linear-gradient(145deg, #0a0a0a 0%, #111 100%);
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            padding: 1.25rem;
+        }
+        
+        .market-bento::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 233, 253, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .market-bento:hover {
+            border-color: #8be9fd;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(139, 233, 253, 0.15),
+                inset 0 0 60px rgba(139, 233, 253, 0.03);
+        }
+        
+        .market-bento:hover::before {
+            opacity: 1;
+        }
+        
+
+        
+        /* Market Header */
+        .market-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .market-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            filter: grayscale(30%) brightness(0.9);
+            transition: all 0.4s ease;
+        }
+        
+        .market-bento:hover .market-logo {
+            filter: grayscale(0%) brightness(1.1);
+            transform: scale(1.05);
+        }
+        
+        .market-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-transform: lowercase;
+            margin: 0;
+        }
+        
+        /* Glitch effect on hover */
+        .market-bento:hover .market-name {
+            animation: glitch 0.3s ease;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* Stats Grid */
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .market-stat {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #1a1a1a;
+            transition: all 0.3s;
+        }
+        
+        .market-bento:hover .market-stat {
+            border-color: rgba(139, 233, 253, 0.3);
+            background: rgba(139, 233, 253, 0.05);
+        }
+        
+        .market-stat-label {
+            font-size: 0.65rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .market-stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #8be9fd;
+        }
+        
+        /* Description */
+        .market-desc {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            line-height: 1.5;
+        }
+        
+        .market-bento:hover .market-desc {
+            color: #999;
+        }
+        
+        /* Links */
+        .market-links {
+            display: flex;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .market-link {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: lowercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .market-link:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+            background: rgba(139, 233, 253, 0.1);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        /* Chart container */
+        .chart-container {
+            background: linear-gradient(145deg, #0a0a0a 0%, #111 100%);
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-top: 1rem;
+            transition: all 0.4s ease;
+        }
+        
+        .chart-container:hover {
+            border-color: rgba(139, 233, 253, 0.3);
+        }
+        
+        .chart-title {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .chart-title::before {
+            content: '📈';
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <main class="main-content">
@@ -42,153 +316,143 @@
         </div>
     </section>
 
-    <!-- NFT Collection Section -->
-    <section id="nfts" class="nfts">
-        <div class="container">
-            <h2 class="section-title">neochibi markets</h2>
-            <div class="nft-grid">
-                <div class="nft-card">
-                    <div class="nft-header">
-                        <img src="assets/milady.png" alt="Milady Maker" class="nft-logo">
-                        <h3 class="nft-title">milady maker</h3>
+    <!-- Markets Bento Section -->
+    <section id="markets" style="padding: 1rem 0 2rem;">
+        <div class="bento-container">
+            <div class="bento-header">
+                <h2 class="bento-title">neochibi markets</h2>
+            </div>
+            
+            <div class="bento-grid">
+                <!-- Milady Maker -->
+                <div class="market-bento">
+                    <div class="market-header">
+                        <img src="assets/milady.png" alt="Milady Maker" class="market-logo">
+                        <h3 class="market-name">milady maker</h3>
                     </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">floor</div>
-                            <div class="nft-stat-value" id="milady-floor">Loading...</div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-value" id="milady-floor">Loading...</div>
                         </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">volume</div>
-                            <div class="nft-stat-value" id="milady-volume">Loading...</div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-value" id="milady-volume">Loading...</div>
                         </div>
                     </div>
-                    <div class="nft-description">
+                    <div class="market-desc">
                         10,000 generative pfps. neochibi street style.
                     </div>
-                    <div class="nft-links">
-                        <a href="https://opensea.io/collection/milady" target="_blank" class="nft-link">opensea</a>
-                        <a href="https://miladymaker.net" target="_blank" class="nft-link">milady</a>
+                    <div class="market-links">
+                        <a href="https://opensea.io/collection/milady" target="_blank" class="market-link">opensea</a>
+                        <a href="https://miladymaker.net" target="_blank" class="market-link">milady</a>
                     </div>
                 </div>
-                <div class="nft-card">
-                    <div class="nft-header">
-                        <img src="assets/remilio.jpg" alt="Redacted Remilio Babies" class="nft-logo">
-                        <h3 class="nft-title">remilio babies</h3>
+                
+                <!-- Remilio Babies -->
+                <div class="market-bento">
+                    <div class="market-header">
+                        <img src="assets/remilio.jpg" alt="Redacted Remilio Babies" class="market-logo">
+                        <h3 class="market-name">remilio babies</h3>
                     </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">floor</div>
-                            <div class="nft-stat-value" id="remilio-floor">Loading...</div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-value" id="remilio-floor">Loading...</div>
                         </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">volume</div>
-                            <div class="nft-stat-value" id="remilio-volume">Loading...</div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-value" id="remilio-volume">Loading...</div>
                         </div>
                     </div>
-                    <div class="nft-description">
+                    <div class="market-desc">
                         10,000 male milady variants. underground culture.
                     </div>
-                    <div class="nft-links">
-                        <a href="https://opensea.io/collection/remilio-babies" target="_blank" class="nft-link">opensea</a>
-                        <a href="https://remilio.org" target="_blank" class="nft-link">remilio</a>
+                    <div class="market-links">
+                        <a href="https://opensea.io/collection/remilio-babies" target="_blank" class="market-link">opensea</a>
+                        <a href="https://remilio.org" target="_blank" class="market-link">remilio</a>
                     </div>
                 </div>
-                <div class="nft-card">
-                    <div class="nft-header">
-                        <img src="assets/schizo.png" alt="Schizoposters" class="nft-logo">
-                        <h3 class="nft-title">schizoposters</h3>
+                
+                <!-- Schizoposters -->
+                <div class="market-bento">
+                    <div class="market-header">
+                        <img src="assets/schizo.png" alt="Schizoposters" class="market-logo">
+                        <h3 class="market-name">schizoposters</h3>
                     </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">floor</div>
-                            <div class="nft-stat-value" id="schizo-floor">Loading...</div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-value" id="schizo-floor">Loading...</div>
                         </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">volume</div>
-                            <div class="nft-stat-value" id="schizo-volume">Loading...</div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-value" id="schizo-volume">Loading...</div>
                         </div>
                     </div>
-                    <div class="nft-description">
+                    <div class="market-desc">
                         I HATE THE ANTICHRIST.
                     </div>
-                    <div class="nft-links">
-                        <a href="https://opensea.io/collection/schizoposters" target="_blank" class="nft-link">opensea</a>
-                        <a href="https://schizoposters.xyz" target="_blank" class="nft-link">site</a>
+                    <div class="market-links">
+                        <a href="https://opensea.io/collection/schizoposters" target="_blank" class="market-link">opensea</a>
+                        <a href="https://schizoposters.xyz" target="_blank" class="market-link">site</a>
                     </div>
                 </div>
-                <div class="nft-card">
-                    <div class="nft-header">
-                        <img src="assets/radbro.png" alt="Radbro Webring" class="nft-logo">
-                        <h3 class="nft-title">radbro webring</h3>
+                
+                <!-- Radbro Webring -->
+                <div class="market-bento">
+                    <div class="market-header">
+                        <img src="assets/radbro.png" alt="Radbro Webring" class="market-logo">
+                        <h3 class="market-name">radbro webring</h3>
                     </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">floor</div>
-                            <div class="nft-stat-value" id="radbro-floor">Loading...</div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-value" id="radbro-floor">Loading...</div>
                         </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">volume</div>
-                            <div class="nft-stat-value" id="radbro-volume">Loading...</div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-value" id="radbro-volume">Loading...</div>
                         </div>
                     </div>
-                    <div class="nft-description">
+                    <div class="market-desc">
                         Check the Chain.
                     </div>
-                    <div class="nft-links">
-                        <a href="https://opensea.io/collection/radbro-webring" target="_blank" class="nft-link">opensea</a>
-                        <a href="http://radbro.xyz" target="_blank" class="nft-link">radbro</a>
+                    <div class="market-links">
+                        <a href="https://opensea.io/collection/radbro-webring" target="_blank" class="market-link">opensea</a>
+                        <a href="http://radbro.xyz" target="_blank" class="market-link">radbro</a>
                     </div>
                 </div>
-                <div class="nft-card">
-                    <div class="nft-header">
-                        <video src="https://blog.remilia.org/content/media/2024/04/fumo_01-1.mp4" alt="Fumo Baby 404" class="nft-logo" autoplay muted loop playsinline></video>
-                        <h3 class="nft-title">fumo baby 404</h3>
+                
+                <!-- Fumo Baby 404 -->
+                <div class="market-bento">
+                    <div class="market-header">
+                        <video src="https://blog.remilia.org/content/media/2024/04/fumo_01-1.mp4" alt="Fumo Baby 404" class="market-logo" autoplay muted loop playsinline></video>
+                        <h3 class="market-name">fumo baby 404</h3>
                     </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">floor</div>
-                            <div class="nft-stat-value" id="fumo-floor">Loading...</div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-value" id="fumo-floor">Loading...</div>
                         </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">volume</div>
-                            <div class="nft-stat-value" id="fumo-volume">Loading...</div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-value" id="fumo-volume">Loading...</div>
                         </div>
                     </div>
-                    <div class="nft-description">
+                    <div class="market-desc">
                         Hardforked 404 collection.
                     </div>
-                    <div class="nft-links">
-                        <a href="https://opensea.io/collection/milady-fumo-baby-404" target="_blank" class="nft-link">opensea</a>
-                        <a href="https://blog.remilia.org/fumo-404" target="_blank" class="nft-link">blog</a>
+                    <div class="market-links">
+                        <a href="https://opensea.io/collection/milady-fumo-baby-404" target="_blank" class="market-link">opensea</a>
+                        <a href="https://blog.remilia.org/fumo-404" target="_blank" class="market-link">blog</a>
                     </div>
                 </div>
-                <!-- CULTCOIN Card -->
-                <!-- <div class="nft-card">
-                    <div class="nft-header">
-                        <img src="assets/cult.png" alt="CULTCOIN" class="nft-logo">
-                        <h3 class="nft-title">CULTCOIN</h3>
-                    </div>
-                    <div class="nft-stats">
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">contract</div>
-                            <div class="nft-stat-value" style="font-size: 0.7rem;">0x000...eCa4</div>
-                        </div>
-                        <div class="nft-stat">
-                            <div class="nft-stat-label">network</div>
-                            <div class="nft-stat-value">ethereum</div>
-                        </div>
-                    </div>
-                    <div class="nft-description">
-                        Hyperfinancialized network tribe market intelligence.
-                    </div>
-                    <div class="nft-links">
-                        <a href="https://app.uniswap.org/#/swap?outputCurrency=0x0000000000c5dc95539589fbD24BE07c6C14eCa4" target="_blank" class="nft-link">BUY CULT</a>
-                        <a href="https://etherscan.io/token/0x0000000000c5dc95539589fbD24BE07c6C14eCa4" target="_blank" class="nft-link">etherscan</a>
-                    </div>
-                </div> -->
             </div>
-
-            <div style="margin: 0.75rem 0 0 0; padding: 0.5rem 0; background: transparent; border: none; text-align: center;">
+            
+            <!-- CULT Chart -->
+            <div class="chart-container">
+                <div class="chart-title">cultcoin price</div>
                 <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
                 <gecko-coin-price-chart-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" coin-id="milady-cult-coin" initial-currency="usd"></gecko-coin-price-chart-widget>
             </div>
@@ -228,5 +492,32 @@
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>
     <script src="effects.js?v=1.1"></script>
+    
+    <!-- Parallax tilt effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bentoItems = document.querySelectorAll('.market-bento');
+            
+            bentoItems.forEach(item => {
+                item.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.02)`;
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
