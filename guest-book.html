@@ -29,6 +29,127 @@
     
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css?v=1.1">
+    
+    <style>
+        /* Guest Book Page Styles */
+        .guestbook-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .guestbook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .guestbook-title {
+            font-size: 1.5rem;
+            color: #8be9fd;
+            text-transform: lowercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            margin: 0;
+        }
+        
+        .guestbook-title::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .guestbook-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .guestbook-link {
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: lowercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+        }
+        
+        .guestbook-link:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        /* Iframe Container */
+        .guestbook-frame-container {
+            background: linear-gradient(145deg, #0a0a0a 0%, #111 100%);
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .guestbook-frame-container:hover {
+            border-color: #8be9fd;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(139, 233, 253, 0.1);
+        }
+        
+        .guestbook-iframe {
+            width: 100%;
+            height: calc(100vh - 280px);
+            min-height: 500px;
+            border: none;
+            display: block;
+        }
+        
+        /* Scanline overlay */
+        .guestbook-frame-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .guestbook-iframe {
+                height: calc(100vh - 320px);
+                min-height: 400px;
+            }
+            
+            .guestbook-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
     <main class="main-content">
@@ -42,41 +163,24 @@
     </section>
 
     <!-- Guest Book Section -->
-    <section id="guestbook" class="guestbook">
-        <div class="container">
-            <!-- <h2 class="section-title">guest book</h2> -->
+    <section id="guestbook" style="padding: 1rem 0 2rem;">
+        <div class="guestbook-container">
+            <div class="guestbook-header">
+                <h2 class="guestbook-title">guest book</h2>
+                <div class="guestbook-links">
+                    <a href="https://urbit.org/get-on-the-network" target="_blank" class="guestbook-link">get urbit</a>
+                    <a href="https://network.urbit.org/" target="_blank" class="guestbook-link">network</a>
+                    <a href="web+urbitgraph://group/~bitbet-bolbel/urbit-community" class="guestbook-link">community</a>
+                </div>
+            </div>
             
-            <!-- Urbit Embed -->
-            <div class="urbit-embed">
-                <h3 class="embed-title">leave a message on urbit</h3>
-                <p class="embed-description">
-                    Connect with me on the peer-to-peer network.
-                </p>
-                
-                <!-- Urbit Chat Iframe -->
-                <div class="iframe-container">
-                    <iframe 
-                        src="http://urbit.tylerirl.com/~~/radbro/" 
-                        class="urbit-chat-frame"
-                        title="Urbit Chat"
-                        loading="lazy">
-                    </iframe>
-
-
-                </div>
-                
-                <!-- Alternative Links -->
-                <div class="urbit-links">
-                    <a href="https://urbit.org/get-on-the-network" target="_blank" class="urbit-link">
-                        get online
-                    </a>
-                    <a href="https://network.urbit.org/" target="_blank" class="urbit-link">
-                        network
-                    </a>
-                    <a href="web+urbitgraph://group/~bitbet-bolbel/urbit-community" class="urbit-link">
-                        community
-                    </a>
-                </div>
+            <div class="guestbook-frame-container">
+                <iframe 
+                    src="http://urbit.tylerirl.com/~~/radbro/" 
+                    class="guestbook-iframe"
+                    title="Urbit Chat"
+                    loading="lazy">
+                </iframe>
             </div>
         </div>
     </section>
@@ -114,31 +218,5 @@
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>
     <script src="effects.js?v=1.1"></script>
-    
-    <!-- Form handling script -->
-    <script>
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const message = formData.get('message');
-            
-            // Simple validation
-            if (!name || !message) {
-                alert('Please fill in required fields');
-                return;
-            }
-            
-            // Here you would typically send to a server
-            // For now, just show a success message
-            alert('Thanks for your message! I\'ll get back to you soon.');
-            
-            // Reset form
-            this.reset();
-        });
-    </script>
 </body>
 </html>
