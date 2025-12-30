@@ -65,38 +65,7 @@
             51%, 100% { opacity: 0; }
         }
         
-        .filter-pills {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-pill {
-            background: transparent;
-            border: 1px solid #333;
-            color: #666;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: lowercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .filter-pill:hover {
-            border-color: #8be9fd;
-            color: #8be9fd;
-            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
-        }
-        
-        .filter-pill.active {
-            background: #8be9fd;
-            border-color: #8be9fd;
-            color: #000;
-            box-shadow: 0 0 30px rgba(139, 233, 253, 0.4);
-        }
+        /* Stats bar - now acts as filter buttons */
         
         /* Bento Grid */
         .bento-grid {
@@ -320,24 +289,48 @@
             }
         }
         
-        /* Stats bar */
+        /* Stats bar - clickable filter buttons */
         .stats-bar {
             display: flex;
-            gap: 2rem;
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
-            padding: 1rem;
+            padding: 0.75rem;
             background: rgba(139, 233, 253, 0.03);
             border: 1px solid #1a1a1a;
             border-radius: 12px;
+            flex-wrap: wrap;
         }
         
         .stat {
             text-align: center;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+        }
+        
+        .stat:hover {
+            border-color: #8be9fd;
+            background: rgba(139, 233, 253, 0.1);
+        }
+        
+        .stat.active {
+            border-color: #8be9fd;
+            background: rgba(139, 233, 253, 0.15);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
         }
         
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
+            color: #666;
+            transition: color 0.3s;
+        }
+        
+        .stat:hover .stat-value,
+        .stat.active .stat-value {
             color: #8be9fd;
         }
         
@@ -346,6 +339,12 @@
             color: #666;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+        
+        .stat:hover .stat-label,
+        .stat.active .stat-label {
+            color: #8be9fd;
         }
         
         /* Responsive */
@@ -400,34 +399,113 @@
         <div class="bento-container">
             <div class="bento-header">
                 <h2 class="bento-title">things i like</h2>
-                <div class="filter-pills">
-                    <button class="filter-pill active" data-filter="all">all</button>
-                    <button class="filter-pill" data-filter="crypto">crypto</button>
-                    <button class="filter-pill" data-filter="tech">tech</button>
-                    <button class="filter-pill" data-filter="fun">fun</button>
-                </div>
             </div>
             
             <div class="stats-bar">
-                <div class="stat">
-                    <div class="stat-value" id="totalCount">27</div>
+                <div class="stat active" data-filter="all">
+                    <div class="stat-value">33</div>
                     <div class="stat-label">total</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="cryptoCount">11</div>
+                <div class="stat" data-filter="personal">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">personal</div>
+                </div>
+                <div class="stat" data-filter="crypto">
+                    <div class="stat-value">11</div>
                     <div class="stat-label">crypto</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="techCount">8</div>
+                <div class="stat" data-filter="tech">
+                    <div class="stat-value">8</div>
                     <div class="stat-label">tech</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="funCount">8</div>
+                <div class="stat" data-filter="fun">
+                    <div class="stat-value">2</div>
                     <div class="stat-label">fun</div>
+                </div>
+                <div class="stat" data-filter="games">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">games</div>
+                </div>
+                <div class="stat" data-filter="art">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">art</div>
                 </div>
             </div>
             
             <div class="bento-grid">
+                <!-- Personal Projects -->
+                <!-- DeepDish OCS - Featured -->
+                <a href="OCS.html" class="bento-item featured visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/OCS.png" alt="DeepDish OCS">
+                    </div>
+                    <div class="bento-content">
+                        <h3>deepdish ocs</h3>
+                        <p>computer eye project</p>
+                    </div>
+                </a>
+                
+                <!-- Redacted Bot -->
+                <a href="discord-bot.html" class="bento-item visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/redacted/redacted.png" alt="Redacted Bot">
+                    </div>
+                    <div class="bento-content">
+                        <h3>████████████</h3>
+                        <p>schizo discord app</p>
+                    </div>
+                </a>
+                
+                <!-- RadGotchi -->
+                <a href="radgotchi.html" class="bento-item visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/BORED.png" alt="RadGotchi" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>radgotchi</h3>
+                        <p>radbro pwnagotchi</p>
+                    </div>
+                </a>
+                
+                <!-- ~nosfyl -->
+                <a href="https://nosfyl.startram.io/apps/landscape/" target="_blank" class="bento-item visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/nosfyl_icon.png" alt="~nosfyl" style="border-radius: 50%; border: 2px solid #22d0f7;">
+                    </div>
+                    <div class="bento-content">
+                        <h3>~nosfyl</h3>
+                        <p>urbit star</p>
+                    </div>
+                </a>
+                
+                <!-- ~raddem-tidwyt -->
+                <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/raddem_icon.png" alt="~raddem-tidwyt" style="border-radius: 50%; border: 2px solid #bbfabf;">
+                    </div>
+                    <div class="bento-content">
+                        <h3>~raddem-tidwyt</h3>
+                        <p>urbit planet</p>
+                    </div>
+                </a>
+                
+                <!-- CornHub -->
+                <a href="cornhub.html" class="bento-item visible" data-category="personal">
+                    <span class="bento-category">personal</span>
+                    <div class="bento-image">
+                        <img src="assets/moeda.png" alt="CornHub">
+                    </div>
+                    <div class="bento-content">
+                        <h3>cornhub</h3>
+                        <p>community tokens</p>
+                    </div>
+                </a>
+                
                 <!-- Featured: Ethereum -->
                 <a href="https://ethereum.org/en" target="_blank" class="bento-item featured visible" data-category="crypto">
                     <span class="bento-category">crypto</span>
@@ -501,8 +579,8 @@
                 </a>
                 
                 <!-- Miladycraft -->
-                <a href="https://miladycraft.net" target="_blank" class="bento-item visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://miladycraft.net" target="_blank" class="bento-item visible" data-category="games">
+                    <span class="bento-category">games</span>
                     <div class="bento-image">
                         <img src="assets/miladycraft.gif" alt="Miladycraft">
                     </div>
@@ -573,8 +651,8 @@
                 </a>
                 
                 <!-- VIP -->
-                <a href="https://veryinter.net/person" target="_blank" class="bento-item visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://veryinter.net/person" target="_blank" class="bento-item visible" data-category="art">
+                    <span class="bento-category">art</span>
                     <div class="bento-image">
                         <img src="assets/vip.png" alt="Very Internet Person">
                     </div>
@@ -585,8 +663,8 @@
                 </a>
                 
                 <!-- Eth Chan -->
-                <a href="https://manifold.xyz/@shiro-15bf3400/contract/172822768" target="_blank" class="bento-item visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://manifold.xyz/@shiro-15bf3400/contract/172822768" target="_blank" class="bento-item visible" data-category="art">
+                    <span class="bento-category">art</span>
                     <div class="bento-image">
                         <img src="assets/ethchan.png" alt="Eth Chan">
                     </div>
@@ -609,8 +687,8 @@
                 </a>
                 
                 <!-- Schizoposters -->
-                <a href="https://schizoposters.xyz" target="_blank" class="bento-item visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://schizoposters.xyz" target="_blank" class="bento-item visible" data-category="art">
+                    <span class="bento-category">art</span>
                     <div class="bento-image">
                         <img src="assets/schizo_logo.png" alt="Schizoposters">
                     </div>
@@ -657,8 +735,8 @@
                 </a>
                 
                 <!-- USGC -->
-                <a href="https://usgraphics.com" target="_blank" class="bento-item visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://usgraphics.com" target="_blank" class="bento-item visible" data-category="art">
+                    <span class="bento-category">art</span>
                     <div class="bento-image">
                         <img src="https://pbs.twimg.com/profile_images/1959880828621885440/AevS5y-8_400x400.png" alt="US Graphics Company">
                     </div>
@@ -693,8 +771,8 @@
                 </a>
                 
                 <!-- KoL - Tall -->
-                <a href="https://www.kingdomofloathing.com/" target="_blank" class="bento-item tall visible" data-category="fun">
-                    <span class="bento-category">fun</span>
+                <a href="https://www.kingdomofloathing.com/" target="_blank" class="bento-item tall visible" data-category="games">
+                    <span class="bento-category">games</span>
                     <div class="bento-image">
                         <img src="https://www.kingdomofloathing.com/favicon.ico" alt="Kingdom of Loathing">
                     </div>
@@ -792,16 +870,16 @@
     <!-- Bento Grid JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Filter functionality
-            const filterPills = document.querySelectorAll('.filter-pill');
+            // Filter functionality - stats are now the filter buttons
+            const statFilters = document.querySelectorAll('.stat[data-filter]');
             const bentoItems = document.querySelectorAll('.bento-item');
             
-            filterPills.forEach(pill => {
-                pill.addEventListener('click', function() {
+            statFilters.forEach(stat => {
+                stat.addEventListener('click', function() {
                     const filter = this.dataset.filter;
                     
-                    // Update active pill
-                    filterPills.forEach(p => p.classList.remove('active'));
+                    // Update active stat
+                    statFilters.forEach(s => s.classList.remove('active'));
                     this.classList.add('active');
                     
                     // Filter items with staggered animation
@@ -818,40 +896,8 @@
                             item.classList.add('hidden');
                         }
                     });
-                    
-                    // Update stats display
-                    updateVisibleCount(filter);
                 });
             });
-            
-            function updateVisibleCount(filter) {
-                const total = document.getElementById('totalCount');
-                const crypto = document.getElementById('cryptoCount');
-                const tech = document.getElementById('techCount');
-                const fun = document.getElementById('funCount');
-                
-                if (filter === 'all') {
-                    total.style.color = '#8be9fd';
-                    crypto.style.color = '#666';
-                    tech.style.color = '#666';
-                    fun.style.color = '#666';
-                } else if (filter === 'crypto') {
-                    total.style.color = '#666';
-                    crypto.style.color = '#8be9fd';
-                    tech.style.color = '#666';
-                    fun.style.color = '#666';
-                } else if (filter === 'tech') {
-                    total.style.color = '#666';
-                    crypto.style.color = '#666';
-                    tech.style.color = '#8be9fd';
-                    fun.style.color = '#666';
-                } else if (filter === 'fun') {
-                    total.style.color = '#666';
-                    crypto.style.color = '#666';
-                    tech.style.color = '#666';
-                    fun.style.color = '#8be9fd';
-                }
-            }
             
             // Add parallax tilt effect on hover
             bentoItems.forEach(item => {
