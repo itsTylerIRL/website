@@ -93,6 +93,18 @@
             box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
         }
         
+        .guestbook-link.reload-btn {
+            border-color: #ff79c6;
+            color: #ff79c6;
+            display: none;
+        }
+        
+        .guestbook-link.reload-btn:hover {
+            border-color: #ff92d0;
+            color: #ff92d0;
+            box-shadow: 0 0 20px rgba(255, 121, 198, 0.3);
+        }
+        
         /* Iframe Container */
         .guestbook-frame-container {
             background: linear-gradient(145deg, #0a0a0a 0%, #111 100%);
@@ -114,6 +126,7 @@
             width: 100%;
             height: calc(100vh - 280px);
             min-height: 500px;
+            max-height: 600px;
             border: none;
             display: block;
         }
@@ -142,6 +155,7 @@
             .guestbook-iframe {
                 height: calc(100vh - 320px);
                 min-height: 400px;
+                max-height: 500px;
             }
             
             .guestbook-header {
@@ -168,6 +182,7 @@
             <div class="guestbook-header">
                 <h2 class="guestbook-title">guest book</h2>
                 <div class="guestbook-links">
+                    <button onclick="reloadHttp()" class="guestbook-link reload-btn" id="reload-http-btn">reload</button>
                     <a href="https://urbit.org/get-on-the-network" target="_blank" class="guestbook-link">get urbit</a>
                     <a href="https://network.urbit.org/" target="_blank" class="guestbook-link">network</a>
                     <a href="web+urbitgraph://group/~bitbet-bolbel/urbit-community" class="guestbook-link">community</a>
@@ -214,6 +229,16 @@
     </footer>
 
     <!-- External JavaScript -->
+    <script>
+        // Show reload button if on HTTPS (iframe only loads on HTTP)
+        if (window.location.protocol === 'https:') {
+            document.getElementById('reload-http-btn').style.display = 'inline-block';
+        }
+        
+        function reloadHttp() {
+            window.location.href = window.location.href.replace('https://', 'http://');
+        }
+    </script>
     <script src="script.js?v=1.1"></script>
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>
