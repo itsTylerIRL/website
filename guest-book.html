@@ -182,7 +182,7 @@
             <div class="guestbook-header">
                 <h2 class="guestbook-title">guest book</h2>
                 <div class="guestbook-links">
-                    <button onclick="reloadHttp()" class="guestbook-link reload-btn" id="reload-http-btn">reload</button>
+                    <a href="http://tylerirl.com/guest-book.html" class="guestbook-link reload-btn" id="reload-http-btn">reload</a>
                     <a href="https://urbit.org/get-on-the-network" target="_blank" class="guestbook-link">get urbit</a>
                     <a href="https://network.urbit.org/" target="_blank" class="guestbook-link">network</a>
                     <a href="web+urbitgraph://group/~bitbet-bolbel/urbit-community" class="guestbook-link">community</a>
@@ -233,10 +233,6 @@
         // Show reload button if on HTTPS (iframe only loads on HTTP)
         if (window.location.protocol === 'https:') {
             document.getElementById('reload-http-btn').style.display = 'inline-block';
-        }
-        
-        function reloadHttp() {
-            window.location.href = window.location.href.replace('https://', 'http://');
         }
     </script>
     <script src="script.js?v=1.1"></script>
