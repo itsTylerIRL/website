@@ -1052,10 +1052,11 @@ section {
 /* Dual Card Container - Same width as nav cards but taller */
 .dual-card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Exact same as nav-links */
-    gap: 1.5rem; /* Match nav-links gap */
-    max-width: 1000px; /* Match nav-links max-width */
-    margin: 1.5rem auto 1.5rem auto; /* Balanced vertical margins */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 1.5rem auto 1.5rem auto;
+    padding: 0 1rem; /* Match bento-container padding */
 }
 
 /* Make dual cards match navigation card spacing and height */
@@ -1105,23 +1106,23 @@ section {
 }
 
 .dual-card-container .card-main {
-    display: grid;
-    grid-template-columns: 60px 1fr 185px; /* Slightly smaller right column to prevent overflow */
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.75rem; /* Better spacing between columns */
+    gap: 0.75rem;
     flex: 1;
-    overflow: hidden; /* Prevent grid overflow */
+    overflow: hidden;
 }
 
 /* Left column - Profile picture (like nav card icon) */
 .dual-card-container .profile-picture {
-    width: 60px; /* Match nav card icon size exactly */
-    height: 60px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
     border-radius: 50%;
     overflow: hidden;
-    grid-column: 1; /* First column */
     flex-shrink: 0;
-    background: rgba(139, 233, 253, 0.1); /* Match nav card icon background */
+    background: rgba(139, 233, 253, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1132,9 +1133,10 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.25rem; /* Better spacing for readability */
-    grid-column: 2; /* Second column */
-    text-align: left; /* Match navigation card alignment */
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 100px;
+    text-align: left;
 }
 
 /* Remove old header-with-qr styles - no longer used */
@@ -1176,8 +1178,9 @@ section {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    grid-column: 3; /* Third column */
-    overflow: hidden; /* Prevent overflow outside the card */
+    flex-shrink: 0;
+    overflow: hidden;
+    max-width: 180px;
 }
 
 .dual-card-container .qr-section {
@@ -1262,11 +1265,11 @@ section {
     margin: 0;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 0;
+    padding: 0.75rem;
     overflow: hidden;
     height: 100%;
     box-sizing: border-box;
@@ -1275,22 +1278,18 @@ section {
 .dual-card-container .kol-link {
     display: flex !important;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
 .dual-card-container .kol-image {
-    max-width: none;
-    max-height: none;
-    width: auto !important;
-    height: auto !important;
-    object-fit: none !important;
-    border-radius: 0;
-    transform: scale(1.2);
-    transform-origin: left center;
-    margin-left: 0.5rem;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    border-radius: 4px;
 }
 
 /* Original Remilia ID Card Section (for other uses) */
@@ -1577,6 +1576,39 @@ footer {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    /* Mobile Remilia ID Card */
+    .dual-card-container .card-container {
+        padding: 0.75rem;
+    }
+    
+    .dual-card-container .card-main {
+        gap: 0.5rem;
+    }
+    
+    .dual-card-container .profile-picture {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+    }
+    
+    .dual-card-container .card-header span {
+        font-size: 0.85rem;
+    }
+    
+    .dual-card-container .user-info .section {
+        font-size: 0.7rem;
+    }
+    
+    .dual-card-container .card-right {
+        display: none; /* Hide QR section on mobile */
+    }
+    
+    .dual-card-container .footer {
+        font-size: 0.6rem;
+        padding: 0.4rem 0 0 0;
+        margin-top: 0.4rem;
+    }
+    
     .hero {
         padding: 2px 0; /* Very minimal padding on mobile */
     }

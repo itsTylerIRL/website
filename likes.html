@@ -368,6 +368,18 @@
                 grid-column: span 2;
                 grid-row: span 2;
             }
+            
+            .stats-bar {
+                justify-content: center;
+            }
+            
+            .stat {
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem;
+            }
         }
         
         @media (max-width: 500px) {
@@ -387,8 +399,32 @@
             }
             
             .stats-bar {
-                flex-wrap: wrap;
-                gap: 1rem;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+                padding: 0.5rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .stat {
+                padding: 0.5rem 0.25rem;
+                min-width: 0;
+            }
+            
+            .stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .stat-label {
+                font-size: 0.55rem;
+                letter-spacing: 0.05em;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
