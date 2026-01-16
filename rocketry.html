@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocketry Project - Tyler (in real life)</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    
+    <!-- Apple Touch Icons for mobile bookmarks -->
+    <link rel="apple-touch-icon" href="assets/5031 1.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/5031 1.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/5031 1.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="assets/5031 1.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/rocketry">
+    <meta property="og:title" content="Rocketry Project - Tyler (in real life)">
+    <meta property="og:description" content="Follow along as I build and launch my rocket project">
+    <meta property="og:image" content="https://tylerirl.com/assets/rocketry/rocket-og.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/rocketry">
+    <meta property="twitter:title" content="Rocketry Project - Tyler (in real life)">
+    <meta property="twitter:description" content="Follow along as I build and launch my rocket project">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/rocketry/rocket-og.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css?v=1.1">
+    <style>
+        .project-writeup {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #000000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        
+        .project-writeup h2 {
+            color: #8be9fd;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+        
+        .project-writeup h3 {
+            color: #b4f8c3;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-writeup p {
+            color: #bdbdbd;
+            margin-bottom: 1rem;
+        }
+        
+        .project-writeup ul, .project-writeup ol {
+            color: #bdbdbd;
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-writeup li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-writeup code {
+            background: #000000;
+            color: #ff79c6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .project-writeup a {
+            color: #8be9fd;
+            text-decoration: none;
+            border-bottom: 1px solid #8be9fd;
+            transition: all 0.2s;
+        }
+        
+        .project-writeup a:hover {
+            color: #b4f8c3;
+            border-bottom-color: #b4f8c3;
+        }
+        
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff79c6, #8be9fd, #b4f8c3);
+            border-radius: 3px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 8px;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #000;
+            border: 3px solid #ff79c6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .timeline-item.completed .timeline-marker {
+            background: #b4f8c3;
+            border-color: #b4f8c3;
+        }
+        
+        .timeline-item.in-progress .timeline-marker {
+            background: #ff79c6;
+            border-color: #ff79c6;
+            animation: pulse 2s infinite;
+        }
+        
+        .timeline-item.upcoming .timeline-marker {
+            background: #000;
+            border-color: #444;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 121, 198, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 121, 198, 0);
+            }
+        }
+        
+        .timeline-content {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-content {
+            border-color: #8be9fd;
+            transform: translateX(5px);
+        }
+        
+        .timeline-item.completed:hover .timeline-content {
+            border-color: #b4f8c3;
+        }
+        
+        .timeline-item.in-progress .timeline-content {
+            border-color: #ff79c6;
+        }
+        
+        .timeline-date {
+            font-size: 0.85rem;
+            color: #ff79c6;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timeline-title {
+            color: #8be9fd;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .timeline-description {
+            color: #bdbdbd;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .timeline-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+        }
+        
+        .timeline-item.expanded .timeline-details {
+            max-height: 500px;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #333;
+        }
+        
+        .timeline-details p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .timeline-details img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 1px solid #333;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+        
+        .status-completed {
+            background: rgba(180, 248, 195, 0.2);
+            color: #b4f8c3;
+            border: 1px solid #b4f8c3;
+        }
+        
+        .status-in-progress {
+            background: rgba(255, 121, 198, 0.2);
+            color: #ff79c6;
+            border: 1px solid #ff79c6;
+        }
+        
+        .status-upcoming {
+            background: rgba(139, 233, 253, 0.2);
+            color: #8be9fd;
+            border: 1px solid #8be9fd;
+        }
+        
+        .click-hint {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .project-status {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(255, 121, 198, 0.1), rgba(139, 233, 253, 0.1));
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid #333;
+        }
+        
+        .project-status h3 {
+            color: #ff79c6;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .project-status p {
+            margin: 0;
+            color: #8be9fd;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div style="text-align: center; margin: 0.3rem 0;">
+                <img src="assets/remilio2.png" alt="Remilio" style="max-width: 200px; height: auto; border-radius: 8px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Write-up Section -->
+    <section class="project-writeup">
+        <h1 style="color: #8be9fd; margin-bottom: 0.5rem;">🚀 Rocketry Project</h1>
+        <p style="color: #ff79c6; margin-bottom: 2rem;">Building and launching my own patriot missile</p>
+        
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="assets/rocketry/rocket.png" alt="Rocket" style="max-width: 100%; height: auto; border-radius: 8px;">
+        </div>
+        
+        <div class="project-status">
+            <h3>📍 Current Status</h3>
+            <p>Rocket received — Build phase beginning soon!</p>
+        </div>
+        
+        <h2>Project Timeline</h2>
+        <p class="click-hint">Click on any milestone to expand details</p>
+        
+        <div class="timeline">
+            <!-- Milestone 1: Rocket Received -->
+            <div class="timeline-item completed" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">✓</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">January 7, 2026</div>
+                    <div class="timeline-title">
+                        Rocket Received
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                    <p class="timeline-description">The rocket kit has arrived! Time to start this journey.</p>
+                    <div class="timeline-details">
+                        <p>Unboxed the rocket kit and inventoried all the parts. Everything looks good and accounted for. Excited to get started on this build!</p>
+                        <!-- Add photos here as you take them -->
+                        <!-- <img src="assets/rocketry/unboxing.jpg" alt="Rocket unboxing"> -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 2: Parts Inventory & Planning -->
+            <div class="timeline-item in-progress" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">⚡</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">January 2026</div>
+                    <div class="timeline-title">
+                        Parts Inventory & Planning
+                        <span class="status-badge status-in-progress">In Progress</span>
+                    </div>
+                    <p class="timeline-description">Organizing components and planning the build process.</p>
+                    <div class="timeline-details">
+                        <p>Currently reviewing the instruction manual and laying out all the parts. Creating a checklist of tools needed and planning the build sequence.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 3: Body Assembly -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">○</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Body Tube Assembly
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">Assembling the main body tube and structural components.</p>
+                    <div class="timeline-details">
+                        <p>Will include attaching motor mount, centering rings, and any internal structures.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 4: Fin Installation -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">○</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Fin Installation
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">Attaching and aligning the fins for stable flight.</p>
+                    <div class="timeline-details">
+                        <p>Critical for flight stability. Will use a fin alignment jig to ensure perfect 120° spacing.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 5: Recovery System -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">○</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Recovery System Setup
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">Installing the parachute and recovery hardware.</p>
+                    <div class="timeline-details">
+                        <p>Setting up shock cord, parachute attachment, and ejection charge protection.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 6: Paint & Finishing -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">○</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Paint & Finishing
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">Making it look cool with paint and decals.</p>
+                    <div class="timeline-details">
+                        <p>Primer, paint, clear coat, and custom decals. Going for a cyberpunk aesthetic obviously.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 7: Pre-Flight Checks -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">○</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Pre-Flight Checks
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">Final inspections and flight readiness verification.</p>
+                    <div class="timeline-details">
+                        <p>Center of gravity check, swing test for stability, motor fitting, and recovery system test.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestone 8: Launch Day -->
+            <div class="timeline-item upcoming" onclick="toggleTimeline(this)">
+                <div class="timeline-marker">🚀</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">TBD</div>
+                    <div class="timeline-title">
+                        Launch Day!
+                        <span class="status-badge status-upcoming">Upcoming</span>
+                    </div>
+                    <p class="timeline-description">The moment of truth — sending it to the sky.</p>
+                    <div class="timeline-details">
+                        <p>First flight! Will document everything with video and photos. Fingers crossed for a successful launch and recovery.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #333;">
+        
+        <p style="text-align: center; color: #666; font-size: 0.9rem;">
+            To the moon 🌙<br>
+            <span style="color: #ff79c6;">...or at least a few hundred feet</span>
+        </p>
+    </section>
+    
+    <!-- Floating Return Home Button -->
+    <a href="index.html" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <center>
+            <div style="text-align: center; margin-bottom: 0.5rem;">
+                <img src="assets/SMART.png" alt="Smart" style="width: 80px; height: auto; border: 0px solid #232323;">
+            </div>
+            <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
+            <span style="font-size: 0.95rem;">radbro webring</span>
+            <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
+            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2026 tyler</span></center>
+
+        </div>
+    </footer>
+    
+    <!-- Timeline Interaction Script -->
+    <script>
+        function toggleTimeline(element) {
+            // Close all other expanded items
+            document.querySelectorAll('.timeline-item.expanded').forEach(item => {
+                if (item !== element) {
+                    item.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle the clicked item
+            element.classList.toggle('expanded');
+        }
+        
+        // Add keyboard support
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            item.setAttribute('tabindex', '0');
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTimeline(item);
+                }
+            });
+        });
+    </script>
+    
+    <!-- External JavaScript -->
+    <script src="script.js?v=1.1"></script>
+    <script src="performance.js?v=1.1"></script>
+    <script src="interactions.js?v=1.1"></script>
+    <script src="effects.js?v=1.1"></script>
+    <script src="router.js?v=1.1"></script>
+    
+</body>
+</html>

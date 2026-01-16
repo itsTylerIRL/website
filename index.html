@@ -220,6 +220,25 @@
             transform: translate(2px, -2px);
         }
         
+        /* Scanline toggle button */
+        #scanlineToggle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 99999;
+            opacity: 0;
+        }
+        
+        #scanlineToggle:hover {
+            opacity: 0.1;
+            background: #8be9fd;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .bento-grid {
@@ -237,6 +256,9 @@
     </style>
 </head>
 <body>
+    <!-- Invisible scanline toggle button for screenshots -->
+    <button id="scanlineToggle" title="Toggle scanline (for screenshots)"></button>
+    
     <main class="main-content">
     <!-- Hero Section -->
     <section id="home" class="hero">

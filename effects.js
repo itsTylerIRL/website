@@ -144,12 +144,17 @@ function createScanline() {
                 0 0 10px rgba(139, 233, 253, 0.1) !important;
             transition: all 0.8s ease-out !important;
         }
+        
+        /* Hide scanline effects when disabled */
+        body.scanline-disabled::before {
+            display: none !important;
+        }
     `;
     document.head.appendChild(scanlineStyles);
 
     // Add scanline border interaction
     function addScanlineInteraction() {
-        const elements = document.querySelectorAll('.skill-card, .nft-card, .card-container, .nav-card, .contact-card');
+        const elements = document.querySelectorAll('.skill-card, .nft-card, .card-container, .nav-card, .contact-card, .bento-item');
         
         function updateScanlineEffects() {
             const scanline = document.querySelector('.scanline');
@@ -197,4 +202,23 @@ function createScanline() {
 // Initialize scanline effect when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     createScanline();
+    
+    // Scanline toggle button functionality
+    const toggleBtn = document.getElementById('scanlineToggle');
+    if (toggleBtn) {
+        let scanlineEnabled = true;
+        toggleBtn.addEventListener('click', function() {
+            scanlineEnabled = !scanlineEnabled;
+            const scanline = document.querySelector('.scanline');
+            const bodyBefore = document.body;
+            
+            if (scanlineEnabled) {
+                if (scanline) scanline.style.display = '';
+                bodyBefore.classList.remove('scanline-disabled');
+            } else {
+                if (scanline) scanline.style.display = 'none';
+                bodyBefore.classList.add('scanline-disabled');
+            }
+        });
+    }
 });
