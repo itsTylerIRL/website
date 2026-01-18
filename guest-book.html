@@ -182,7 +182,6 @@
             <div class="guestbook-header">
                 <h2 class="guestbook-title">guest book</h2>
                 <div class="guestbook-links">
-                    <a href="http://tylerirl.com/guest-book.html" class="guestbook-link reload-btn" id="reload-http-btn">reload</a>
                     <a href="https://urbit.org/get-on-the-network" target="_blank" class="guestbook-link">get urbit</a>
                     <a href="https://network.urbit.org/" target="_blank" class="guestbook-link">network</a>
                     <a href="web+urbitgraph://group/~bitbet-bolbel/urbit-community" class="guestbook-link">community</a>
@@ -191,7 +190,7 @@
             
             <div class="guestbook-frame-container">
                 <iframe 
-                    src="http://urbit.tylerirl.com/~~/radbro/" 
+                    src="https://urbit.tylerirl.com/~~/radbro/" 
                     class="guestbook-iframe"
                     title="Urbit Chat"
                     loading="lazy">
@@ -229,12 +228,6 @@
     </footer>
 
     <!-- External JavaScript -->
-    <script>
-        // Show reload button if on HTTPS (iframe only loads on HTTP)
-        if (window.location.protocol === 'https:') {
-            document.getElementById('reload-http-btn').style.display = 'inline-block';
-        }
-    </script>
     <script src="script.js?v=1.1"></script>
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>
