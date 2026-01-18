@@ -282,6 +282,14 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(skillDragStyles);
 
+    // Bento Items Hover Sound Effects
+    const bentoItems = document.querySelectorAll('.bento-item');
+    bentoItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            playHoverSound();
+        });
+    });
+
     // Custom Cursor Implementation - Only on desktop
     const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
