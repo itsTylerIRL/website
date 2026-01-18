@@ -295,6 +295,29 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Initializing custom cursor');
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
+    
+    // Create outer rotating ring
+    const outerRing = document.createElement('div');
+    outerRing.className = 'cursor-ring-outer';
+    cursor.appendChild(outerRing);
+    
+    // Create corner brackets
+    const brackets = ['tl', 'tr', 'bl', 'br'];
+    brackets.forEach(pos => {
+        const bracket = document.createElement('div');
+        bracket.className = `cursor-bracket ${pos}`;
+        cursor.appendChild(bracket);
+    });
+    
+    // Create targeting lines
+    const lineH = document.createElement('div');
+    lineH.className = 'cursor-line horizontal';
+    cursor.appendChild(lineH);
+    
+    const lineV = document.createElement('div');
+    lineV.className = 'cursor-line vertical';
+    cursor.appendChild(lineV);
+    
     document.body.appendChild(cursor);
     console.log('Custom cursor element added to DOM:', cursor);
 
@@ -322,10 +345,15 @@ document.addEventListener('DOMContentLoaded', function() {
         isHoveringInteractive = elementUnderCursor && (
             elementUnderCursor.tagName === 'A' ||
             elementUnderCursor.tagName === 'BUTTON' ||
+            elementUnderCursor.tagName === 'IMG' ||
             elementUnderCursor.classList.contains('pfp-card') ||
             elementUnderCursor.classList.contains('filter-btn') ||
             elementUnderCursor.classList.contains('project-link') ||
             elementUnderCursor.classList.contains('contact-link') ||
+            elementUnderCursor.classList.contains('social-icon') ||
+            elementUnderCursor.classList.contains('kol-badge') ||
+            elementUnderCursor.closest('.social-icon') ||
+            elementUnderCursor.closest('.kol-badge') ||
             elementUnderCursor.style.cursor === 'pointer' ||
             window.getComputedStyle(elementUnderCursor).cursor === 'pointer'
         );
@@ -396,13 +424,12 @@ document.addEventListener('DOMContentLoaded', function() {
         cursor.style.setProperty('--frozen-rotation-inner', `${innerTargetAngle}deg`);
     }
 
-    // Click animation - snap to cardinal directions and maintain size
+    // Click animation - lock-on effect
     document.addEventListener('mousedown', () => {
         isMouseDown = true;
-        isDragging = false; // Reset dragging state
+        isDragging = false;
         cursor.classList.add('clicked');
-        cursor.classList.add('hover'); // Keep enlarged when clicked
-        snapToCardinalDirections();
+        cursor.classList.add('hover');
     });
 
     document.addEventListener('mouseup', () => {
