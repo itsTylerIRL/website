@@ -605,3 +605,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start idle timer
     resetIdleTimer();
 })();
+
+// CEG Filler Dynamic Visibility
+(function() {
+    const cegContainer = document.getElementById('cegFiller');
+    const MIN_HEIGHT = 50; // Minimum height in pixels to show the filler
+    
+    if (!cegContainer) return;
+    
+    function checkVisibility() {
+        const containerHeight = cegContainer.offsetHeight;
+        if (containerHeight < MIN_HEIGHT) {
+            cegContainer.classList.add('hidden');
+        } else {
+            cegContainer.classList.remove('hidden');
+        }
+    }
+    
+    window.addEventListener('load', checkVisibility);
+    window.addEventListener('resize', checkVisibility);
+    setTimeout(checkVisibility, 100);
+})();
