@@ -459,7 +459,11 @@ document.addEventListener('DOMContentLoaded', function() {
         lonely: 'assets/radbros/LONELY.png',
         sad: 'assets/radbros/SAD.png',
         sleep: 'assets/radbros/SLEEP.png',
-        sleep2: 'assets/radbros/SLEEP2.png'
+        sleep2: 'assets/radbros/SLEEP2.png',
+        cool: 'assets/radbros/COOL.png',
+        smart: 'assets/radbros/SMART.png',
+        upload: 'assets/radbros/UPLOAD.png',
+        excited: 'assets/radbros/EXCITED.png'
     };
     
     // Preload all images
@@ -527,8 +531,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const mouseX = e.clientX;
         const relativeX = mouseX / windowWidth; // 0 to 1
         
-        // Determine if mouse is on left, center, or right third
+        // Check for specific hover targets
+        const kolBadge = e.target.closest('a[href*="kingdomofloathing"]');
+        const urbitTile = e.target.closest('a[href*="nosfyl"], a[href*="urbit.tylerirl"]');
+        const guestBook = e.target.closest('a[href*="guest-book"]');
+        const galleryTile = e.target.closest('a[href="gallery.html"]');
+        const likesTile = e.target.closest('a[href="likes.html"]');
+        const marketsTile = e.target.closest('a[href="markets.html"]');
         const isHovering = e.target.closest('a, button, .bento-item, .contact-icon-link');
+        
+        // Priority hover reactions
+        if (kolBadge) {
+            setRadbro('cool');
+            return;
+        }
+        if (urbitTile || guestBook) {
+            setRadbro('smart');
+            return;
+        }
+        if (galleryTile) {
+            setRadbro('excited');
+            return;
+        }
+        if (likesTile) {
+            setRadbro('grateful');
+            return;
+        }
+        if (marketsTile) {
+            setRadbro('upload');
+            return;
+        }
         
         if (relativeX < 0.33) {
             // Mouse on left side - look left
