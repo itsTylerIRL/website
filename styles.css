@@ -1649,6 +1649,31 @@ section {
     display: none;
 }
 
+/* CEG Filler Section */
+.ceg-filler-container {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
+    padding: 0;
+}
+
+.ceg-filler {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    opacity: 0.9;
+}
+
+.ceg-filler-container.hidden {
+    display: none;
+}
+
 /* Footer */
 footer {
     background: #000000;
