@@ -440,3 +440,136 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Radbro - Dynamic Mouse Reactive Display
+(function() {
+    const radbroImg = document.getElementById('radbroImage');
+    
+    if (!radbroImg) return;
+    
+    // Radbro image states
+    const radbros = {
+        lookLeft: 'assets/radbros/LOOK_L.png',
+        lookLeftHappy: 'assets/radbros/LOOK_L_HAPPY.png',
+        lookRight: 'assets/radbros/LOOK_R.png',
+        lookRightHappy: 'assets/radbros/LOOK_R_HAPPY.png',
+        happy: 'assets/radbros/HAPPY.png',
+        grateful: 'assets/radbros/GRATEFUL.png',
+        intense: 'assets/radbros/INTENSE.png',
+        lonely: 'assets/radbros/LONELY.png',
+        sad: 'assets/radbros/SAD.png',
+        sleep: 'assets/radbros/SLEEP.png',
+        sleep2: 'assets/radbros/SLEEP2.png'
+    };
+    
+    // Preload all images
+    Object.values(radbros).forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+    
+    let lastMouseMove = Date.now();
+    let currentState = 'happy';
+    let isIdle = false;
+    let sleepToggle = false;
+    let idleTimeout = null;
+    let sleepInterval = null;
+    
+    // Random mood states for variety
+    const happyMoods = ['happy', 'grateful', 'intense'];
+    
+    function setRadbro(state) {
+        if (currentState === state) return;
+        currentState = state;
+        radbroImg.src = radbros[state];
+    }
+    
+    function getRandomHappyMood() {
+        return happyMoods[Math.floor(Math.random() * happyMoods.length)];
+    }
+    
+    function startSleeping() {
+        isIdle = true;
+        setRadbro('sleep');
+        // Alternate between sleep frames
+        sleepInterval = setInterval(() => {
+            sleepToggle = !sleepToggle;
+            setRadbro(sleepToggle ? 'sleep2' : 'sleep');
+        }, 1500);
+    }
+    
+    function wakeUp() {
+        isIdle = false;
+        if (sleepInterval) {
+            clearInterval(sleepInterval);
+            sleepInterval = null;
+        }
+    }
+    
+    function resetIdleTimer() {
+        if (idleTimeout) clearTimeout(idleTimeout);
+        if (isIdle) wakeUp();
+        
+        // Go to sleep after 5 seconds of no mouse movement
+        idleTimeout = setTimeout(() => {
+            startSleeping();
+        }, 5000);
+    }
+    
+    // Mouse position tracking
+    document.addEventListener('mousemove', (e) => {
+        lastMouseMove = Date.now();
+        resetIdleTimer();
+        
+        if (isIdle) return;
+        
+        const windowWidth = window.innerWidth;
+        const mouseX = e.clientX;
+        const relativeX = mouseX / windowWidth; // 0 to 1
+        
+        // Determine if mouse is on left, center, or right third
+        const isHovering = e.target.closest('a, button, .bento-item, .contact-icon-link');
+        
+        if (relativeX < 0.33) {
+            // Mouse on left side - look left
+            setRadbro(isHovering ? 'lookLeftHappy' : 'lookLeft');
+        } else if (relativeX > 0.66) {
+            // Mouse on right side - look right
+            setRadbro(isHovering ? 'lookRightHappy' : 'lookRight');
+        } else {
+            // Mouse in center - look forward with mood
+            if (isHovering) {
+                setRadbro('happy');
+            } else {
+                // Occasionally show different moods
+                if (Math.random() < 0.02) {
+                    setRadbro(getRandomHappyMood());
+                }
+            }
+        }
+    });
+    
+    // React to clicks
+    document.addEventListener('click', () => {
+        if (isIdle) {
+            wakeUp();
+            setRadbro('intense');
+            setTimeout(() => {
+                if (!isIdle) setRadbro('happy');
+            }, 500);
+        } else {
+            // Brief intense reaction
+            const prevState = currentState;
+            setRadbro('intense');
+            setTimeout(() => {
+                if (!isIdle && currentState === 'intense') {
+                    setRadbro(prevState.includes('look') ? prevState : 'happy');
+                }
+            }, 300);
+        }
+        resetIdleTimer();
+    });
+    
+    // Start idle timer
+    resetIdleTimer();
+})();

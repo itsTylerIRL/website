@@ -1618,6 +1618,37 @@ section {
     flex-direction: column;
 }
 
+/* Radbro Filler Section */
+.radbro-filler-container {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
+    padding: 0 1rem;
+    position: relative;
+}
+
+.radbro-filler {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    opacity: 0.9;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    image-rendering: pixelated;
+    filter: invert(1);
+    transform: scale(2);
+    transform-origin: bottom center;
+}
+
+.radbro-filler-container.hidden {
+    display: none;
+}
+
 /* Footer */
 footer {
     background: #000000;
@@ -1625,7 +1656,6 @@ footer {
     text-align: left;
     padding: 0.6rem 0;
     flex-shrink: 0;
-    margin-top: auto; /* Ensures footer stays at bottom */
 }
 
 /* Animations removed for minimalism */
