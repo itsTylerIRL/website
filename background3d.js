@@ -21,7 +21,7 @@ let bloomThreshold = 0.2;
 let linesEnabled = true;
 let linesMaxDistance = 25;
 let linesOpacity = 0.08;
-let glitchEnabled = true;
+let glitchEnabled = false;
 
 function initBackground3D() {
     // Scene setup
