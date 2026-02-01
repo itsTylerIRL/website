@@ -14,7 +14,7 @@ body {
     font-family: 'JetBrains Mono', 'Fira Mono', 'Menlo', 'Consolas', monospace;
     line-height: 1.7;
     color: #eaeaea;
-    background: #000000;
+    background: transparent;
     letter-spacing: 0.01em;
     cursor: none !important; /* Hide default cursor */
     display: flex;
@@ -339,7 +339,7 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
 
 /* Hero Section */
 .hero {
-    background: #000000;
+    background: transparent;
     color: #eaeaea;
     padding: 8px 0;
     text-align: center;
@@ -396,7 +396,7 @@ section {
 
 /* PFP Section */
 .pfp-section {
-    background: #000000;
+    background: transparent;
     padding: 0.5rem 0 0.5rem 0;
 }
 
@@ -1457,7 +1457,7 @@ section {
 }
 
 .card-container {
-    background: linear-gradient(135deg, #000000 0%, #000000 100%);
+    background: rgba(0, 0, 0, 0.85);
     border: 1px solid #232323;
     border-radius: 8px;
     padding: 1rem;
@@ -1676,7 +1676,7 @@ section {
 
 /* Footer */
 footer {
-    background: #000000;
+    background: transparent;
     color: #bdbdbd;
     text-align: left;
     padding: 0.6rem 0;
