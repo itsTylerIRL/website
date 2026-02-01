@@ -28,6 +28,9 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css?v=1.1">
     
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <style>
         /* Guest Book Page Styles */
         .guestbook-container {
@@ -216,8 +219,49 @@
         <div class="container">
             <center>
             <div style="text-align: center; margin-bottom: 0.5rem;">
-                <img src="assets/SMART.png" alt="Smart" style="width: 80px; height: auto; border: 0px solid #232323;">
+                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1); image-rendering: pixelated;">
             </div>
+            
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.75rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+            <style>
+                #particleSlider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 12px;
+                    height: 12px;
+                    background: #8be9fd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+                    transition: all 0.2s ease;
+                }
+                #particleSlider::-webkit-slider-thumb:hover {
+                    transform: scale(1.2);
+                    box-shadow: 0 0 15px rgba(139, 233, 253, 0.8);
+                }
+                #particleSlider::-moz-range-thumb {
+                    width: 12px;
+                    height: 12px;
+                    background: #8be9fd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+                }
+            </style>
+            <script>
+                document.getElementById('particleSlider').addEventListener('input', function(e) {
+                    const count = parseInt(e.target.value);
+                    if (window.setParticleCount) {
+                        window.setParticleCount(count);
+                    }
+                });
+            </script>
+            
             <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
             <span style="font-size: 0.95rem;">radbro webring</span>
             <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
@@ -226,6 +270,7 @@
     </footer>
 
     <!-- External JavaScript -->
+    <script src="background3d.js?v=1.0"></script>
     <script src="script.js?v=1.1"></script>
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>

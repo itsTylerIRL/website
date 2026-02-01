@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyler (in real life)</title>
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -268,10 +271,9 @@
             <!-- KoL Badge -->
             <div style="text-align: center; margin: 1rem 0;">
                 <a href="http://www.kingdomofloathing.com" target="_blank">
-                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_level/s2_ascensions/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                 </a>
             </div>
-            
             
             <!-- Contact Methods -->
             <div class="contact-methods" style="margin: 0.1rem 0 0.2rem 0;">
@@ -391,11 +393,6 @@
     </section>
     </main>
 
-    <!-- CEG Filler Section -->
-    <div class="ceg-filler-container" id="cegFiller">
-        <img src="assets/CEG.gif" alt="" class="ceg-filler">
-    </div>
-
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -403,6 +400,47 @@
             <div style="text-align: center; margin-bottom: 0.5rem;">
                 <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1); image-rendering: pixelated;">
             </div>
+            
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.75rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+            <style>
+                #particleSlider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 12px;
+                    height: 12px;
+                    background: #8be9fd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+                    transition: all 0.2s ease;
+                }
+                #particleSlider::-webkit-slider-thumb:hover {
+                    transform: scale(1.2);
+                    box-shadow: 0 0 15px rgba(139, 233, 253, 0.8);
+                }
+                #particleSlider::-moz-range-thumb {
+                    width: 12px;
+                    height: 12px;
+                    background: #8be9fd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+                }
+            </style>
+            <script>
+                document.getElementById('particleSlider').addEventListener('input', function(e) {
+                    const count = parseInt(e.target.value);
+                    if (window.setParticleCount) {
+                        window.setParticleCount(count);
+                    }
+                });
+            </script>
+            
             <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
             <span style="font-size: 0.95rem;">radbro webring</span>
             <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
@@ -412,6 +450,7 @@
     </footer>
     
     <!-- External JavaScript -->
+    <script src="background3d.js?v=1.0"></script>
     <script src="script.js?v=1.1"></script>
     <script src="performance.js?v=1.1"></script>
     <script src="interactions.js?v=1.1"></script>

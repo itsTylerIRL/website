@@ -314,6 +314,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (mainScanline) {
                 mainScanline.style.display = 'none';
             }
+            
+            // Hide floating home button
+            const floatingHome = document.querySelector('.floating-home');
+            if (floatingHome) {
+                floatingHome.style.display = 'none';
+            }
         });
     });
     
@@ -344,6 +350,12 @@ function closePfpPopup() {
     }
     if (mainScanline) {
         mainScanline.style.display = 'block';
+    }
+    
+    // Show floating home button again
+    const floatingHome = document.querySelector('.floating-home');
+    if (floatingHome) {
+        floatingHome.style.display = 'block';
     }
 }
 
