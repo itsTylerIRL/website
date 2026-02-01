@@ -14,14 +14,20 @@ let linesMesh, linesGeometry, linesPositions;
 let glitchIntensity = 0;
 let nextGlitchTime = 0;
 
+// Mouse world position for line attraction
+let mouseWorldX = 0;
+let mouseWorldY = 0;
+let mouseWorldZ = 20; // Slightly in front of particles
+
 // Effect settings
 let bloomStrength = 0.8;
 let bloomRadius = 0.4;
 let bloomThreshold = 0.2;
 let linesEnabled = true;
-let linesMaxDistance = 25;
-let linesOpacity = 0.08;
+let linesMaxDistance = 23;
+let linesOpacity = 0.25;
 let glitchEnabled = false;
+let linesAttraction = 0.7; // How strongly lines are attracted to cursor (0-1)
 
 function initBackground3D() {
     // Scene setup
@@ -336,7 +342,7 @@ function setupPostProcessing() {
 // ============== CONNECTION LINES ==============
 function createConnectionLines() {
     // Create a buffer geometry for dynamic lines
-    const maxLines = 500; // Maximum number of line segments
+    const maxLines = 250; // Maximum number of line segments
     linesGeometry = new THREE.BufferGeometry();
     linesPositions = new Float32Array(maxLines * 6); // 2 vertices per line, 3 coords each
     const linesColors = new Float32Array(maxLines * 6); // RGB for each vertex
@@ -387,21 +393,149 @@ function updateConnectionLines() {
         tempVec.applyMatrix4(matrix);
         
         if (Math.abs(tempVec.y - cameraY) < viewRange) {
+            // Calculate distance to mouse for scoring
+            const dx = tempVec.x - mouseWorldX;
+            const dy = tempVec.y - mouseWorldY;
+            const dz = tempVec.z - mouseWorldZ;
+            const distToMouse = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            
             visibleParticles.push(i);
-            transformedPositions.push({ x: tempVec.x, y: tempVec.y, z: tempVec.z });
+            transformedPositions.push({ 
+                x: tempVec.x, 
+                y: tempVec.y, 
+                z: tempVec.z,
+                distToMouse: distToMouse
+            });
         }
     }
+    
+    // Sort particles by distance to mouse (closest first)
+    const sortedIndices = transformedPositions
+        .map((p, idx) => ({ idx, dist: p.distToMouse }))
+        .sort((a, b) => a.dist - b.dist)
+        .map(item => item.idx);
     
     let lineIndex = 0;
     const maxLines = linesPositions.length / 6;
     const maxDist = linesMaxDistance;
     const maxDistSq = maxDist * maxDist;
+    const attractionRange = 100; // Range where cursor attraction kicks in
+    const cursorConnectRange = 40; // Range where particles connect directly to cursor
+    const maxCursorLines = 8; // Max lines connecting to cursor
     
-    // Check pairs of visible particles
+    // Create lines prioritizing paths toward cursor
+    const usedParticles = new Set();
+    
+    // FIRST: Draw lines from closest particles directly to cursor
+    for (let si = 0; si < Math.min(sortedIndices.length, maxCursorLines) && lineIndex < maxLines; si++) {
+        const i = sortedIndices[si];
+        const p1 = transformedPositions[i];
+        
+        if (p1.distToMouse > cursorConnectRange) continue;
+        
+        const alpha = 1 - (p1.distToMouse / cursorConnectRange);
+        
+        const li = lineIndex * 6;
+        // Line from particle to cursor
+        linesPos[li] = p1.x;
+        linesPos[li + 1] = p1.y;
+        linesPos[li + 2] = p1.z;
+        linesPos[li + 3] = mouseWorldX;
+        linesPos[li + 4] = mouseWorldY;
+        linesPos[li + 5] = mouseWorldZ;
+        
+        // Bright white/cyan for cursor lines - make them pop
+        const brightness = 0.8 + alpha * 0.2;
+        linesCol[li] = brightness;
+        linesCol[li + 1] = brightness;
+        linesCol[li + 2] = brightness;
+        linesCol[li + 3] = 0.4 + alpha * 0.6; // Fade to cyan at cursor
+        linesCol[li + 4] = 0.95;
+        linesCol[li + 5] = 1.0;
+        
+        usedParticles.add(i);
+        lineIndex++;
+    }
+    
+    // Second pass: Create path lines from particles nearest to mouse
+    for (let si = 0; si < Math.min(sortedIndices.length, 50) && lineIndex < maxLines * 0.6; si++) {
+        const i = sortedIndices[si];
+        const p1 = transformedPositions[i];
+        
+        if (p1.distToMouse > attractionRange) continue;
+        
+        // Find the best neighbor that's further from mouse (creating path away)
+        let bestJ = -1;
+        let bestScore = -Infinity;
+        
+        for (let j = 0; j < transformedPositions.length; j++) {
+            if (i === j) continue;
+            
+            const p2 = transformedPositions[j];
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const dz = p2.z - p1.z;
+            const distSq = dx * dx + dy * dy + dz * dz;
+            
+            if (distSq > maxDistSq || distSq < 1) continue;
+            
+            // Score based on: being further from mouse (creates outward path) but not too far apart
+            const dist = Math.sqrt(distSq);
+            const directionScore = (p2.distToMouse - p1.distToMouse) / dist; // Positive = moving away from mouse
+            const proximityScore = 1 - (dist / maxDist);
+            const noveltyScore = usedParticles.has(j) ? 0.3 : 1; // Prefer unused particles
+            
+            const score = (directionScore * linesAttraction + proximityScore * (1 - linesAttraction)) * noveltyScore;
+            
+            if (score > bestScore) {
+                bestScore = score;
+                bestJ = j;
+            }
+        }
+        
+        if (bestJ !== -1) {
+            const p2 = transformedPositions[bestJ];
+            const dist = Math.sqrt(
+                Math.pow(p2.x - p1.x, 2) + 
+                Math.pow(p2.y - p1.y, 2) + 
+                Math.pow(p2.z - p1.z, 2)
+            );
+            const alpha = 1 - (dist / maxDist);
+            
+            // Boost brightness for lines near cursor
+            const mouseProximity = 1 - Math.min(p1.distToMouse / attractionRange, 1);
+            const brightBoost = 1 + mouseProximity * 0.5;
+            
+            const li = lineIndex * 6;
+            linesPos[li] = p1.x;
+            linesPos[li + 1] = p1.y;
+            linesPos[li + 2] = p1.z;
+            linesPos[li + 3] = p2.x;
+            linesPos[li + 4] = p2.y;
+            linesPos[li + 5] = p2.z;
+            
+            // Brighter cyan near cursor, with pink tint
+            const r = (0.55 + 0.45 * alpha) * brightBoost;
+            const g = (0.91 + 0.09 * alpha) * brightBoost;
+            const b = (0.99 + 0.01 * alpha) * brightBoost;
+            linesCol[li] = Math.min(1, r + mouseProximity * 0.3);
+            linesCol[li + 1] = Math.min(1, g);
+            linesCol[li + 2] = Math.min(1, b);
+            linesCol[li + 3] = Math.min(1, r);
+            linesCol[li + 4] = Math.min(1, g);
+            linesCol[li + 5] = Math.min(1, b);
+            
+            usedParticles.add(i);
+            usedParticles.add(bestJ);
+            lineIndex++;
+        }
+    }
+    
+    // Second pass: Regular connections for remaining lines
     for (let i = 0; i < visibleParticles.length && lineIndex < maxLines; i++) {
         const p1 = transformedPositions[i];
         
-        for (let j = i + 1; j < visibleParticles.length && lineIndex < maxLines; j++) {
+        for (let j = i + 1; j < transformedPositions.length && lineIndex < maxLines; j++) {
             const p2 = transformedPositions[j];
             
             const dx = p2.x - p1.x;
@@ -413,7 +547,6 @@ function updateConnectionLines() {
                 const dist = Math.sqrt(distSq);
                 const alpha = 1 - (dist / maxDist);
                 
-                // Set line positions
                 const li = lineIndex * 6;
                 linesPos[li] = p1.x;
                 linesPos[li + 1] = p1.y;
@@ -422,13 +555,12 @@ function updateConnectionLines() {
                 linesPos[li + 4] = p2.y;
                 linesPos[li + 5] = p2.z;
                 
-                // Cyan color with distance-based alpha
-                linesCol[li] = 0.55 * alpha;
-                linesCol[li + 1] = 0.91 * alpha;
-                linesCol[li + 2] = 0.99 * alpha;
-                linesCol[li + 3] = 0.55 * alpha;
-                linesCol[li + 4] = 0.91 * alpha;
-                linesCol[li + 5] = 0.99 * alpha;
+                linesCol[li] = 0.55 + 0.45 * alpha;
+                linesCol[li + 1] = 0.91 + 0.09 * alpha;
+                linesCol[li + 2] = 0.99 + 0.01 * alpha;
+                linesCol[li + 3] = 0.55 + 0.45 * alpha;
+                linesCol[li + 4] = 0.91 + 0.09 * alpha;
+                linesCol[li + 5] = 0.99 + 0.01 * alpha;
                 
                 lineIndex++;
             }
@@ -537,9 +669,26 @@ function onMouseMove(event) {
         // Mouse is at edge or outside - recenter
         mouseX = 0;
         mouseY = 0;
+        mouseWorldX = 0;
+        mouseWorldY = camera.position.y;
     } else {
         mouseX = (x - windowHalfX) * 0.05;
         mouseY = (y - windowHalfY) * 0.05;
+        
+        // Convert screen position to world coordinates for line attraction
+        const normalizedX = (x / window.innerWidth) * 2 - 1;
+        const normalizedY = -(y / window.innerHeight) * 2 + 1;
+        
+        // Unproject to world space
+        const mouseVec = new THREE.Vector3(normalizedX, normalizedY, 0.5);
+        mouseVec.unproject(camera);
+        const dir = mouseVec.sub(camera.position).normalize();
+        const distance = -camera.position.z / dir.z;
+        const worldPos = camera.position.clone().add(dir.multiplyScalar(distance));
+        
+        mouseWorldX = worldPos.x;
+        mouseWorldY = worldPos.y;
+        mouseWorldZ = worldPos.z;
     }
 }
 
@@ -857,7 +1006,15 @@ window.setLinesOpacity = function(opacity) {
     linesOpacity = opacity;
     if (linesMesh) linesMesh.material.opacity = opacity;
 };
-window.getLinesSettings = () => ({ enabled: linesEnabled, maxDistance: linesMaxDistance, opacity: linesOpacity });
+window.setLinesAttraction = function(attraction) {
+    linesAttraction = Math.max(0, Math.min(1, attraction));
+};
+window.getLinesSettings = () => ({ 
+    enabled: linesEnabled, 
+    maxDistance: linesMaxDistance, 
+    opacity: linesOpacity,
+    attraction: linesAttraction 
+});
 
 // Glitch controls
 window.setGlitchEnabled = function(enabled) {
