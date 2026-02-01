@@ -87,6 +87,7 @@ const particleVertexShader = `
     attribute vec3 color;
     varying vec3 vColor;
     varying vec2 vScreenPos;
+    varying float vDepth;
     
     void main() {
         vColor = color;
@@ -96,15 +97,21 @@ const particleVertexShader = `
         
         // Pass screen position for dithering
         vScreenPos = gl_Position.xy / gl_Position.w * 0.5 + 0.5;
+        
+        // Pass depth for fog (normalized 0-1, 0 = near, 1 = far)
+        vDepth = smoothstep(0.0, 150.0, -mvPosition.z);
     }
 `;
 
 const particleFragmentShader = `
     varying vec3 vColor;
     varying vec2 vScreenPos;
+    varying float vDepth;
     uniform float uTime;
     uniform vec2 uResolution;
     uniform float uDitherStrength;
+    uniform float uFogDensity;
+    uniform vec3 uFogColor;
     
     // 4x4 Bayer dithering matrix
     float bayer4x4(vec2 pos) {
@@ -152,12 +159,26 @@ const particleFragmentShader = `
         // Soft edge falloff for professional look
         float edge = 1.0 - smoothstep(0.3, 0.5, dist);
         
-        gl_FragColor = vec4(vColor, ditherAlpha * edge);
+        // Apply depth fog - fade distant particles
+        float fogFactor = 1.0 - vDepth * uFogDensity;
+        fogFactor = clamp(fogFactor, 0.0, 1.0);
+        
+        // Mix color toward fog color for distant particles
+        vec3 finalColor = mix(uFogColor, vColor, fogFactor);
+        
+        // Also reduce alpha for distant particles
+        float finalAlpha = ditherAlpha * edge * (0.3 + fogFactor * 0.7);
+        
+        gl_FragColor = vec4(finalColor, finalAlpha);
     }
 `;
 
 // Dither strength control - subtle default
 let ditherStrength = 0.5;
+
+// Fog settings
+let fogDensity = 0.6;
+let fogColor = new THREE.Color(0x000000);
 
 function createParticles() {
     const geometry = new THREE.BufferGeometry();
@@ -199,7 +220,9 @@ function createParticles() {
         uniforms: {
             uTime: { value: 0 },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-            uDitherStrength: { value: ditherStrength }
+            uDitherStrength: { value: ditherStrength },
+            uFogDensity: { value: fogDensity },
+            uFogColor: { value: fogColor }
         },
         vertexShader: particleVertexShader,
         fragmentShader: particleFragmentShader,
@@ -222,6 +245,16 @@ window.setDitherStrength = function(strength) {
 };
 
 window.getDitherStrength = () => ditherStrength;
+
+// Fog controls
+window.setFogDensity = function(density) {
+    fogDensity = density;
+    if (particles && particles.material.uniforms) {
+        particles.material.uniforms.uFogDensity.value = density;
+    }
+};
+
+window.getFogDensity = () => fogDensity;
 
 function createWireframeShapes() {
     // Floating wireframe geometries - spread across entire scene
@@ -728,7 +761,9 @@ function createParticlesWithCount(count) {
         uniforms: {
             uTime: { value: 0 },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-            uDitherStrength: { value: ditherStrength }
+            uDitherStrength: { value: ditherStrength },
+            uFogDensity: { value: fogDensity },
+            uFogColor: { value: fogColor }
         },
         vertexShader: particleVertexShader,
         fragmentShader: particleFragmentShader,
@@ -738,6 +773,7 @@ function createParticlesWithCount(count) {
     });
 
     particles = new THREE.Points(geometry, material);
+    particles.renderOrder = 1;
     scene.add(particles);
 }
 
