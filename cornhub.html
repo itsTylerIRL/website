@@ -30,6 +30,13 @@
     
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Three.js Post-processing for bloom effect -->
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
     <!-- Web3 Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
@@ -355,7 +362,7 @@
         <div class="container">
             <center>
             <div style="text-align: center; margin-bottom: 0.5rem;">
-                <img src="assets/radbro.png" alt="Radbro" style="width: 80px; height: auto; image-rendering: pixelated; border: 0px solid #232323;">
+                <img src="assets/radbros/HAPPY.png" alt="Radbro" style="width: 80px; height: auto; filter: invert(1); image-rendering: pixelated; border: 0px solid #232323;">
             </div>
             <div style="margin-bottom: 0.5rem;">
                 <input type="range" id="particle-slider" min="500" max="6000" value="3000" 
@@ -365,7 +372,7 @@
             <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
             <span style="font-size: 0.95rem;">radbro webring</span>
             <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
-            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2025 tyler</span></center>
+            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2026 tyler</span></center>
         </div>
     </footer>
     
