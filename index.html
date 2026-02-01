@@ -293,6 +293,62 @@
             background: #8be9fd;
         }
         
+        /* Corner Brackets Border */
+        .corner-brackets {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .corner-brackets::before,
+        .corner-brackets::after,
+        .corner-brackets .bottom::before,
+        .corner-brackets .bottom::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: rgba(139, 233, 253, 0.5);
+            border-style: solid;
+            border-width: 0;
+        }
+        
+        /* Top-left */
+        .corner-brackets::before {
+            top: 15px;
+            left: 15px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+        
+        /* Top-right */
+        .corner-brackets::after {
+            top: 15px;
+            right: 15px;
+            border-top-width: 2px;
+            border-right-width: 2px;
+        }
+        
+        /* Bottom-left */
+        .corner-brackets .bottom::before {
+            bottom: 15px;
+            left: 15px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+        
+        /* Bottom-right */
+        .corner-brackets .bottom::after {
+            bottom: 15px;
+            right: 15px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .bento-grid {
@@ -310,6 +366,9 @@
     </style>
 </head>
 <body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    
     <!-- Invisible scanline toggle button for screenshots -->
     <button id="scanlineToggle" title="Toggle scanline"></button>
     
