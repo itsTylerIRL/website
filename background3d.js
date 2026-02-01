@@ -1,13 +1,12 @@
 // Three.js Particle Field Background
 // Cyberpunk aesthetic with cyan accents - scanline reactive
 
-let scene, camera, renderer, particles, vipParticles, mouseX = 0, mouseY = 0;
+let scene, camera, renderer, particles, mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 let scrollY = 0;
 let scanlineY = 0;
 let particlePositions, particleColors, originalColors;
-let vipTexture;
 
 function initBackground3D() {
     // Scene setup
@@ -29,27 +28,8 @@ function initBackground3D() {
     renderer.domElement.style.pointerEvents = 'none';
     document.body.prepend(renderer.domElement);
 
-    // Load VIP texture with error handling
-    const textureLoader = new THREE.TextureLoader();
-    vipTexture = textureLoader.load(
-        'assets/vip.png',
-        // Success callback
-        function(texture) {
-            console.log('VIP texture loaded successfully');
-            createVipParticles();
-        },
-        // Progress callback
-        undefined,
-        // Error callback - texture failed to load
-        function(err) {
-            console.warn('Could not load VIP texture (CORS issue with file:// protocol). Run via a local server to enable VIP particles.');
-            vipTexture = null;
-        }
-    );
-
     // Create particle systems
     createParticles();
-    // VIP particles created in texture load callback
     createWireframeShapes();
     
     camera.position.z = 50;
@@ -130,39 +110,6 @@ function createParticles() {
 
     particles = new THREE.Points(geometry, material);
     scene.add(particles);
-}
-
-function createVipParticles() {
-    if (!vipTexture) return; // Skip if texture failed to load
-    
-    const geometry = new THREE.BufferGeometry();
-    const vertices = [];
-    
-    // 1 in 500 chance means roughly 6 VIP particles out of 3000
-    const vipCount = Math.floor(3000 / 500);
-    
-    for (let i = 0; i < vipCount; i++) {
-        const x = (Math.random() - 0.5) * 200;
-        const y = (Math.random() - 0.5) * 800;
-        const z = (Math.random() - 0.5) * 100 - 20;
-        
-        vertices.push(x, y, z);
-    }
-
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
-    const material = new THREE.PointsMaterial({ 
-        size: 8,
-        map: vipTexture,
-        transparent: true,
-        opacity: 0.9,
-        sizeAttenuation: true,
-        blending: THREE.NormalBlending,
-        depthWrite: false
-    });
-
-    vipParticles = new THREE.Points(geometry, material);
-    scene.add(vipParticles);
 }
 
 function createWireframeShapes() {
@@ -267,12 +214,6 @@ function animate() {
     // Rotate particles slowly
     particles.rotation.y += 0.0003;
     particles.rotation.x += 0.0001;
-    
-    // Rotate VIP particles with particles
-    if (vipParticles) {
-        vipParticles.rotation.y += 0.0003;
-        vipParticles.rotation.x += 0.0001;
-    }
     
     // Camera follows scroll position
     const targetY = -scrollY * 0.05; // Move camera down as user scrolls
@@ -384,16 +325,8 @@ function setParticleCount(count) {
         particles.material.dispose();
     }
     
-    // Remove old VIP particles
-    if (vipParticles) {
-        scene.remove(vipParticles);
-        vipParticles.geometry.dispose();
-        vipParticles.material.dispose();
-    }
-    
     // Recreate with new count
     createParticlesWithCount(count);
-    createVipParticlesWithCount(count);
 }
 
 function createParticlesWithCount(count) {
@@ -439,39 +372,6 @@ function createParticlesWithCount(count) {
 
     particles = new THREE.Points(geometry, material);
     scene.add(particles);
-}
-
-function createVipParticlesWithCount(count) {
-    if (!vipTexture) return; // Skip if texture failed to load
-    
-    const geometry = new THREE.BufferGeometry();
-    const vertices = [];
-    
-    // 1 in 500 chance
-    const vipCount = Math.max(1, Math.floor(count / 500));
-    
-    for (let i = 0; i < vipCount; i++) {
-        const x = (Math.random() - 0.5) * 200;
-        const y = (Math.random() - 0.5) * 800;
-        const z = (Math.random() - 0.5) * 100 - 20;
-        
-        vertices.push(x, y, z);
-    }
-
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
-    const material = new THREE.PointsMaterial({ 
-        size: 8,
-        map: vipTexture,
-        transparent: true,
-        opacity: 0.9,
-        sizeAttenuation: true,
-        blending: THREE.NormalBlending,
-        depthWrite: false
-    });
-
-    vipParticles = new THREE.Points(geometry, material);
-    scene.add(vipParticles);
 }
 
 // Expose to window for slider control
