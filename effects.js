@@ -1,10 +1,18 @@
 // Effects module - handles scanline animations and visual effects
 // Author: Tyler (in real life)
 
+// Global scanline state - shared with background3d.js
+window.scanlineState = {
+    y: 0,
+    duration: 4000, // 4 seconds
+    startTime: performance.now()
+};
+
 // Add animated scanline effect
 function createScanline() {
     const scanline = document.createElement('div');
     scanline.className = 'scanline';
+    scanline.id = 'main-scanline';
     document.body.appendChild(scanline);
     
     // Create popup scanline
@@ -35,9 +43,9 @@ function createScanline() {
                 0 0 10px rgba(139, 233, 253, 0.5),
                 0 0 20px rgba(139, 233, 253, 0.3),
                 0 0 30px rgba(139, 233, 253, 0.1);
-            animation: scanline-move 4s linear infinite;
             z-index: 9999;
             pointer-events: none;
+            will-change: top, opacity;
         }
         
         /* Hide scanline on body when popup is active */
@@ -62,44 +70,10 @@ function createScanline() {
                 0 0 10px rgba(139, 233, 253, 0.5),
                 0 0 20px rgba(139, 233, 253, 0.3),
                 0 0 30px rgba(139, 233, 253, 0.1);
-            animation: scanline-move-popup 4s linear infinite;
             z-index: 10001;
             pointer-events: none;
             display: none;
-        }
-
-        @keyframes scanline-move {
-            0% {
-                top: -2px;
-                opacity: 0;
-            }
-            5% {
-                opacity: 1;
-            }
-            95% {
-                opacity: 1;
-            }
-            100% {
-                top: 100vh;
-                opacity: 0;
-            }
-        }
-        
-        @keyframes scanline-move-popup {
-            0% {
-                top: -2px;
-                opacity: 0;
-            }
-            5% {
-                opacity: 1;
-            }
-            95% {
-                opacity: 1;
-            }
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
+            will-change: top, opacity;
         }
 
         /* Add subtle screen flicker effect */
@@ -197,6 +171,44 @@ function createScanline() {
 
     // Start scanline interaction after a brief delay
     setTimeout(addScanlineInteraction, 100);
+    
+    // Start JS-controlled scanline animation
+    animateScanlineJS(scanline);
+}
+
+// JavaScript-controlled scanline animation for perfect sync with particles
+function animateScanlineJS(scanlineElement) {
+    const state = window.scanlineState;
+    
+    function updateScanline() {
+        const now = performance.now();
+        const elapsed = (now - state.startTime) % state.duration;
+        const progress = elapsed / state.duration;
+        
+        // Calculate Y position (0 to window height)
+        const y = progress * window.innerHeight;
+        
+        // Update global state (read by background3d.js)
+        state.y = y;
+        
+        // Update DOM element position
+        if (scanlineElement) {
+            scanlineElement.style.top = y + 'px';
+            
+            // Fade in/out at edges
+            let opacity = 1;
+            if (progress < 0.05) {
+                opacity = progress / 0.05;
+            } else if (progress > 0.95) {
+                opacity = (1 - progress) / 0.05;
+            }
+            scanlineElement.style.opacity = opacity;
+        }
+        
+        requestAnimationFrame(updateScanline);
+    }
+    
+    updateScanline();
 }
 
 // Initialize scanline effect when DOM is ready

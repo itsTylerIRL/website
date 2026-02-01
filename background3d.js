@@ -62,8 +62,8 @@ function initBackground3D() {
     window.addEventListener('scroll', onScroll);
     window.addEventListener('blur', () => { mouseX = 0; mouseY = 0; }); // Recenter when window loses focus
     
-    // Track scanline position
-    trackScanline();
+    // Track scanline position - now reads from shared state in effects.js
+    // trackScanline(); // Removed - using window.scanlineState instead
 
     // Start animation
     animate();
@@ -650,33 +650,80 @@ function animate() {
 function updateParticlesWithScanline(time) {
     if (!particlePositions || !particleColors) return;
     
+    // Read scanline position from shared state (set by effects.js)
+    const currentScanlineY = window.scanlineState ? window.scanlineState.y : scanlineY;
+    
     const colors = particleColors.array;
     const positions = particlePositions.array;
-    const scanlineWorldY = screenYToWorldY(scanlineY);
-    const scanlineWidth = 15; // How wide the scanline effect is in world units
+    
+    // Scanline effect parameters - pixel-perfect CRT behavior
+    const leadingEdge = 0;      // Pixels ahead where particles start to glow
+    const peakWidth = 8;         // Pixels of maximum brightness
+    const trailingDecay = 60;   // Pixels behind for afterglow
+    const maxBrightness = 2.5;   // Peak brightness multiplier
+    const afterglowColor = 0.15; // Slight warm tint in afterglow
+    
+    // Temp vector for projection
+    const tempVec = new THREE.Vector3();
     
     for (let i = 0; i < positions.length; i += 3) {
-        const particleY = positions[i + 1];
-        const distToScanline = Math.abs(particleY - scanlineWorldY);
+        // Get particle position
+        tempVec.set(positions[i], positions[i + 1], positions[i + 2]);
         
-        // Color index in the colors array
-        const colorIdx = i; // r, g, b are at i, i+1, i+2
-        
-        if (distToScanline < scanlineWidth) {
-            // Particle is near scanline - brighten it!
-            const intensity = 1 - (distToScanline / scanlineWidth);
-            const boost = 1 + intensity * 2; // Up to 3x brightness
-            
-            colors[colorIdx] = Math.min(1, originalColors[colorIdx] * boost);
-            colors[colorIdx + 1] = Math.min(1, originalColors[colorIdx + 1] * boost);
-            colors[colorIdx + 2] = Math.min(1, originalColors[colorIdx + 2] * boost);
-        } else {
-            // Restore original colors with gentle pulsing
-            const pulse = 0.8 + Math.sin(time * 2 + i * 0.1) * 0.2;
-            colors[colorIdx] = originalColors[colorIdx] * pulse;
-            colors[colorIdx + 1] = originalColors[colorIdx + 1] * pulse;
-            colors[colorIdx + 2] = originalColors[colorIdx + 2] * pulse;
+        // Apply the particles group transform if it exists
+        if (particles.matrixWorld) {
+            tempVec.applyMatrix4(particles.matrixWorld);
         }
+        
+        // Project to screen space
+        tempVec.project(camera);
+        
+        // Convert to pixel coordinates (0 = top, windowHeight = bottom)
+        const screenY = (1 - tempVec.y) * 0.5 * window.innerHeight;
+        
+        // Distance to scanline in pixels (positive = scanline hasn't reached yet)
+        const distToScanline = screenY - currentScanlineY;
+        
+        // Color index
+        const colorIdx = i;
+        
+        // Base pulse for ambient life
+        const ambientPulse = 0.85 + Math.sin(time * 1.5 + i * 0.05) * 0.15;
+        
+        let brightness = ambientPulse;
+        let colorShiftR = 0;
+        let colorShiftG = 0;
+        let colorShiftB = 0;
+        
+        if (distToScanline > 0 && distToScanline < leadingEdge) {
+            // LEADING EDGE: Scanline approaching
+            const t = 1 - (distToScanline / leadingEdge);
+            const easedT = t * t;
+            brightness = ambientPulse + easedT * (maxBrightness - 1) * 0.5;
+            colorShiftB = easedT * 0.1;
+            
+        } else if (Math.abs(distToScanline) <= peakWidth) {
+            // PEAK: Scanline is here
+            const t = 1 - Math.abs(distToScanline) / peakWidth;
+            brightness = maxBrightness * (0.8 + t * 0.2);
+            colorShiftR = t * 0.15;
+            colorShiftG = t * 0.15;
+            colorShiftB = t * 0.15;
+            
+        } else if (distToScanline < 0 && distToScanline > -trailingDecay) {
+            // TRAILING EDGE: Phosphor afterglow decay
+            const t = -distToScanline / trailingDecay;
+            const decay = Math.exp(-t * 3);
+            brightness = ambientPulse + decay * (maxBrightness - 1) * 0.7;
+            colorShiftR = decay * afterglowColor * 0.5;
+            colorShiftG = decay * afterglowColor * -0.2;
+            colorShiftB = decay * afterglowColor * 0.3;
+        }
+        
+        // Apply final colors
+        colors[colorIdx] = Math.min(1, originalColors[colorIdx] * brightness + colorShiftR);
+        colors[colorIdx + 1] = Math.min(1, originalColors[colorIdx + 1] * brightness + colorShiftG);
+        colors[colorIdx + 2] = Math.min(1, originalColors[colorIdx + 2] * brightness + colorShiftB);
     }
     
     particleColors.needsUpdate = true;
