@@ -100,6 +100,38 @@ input[type="range"]::-ms-thumb {
     border-color: rgba(139, 233, 253, 0.5);
     border-style: solid;
     border-width: 0;
+    transition: all 0.15s ease-out;
+}
+
+/* Active/held state - brackets pulse and expand */
+.corner-brackets.active::before,
+.corner-brackets.active::after,
+.corner-brackets.active .bottom::before,
+.corner-brackets.active .bottom::after {
+    border-color: rgba(139, 233, 253, 1);
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 8px rgba(139, 233, 253, 0.8));
+}
+
+.corner-brackets.active::before {
+    top: 10px;
+    left: 10px;
+}
+
+.corner-brackets.active::after {
+    top: 10px;
+    right: 10px;
+}
+
+.corner-brackets.active .bottom::before {
+    bottom: 10px;
+    left: 10px;
+}
+
+.corner-brackets.active .bottom::after {
+    bottom: 10px;
+    right: 10px;
 }
 
 /* Top-left */

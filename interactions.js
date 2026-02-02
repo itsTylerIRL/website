@@ -2,6 +2,27 @@
 // Author: Tyler (in real life)
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Corner brackets click/hold interaction
+    const cornerBrackets = document.querySelector('.corner-brackets');
+    if (cornerBrackets) {
+        document.addEventListener('mousedown', function() {
+            cornerBrackets.classList.add('active');
+        });
+        
+        document.addEventListener('mouseup', function() {
+            cornerBrackets.classList.remove('active');
+        });
+        
+        // Also handle touch events for mobile
+        document.addEventListener('touchstart', function() {
+            cornerBrackets.classList.add('active');
+        });
+        
+        document.addEventListener('touchend', function() {
+            cornerBrackets.classList.remove('active');
+        });
+    }
+
     const pfpGrid = document.querySelector('.pfp-grid');
     const pfpCards = document.querySelectorAll('.pfp-card');
     let draggedElement = null;
