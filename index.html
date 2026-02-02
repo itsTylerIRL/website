@@ -82,14 +82,14 @@
             opacity: 0.5;
         }
         
-        /* Bento Items - Glassmorphism */
+        /* Bento Items - Dark Glass */
         .bento-item {
-            background: linear-gradient(145deg, 
-                rgba(20, 20, 25, 0.4) 0%, 
-                rgba(10, 10, 15, 0.6) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             overflow: hidden;
             position: relative;
@@ -100,21 +100,20 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.02);
         }
         
-        /* Top reflection/shine */
+        /* Top reflection/shine - subtle */
         .bento-item::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 50%;
+            height: 40%;
             background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.08) 0%, 
-                rgba(255, 255, 255, 0.02) 50%,
+                rgba(255, 255, 255, 0.02) 0%, 
                 transparent 100%);
             pointer-events: none;
             z-index: 1;
@@ -132,9 +131,9 @@
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(139, 233, 253, 0.03) 45%,
-                rgba(139, 233, 253, 0.08) 50%,
-                rgba(139, 233, 253, 0.03) 55%,
+                rgba(139, 233, 253, 0.02) 45%,
+                rgba(139, 233, 253, 0.05) 50%,
+                rgba(139, 233, 253, 0.02) 55%,
                 transparent 100%
             );
             transform: rotate(25deg);
@@ -149,16 +148,14 @@
         }
         
         .bento-item:hover {
-            background: linear-gradient(145deg, 
-                rgba(30, 30, 40, 0.5) 0%, 
-                rgba(15, 15, 25, 0.7) 100%);
-            border-color: rgba(139, 233, 253, 0.4);
+            background: rgba(0, 0, 0, 0.18);
+            border-color: rgba(139, 233, 253, 0.25);
+            border-top-color: rgba(139, 233, 253, 0.3);
             transform: translateY(-5px) scale(1.02);
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 60px rgba(139, 233, 253, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                inset 0 0 30px rgba(139, 233, 253, 0.05);
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(139, 233, 253, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
         
         .bento-item:hover::before {
@@ -526,7 +523,7 @@
                     height: 12px;
                     background: #8be9fd;
                     border-radius: 50%;
-                    cursor: pointer;
+                    cursor: none;
                     box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
                     transition: all 0.2s ease;
                 }
@@ -539,7 +536,7 @@
                     height: 12px;
                     background: #8be9fd;
                     border-radius: 50%;
-                    cursor: pointer;
+                    cursor: none;
                     border: none;
                     box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
                 }

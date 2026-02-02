@@ -37,6 +37,14 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
     cursor: none !important;
 }
 
+/* Override range slider cursors */
+input[type="range"],
+input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb,
+input[type="range"]::-ms-thumb {
+    cursor: none !important;
+}
+
 /* Custom Cursor - Palantir/Futuristic Tech Style */
 .custom-cursor {
     position: fixed;
@@ -46,6 +54,28 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
     z-index: 9999;
     transform: translate(-50%, -50%);
     transition: width 0.2s ease, height 0.2s ease;
+    perspective: 200px;
+    transform-style: preserve-3d;
+}
+
+/* Cursor container for 3D rotation */
+.cursor-3d-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    transform-style: preserve-3d;
+    animation: cursorOrbit 8s linear infinite;
+}
+
+@keyframes cursorOrbit {
+    0% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translate(-50%, -50%) rotateX(5deg) rotateY(90deg); }
+    50% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(180deg); }
+    75% { transform: translate(-50%, -50%) rotateX(-5deg) rotateY(270deg); }
+    100% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(360deg); }
 }
 
 /* Corner Brackets Border */
@@ -110,16 +140,16 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
     background: #8be9fd;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 
-        0 0 10px #8be9fd,
-        0 0 20px rgba(139, 233, 253, 0.5),
-        0 0 30px rgba(139, 233, 253, 0.3);
-    animation: corePulse 1.5s ease-in-out infinite;
+        0 0 8px #8be9fd,
+        0 0 16px rgba(139, 233, 253, 0.6),
+        0 0 24px rgba(139, 233, 253, 0.3);
+    animation: corePulse 0.6s steps(3) infinite;
 }
 
 /* Outer scanning ring */
@@ -128,75 +158,108 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 28px;
-    height: 28px;
-    border: 1px solid rgba(139, 233, 253, 0.6);
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: rgba(139, 233, 253, 0.9);
+    border-right-color: rgba(139, 233, 253, 0.3);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    animation: scanRing 3s linear infinite;
-    background: 
-        conic-gradient(
-            from 0deg,
-            transparent 0deg,
-            rgba(139, 233, 253, 0.4) 30deg,
-            transparent 60deg,
-            transparent 180deg,
-            rgba(139, 233, 253, 0.2) 210deg,
-            transparent 240deg
-        );
+    animation: scanRing 0.8s steps(8) infinite;
+    box-shadow: 
+        0 0 8px rgba(139, 233, 253, 0.4),
+        inset 0 0 6px rgba(139, 233, 253, 0.1);
 }
 
-/* Scanning sweep effect - add via JS as additional element */
+/* Secondary counter-rotating ring */
 .cursor-ring-outer {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(139, 233, 253, 0.3);
+    width: 44px;
+    height: 44px;
+    border: 1px solid transparent;
+    border-bottom-color: rgba(139, 233, 253, 0.6);
+    border-left-color: rgba(139, 233, 253, 0.3);
+    border-radius: 50%;
     transform: translate(-50%, -50%);
-    animation: rotateCursor 4s linear infinite;
-    clip-path: polygon(
-        50% 0%, 52% 0%, 52% 48%, 100% 48%, 100% 52%, 52% 52%, 52% 100%, 48% 100%, 48% 52%, 0% 52%, 0% 48%, 48% 48%, 48% 0%
-    );
-}
+    animation: rotateCursor 2s linear infinite reverse;
+    box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+}\n\n/* Third ring - data stream effect */\n.cursor-ring-outer::before {\n    content: '';\n    position: absolute;\n    top: -4px;\n    left: -4px;\n    right: -4px;\n    bottom: -4px;\n    border: 1px dashed rgba(139, 233, 253, 0.3);\n    border-radius: 50%;\n    animation: rotateCursor 8s linear infinite;\n}
 
-/* Corner brackets */
+/* Corner brackets - 3D depth effect */
 .cursor-bracket {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-color: #8be9fd;
     border-style: solid;
     border-width: 0;
-    opacity: 0.8;
-    transition: all 0.3s ease;
+    opacity: 0.9;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     top: 50%;
     left: 50%;
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 0 6px rgba(139, 233, 253, 0.8),
+        0 0 12px rgba(139, 233, 253, 0.4);
 }
 
+/* Individual bracket animations - snappy angular movements */
 .cursor-bracket.tl {
-    border-top-width: 1px;
-    border-left-width: 1px;
-    transform: translate(-50%, -50%) translate(-18px, -18px);
+    border-top-width: 2px;
+    border-left-width: 2px;
+    transform: translate(-50%, -50%) translate(-14px, -14px);
+    animation: bracketSnapTL 1.5s steps(4) infinite;
 }
 
 .cursor-bracket.tr {
-    border-top-width: 1px;
-    border-right-width: 1px;
-    transform: translate(-50%, -50%) translate(18px, -18px);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    transform: translate(-50%, -50%) translate(14px, -14px);
+    animation: bracketSnapTR 1.5s steps(4) infinite;
 }
 
 .cursor-bracket.bl {
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    transform: translate(-50%, -50%) translate(-18px, 18px);
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    transform: translate(-50%, -50%) translate(-14px, 14px);
+    animation: bracketSnapBL 1.5s steps(4) infinite;
 }
 
 .cursor-bracket.br {
-    border-bottom-width: 1px;
-    border-right-width: 1px;
-    transform: translate(-50%, -50%) translate(18px, 18px);
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    transform: translate(-50%, -50%) translate(14px, 14px);
+    animation: bracketSnapBR 1.5s steps(4) infinite;
+}
+
+@keyframes bracketSnapTL {
+    0%, 100% { transform: translate(-50%, -50%) translate(-14px, -14px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translate(-50%, -50%) translate(-16px, -12px) rotateX(-25deg) rotateY(25deg); }
+    50% { transform: translate(-50%, -50%) translate(-14px, -14px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translate(-50%, -50%) translate(-12px, -16px) rotateX(25deg) rotateY(-25deg); }
+}
+
+@keyframes bracketSnapTR {
+    0%, 100% { transform: translate(-50%, -50%) translate(14px, -14px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translate(-50%, -50%) translate(12px, -12px) rotateX(-25deg) rotateY(-25deg); }
+    50% { transform: translate(-50%, -50%) translate(14px, -14px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translate(-50%, -50%) translate(16px, -16px) rotateX(25deg) rotateY(25deg); }
+}
+
+@keyframes bracketSnapBL {
+    0%, 100% { transform: translate(-50%, -50%) translate(-14px, 14px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translate(-50%, -50%) translate(-12px, 16px) rotateX(25deg) rotateY(25deg); }
+    50% { transform: translate(-50%, -50%) translate(-14px, 14px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translate(-50%, -50%) translate(-16px, 12px) rotateX(-25deg) rotateY(-25deg); }
+}
+
+@keyframes bracketSnapBR {
+    0%, 100% { transform: translate(-50%, -50%) translate(14px, 14px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translate(-50%, -50%) translate(16px, 12px) rotateX(25deg) rotateY(-25deg); }
+    50% { transform: translate(-50%, -50%) translate(14px, 14px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translate(-50%, -50%) translate(12px, 16px) rotateX(-25deg) rotateY(25deg); }
 }
 
 /* Targeting lines */
@@ -241,35 +304,59 @@ a, button, input, textarea, select, [role="button"], [onclick], .clickable {
 }
 
 .custom-cursor.hover::before {
-    width: 36px;
-    height: 36px;
+    width: 26px;
+    height: 26px;
     border-color: #8be9fd;
 }
 
 .custom-cursor.hover .cursor-ring-outer {
-    width: 52px;
-    height: 52px;
+    width: 38px;
+    height: 38px;
     border-color: rgba(139, 233, 253, 0.5);
 }
 
 .custom-cursor.hover .cursor-bracket {
     opacity: 1;
+    box-shadow: 
+        0 0 10px rgba(139, 233, 253, 1),
+        0 0 20px rgba(139, 233, 253, 0.6),
+        0 0 30px rgba(139, 233, 253, 0.3);
 }
 
 .custom-cursor.hover .cursor-bracket.tl {
-    transform: translate(-50%, -50%) translate(0, -50px) rotate(45deg);
+    animation: bracketHoverTL 0.4s steps(2) infinite;
 }
 
 .custom-cursor.hover .cursor-bracket.tr {
-    transform: translate(-50%, -50%) translate(50px, 0) rotate(45deg);
+    animation: bracketHoverTR 0.4s steps(2) infinite;
 }
 
 .custom-cursor.hover .cursor-bracket.bl {
-    transform: translate(-50%, -50%) translate(-50px, 0) rotate(45deg);
+    animation: bracketHoverBL 0.4s steps(2) infinite;
 }
 
 .custom-cursor.hover .cursor-bracket.br {
-    transform: translate(-50%, -50%) translate(0, 50px) rotate(45deg);
+    animation: bracketHoverBR 0.4s steps(2) infinite;
+}
+
+@keyframes bracketHoverTL {
+    0%, 100% { transform: translate(-50%, -50%) translate(-18px, -18px) rotateX(-35deg) rotateY(35deg); }
+    50% { transform: translate(-50%, -50%) translate(-22px, -22px) rotateX(-50deg) rotateY(50deg); }
+}
+
+@keyframes bracketHoverTR {
+    0%, 100% { transform: translate(-50%, -50%) translate(18px, -18px) rotateX(-35deg) rotateY(-35deg); }
+    50% { transform: translate(-50%, -50%) translate(22px, -22px) rotateX(-50deg) rotateY(-50deg); }
+}
+
+@keyframes bracketHoverBL {
+    0%, 100% { transform: translate(-50%, -50%) translate(-18px, 18px) rotateX(35deg) rotateY(35deg); }
+    50% { transform: translate(-50%, -50%) translate(-22px, 22px) rotateX(50deg) rotateY(50deg); }
+}
+
+@keyframes bracketHoverBR {
+    0%, 100% { transform: translate(-50%, -50%) translate(18px, 18px) rotateX(35deg) rotateY(-35deg); }
+    50% { transform: translate(-50%, -50%) translate(22px, 22px) rotateX(50deg) rotateY(-50deg); }
 }
 
 .custom-cursor.hover .cursor-line.horizontal {
