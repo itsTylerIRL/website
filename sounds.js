@@ -12,7 +12,7 @@
     // Preload and configure sounds
     Object.values(sounds).forEach(sound => {
         sound.preload = 'auto';
-        sound.volume = 0.3;
+        sound.volume = 0.05;
     });
     
     // Throttle hover sounds to prevent spam
