@@ -44,8 +44,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
         
         .project-writeup {
-            max-width: 1200px;
-            margin: 2rem auto;
+            max-width: 1100px;
+            margin: 2rem 70px;
+            margin-left: auto;
+            margin-right: auto;
             padding: 2rem 2.5rem;
             background: rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(4px);
@@ -835,8 +837,57 @@
             color: #7a9aaa;
             background: rgba(0, 0, 0, 0.15);
         }
+        
+        /* Integrated return home button - styled as document control */
+        .doc-return-home {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-return-home:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
+        }
+        
+        .doc-return-home img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+        }
+        
+        .doc-return-home-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .doc-return-home-text span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #8be9fd;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .doc-return-home-text small {
+            font-size: 0.55rem;
+            color: #4a7a8a;
+            font-family: 'Courier Prime', monospace;
+        }
 
         @media (max-width: 1100px) {
+            .project-writeup {
+                margin-left: 60px;
+                margin-right: 60px;
+            }
             .document-layout {
                 grid-template-columns: 1fr;
             }
@@ -848,6 +899,10 @@
         }
         
         @media (max-width: 900px) {
+            .project-writeup {
+                margin-left: 55px;
+                margin-right: 55px;
+            }
             .two-col, .three-col, .four-col {
                 grid-template-columns: 1fr;
             }
@@ -867,11 +922,30 @@
         
         /* Mobile styles */
         @media (max-width: 600px) {
+            .doc-return-home {
+                padding: 0.35rem 0.5rem;
+                gap: 0.4rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .doc-return-home img {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .doc-return-home-text span {
+                font-size: 0.55rem;
+            }
+            
+            .doc-return-home-text small {
+                font-size: 0.45rem;
+            }
+            
             .project-writeup {
                 padding: 0.75rem 0.5rem;
-                margin: 0.25rem auto;
+                margin: 0.25rem 50px;
                 font-size: 0.7rem;
-                max-width: 100%;
+                max-width: calc(100% - 100px);
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
@@ -1226,6 +1300,8 @@
         @media (max-width: 400px) {
             .project-writeup {
                 padding: 0.5rem 0.35rem;
+                margin: 0.25rem 45px;
+                max-width: calc(100% - 90px);
             }
             
             .classified-header h1 {
@@ -1264,6 +1340,11 @@
         
         /* Extra small - under 350px */
         @media (max-width: 350px) {
+            .project-writeup {
+                margin: 0.25rem 40px;
+                max-width: calc(100% - 80px);
+            }
+            
             .classified-header {
                 padding: 0.2rem;
             }
@@ -1314,6 +1395,15 @@
             <span class="classification-stamp">TOP SECRET // NOFORN</span>
             <h1>CLASSIFIED</h1>
         </div>
+        
+        <!-- Document Navigation Control -->
+        <a href="index.html" class="doc-return-home">
+            <img src="assets/wee.gif" alt="[SEAL]">
+            <div class="doc-return-home-text">
+                <span>◄ Return to Main Terminal</span>
+                <small>Exit document viewer // Return to index</small>
+            </div>
+        </a>
         
         <!-- Alert ticker -->
         <div class="ticker-wrap">
@@ -1990,19 +2080,6 @@ response = client.generate_response(
             * This document has been sanitized for distribution outside of <span class="redacted">████████████</span> facilities. Original classification markings have been preserved for audit purposes. Any resemblance to actual government programs, living or dead, is purely coincidental and probably your imagination. <span class="redacted">████████</span>.
         </p>
     </section>
-    
-    <!-- Floating Return Home Button -->
-    <a href="index.html" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="assets/wee.gif" alt="Return home">
-            </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
-            </div>
-        </div>
-    </a>
     </main>
 
     <!-- Footer -->
