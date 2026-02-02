@@ -751,9 +751,23 @@ function animate() {
     const targetY = -scrollY * 0.05; // Move camera down as user scrolls
     camera.position.y += (targetY - camera.position.y) * 0.1;
     
-    // Mouse parallax effect
-    camera.position.x += (mouseX - camera.position.x) * 0.02;
-    camera.lookAt(new THREE.Vector3(0, camera.position.y, 0));
+    // 3D rotation based on mouse position
+    const targetRotationX = -mouseY * 0.015; // Vertical mouse = tilt up/down
+    const targetRotationY = mouseX * 0.02;   // Horizontal mouse = rotate left/right
+    
+    // Smooth camera orbit around center
+    const orbitRadius = 50;
+    const targetCameraX = Math.sin(targetRotationY) * orbitRadius * 0.8;
+    const targetCameraZ = 50 - (1 - Math.cos(targetRotationY)) * orbitRadius * 0.4;
+    const targetCameraYOffset = Math.sin(targetRotationX) * orbitRadius * 0.5;
+    
+    // Smooth interpolation for camera position
+    camera.position.x += (targetCameraX - camera.position.x) * 0.05;
+    camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
+    camera.position.y += (targetY + targetCameraYOffset - camera.position.y) * 0.05;
+    
+    // Camera always looks at center (with scroll offset)
+    camera.lookAt(new THREE.Vector3(0, targetY, 0));
     
     // Scanline reactive particles
     updateParticlesWithScanline(time);
