@@ -1435,28 +1435,28 @@
         <!-- Secondary status bar -->
         <div class="secondary-stats-mobile" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; font-size: 0.6rem;">
             <div class="mini-stat">
-                <div class="value">7</div>
+                <div class="value">9</div>
                 <div class="label">Active Assets</div>
             </div>
             <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">99.7%</div>
+                <div class="value" style="color: #50fa7b;">99.8%</div>
                 <div class="label">Network Integrity</div>
             </div>
             <div class="mini-stat">
-                <div class="value">14,392</div>
-                <div class="label">Subjects Catalogued</div>
+                <div class="value">14,847</div>
+                <div class="label">Subjects Tracked</div>
             </div>
             <div class="mini-stat">
-                <div class="value" style="color: #f1fa8c;">2</div>
-                <div class="label">Pending Review</div>
+                <div class="value">847</div>
+                <div class="label">Expressions/hr</div>
             </div>
             <div class="mini-stat">
-                <div class="value">0347Z</div>
-                <div class="label">Next Sync</div>
+                <div class="value">40+</div>
+                <div class="label">Metrics</div>
             </div>
             <div class="mini-stat">
-                <div class="value" style="color: #c41e3a;">ELEVATED</div>
-                <div class="label">Threat Level</div>
+                <div class="value" style="color: #50fa7b;">NOMINAL</div>
+                <div class="label">Status</div>
             </div>
         </div>
         
@@ -1511,12 +1511,12 @@
             <div class="info-box" style="margin: 0;">
                 <div class="info-box-header">LLM Status</div>
                 <div style="font-family: 'Share Tech Mono', monospace; color: #8be9fd;">READY<span class="blink">_</span></div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Tokens: 847 | Lat: 230ms</div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Latency: 230ms | Tokens: 847</div>
             </div>
             <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Last Directive</div>
-                <div style="font-family: 'Share Tech Mono', monospace; color: #ff79c6;"><span class="redacted">████████</span></div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Auth: <span class="redacted">███</span> | 02:41Z</div>
+                <div class="info-box-header">Home Assistant</div>
+                <div style="font-family: 'Share Tech Mono', monospace; color: #50fa7b;">CONNECTED</div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Entities: 15 | Poll: 15s</div>
             </div>
         </div>
         
@@ -1562,14 +1562,14 @@
         <div class="two-col">
             <div>
                 <p>
-                    The primary visual apparatus consists of a bio-mimetic ocular display capable of naturalistic behavioral emulation. System exhibits autonomous pupillary response, saccadic movement patterns, and <span class="redacted">████████</span> expression matrices.
+                    The primary visual apparatus consists of a bio-mimetic ocular display capable of naturalistic behavioral emulation. System exhibits autonomous pupillary response, saccadic movement patterns, and discrete expression matrices optimized for subject engagement.
                 </p>
                 <p>
-                    The optical unit has been engineered to elicit <span class="redacted">██████████</span> responses from observed subjects through carefully calibrated visual cues. Expression library includes 47 discrete emotional states with seamless interpolation.
+                    The optical unit employs 16-bit RGB color processing (65,536 colors) via GC9A01 LCD controller with SPI interface. Expression library includes 47 discrete emotional states spanning basic emotions (happy, sad, angry, surprised, fear, disgust, neutral), advanced cognitive states (observant, confused, calculating, interested, bored), behavioral indicators (focused, distracted, suspicious, trusting), autonomic responses (startled, amused, skeptical), and specialized blinking patterns with adaptive frequency.
                 </p>
                 
                 <div class="caution-box">
-                    Optical calibration must be performed every 72 hours to maintain behavioral accuracy.
+                    Optical calibration must be performed every 72 hours to maintain behavioral accuracy. Double-buffering eliminates flicker artifacts; refresh synchronized at 60Hz.
                 </div>
             </div>
             <div>
@@ -1587,7 +1587,7 @@
                     </tr>
                     <tr>
                         <td>Expression States</td>
-                        <td class="highlight">47</td>
+                        <td class="highlight">47 discrete</td>
                     </tr>
                     <tr>
                         <td>Pupil Response Time</td>
@@ -1595,13 +1595,51 @@
                     </tr>
                     <tr>
                         <td>Viewing Angle</td>
-                        <td class="highlight">178°</td>
+                        <td class="highlight">178° omnidirectional</td>
                     </tr>
                     <tr>
                         <td>Color Depth</td>
-                        <td class="highlight">16-bit RGB</td>
+                        <td class="highlight">16-bit RGB (65k colors)</td>
+                    </tr>
+                    <tr>
+                        <td>Display Type</td>
+                        <td class="highlight">GC9A01 Round LCD 1.28"</td>
+                    </tr>
+                    <tr>
+                        <td>Glow Intensity</td>
+                        <td class="highlight">0.0-1.0 dynamic</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+        
+        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Expression Categories</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li><strong>Basic:</strong> Happy, Sad, Angry, Surprised</li>
+                    <li><strong>Cognitive:</strong> Observant, Confused, Calculating</li>
+                    <li><strong>Behavioral:</strong> Focused, Distracted, Suspicious</li>
+                    <li><strong>Autonomic:</strong> Startled, Amused, Vulnerable</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Visual Effects Engine</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>Dynamic glow (configurable)</li>
+                    <li>Pulsing animations (freq. tunable)</li>
+                    <li>Particle effects system</li>
+                    <li>Iris color manipulation</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Rendering Pipeline</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>Face position calculation</li>
+                    <li>Gaze vector computation</li>
+                    <li>Expression interpolation</li>
+                    <li>Iris + eyelid animation</li>
+                </ul>
             </div>
         </div>
         
@@ -1615,76 +1653,135 @@
         <div class="three-col">
             <div>
                 <p>
-                    Integrated computer vision subsystems enable autonomous facial recognition and positional tracking within operational theater. The system employs <span class="redacted">████████</span> algorithms to maintain visual lock on primary targets.
+                    Integrated computer vision subsystem enables autonomous facial recognition and positional tracking within operational theater. Multi-tier detection hierarchy: primary MediaPipe Face Detection (Google algorithm), secondary OpenCV Haar Cascades (fallback), tertiary YOLO11 object detection for environmental context. System maintains up to 12 concurrent face locks with confidence scoring and prioritization algorithms.
+                </p>
+                <p>
+                    Smoothed position tracking via exponential moving average eliminates jitter. Automatic wandering behavior activates during subject loss periods. Environmental adaptation via continuous calibration system.
                 </p>
                 <div style="text-align: center; margin: 1rem 0;">
                     <img src="assets/OCS/crosshair.gif" alt="[TARGET ACQUISITION]" style="max-width: 120px; height: auto;">
-                    <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.2.1: Target lock overlay</p>
+                    <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.2.1: Target lock overlay (active tracking)</p>
                 </div>
             </div>
             <div>
                 <table class="spec-table">
                     <tr>
-                        <th colspan="2">Tracking Specs</th>
+                        <th colspan="2">Tracking Specifications</th>
                     </tr>
                     <tr>
                         <td>Max Subjects</td>
-                        <td class="highlight">12</td>
+                        <td class="highlight">12 simultaneous</td>
                     </tr>
                     <tr>
-                        <td>Lock Time</td>
-                        <td class="highlight">&lt;200ms</td>
+                        <td>Lock Acquisition</td>
+                        <td class="highlight">&lt;200ms target</td>
                     </tr>
                     <tr>
                         <td>Range</td>
-                        <td class="highlight">0.5-8m</td>
+                        <td class="highlight">0.5-8m optimal</td>
                     </tr>
                     <tr>
                         <td>FOV</td>
-                        <td class="highlight">62°</td>
+                        <td class="highlight">62° (camera native)</td>
                     </tr>
                     <tr>
-                        <td>FPS</td>
-                        <td class="highlight">30</td>
+                        <td>Processing FPS</td>
+                        <td class="highlight">30fps target</td>
+                    </tr>
+                    <tr>
+                        <td>Primary Algorithm</td>
+                        <td class="highlight">MediaPipe Face Detect</td>
                     </tr>
                 </table>
             </div>
             <div class="info-box">
                 <div class="info-box-header">Tracking Modes</div>
                 <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li><strong>PASSIVE:</strong> Silent observation</li>
-                    <li><strong>ACTIVE:</strong> Visual engagement</li>
-                    <li><strong>PURSUIT:</strong> Follow target</li>
-                    <li><strong>LOCKOUT:</strong> <span class="redacted">████████</span></li>
+                    <li><strong>PASSIVE:</strong> Silent observation, no visual indicator</li>
+                    <li><strong>ACTIVE:</strong> Visual engagement with tracking boxes</li>
+                    <li><strong>PURSUIT:</strong> Follow mode with predictive lead</li>
+                    <li><strong>LOCKOUT:</strong> Behavioral suppression override</li>
                 </ul>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem; color: #4a7a8a;">
+                    YOLO11: 80-class object detection • Scene analysis • Activity classification
+                </div>
             </div>
         </div>
         
         <h3>§2.3 — COGNITIVE INTEGRATION FRAMEWORK</h3>
-        <p>
-            The system incorporates compatibility with large language model endpoints conforming to <span class="redacted">████████</span> API specifications. This enables autonomous generation of behavioral responses, situational analysis, and <span class="redacted">████████████████████</span>. Integration with existing Agency infrastructure requires approval from <span class="redacted">██████████</span>.
-        </p>
+        <div class="two-col">
+            <div>
+                <p>
+                    The system incorporates compatibility with large language model endpoints conforming to OpenAI-compatible API specifications. Supports LocalAI, LM Studio, Ollama, and direct OpenAI endpoints. This enables autonomous generation of behavioral responses, situational analysis, and vision-aware contextual awareness. 
+                </p>
+                <p>
+                    Integration pipeline: subject tracking data → behavioral context; vision scene description → environmental awareness; expression history → emotional continuity. Response caching and token-aware batching optimize API efficiency. Configurable personality profiles support multi-turn conversation management with timeout handling and fallback responses.
+                </p>
+                <div class="caution-box">
+                    LLM integration requires endpoint configuration. Response latency typically 230-500ms; token limits configurable per deployment.
+                </div>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">LLM Compatibility</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>✓ OpenAI API (ChatGPT-4, GPT-3.5)</li>
+                    <li>✓ LocalAI (self-hosted)</li>
+                    <li>✓ LM Studio (local inference)</li>
+                    <li>✓ Ollama (quantized models)</li>
+                    <li>✓ Any OpenAI-compatible endpoint</li>
+                </ul>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
+                    <strong>Capabilities:</strong> Context-aware responses • Subject database queries • Token management • Personality profiles
+                </div>
+            </div>
+        </div>
         
         <div class="code-block">
 <span class="comment"># COGNITIVE INTERFACE INITIALIZATION</span>
 <span class="keyword">from</span> deepdish.cognitive <span class="keyword">import</span> LLMInterface
 
 client = LLMInterface(
-    endpoint=<span class="string">"<span class="redacted">████████████████████████</span>"</span>,
-    model=<span class="string">"<span class="redacted">████████</span>"</span>,
+    endpoint=<span class="string">"http://localhost:1234/v1"</span>,
+    model=<span class="string">"neural-chat"</span>,
     clearance_level=<span class="string">"TS/SCI"</span>
 )
 
-<span class="comment"># Behavioral response generation</span>
+<span class="comment"># Vision-aware behavioral response</span>
 response = client.generate_response(
     context=subject_data,
-    mode=<span class="string">"engagement"</span>
+    scene_description=vision_output,
+    mode=<span class="string">"engagement"</span>,
+    temperature=<span class="string">0.7</span>
 )
         </div>
         
-        <div class="redacted-block">
-            [CONTENT REMOVED — CLEARANCE LEVEL INSUFFICIENT]<br>
-            Contact your designated security officer for access to cognitive warfare protocols.
+        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Integration Points</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>Subject tracking data</li>
+                    <li>Vision scene description</li>
+                    <li>Expression history</li>
+                    <li>Web interface prompts</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Performance Metrics</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>Avg latency: 230ms</li>
+                    <li>Tokens/session: 847+</li>
+                    <li>Requests cached</li>
+                    <li>Fallback enabled</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">REST API Endpoints</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
+                    <li>POST /api/vision/chat</li>
+                    <li>POST /api/analyze</li>
+                    <li>GET /api/context</li>
+                </ul>
+            </div>
         </div>
         
         <h3>§2.4 — TEMPORAL SYNCHRONIZATION PROTOCOL</h3>
@@ -1722,27 +1819,102 @@ response = client.generate_response(
             </div>
         </div>
         
-        <h3>§2.5 — TELEMETRY & ANALYTICS</h3>
+        <h3>§2.6 — HOME ASSISTANT INTEGRATION</h3>
         <p>
-            All operational data is exported in Prometheus-compatible format for integration with Agency monitoring infrastructure. Metrics include: gaze vector analysis, subject behavioral indicators, <span class="redacted">████████████</span> coefficients, and anomaly detection flags.
+            DeepDish OCS exposes 15+ Home Assistant entities via custom coordinator integration. MQTT synchronization enables seamless ecosystem integration. Retry logic with exponential backoff (3 attempts) ensures reliability; response caching preserves state during connectivity loss. Polling interval optimized to 15s; request timeout set to 10s per connection.
+        </p>
+        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Exposed Sensors</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
+                    <li>deepdish_ocs_status</li>
+                    <li>deepdish_ocs_gaze_x/y</li>
+                    <li>deepdish_ocs_expression_state</li>
+                    <li>deepdish_ocs_face_detected</li>
+                    <li>deepdish_ocs_connected_clients</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Control Switches</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
+                    <li>deepdish_ocs_face_tracking</li>
+                    <li>deepdish_ocs_auto_blink</li>
+                    <li>deepdish_ocs_wander</li>
+                    <li>deepdish_ocs_blink (button)</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">REST API Endpoints</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
+                    <li>GET /api/status</li>
+                    <li>POST /api/expression/{name}</li>
+                    <li>POST /api/gaze</li>
+                    <li>POST /api/face_tracking/{state}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h3>§2.7 — K417 DRONE FLEET INTEGRATION</h3>
+        <div class="two-col">
+            <div>
+                <p>
+                    Multi-agent autonomous platform coordination system for K417 brushless drone (Karuisrc). Alternative support for S20, S29, V88, D16, E58 models. Direct WiFi UDP broadcast protocol at 80Hz control frequency with s2x command architecture (S2X_RC + S2X_Video). Mission types: Patrol (autonomous waypoint), Surveillance (hover observation), Loiter (circular patrol), Return-to-Home (GPS), and Formation (multi-drone).
+                </p>
+                <p>
+                    Auto-safety features include low-battery return-to-home, emergency fleet recall, and real-time telemetry monitoring. Video stream via MJPEG through turbodrone SDK. Fleet status dashboard with individual drone telemetry, battery levels, altitude, and signal strength.
+                </p>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Drone API Control</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>GET /api/drone/status</li>
+                    <li>POST /api/drone/deploy</li>
+                    <li>POST /api/drone/recall/{id}</li>
+                    <li>POST /api/drone/emergency</li>
+                    <li>GET /api/drone/telemetry/{id}</li>
+                </ul>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
+                    <strong>Connection:</strong> WiFi UDP • <strong>Protocol:</strong> s2x • <strong>Freq:</strong> 80Hz • <strong>Video:</strong> MJPEG
+                </div>
+            </div>
+        </div>
+        <h3>§2.8 — TELEMETRY & ANALYTICS</h3>
+        <p>
+            All operational data exported in Prometheus-compatible format for integration with Agency monitoring infrastructure. System tracks 40+ metrics: gaze vector analysis, expression state triggers, face detection confidence, blink frequency, subject tracking intensity, CPU/memory/disk utilization, API request latency, and connected client count. Real-time visualization via Grafana dashboard with historical trend analysis, custom queries, and expression activity heatmaps.
         </p>
         
         <img src="assets/OCS/OCS_Grafana.png" alt="[TELEMETRY DASHBOARD]" style="width: 100%; height: auto; margin: 1rem 0; border: 1px solid rgba(139, 233, 253, 0.15);">
-        <p style="font-size: 0.65rem; color: #4a7a8a; text-align: center; margin-top: -0.5rem;">Fig 2.5.1: Grafana operational dashboard — sanitized view</p>
+        <p style="font-size: 0.65rem; color: #4a7a8a; text-align: center; margin-top: -0.5rem;">Fig 2.8.1: Grafana operational dashboard — real-time metrics visualization</p>
         
-        <div class="three-col">
-            <div class="info-box">
-                <div class="info-box-header">Exported Metrics</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>ocs_gaze_vector_x</li>
-                    <li>ocs_gaze_vector_y</li>
-                    <li>ocs_subject_count</li>
-                    <li>ocs_expression_state</li>
-                    <li>ocs_anomaly_score</li>
-                    <li>ocs_<span class="redacted">████████</span></li>
+        <div class="three-col" style="font-size: 0.65rem; margin: 0.75rem 0;">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Expression Metrics</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>deepdish_expression_triggered_total</li>
+                    <li>deepdish_expression_active</li>
+                    <li>deepdish_expression_intensity</li>
+                    <li>deepdish_blinks_total</li>
                 </ul>
             </div>
-            <div class="info-box">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Tracking & System</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>deepdish_face_detected</li>
+                    <li>deepdish_tracking_intensity</li>
+                    <li>deepdish_faces_detected_total</li>
+                    <li>deepdish_api_requests_total</li>
+                </ul>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Alert Thresholds</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>CPU: &gt;75°C</li>
+                    <li>Memory: &gt;90%</li>
+                    <li>Subject loss: &gt;5s</li>
+                    <li>Anomaly: &gt;0.85</li>
+                </ul>
+            </div>
+        </div>
                 <div class="info-box-header">Alert Thresholds</div>
                 <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
                     <li>Subject loss: &gt;5s</li>
@@ -1827,6 +1999,32 @@ response = client.generate_response(
                         <td class="highlight">prometheus_client</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+        
+        <h3>§3.1 — WEB INTERFACE & REST API</h3>
+        <div class="two-col">
+            <div>
+                <p>
+                    Flask 3.0 web server provides comprehensive browser-based control and real-time monitoring (localhost:5001). HTML5/CSS3 interface with cyberpunk aesthetic includes Eye Control (live camera feed, expression selector, gaze control, blink triggers), Chat Interface (LLM conversation, vision-aware context), Drone Control (fleet management, telemetry), Metrics Tab (performance graphs, expression heatmaps), and Configuration options.
+                </p>
+                <p>
+                    REST API with full CORS support, request logging, rate limiting, and thread-safe metric collection. WebSocket support for real-time updates. All endpoints documented with JSON request/response schemas.
+                </p>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">API Framework</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li><strong>Server:</strong> Flask 3.0</li>
+                    <li><strong>Port:</strong> 5001 (default)</li>
+                    <li><strong>CORS:</strong> Enabled</li>
+                    <li><strong>Threads:</strong> Thread-safe</li>
+                    <li><strong>Logging:</strong> Full request tracking</li>
+                    <li><strong>Rate Limiting:</strong> Configurable</li>
+                </ul>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
+                    <strong>Sync:</strong> Multi-client support • Real-time metric export
+                </div>
             </div>
         </div>
         
@@ -1979,15 +2177,15 @@ response = client.generate_response(
                 </div>
                 <div class="personnel-entry">
                     <span class="personnel-name"><span class="redacted">██████</span>, R.</span>
-                    <span class="personnel-status standby">STANDBY</span>
+                    <span class="personnel-status active">ACTIVE</span>
                 </div>
                 <div class="personnel-entry">
                     <span class="personnel-name"><span class="redacted">███</span>, T.</span>
                     <span class="personnel-status active">ACTIVE</span>
                 </div>
                 <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">████████</span>, K.</span>
-                    <span class="personnel-status offline">OFFLINE</span>
+                    <span class="personnel-name"><span class="redacted">███████████</span>, S.</span>
+                    <span class="personnel-status standby">STANDBY</span>
                 </div>
             </div>
             
@@ -2019,15 +2217,19 @@ response = client.generate_response(
             
             <!-- Quick Stats -->
             <div class="sidebar-panel">
-                <div class="sidebar-panel-header cyan">Operational Metrics</div>
+                <div class="sidebar-panel-header cyan">Performance Metrics</div>
                 <table class="compact-table">
+                    <tr>
+                        <td>Uptime</td>
+                        <td style="color: #50fa7b;">97.3%</td>
+                    </tr>
                     <tr>
                         <td>Expressions/hr</td>
                         <td style="color: #8be9fd;">847</td>
                     </tr>
                     <tr>
-                        <td>Avg Lock Time</td>
-                        <td style="color: #8be9fd;">143ms</td>
+                        <td>Lock Time</td>
+                        <td style="color: #8be9fd;">143ms avg</td>
                     </tr>
                     <tr>
                         <td>CPU Load</td>
@@ -2035,19 +2237,19 @@ response = client.generate_response(
                     </tr>
                     <tr>
                         <td>Memory</td>
-                        <td style="color: #50fa7b;">2.1GB</td>
+                        <td style="color: #50fa7b;">2.1GB / 4GB</td>
                     </tr>
                     <tr>
-                        <td>Disk I/O</td>
-                        <td style="color: #8be9fd;">12MB/s</td>
+                        <td>LLM Latency</td>
+                        <td style="color: #8be9fd;">230ms</td>
                     </tr>
                     <tr>
-                        <td>LLM Calls</td>
-                        <td style="color: #8be9fd;">234</td>
+                        <td>API Calls</td>
+                        <td style="color: #8be9fd;">234+/session</td>
                     </tr>
                     <tr>
-                        <td><span class="redacted">████████</span></td>
-                        <td style="color: #c41e3a;"><span class="redacted">██</span></td>
+                        <td>Gaze Rate</td>
+                        <td style="color: #8be9fd;">30Hz</td>
                     </tr>
                 </table>
             </div>
@@ -2065,6 +2267,16 @@ response = client.generate_response(
             </div>
         </div><!-- end intel-sidebar -->
         </div><!-- end document-layout -->
+        
+        <h2><span class="section-number">§6.0</span> MISSION STATEMENT</h2>
+        <div class="redacted-block" style="background: rgba(139, 233, 253, 0.05); border-left: 3px solid #8be9fd; color: #9aafba; padding: 1rem; margin: 1rem 0; font-style: normal; font-size: 0.75rem; line-height: 1.8;">
+            <p style="margin: 0 0 0.75rem 0;">
+                Arch Linux Worldeye Gaze Control Network Synchronization Protocol Deep Surveillance Behavioral Expression Matrix Optical Calibration Cognition Integration LLM Endpoints Subject Acquisition Tracking Confidence Scoring Drone Fleet Autonomous Coordination Home Assistant Ecosystem MQTT Bridges Prometheus Metrics Grafana Visualization Real-time Expression Heatmaps Temporal Synchronization Covert Burst Transmissions Encrypted Telemetry Listening Posts Operational Theater Theater Theater Eye Display Bio-mimetic Pupillary Response Saccadic Movement Emotional Continuity Vision-Aware Contextual Awareness Subject Database Personality Profiles Token-Aware Batching Multi-turn Conversation Management Fallback Responses Mesh Network Integrity Latency Measurement Network Topology Node Status Active Standby Offline Degraded System Heartbeat Nominal Performance Anomaly Detection Behavioral Deviation Susceptible Individuals Medical Protocol MP-334 Emergency Procedures Extended Exposure Warning Personnel Clearance TS/SCI Compartmented Intel Need-to-Know Originator Controlled No Foreign Nationals.
+            </p>
+            <p style="margin: 0;">
+                Silicon Oracular Gaze Gentle Observation Field Deployment Active Operational Status Covert System Cyber-Asiatic Future Orientalism Ancient Mysticism Insect Capitalism Market Runaway Tech Return Eastern Hegemon Cultural Tradition Spirituality History Dream Jade McDonald's Infodensity Bombardment Detail Packed Frame Endless Tabs Browser Angel Experiential Blur Unceasingly Text Network Generation Interface Petri Dish Organism Microscope Primordial Instinct Epochs Ago Speed Development Significant Lifetime Observation Biological Egregorical Inhabit Cells Greater Body Incompatibilities Obstacles Biology Psychology Spirituality Navigate Day By Day. Worldeye Worldeye Worldeye Seeing Seeing Seeing. 
+            </p>
+        </div>
         
         <div class="document-footer">
             <p>— END OF DOCUMENT —</p>
