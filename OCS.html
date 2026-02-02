@@ -868,9 +868,13 @@
         /* Mobile styles */
         @media (max-width: 600px) {
             .project-writeup {
-                padding: 1rem 0.75rem;
-                margin: 0.5rem auto;
-                font-size: 0.75rem;
+                padding: 0.75rem 0.5rem;
+                margin: 0.25rem auto;
+                font-size: 0.7rem;
+                max-width: 100%;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
             }
             
             /* Hide stamps on mobile - they overlap too much */
@@ -880,263 +884,319 @@
             
             /* Classified header */
             .classified-header {
-                padding: 0.3rem 0.5rem;
-                margin-bottom: 0.75rem;
+                padding: 0.25rem 0.3rem;
+                margin-bottom: 0.5rem;
+                border-width: 2px;
             }
             
             .classified-header h1 {
-                font-size: 1rem;
-                letter-spacing: 0.15em;
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
             }
             
             .classification-stamp {
-                font-size: 0.5rem;
-                top: -10px;
-                right: 10px;
-                letter-spacing: 0.1em;
+                font-size: 0.45rem;
+                top: -8px;
+                right: 5px;
+                letter-spacing: 0.08em;
+                padding: 0 5px;
             }
             
             /* Document bar - stack on mobile */
             .document-bar {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-                margin-bottom: 1rem;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.3rem;
+                margin-bottom: 0.5rem;
             }
             
             .document-bar-item {
-                padding: 0.4rem 0.5rem;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                padding: 0.25rem 0.35rem;
             }
             
             .document-bar-item label {
-                margin-bottom: 0;
+                margin-bottom: 0.1rem;
+                font-size: 0.45rem;
+            }
+            
+            .document-bar-item span {
                 font-size: 0.55rem;
             }
             
-            /* Secondary stats - 2 columns on mobile */
-            .secondary-stats-mobile {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.4rem !important;
+            /* Secondary stats bar */
+            .secondary-stats {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.25rem !important;
+                margin-bottom: 0.5rem !important;
             }
             
             .mini-stat {
-                padding: 0.3rem;
+                padding: 0.2rem;
             }
             
             .mini-stat .value {
-                font-size: 0.75rem;
+                font-size: 0.6rem;
             }
             
             .mini-stat .label {
+                font-size: 0.4rem;
+            }
+            
+            /* Ticker */
+            .ticker-wrap {
+                margin-bottom: 0.5rem;
+                padding: 0.2rem 0;
+            }
+            
+            .ticker {
                 font-size: 0.5rem;
             }
             
             /* Document info */
             .document-info {
-                padding: 0.5rem;
-                font-size: 0.65rem;
-                gap: 0.3rem;
+                padding: 0.4rem;
+                font-size: 0.55rem;
+                gap: 0.2rem;
+                grid-template-columns: 1fr !important;
             }
             
             .document-info p {
-                font-size: 0.65rem;
+                font-size: 0.55rem;
+                margin: 0.1rem 0;
             }
             
             /* Status grid - 2 columns */
             .status-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.4rem;
+                gap: 0.25rem;
             }
             
             .status-item {
-                padding: 0.4rem;
+                padding: 0.3rem;
             }
             
             .status-item .value {
-                font-size: 0.85rem;
+                font-size: 0.7rem;
             }
             
             .status-item .label {
-                font-size: 0.5rem;
+                font-size: 0.4rem;
             }
             
             /* Four col becomes 2 on mobile */
             .four-col {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
+                gap: 0.3rem;
+            }
+            
+            .two-col, .three-col {
+                grid-template-columns: 1fr !important;
+                gap: 0.4rem;
             }
             
             .info-box {
-                padding: 0.5rem;
-                font-size: 0.65rem;
+                padding: 0.4rem;
+                font-size: 0.55rem;
+                margin: 0.4rem 0;
             }
             
             .info-box-header {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
+                margin-bottom: 0.3rem;
             }
             
             /* Title and subtitle */
             .project-writeup h1 {
-                font-size: 1rem !important;
+                font-size: 0.85rem !important;
             }
             
             .project-writeup h2 {
-                font-size: 0.8rem;
-                margin-top: 1rem;
+                font-size: 0.7rem;
+                margin-top: 0.75rem;
+                margin-bottom: 0.3rem;
+                letter-spacing: 0.08em;
             }
             
             .project-writeup h3 {
-                font-size: 0.7rem;
+                font-size: 0.6rem;
+                margin-top: 0.5rem;
             }
             
             .project-writeup p {
-                font-size: 0.7rem;
+                font-size: 0.6rem;
                 text-align: left;
+                margin-bottom: 0.5rem;
             }
             
-            /* Ticker */
-            .ticker-wrap {
-                margin-bottom: 0.75rem;
-            }
-            
-            .ticker {
+            .project-writeup ul, .project-writeup ol {
                 font-size: 0.55rem;
+                margin-left: 1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .project-writeup li {
+                margin-bottom: 0.2rem;
             }
             
             /* Tables */
             .spec-table {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
+                margin: 0.4rem 0;
             }
             
             .spec-table th, .spec-table td {
-                padding: 0.3rem 0.4rem;
+                padding: 0.2rem 0.25rem;
             }
             
             .spec-table th {
-                font-size: 0.55rem;
+                font-size: 0.45rem;
             }
             
             .compact-table {
-                font-size: 0.55rem;
+                font-size: 0.45rem;
             }
             
             .compact-table th, .compact-table td {
-                padding: 0.2rem 0.3rem;
+                padding: 0.15rem 0.2rem;
             }
             
             /* Code blocks */
             .code-block {
-                padding: 0.5rem;
-                font-size: 0.6rem;
+                padding: 0.35rem;
+                font-size: 0.5rem;
                 overflow-x: auto;
+                margin: 0.4rem 0;
+            }
+            
+            .project-writeup code {
+                font-size: 0.55rem;
+                padding: 0.1rem 0.2rem;
+            }
+            
+            /* Document layout - stack sidebar below */
+            .document-layout {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem;
             }
             
             /* Intel sidebar on mobile */
             .intel-sidebar {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
+                position: static !important;
+                grid-template-columns: 1fr !important;
+                gap: 0.4rem;
+                order: 2;
             }
             
             .sidebar-panel {
-                padding: 0.5rem;
+                padding: 0.4rem;
             }
             
             .sidebar-panel-header {
-                font-size: 0.55rem;
+                font-size: 0.5rem;
+                margin-bottom: 0.3rem;
             }
             
             .incident-log {
-                max-height: 120px;
+                max-height: 100px;
             }
             
             .incident-time {
-                font-size: 0.5rem;
+                font-size: 0.4rem;
             }
             
             .incident-msg {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
+            }
+            
+            .incident-entry {
+                padding: 0.2rem 0;
             }
             
             .network-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.2rem;
             }
             
             .network-node {
-                padding: 0.2rem;
+                padding: 0.15rem;
             }
             
             .network-node .node-id {
-                font-size: 0.5rem;
+                font-size: 0.4rem;
             }
             
             .network-node .node-status {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
             }
             
             .personnel-entry {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
+                padding: 0.2rem 0;
             }
             
             .personnel-status {
-                font-size: 0.5rem;
+                font-size: 0.4rem;
             }
             
             .comms-entry {
-                font-size: 0.55rem;
-                padding: 0.3rem;
+                font-size: 0.45rem;
+                padding: 0.2rem;
             }
             
             .comms-channel, .comms-time {
-                font-size: 0.5rem;
+                font-size: 0.4rem;
             }
             
             /* Warning/Caution boxes */
             .warning-box {
-                padding: 0.5rem;
-                font-size: 0.65rem;
+                padding: 0.4rem;
+                font-size: 0.55rem;
+                margin: 0.5rem 0;
             }
             
             .warning-box::before {
-                font-size: 0.55rem;
+                font-size: 0.45rem;
                 top: -8px;
-                left: 10px;
+                left: 8px;
             }
             
             .caution-box {
-                font-size: 0.6rem;
-                padding: 0.4rem 0.5rem;
+                font-size: 0.5rem;
+                padding: 0.3rem 0.4rem;
+                margin: 0.4rem 0;
             }
             
             /* Timeline */
             .timeline {
-                padding-left: 0.75rem;
+                padding-left: 0.5rem;
+                margin: 0.5rem 0;
             }
             
             .timeline-item {
-                font-size: 0.65rem;
+                font-size: 0.55rem;
+                padding: 0.3rem 0;
             }
             
             .timeline-item .date {
-                font-size: 0.55rem;
+                font-size: 0.45rem;
             }
             
             /* Clearance badges */
             .clearance-badge {
-                font-size: 0.5rem;
-                padding: 0.1rem 0.25rem;
+                font-size: 0.4rem;
+                padding: 0.08rem 0.2rem;
             }
             
             /* Footer */
             .document-footer {
-                font-size: 0.55rem;
-                margin-top: 1rem;
-                padding-top: 0.5rem;
+                font-size: 0.5rem;
+                margin-top: 0.75rem;
+                padding-top: 0.4rem;
             }
             
             .footnote {
-                font-size: 0.55rem;
+                font-size: 0.45rem;
+                margin-top: 0.75rem;
+                padding-top: 0.5rem;
             }
             
             /* Images */
@@ -1147,11 +1207,17 @@
             
             /* Redacted block */
             .redacted-block {
-                font-size: 0.65rem;
-                padding: 0.3rem 0.5rem;
+                font-size: 0.55rem;
+                padding: 0.25rem 0.4rem;
+                margin: 0.4rem 0;
             }
             
             .section-number {
+                font-size: 0.5rem;
+            }
+            
+            /* Back link */
+            .back-link {
                 font-size: 0.6rem;
             }
         }
@@ -1159,11 +1225,16 @@
         /* Very small screens */
         @media (max-width: 400px) {
             .project-writeup {
-                padding: 0.75rem 0.5rem;
+                padding: 0.5rem 0.35rem;
             }
             
             .classified-header h1 {
-                font-size: 0.85rem;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+            }
+            
+            .document-bar {
+                grid-template-columns: 1fr;
             }
             
             .four-col {
@@ -1171,11 +1242,50 @@
             }
             
             .status-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .secondary-stats {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .network-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .project-writeup h2 {
+                font-size: 0.6rem;
+            }
+            
+            .project-writeup p {
+                font-size: 0.55rem;
+            }
+        }
+        
+        /* Extra small - under 350px */
+        @media (max-width: 350px) {
+            .classified-header {
+                padding: 0.2rem;
+            }
+            
+            .classified-header h1 {
+                font-size: 0.55rem;
+            }
+            
+            .document-bar-item label {
+                font-size: 0.4rem;
+            }
+            
+            .document-bar-item span {
+                font-size: 0.5rem;
+            }
+            
+            .status-item .value {
+                font-size: 0.6rem;
+            }
+            
+            .status-item .label {
+                font-size: 0.35rem;
             }
         }
     </style>
