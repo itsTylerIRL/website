@@ -41,13 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
         'assets/sfx/the-undertaker-bell-meme-sound-effect-soundboard-link.mp3'
     ];
 
-    // Hover sound effect for PFPs
-    const hoverSound = new Audio('assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3');
-    hoverSound.volume = 0.3;
-    let isPlayingHoverSound = false;
+    // Hover sound effect for PFPs - DISABLED (now using sounds.js)
+    // const hoverSound = new Audio('assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3');
+    // hoverSound.volume = 0.3;
+    // let isPlayingHoverSound = false;
+    let isPlayingHoverSound = false; // Keep for drag/drop compatibility
 
-    // Function to play hover sound
+    // Function to play hover sound - DISABLED (now using sounds.js)
     function playHoverSound() {
+        // Old sounds disabled - using sounds.js instead
+        return;
+        /*
         if (!isPlayingHoverSound) {
             isPlayingHoverSound = true;
             hoverSound.currentTime = 0; // Reset to start
@@ -61,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 isPlayingHoverSound = false;
             });
         }
+        */
     }
 
     // Function to play random sound effect
@@ -303,13 +308,13 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(skillDragStyles);
 
-    // Bento Items Hover Sound Effects
-    const bentoItems = document.querySelectorAll('.bento-item');
-    bentoItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            playHoverSound();
-        });
-    });
+    // Bento Items Hover Sound Effects - DISABLED (now using sounds.js)
+    // const bentoItems = document.querySelectorAll('.bento-item');
+    // bentoItems.forEach(item => {
+    //     item.addEventListener('mouseenter', function() {
+    //         playHoverSound();
+    //     });
+    // });
 
     // Custom Cursor Implementation - Only on desktop
     const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -517,21 +522,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add hover sound effects to navigation cards on index page
     const navCards = document.querySelectorAll('.nav-card');
-    console.log('Found nav cards:', navCards.length);
-    navCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            console.log('Nav card hover detected');
-            playHoverSound();
-        });
-    });
+    // Nav cards and contact icons hover sounds - DISABLED (now using sounds.js)
+    // console.log('Found nav cards:', navCards.length);
+    // navCards.forEach(card => {
+    //     card.addEventListener('mouseenter', function() {
+    //         console.log('Nav card hover detected');
+    //         playHoverSound();
+    //     });
+    // });
 
-    // Add hover sound effects to contact icons on index page
-    const contactIcons = document.querySelectorAll('.contact-icon-link');
-    console.log('Found contact icons:', contactIcons.length);
-    contactIcons.forEach(icon => {
-        icon.addEventListener('mouseenter', function() {
-            console.log('Contact icon hover detected');
-            playHoverSound();
-        });
-    });
+    // // Add hover sound effects to contact icons on index page
+    // const contactIcons = document.querySelectorAll('.contact-icon-link');
+    // console.log('Found contact icons:', contactIcons.length);
+    // contactIcons.forEach(icon => {
+    //     icon.addEventListener('mouseenter', function() {
+    //         console.log('Contact icon hover detected');
+    //         playHoverSound();
+    //     });
+    // });
 });
