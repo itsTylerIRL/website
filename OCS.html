@@ -41,58 +41,177 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
+        
         .project-writeup {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 2rem auto;
-            padding: 2rem;
-            background: #000000;
-            border: 1px solid #333;
-            border-radius: 8px;
+            padding: 2rem 2.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(255, 255, 255, 0.03);
+            border-radius: 0;
             line-height: 1.6;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            position: relative;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            font-size: 0.8rem;
+        }
+        
+        /* Document aging effect */
+        .project-writeup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 233, 253, 0.015) 2px,
+                    rgba(139, 233, 253, 0.015) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .classified-header {
+            text-align: center;
+            border: 3px solid #c41e3a;
+            padding: 0.4rem 1rem;
+            margin-bottom: 1rem;
+            background: rgba(196, 30, 58, 0.1);
+            position: relative;
+        }
+        
+        .classified-header h1 {
+            color: #c41e3a;
+            font-family: 'Special Elite', monospace;
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        
+        .classification-stamp {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #000000;
+            padding: 0 10px;
+            color: #c41e3a;
+            font-weight: bold;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+        }
+        
+        /* Top bar with document info */
+        .document-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.7rem;
+        }
+        
+        .document-bar-item {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .document-bar-item label {
+            color: #4a7a8a;
+            display: block;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+        }
+        
+        .document-bar-item span {
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .document-info {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.75rem;
+            color: #6a8a9a;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem 2rem;
+        }
+        
+        .document-info p {
+            margin: 0.2rem 0;
+            color: #6a8a9a;
         }
         
         .project-writeup h2 {
             color: #8be9fd;
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.3);
+            padding-bottom: 0.3rem;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
         
         .project-writeup h3 {
-            color: #b4f8c3;
+            color: #5fcfdf;
             margin-top: 1rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         
         .project-writeup p {
-            color: #bdbdbd;
-            margin-bottom: 1rem;
+            color: #9aafba;
+            margin-bottom: 0.75rem;
+            text-align: justify;
+            font-size: 0.78rem;
         }
         
         .project-writeup ul, .project-writeup ol {
-            color: #bdbdbd;
-            margin-left: 2rem;
-            margin-bottom: 1rem;
+            color: #9aafba;
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
         }
         
         .project-writeup li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
         
         .project-writeup code {
-            background: #000000;
-            color: #ff79c6;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+            background: #0a0a0a;
+            color: #8be9fd;
+            padding: 0.15rem 0.3rem;
+            border-radius: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            border: 1px solid rgba(139, 233, 253, 0.2);
         }
         
         .project-writeup a {
             color: #8be9fd;
             text-decoration: none;
-            border-bottom: 1px solid #8be9fd;
+            border-bottom: 1px dashed #8be9fd;
             transition: all 0.2s;
         }
         
@@ -101,18 +220,649 @@
             border-bottom-color: #b4f8c3;
         }
         
+        /* Two column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        /* Spec table */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            margin: 0.75rem 0;
+        }
+        
+        .spec-table th, .spec-table td {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.4rem 0.6rem;
+            text-align: left;
+        }
+        
+        .spec-table th {
+            background: rgba(139, 233, 253, 0.08);
+            color: #8be9fd;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.65rem;
+        }
+        
+        .spec-table td {
+            color: #9aafba;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .spec-table td.highlight {
+            color: #8be9fd;
+        }
+        
+        /* Info boxes */
+        .info-box {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.75rem;
+        }
+        
+        .info-box-header {
+            color: #8be9fd;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.15);
+        }
+        
+        /* Status indicator */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-item .value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            color: #8be9fd;
+        }
+        
+        .status-item .value.alert {
+            color: #c41e3a;
+        }
+        
+        .status-item .value.ok {
+            color: #50fa7b;
+        }
+        
+        .status-item .label {
+            font-size: 0.6rem;
+            color: #4a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.2rem;
+        }
+        
+        /* Redaction styling */
+        .redacted {
+            background: #0a1215;
+            color: #0a1215;
+            padding: 0 4px;
+            user-select: none;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .redacted::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                #0a1215 0px,
+                #0a1215 3px,
+                #0f1a1f 3px,
+                #0f1a1f 4px
+            );
+        }
+        
+        .redacted-block {
+            background: #0a1215;
+            padding: 0.4rem 0.75rem;
+            margin: 0.75rem 0;
+            border-left: 3px solid #c41e3a;
+            font-style: italic;
+            color: #4a6a7a;
+            font-size: 0.75rem;
+        }
+        
+        .section-number {
+            color: #4a7a8a;
+            font-size: 0.7rem;
+            margin-right: 0.4rem;
+        }
+        
+        .warning-box {
+            border: 2px solid #c41e3a;
+            background: rgba(196, 30, 58, 0.05);
+            padding: 0.75rem;
+            margin: 1rem 0;
+            position: relative;
+            font-size: 0.75rem;
+        }
+        
+        .warning-box::before {
+            content: '⚠ WARNING';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #000000;
+            padding: 0 8px;
+            color: #c41e3a;
+            font-weight: bold;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .caution-box {
+            border: 1px solid #f1fa8c;
+            background: rgba(241, 250, 140, 0.05);
+            padding: 0.5rem 0.75rem;
+            margin: 0.75rem 0;
+            font-size: 0.7rem;
+            color: #f1fa8c;
+        }
+        
+        .caution-box::before {
+            content: '△ CAUTION: ';
+            font-weight: bold;
+        }
+        
+        .footnote {
+            font-size: 0.65rem;
+            color: #4a6a7a;
+            border-top: 1px solid rgba(139, 233, 253, 0.2);
+            margin-top: 1.5rem;
+            padding-top: 0.75rem;
+        }
+        
+        .stamp {
+            position: absolute;
+            transform: rotate(-15deg);
+            border: 3px solid;
+            padding: 0.4rem 0.8rem;
+            font-family: 'Special Elite', monospace;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+        
+        .stamp.approved {
+            color: #8be9fd;
+            border-color: #8be9fd;
+            top: 60px;
+            right: 30px;
+        }
+        
+        .stamp.eyes-only {
+            color: #c41e3a;
+            border-color: #c41e3a;
+            bottom: 80px;
+            left: 20px;
+            transform: rotate(12deg);
+        }
+        
+        .document-footer {
+            margin-top: 2rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid rgba(139, 233, 253, 0.3);
+            text-align: center;
+            font-size: 0.65rem;
+            color: #4a6a7a;
+        }
+        
         .back-link {
             display: inline-block;
             margin: 1rem 0;
             color: #8be9fd;
             text-decoration: none;
-            border-bottom: 1px solid #8be9fd;
+            border-bottom: 1px dashed #8be9fd;
             transition: all 0.2s;
+            font-family: 'Courier Prime', monospace;
         }
         
         .back-link:hover {
             color: #b4f8c3;
             border-bottom-color: #b4f8c3;
+        }
+        
+        .project-writeup img {
+            filter: grayscale(30%) contrast(1.1);
+            border: none !important;
+        }
+        
+        /* Code block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.75rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #8be9fd;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+        }
+        
+        .code-block .comment {
+            color: #4a7a8a;
+        }
+        
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+        
+        .code-block .string {
+            color: #f1fa8c;
+        }
+        
+        /* Timeline */
+        .timeline {
+            border-left: 2px solid rgba(139, 233, 253, 0.3);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.35rem;
+            top: 0.2rem;
+            width: 8px;
+            height: 8px;
+            background: #8be9fd;
+            border-radius: 50%;
+        }
+        
+        .timeline-item .date {
+            color: #4a7a8a;
+            font-size: 0.65rem;
+        }
+        
+        /* Clearance levels */
+        .clearance-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-right: 0.3rem;
+        }
+        
+        .clearance-badge.ts {
+            background: rgba(196, 30, 58, 0.3);
+            color: #c41e3a;
+            border: 1px solid #c41e3a;
+        }
+        
+        .clearance-badge.s {
+            background: rgba(255, 121, 198, 0.2);
+            color: #ff79c6;
+            border: 1px solid #ff79c6;
+        }
+        
+        .clearance-badge.c {
+            background: rgba(139, 233, 253, 0.2);
+            color: #8be9fd;
+            border: 1px solid #8be9fd;
+        }
+        
+        /* Main layout with sidebar */
+        .document-layout {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        .main-content-area {
+            min-width: 0;
+        }
+        
+        .intel-sidebar {
+            position: sticky;
+            top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-panel {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.6rem;
+            font-size: 0.65rem;
+        }
+        
+        .sidebar-panel-header {
+            color: #c41e3a;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid rgba(196, 30, 58, 0.3);
+            font-family: 'Special Elite', monospace;
+        }
+        
+        .sidebar-panel-header.cyan {
+            color: #8be9fd;
+            border-bottom-color: rgba(139, 233, 253, 0.3);
+        }
+        
+        .sidebar-panel-header.green {
+            color: #50fa7b;
+            border-bottom-color: rgba(80, 250, 123, 0.3);
+        }
+        
+        /* Incident log */
+        .incident-log {
+            max-height: 180px;
+            overflow-y: auto;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .incident-log::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .incident-log::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .incident-log::-webkit-scrollbar-thumb {
+            background: rgba(139, 233, 253, 0.3);
+        }
+        
+        .incident-entry {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+        }
+        
+        .incident-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .incident-time {
+            color: #4a7a8a;
+            font-size: 0.55rem;
+        }
+        
+        .incident-msg {
+            color: #9aafba;
+        }
+        
+        .incident-msg.alert {
+            color: #c41e3a;
+        }
+        
+        .incident-msg.warn {
+            color: #f1fa8c;
+        }
+        
+        .incident-msg.ok {
+            color: #50fa7b;
+        }
+        
+        /* Personnel roster */
+        .personnel-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.08);
+        }
+        
+        .personnel-name {
+            color: #9aafba;
+        }
+        
+        .personnel-status {
+            font-size: 0.55rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 2px;
+        }
+        
+        .personnel-status.active {
+            background: rgba(80, 250, 123, 0.2);
+            color: #50fa7b;
+        }
+        
+        .personnel-status.standby {
+            background: rgba(241, 250, 140, 0.2);
+            color: #f1fa8c;
+        }
+        
+        .personnel-status.offline {
+            background: rgba(196, 30, 58, 0.2);
+            color: #c41e3a;
+        }
+        
+        /* Comms intercept */
+        .comms-entry {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem;
+            margin-bottom: 0.4rem;
+            border-left: 2px solid #4a7a8a;
+            font-size: 0.6rem;
+        }
+        
+        .comms-entry.priority {
+            border-left-color: #c41e3a;
+            background: rgba(196, 30, 58, 0.05);
+        }
+        
+        .comms-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.2rem;
+        }
+        
+        .comms-channel {
+            color: #ff79c6;
+            font-size: 0.55rem;
+        }
+        
+        .comms-time {
+            color: #4a7a8a;
+            font-size: 0.55rem;
+        }
+        
+        .comms-body {
+            color: #9aafba;
+        }
+        
+        /* Network status mini-grid */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.3rem;
+        }
+        
+        .network-node {
+            text-align: center;
+            padding: 0.3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+        }
+        
+        .network-node .node-id {
+            font-size: 0.55rem;
+            color: #4a7a8a;
+        }
+        
+        .network-node .node-status {
+            font-size: 0.7rem;
+            margin-top: 0.15rem;
+        }
+        
+        .network-node .node-status.up {
+            color: #50fa7b;
+        }
+        
+        .network-node .node-status.down {
+            color: #c41e3a;
+        }
+        
+        .network-node .node-status.degraded {
+            color: #f1fa8c;
+        }
+        
+        /* Four column grid for dense info */
+        .four-col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        /* Mini stat box */
+        .mini-stat {
+            text-align: center;
+            padding: 0.4rem;
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .mini-stat .value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: #8be9fd;
+        }
+        
+        .mini-stat .label {
+            font-size: 0.55rem;
+            color: #4a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Blinking cursor effect */
+        .blink {
+            animation: blink-animation 1s steps(2, start) infinite;
+        }
+        
+        @keyframes blink-animation {
+            to { visibility: hidden; }
+        }
+        
+        /* Scrolling ticker */
+        .ticker-wrap {
+            overflow: hidden;
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid rgba(196, 30, 58, 0.3);
+            padding: 0.3rem 0;
+            margin-bottom: 1rem;
+        }
+        
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: #c41e3a;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Compact table */
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6rem;
+        }
+        
+        .compact-table th, .compact-table td {
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            padding: 0.25rem 0.4rem;
+            text-align: left;
+        }
+        
+        .compact-table th {
+            background: rgba(139, 233, 253, 0.05);
+            color: #5fcfdf;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .compact-table td {
+            color: #7a9aaa;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 1100px) {
+            .document-layout {
+                grid-template-columns: 1fr;
+            }
+            .intel-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .two-col, .three-col, .four-col {
+                grid-template-columns: 1fr;
+            }
+            .document-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .document-info {
+                grid-template-columns: 1fr;
+            }
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .intel-sidebar {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -131,76 +881,689 @@
 
     <!-- Project Write-up Section -->
     <section class="project-writeup">
-        <h1 style="color: #8be9fd; margin-bottom: 0.5rem;">DeepDish OCS</h1>
-        <p style="color: #ff79c6; margin-bottom: 2rem;">An Optical Control System for my Computer</p>
+        <!-- Classification stamps -->
+        <div class="stamp approved">APPROVED</div>
+        <div class="stamp eyes-only">EYES ONLY</div>
         
-        <div style="text-align: center; margin: 2rem 0; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
-            <img src="assets/OCS/computer.jpg" alt="DeepDish OCS Computer Setup" style="max-width: 45%; height: auto; border-radius: 8px; border: 1px solid #333;">
-            <img src="assets/OCS/webui.gif" alt="Web UI Interface" style="max-width: 45%; height: auto; border-radius: 8px;">
+        <!-- Document header -->
+        <div class="classified-header">
+            <span class="classification-stamp">TOP SECRET // NOFORN</span>
+            <h1>CLASSIFIED</h1>
         </div>
         
-        <h2>Overview</h2>
-        <p>
-            I made a cyberpunk eye that watches you. It runs on a Gakken Worldeye display and uses a webcam to track subjects in real-time. The eye follows you, blinks naturally, and can make different expressions. You can control it manually through a web interface, desktop app, or give API control to other applications.
-        </p>
+        <!-- Alert ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                ⚠ PRIORITY ALERT: SECTOR 7-G ANOMALY DETECTED — COGNITIVE FRAMEWORK UPDATE PENDING — ASSET DEEPDISH-03 OFFLINE FOR MAINTENANCE — <span class="redacted">████████</span> PROTOCOL INITIATED — NEXT SYNC: 0347Z — ⚠ PRIORITY ALERT: SECTOR 7-G ANOMALY DETECTED — COGNITIVE FRAMEWORK UPDATE PENDING — ASSET DEEPDISH-03 OFFLINE FOR MAINTENANCE —
+            </div>
+        </div>
         
-        <h2>What It Does</h2>
+        <!-- Quick status bar -->
+        <div class="document-bar">
+            <div class="document-bar-item">
+                <label>Document ID</label>
+                <span>DEEP-OCS-7734-Δ</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Clearance</label>
+                <span class="clearance-badge ts">TS/SCI</span><span class="clearance-badge s">OCULAR</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Status</label>
+                <span style="color: #50fa7b;">● ACTIVE</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Last Update</label>
+                <span><span class="redacted">██</span>/01/2026</span>
+            </div>
+        </div>
         
-        <h3>👁️ The Eye</h3>
-        <p>
-            A colorful glowing eye that looks alive. It tracks where you're looking, dilates its pupils, and makes expressions like happy, sad, confused, suspicious, etc. It even blinks and has an idle animation when nobody's around.
-        </p>
+        <!-- Secondary status bar -->
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; font-size: 0.6rem;">
+            <div class="mini-stat">
+                <div class="value">7</div>
+                <div class="label">Active Assets</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #50fa7b;">99.7%</div>
+                <div class="label">Network Integrity</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">14,392</div>
+                <div class="label">Subjects Catalogued</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #f1fa8c;">2</div>
+                <div class="label">Pending Review</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">0347Z</div>
+                <div class="label">Next Sync</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #c41e3a;">ELEVATED</div>
+                <div class="label">Threat Level</div>
+            </div>
+        </div>
         
-        <h3>📹 Face Tracking</h3>
-        <p>
-            Uses computer vision to detect your face and follow your head movements. The eye smoothly tracks you around the room with customizable sensitivity. You can adjust how responsive it is or flip the tracking if your camera is mirrored.
-        </p>
+        <!-- Document metadata -->
+        <div class="document-info">
+            <p><strong>PROJECT:</strong> OCS (OCULAR CONTROL SYSTEM)</p>
+            <p><strong>CLASSIFICATION:</strong> TOP SECRET // SCI // ORCON</p>
+            <p><strong>ORIGINATOR:</strong> <span class="redacted">████████████</span></p>
+            <p><strong>PLATFORM:</strong> GAKKEN WORLDEYE</p>
+            <p><strong>HANDLING:</strong> OCULAR-INDOC ONLY</p>
+            <p><strong>COPIES:</strong> <span class="redacted">██</span> of <span class="redacted">██</span></p>
+        </div>
         
-        <div style="display: flex; gap: 2rem; align-items: center; margin: 1rem 0;">
-            <p style="margin: 0; width: 100%;">
-                Red crosshairs mark tracked faces in the camera feed, showing exactly where the system is detecting and following your head position in real-time.
+        <h1 style="color: #8be9fd; margin-bottom: 0.3rem; font-family: 'Special Elite', monospace; letter-spacing: 0.1em; font-size: 1.3rem;">OCULAR CONTROL SYSTEM</h1>
+        <p style="color: #5fcfdf; margin-bottom: 1.5rem; font-size: 0.75rem; letter-spacing: 0.15em;">TECHNICAL OPERATIONS MANUAL — REVISION 4.7.2 — GAKKEN WORLDEYE PLATFORM</p>
+        
+        <div class="document-layout">
+        <div class="main-content-area">
+        
+        <!-- System Status Grid -->
+        <div class="status-grid">
+            <div class="status-item">
+                <div class="value ok">ONLINE</div>
+                <div class="label">System Status</div>
+            </div>
+            <div class="status-item">
+                <div class="value">97.3%</div>
+                <div class="label">Uptime</div>
+            </div>
+            <div class="status-item">
+                <div class="value">2,847</div>
+                <div class="label">Subjects Logged</div>
+            </div>
+            <div class="status-item">
+                <div class="value alert">3</div>
+                <div class="label">Active Alerts</div>
+            </div>
+        </div>
+        
+        <!-- Extended operational data -->
+        <div class="four-col" style="margin-bottom: 1rem;">
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Current Target</div>
+                <div style="font-family: 'Share Tech Mono', monospace; color: #8be9fd;">SUBJ-<span class="redacted">████</span></div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Lock: 2m 47s | Conf: 94.2%</div>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Expression State</div>
+                <div style="font-family: 'Share Tech Mono', monospace; color: #50fa7b;">OBSERVANT</div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Queue: 3 | Trans: 0.2s</div>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">LLM Status</div>
+                <div style="font-family: 'Share Tech Mono', monospace; color: #8be9fd;">READY<span class="blink">_</span></div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Tokens: 847 | Lat: 230ms</div>
+            </div>
+            <div class="info-box" style="margin: 0;">
+                <div class="info-box-header">Last Directive</div>
+                <div style="font-family: 'Share Tech Mono', monospace; color: #ff79c6;"><span class="redacted">████████</span></div>
+                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Auth: <span class="redacted">███</span> | 02:41Z</div>
+            </div>
+        </div>
+        
+        <div class="two-col" style="align-items: stretch;">
+            <div style="display: flex; flex-direction: column;">
+                <img src="assets/OCS/computer.jpg" alt="[CLASSIFIED IMAGERY]" style="width: 100%; height: auto; border: 1px solid rgba(139, 233, 253, 0.15);">
+                <p style="font-size: 0.65rem; color: #4a7a8a; margin-top: 0.3rem;">Fig 1.1: Primary hardware deployment configuration</p>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);">
+                    <img src="assets/OCS/webui.gif" alt="[REDACTED INTERFACE]" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                </div>
+                <p style="font-size: 0.65rem; color: #4a7a8a; margin-top: 0.3rem;">Fig 1.2: Web interface — behavioral expression matrix</p>
+            </div>
+        </div>
+        
+        <h2><span class="section-number">§1.0</span> EXECUTIVE SUMMARY</h2>
+        <div class="two-col">
+            <div>
+                <p>
+                    The following documentation pertains to PROJECT DEEPDISH, a covert optical surveillance and behavioral analysis system deployed on modified <span class="redacted">████████</span> hardware. The system provides real-time subject tracking, autonomous behavioral response mechanisms, and integration capabilities with <span class="redacted">████████████</span> intelligence frameworks.
+                </p>
+                <p>
+                    Field deployment has demonstrated exceptional efficacy in <span class="redacted">██████████████████</span> scenarios. All personnel interfacing with this system must maintain strict operational security protocols as outlined in Directive <span class="redacted">███-██</span>.
+                </p>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Quick Reference</div>
+                <ul style="margin: 0; padding-left: 1rem;">
+                    <li>Codename: <strong>DEEPDISH</strong></li>
+                    <li>Platform: Gakken WorldEye</li>
+                    <li>Primary Function: Surveillance/Analysis</li>
+                    <li>AI Integration: <span class="redacted">████</span> LLM API</li>
+                    <li>Clearance Required: <span class="clearance-badge ts">TS/SCI</span></li>
+                    <li>Deployment Date: <span class="redacted">██/██/████</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2><span class="section-number">§2.0</span> SYSTEM CAPABILITIES</h2>
+        
+        <h3>§2.1 — OPTICAL INTERFACE MODULE</h3>
+        <div class="two-col">
+            <div>
+                <p>
+                    The primary visual apparatus consists of a bio-mimetic ocular display capable of naturalistic behavioral emulation. System exhibits autonomous pupillary response, saccadic movement patterns, and <span class="redacted">████████</span> expression matrices.
+                </p>
+                <p>
+                    The optical unit has been engineered to elicit <span class="redacted">██████████</span> responses from observed subjects through carefully calibrated visual cues. Expression library includes 47 discrete emotional states with seamless interpolation.
+                </p>
+                
+                <div class="caution-box">
+                    Optical calibration must be performed every 72 hours to maintain behavioral accuracy.
+                </div>
+            </div>
+            <div>
+                <table class="spec-table">
+                    <tr>
+                        <th colspan="2">Optical Module Specifications</th>
+                    </tr>
+                    <tr>
+                        <td>Display Resolution</td>
+                        <td class="highlight">240×240 px</td>
+                    </tr>
+                    <tr>
+                        <td>Refresh Rate</td>
+                        <td class="highlight">60 Hz</td>
+                    </tr>
+                    <tr>
+                        <td>Expression States</td>
+                        <td class="highlight">47</td>
+                    </tr>
+                    <tr>
+                        <td>Pupil Response Time</td>
+                        <td class="highlight">&lt;50ms</td>
+                    </tr>
+                    <tr>
+                        <td>Viewing Angle</td>
+                        <td class="highlight">178°</td>
+                    </tr>
+                    <tr>
+                        <td>Color Depth</td>
+                        <td class="highlight">16-bit RGB</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <p style="margin: 0; color: #c41e3a;">
+                Extended exposure to the optical interface may induce <span class="redacted">████████████</span> in susceptible individuals. Medical personnel should be available during prolonged observation sessions. Refer to Medical Protocol MP-334 for emergency procedures.
             </p>
         </div>
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <img src="assets/OCS/crosshair.gif" alt="Face Tracking Crosshair" style="max-width: 150px; height: auto; border-radius: 8px;">
+        
+        <h3>§2.2 — SUBJECT ACQUISITION & TRACKING</h3>
+        <div class="three-col">
+            <div>
+                <p>
+                    Integrated computer vision subsystems enable autonomous facial recognition and positional tracking within operational theater. The system employs <span class="redacted">████████</span> algorithms to maintain visual lock on primary targets.
+                </p>
+                <div style="text-align: center; margin: 1rem 0;">
+                    <img src="assets/OCS/crosshair.gif" alt="[TARGET ACQUISITION]" style="max-width: 120px; height: auto;">
+                    <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.2.1: Target lock overlay</p>
+                </div>
+            </div>
+            <div>
+                <table class="spec-table">
+                    <tr>
+                        <th colspan="2">Tracking Specs</th>
+                    </tr>
+                    <tr>
+                        <td>Max Subjects</td>
+                        <td class="highlight">12</td>
+                    </tr>
+                    <tr>
+                        <td>Lock Time</td>
+                        <td class="highlight">&lt;200ms</td>
+                    </tr>
+                    <tr>
+                        <td>Range</td>
+                        <td class="highlight">0.5-8m</td>
+                    </tr>
+                    <tr>
+                        <td>FOV</td>
+                        <td class="highlight">62°</td>
+                    </tr>
+                    <tr>
+                        <td>FPS</td>
+                        <td class="highlight">30</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Tracking Modes</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li><strong>PASSIVE:</strong> Silent observation</li>
+                    <li><strong>ACTIVE:</strong> Visual engagement</li>
+                    <li><strong>PURSUIT:</strong> Follow target</li>
+                    <li><strong>LOCKOUT:</strong> <span class="redacted">████████</span></li>
+                </ul>
+            </div>
         </div>
         
-        <h3>🧠 LLM Integration</h3>
+        <h3>§2.3 — COGNITIVE INTEGRATION FRAMEWORK</h3>
         <p>
-            The system has built-in support for local LLM APIs. Hook it up to any OpenAI-compatible endpoint to give the eye personality. The eye can respond to what you're doing, make expressions based on generated responses, and even have conversations.
+            The system incorporates compatibility with large language model endpoints conforming to <span class="redacted">████████</span> API specifications. This enables autonomous generation of behavioral responses, situational analysis, and <span class="redacted">████████████████████</span>. Integration with existing Agency infrastructure requires approval from <span class="redacted">██████████</span>.
         </p>
         
-        <h3>🕰️ Grandfather Clock Chime</h3>
+        <div class="code-block">
+<span class="comment"># COGNITIVE INTERFACE INITIALIZATION</span>
+<span class="keyword">from</span> deepdish.cognitive <span class="keyword">import</span> LLMInterface
+
+client = LLMInterface(
+    endpoint=<span class="string">"<span class="redacted">████████████████████████</span>"</span>,
+    model=<span class="string">"<span class="redacted">████████</span>"</span>,
+    clearance_level=<span class="string">"TS/SCI"</span>
+)
+
+<span class="comment"># Behavioral response generation</span>
+response = client.generate_response(
+    context=subject_data,
+    mode=<span class="string">"engagement"</span>
+)
+        </div>
         
-        <div style="display: flex; gap: 2rem; align-items: center; margin: 1rem 0;">
-            <p style="margin: 0; width: 100%;">
-                On the hour, every hour, the eye plays a clock chime animation. The eye phases into a cybernetic clock face, chimes the hour with sound effects, then phases back to normal.
+        <div class="redacted-block">
+            [CONTENT REMOVED — CLEARANCE LEVEL INSUFFICIENT]<br>
+            Contact your designated security officer for access to cognitive warfare protocols.
+        </div>
+        
+        <h3>§2.4 — TEMPORAL SYNCHRONIZATION PROTOCOL</h3>
+        <div class="two-col">
+            <div>
+                <p>
+                    At predetermined intervals, the system initiates a covert synchronization routine disguised as a horological display. This mechanism facilitates encrypted burst transmissions to <span class="redacted">████████████</span> listening posts while maintaining operational cover.
+                </p>
+                <table class="spec-table">
+                    <tr>
+                        <th>Interval</th>
+                        <th>Function</th>
+                        <th>Duration</th>
+                    </tr>
+                    <tr>
+                        <td>15 min</td>
+                        <td>Telemetry sync</td>
+                        <td>2.3s</td>
+                    </tr>
+                    <tr>
+                        <td>1 hour</td>
+                        <td>Full data burst</td>
+                        <td>8.7s</td>
+                    </tr>
+                    <tr>
+                        <td>6 hour</td>
+                        <td><span class="redacted">████████</span></td>
+                        <td><span class="redacted">██</span>s</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="text-align: center;">
+                <img src="assets/OCS/clock.gif" alt="[SYNC PROTOCOL]" style="max-width: 150px; height: auto; margin-bottom: 0.5rem;">
+                <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.4.1: Clock mode (cover)</p>
+            </div>
+        </div>
+        
+        <h3>§2.5 — TELEMETRY & ANALYTICS</h3>
+        <p>
+            All operational data is exported in Prometheus-compatible format for integration with Agency monitoring infrastructure. Metrics include: gaze vector analysis, subject behavioral indicators, <span class="redacted">████████████</span> coefficients, and anomaly detection flags.
+        </p>
+        
+        <img src="assets/OCS/OCS_Grafana.png" alt="[TELEMETRY DASHBOARD]" style="width: 100%; height: auto; margin: 1rem 0; border: 1px solid rgba(139, 233, 253, 0.15);">
+        <p style="font-size: 0.65rem; color: #4a7a8a; text-align: center; margin-top: -0.5rem;">Fig 2.5.1: Grafana operational dashboard — sanitized view</p>
+        
+        <div class="three-col">
+            <div class="info-box">
+                <div class="info-box-header">Exported Metrics</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>ocs_gaze_vector_x</li>
+                    <li>ocs_gaze_vector_y</li>
+                    <li>ocs_subject_count</li>
+                    <li>ocs_expression_state</li>
+                    <li>ocs_anomaly_score</li>
+                    <li>ocs_<span class="redacted">████████</span></li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Alert Thresholds</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>Subject loss: &gt;5s</li>
+                    <li>Anomaly score: &gt;0.85</li>
+                    <li>CPU temp: &gt;75°C</li>
+                    <li>Memory: &gt;90%</li>
+                    <li><span class="redacted">████████</span>: &gt;<span class="redacted">██</span></li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Retention Policy</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>Raw video: 24h</li>
+                    <li>Metrics: 30d</li>
+                    <li>Alerts: 90d</li>
+                    <li>Subject data: <span class="redacted">████</span></li>
+                    <li>Audit logs: 7y</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2><span class="section-number">§3.0</span> TECHNICAL SPECIFICATIONS</h2>
+        <div class="two-col">
+            <div>
+                <table class="spec-table">
+                    <tr>
+                        <th colspan="2">Hardware Configuration</th>
+                    </tr>
+                    <tr>
+                        <td>Platform</td>
+                        <td class="highlight">Raspberry Pi 4B (4GB)</td>
+                    </tr>
+                    <tr>
+                        <td>Display</td>
+                        <td class="highlight">1.28" GC9A01 Round LCD</td>
+                    </tr>
+                    <tr>
+                        <td>Camera</td>
+                        <td class="highlight">Pi Camera Module v2</td>
+                    </tr>
+                    <tr>
+                        <td>Housing</td>
+                        <td class="highlight">Gakken WorldEye</td>
+                    </tr>
+                    <tr>
+                        <td>Power</td>
+                        <td class="highlight">5V/3A USB-C</td>
+                    </tr>
+                    <tr>
+                        <td>Storage</td>
+                        <td class="highlight">64GB microSD</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <table class="spec-table">
+                    <tr>
+                        <th colspan="2">Software Stack</th>
+                    </tr>
+                    <tr>
+                        <td>OS</td>
+                        <td class="highlight">Raspberry Pi OS Lite</td>
+                    </tr>
+                    <tr>
+                        <td>Runtime</td>
+                        <td class="highlight">Python 3.11</td>
+                    </tr>
+                    <tr>
+                        <td>Vision</td>
+                        <td class="highlight">OpenCV 4.8</td>
+                    </tr>
+                    <tr>
+                        <td>Web Framework</td>
+                        <td class="highlight">Flask 3.0</td>
+                    </tr>
+                    <tr>
+                        <td>Display Driver</td>
+                        <td class="highlight">PIL + SPI</td>
+                    </tr>
+                    <tr>
+                        <td>Metrics</td>
+                        <td class="highlight">prometheus_client</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <h2><span class="section-number">§4.0</span> DEVELOPMENT TIMELINE</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date">Q3 2024</div>
+                <strong>Initial Prototype</strong> — Basic eye display with static expressions
+            </div>
+            <div class="timeline-item">
+                <div class="date">Q4 2024</div>
+                <strong>Vision Integration</strong> — OpenCV face tracking, autonomous gaze
+            </div>
+            <div class="timeline-item">
+                <div class="date">Q1 2025</div>
+                <strong>LLM Integration</strong> — Cognitive framework, behavioral responses
+            </div>
+            <div class="timeline-item">
+                <div class="date">Q2 2025</div>
+                <strong>Telemetry System</strong> — Prometheus metrics, Grafana dashboards
+            </div>
+            <div class="timeline-item">
+                <div class="date">Q3 2025</div>
+                <strong><span class="redacted">████████████████</span></strong> — <span class="redacted">████████████████████████████</span>
+            </div>
+            <div class="timeline-item">
+                <div class="date">CURRENT</div>
+                <strong>Field Deployment</strong> — Active operational status
+            </div>
+        </div>
+        
+        <h2><span class="section-number">§5.0</span> FUTURE DEVELOPMENT INITIATIVES</h2>
+        <div class="three-col">
+            <div class="info-box">
+                <div class="info-box-header">Phase 5.1 — Enhanced Optics</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>Expanded expression matrix (128 states)</li>
+                    <li>Iris color manipulation</li>
+                    <li>Tear duct simulation</li>
+                    <li><span class="redacted">████████████</span></li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Phase 5.2 — Tracking</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>Multi-camera array</li>
+                    <li>3D depth sensing</li>
+                    <li>Gait analysis</li>
+                    <li>Thermal overlay</li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <div class="info-box-header">Phase 5.3 — Integration</div>
+                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
+                    <li>UAV coordination</li>
+                    <li>Mobile command app</li>
+                    <li>Mesh networking</li>
+                    <li><span class="redacted">████████████</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        </div><!-- end main-content-area -->
+        
+        <!-- INTEL SIDEBAR -->
+        <div class="intel-sidebar">
+            <!-- Live Incident Log -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header">Live Incident Log</div>
+                <div class="incident-log">
+                    <div class="incident-entry">
+                        <div class="incident-time">02:47:33Z</div>
+                        <div class="incident-msg alert">ANOMALY: Subject 7734 behavioral deviation</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:45:12Z</div>
+                        <div class="incident-msg ok">SYNC: Telemetry burst complete</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:41:08Z</div>
+                        <div class="incident-msg">INFO: Expression matrix calibrated</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:38:55Z</div>
+                        <div class="incident-msg warn">WARN: CPU temp 73°C</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:35:22Z</div>
+                        <div class="incident-msg">INFO: New subject acquired (ID: <span class="redacted">████</span>)</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:30:00Z</div>
+                        <div class="incident-msg ok">HEARTBEAT: All systems nominal</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:27:41Z</div>
+                        <div class="incident-msg">INFO: Gaze vector updated</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">02:22:18Z</div>
+                        <div class="incident-msg alert">ALERT: <span class="redacted">████████████</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Network Status -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header cyan">Network Topology</div>
+                <div class="network-grid">
+                    <div class="network-node">
+                        <div class="node-id">OCS-01</div>
+                        <div class="node-status up">●</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">OCS-02</div>
+                        <div class="node-status up">●</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">OCS-03</div>
+                        <div class="node-status down">●</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">RELAY-A</div>
+                        <div class="node-status up">●</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">RELAY-B</div>
+                        <div class="node-status degraded">●</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">C2-NODE</div>
+                        <div class="node-status up">●</div>
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.55rem; color: #4a7a8a;">
+                    MESH INTEGRITY: <span style="color: #50fa7b;">83%</span> | LATENCY: <span style="color: #8be9fd;">42ms</span>
+                </div>
+            </div>
+            
+            <!-- Personnel Roster -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header green">Cleared Personnel</div>
+                <div class="personnel-entry">
+                    <span class="personnel-name"><span class="redacted">███████</span>, J.</span>
+                    <span class="personnel-status active">ACTIVE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name"><span class="redacted">████</span>, M.</span>
+                    <span class="personnel-status active">ACTIVE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name"><span class="redacted">██████</span>, R.</span>
+                    <span class="personnel-status standby">STANDBY</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name"><span class="redacted">███</span>, T.</span>
+                    <span class="personnel-status active">ACTIVE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name"><span class="redacted">████████</span>, K.</span>
+                    <span class="personnel-status offline">OFFLINE</span>
+                </div>
+            </div>
+            
+            <!-- Comms Intercept -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header">Comms Intercept</div>
+                <div class="comms-entry priority">
+                    <div class="comms-header">
+                        <span class="comms-channel">CH-7 PRIORITY</span>
+                        <span class="comms-time">02:44Z</span>
+                    </div>
+                    <div class="comms-body"><span class="redacted">████████</span> confirmed at grid ref <span class="redacted">██████</span></div>
+                </div>
+                <div class="comms-entry">
+                    <div class="comms-header">
+                        <span class="comms-channel">CH-3 ROUTINE</span>
+                        <span class="comms-time">02:38Z</span>
+                    </div>
+                    <div class="comms-body">Asset rotation complete. DEEPDISH-02 now primary.</div>
+                </div>
+                <div class="comms-entry">
+                    <div class="comms-header">
+                        <span class="comms-channel">CH-1 ADMIN</span>
+                        <span class="comms-time">02:31Z</span>
+                    </div>
+                    <div class="comms-body">Maintenance window 0400-0600Z confirmed.</div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header cyan">Operational Metrics</div>
+                <table class="compact-table">
+                    <tr>
+                        <td>Expressions/hr</td>
+                        <td style="color: #8be9fd;">847</td>
+                    </tr>
+                    <tr>
+                        <td>Avg Lock Time</td>
+                        <td style="color: #8be9fd;">143ms</td>
+                    </tr>
+                    <tr>
+                        <td>CPU Load</td>
+                        <td style="color: #f1fa8c;">67%</td>
+                    </tr>
+                    <tr>
+                        <td>Memory</td>
+                        <td style="color: #50fa7b;">2.1GB</td>
+                    </tr>
+                    <tr>
+                        <td>Disk I/O</td>
+                        <td style="color: #8be9fd;">12MB/s</td>
+                    </tr>
+                    <tr>
+                        <td>LLM Calls</td>
+                        <td style="color: #8be9fd;">234</td>
+                    </tr>
+                    <tr>
+                        <td><span class="redacted">████████</span></td>
+                        <td style="color: #c41e3a;"><span class="redacted">██</span></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Classification Legend -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header">Classification Guide</div>
+                <div style="font-size: 0.55rem; line-height: 1.6;">
+                    <span class="clearance-badge ts">TS/SCI</span> Compartmented Intel<br>
+                    <span class="clearance-badge s">SECRET</span> Need-to-Know<br>
+                    <span class="clearance-badge c">CONF</span> Standard Access<br>
+                    <span style="color: #4a7a8a;">ORCON: Originator Controlled</span><br>
+                    <span style="color: #4a7a8a;">NOFORN: No Foreign Nationals</span>
+                </div>
+            </div>
+        </div><!-- end intel-sidebar -->
+        </div><!-- end document-layout -->
+        
+        <div class="document-footer">
+            <p>— END OF DOCUMENT —</p>
+            <p style="margin-top: 0.75rem;">
+                DISTRIBUTION: <span class="redacted">████████</span> • COPY <span class="redacted">██</span> OF <span class="redacted">██</span><br>
+                UNAUTHORIZED DISCLOSURE SUBJECT TO PENALTIES UNDER 18 U.S.C. §798
             </p>
         </div>
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <img src="assets/OCS/clock.gif" alt="Clock Chime Animation" style="max-width: 150px; height: auto; border-radius: 8px; border: 0px solid #333;">
-        </div>
         
-        <h3>📊 Prometheus Metrics & Grafana</h3>
-        <p>
-            The system exports real-time metrics in Prometheus format. Track eye gaze position, blink frequency, expression history, tracking accuracy, LLM response times, and more. Integrate with Grafana to visualize the eye's behavior over time, create dashboards for live monitoring, and set up alerts for unusual activity.
-        </p>
+        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid rgba(139, 233, 253, 0.15);">
         
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="assets/OCS/OCS_Grafana.png" alt="OCS Grafana Dashboard" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #333;">
-        </div>
-        
-        <h2>Built With</h2>
-        <p>Python + OpenCV + Flask. Simple stuff to make something cool.</p>
-        
-        <h2>What's Next</h2>
-        <p>Want to add more expressions, improve the tracking, better mobile interface, maybe integrate drones for surveillance vibes, and AI emotion detection from your face.</p>
-        
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #333;">
-        
-        <p style="text-align: center; color: #666; font-size: 0.9rem;">
-            A cyberpunk eye that watches<br>
-            <span style="color: #ff79c6;">Made for the Gakken Worldeye</span>
+        <p class="footnote">
+            * This document has been sanitized for distribution outside of <span class="redacted">████████████</span> facilities. Original classification markings have been preserved for audit purposes. Any resemblance to actual government programs, living or dead, is purely coincidental and probably your imagination. <span class="redacted">████████</span>.
         </p>
     </section>
     
