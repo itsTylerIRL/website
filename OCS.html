@@ -14,14 +14,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/OCS">
     <meta property="og:title" content="DeepDish OCS - Tyler (in real life)">
-    <meta property="og:description" content="Gakken WorldEye Ocular Control System - A custom monitoring and control system">
+    <meta property="og:description" content="DeepDish Ocular Control System - A custom monitoring human machine interface">
     <meta property="og:image" content="https://tylerirl.com/assets/OCS.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/OCS">
     <meta property="twitter:title" content="DeepDish OCS - Tyler (in real life)">
-    <meta property="twitter:description" content="Gakken WorldEye Ocular Control System - A custom monitoring and control system">
+    <meta property="twitter:description" content="DeepDish Ocular Control System - A custom monitoring human machine interface">
     <meta property="twitter:image" content="https://tylerirl.com/assets/OCS.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="theme-color" content="#000000">
@@ -101,6 +101,7 @@
             letter-spacing: 0.3em;
             margin: 0;
             text-transform: uppercase;
+            transition: all 0.3s ease;
         }
         
         .classification-stamp {
@@ -137,11 +138,13 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 0.2rem;
+            transition: color 0.3s ease;
         }
         
         .document-bar-item span {
             color: #8be9fd;
             font-family: 'Share Tech Mono', monospace;
+            transition: text-shadow 0.3s ease;
         }
         
         .document-info {
@@ -222,6 +225,730 @@
             border-bottom-color: #b4f8c3;
         }
         
+        /* ========================================
+           COMPREHENSIVE HOVER EFFECTS
+           ======================================== */
+        
+        /* Document bar items hover */
+        .document-bar-item {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .document-bar-item:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 233, 253, 0.15);
+        }
+        
+        .document-bar-item:hover label {
+            color: #8be9fd;
+        }
+        
+        .document-bar-item:hover span {
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
+        }
+        
+        /* Mini stat hover */
+        .mini-stat {
+            text-align: center;
+            padding: 0.4rem;
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .mini-stat:hover {
+            background: rgba(139, 233, 253, 0.1);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+        }
+        
+        .mini-stat:hover .value {
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        /* Status grid item hover */
+        .status-item {
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .status-item:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        .status-item:hover .value {
+            text-shadow: 0 0 12px currentColor;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        
+        /* Info box hover */
+        .info-box {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .info-box:hover {
+            background: rgba(139, 233, 253, 0.05);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: translateX(5px);
+            box-shadow: -3px 0 15px rgba(139, 233, 253, 0.15);
+        }
+        
+        .info-box:hover .info-box-header {
+            color: #b4f8c3;
+            text-shadow: 0 0 8px rgba(180, 248, 195, 0.5);
+        }
+        
+        /* Spec table row hover */
+        .spec-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .spec-table tbody tr:hover,
+        .spec-table tr:hover {
+            background: rgba(139, 233, 253, 0.08) !important;
+        }
+        
+        .spec-table tr:hover td {
+            color: #8be9fd;
+            text-shadow: 0 0 5px rgba(139, 233, 253, 0.3);
+        }
+        
+        .spec-table tr:hover td.highlight {
+            color: #b4f8c3;
+            text-shadow: 0 0 8px rgba(180, 248, 195, 0.5);
+        }
+        
+        /* Compact table row hover */
+        .compact-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .compact-table tr:hover {
+            background: rgba(139, 233, 253, 0.1) !important;
+        }
+        
+        .compact-table tr:hover td {
+            color: #b4f8c3 !important;
+        }
+        
+        /* Timeline item hover */
+        .timeline-item {
+            position: relative;
+            padding-bottom: 0.75rem;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: default;
+            padding-left: 0.5rem;
+            margin-left: -0.5rem;
+        }
+        
+        .timeline-item:hover {
+            background: rgba(139, 233, 253, 0.05);
+            padding-left: 1rem;
+        }
+        
+        .timeline-item:hover::before {
+            background: #b4f8c3;
+            box-shadow: 0 0 10px rgba(180, 248, 195, 0.8);
+            transform: scale(1.5);
+        }
+        
+        .timeline-item:hover strong {
+            color: #8be9fd;
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
+        }
+        
+        /* Clearance badge hover */
+        .clearance-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-right: 0.3rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .clearance-badge:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px currentColor;
+        }
+        
+        .clearance-badge.ts:hover {
+            background: rgba(196, 30, 58, 0.5);
+            box-shadow: 0 0 15px rgba(196, 30, 58, 0.6);
+        }
+        
+        .clearance-badge.s:hover {
+            background: rgba(255, 121, 198, 0.4);
+            box-shadow: 0 0 15px rgba(255, 121, 198, 0.6);
+        }
+        
+        .clearance-badge.c:hover {
+            background: rgba(139, 233, 253, 0.4);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.6);
+        }
+        
+        /* Sidebar panel hover */
+        .sidebar-panel {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.6rem;
+            font-size: 0.65rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-panel:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.1);
+        }
+        
+        .sidebar-panel:hover .sidebar-panel-header {
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        /* Network node hover */
+        .network-node {
+            text-align: center;
+            padding: 0.3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .network-node:hover {
+            background: rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: scale(1.1);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .network-node:hover .node-status {
+            animation: pulse-glow 0.5s ease infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { text-shadow: 0 0 5px currentColor; }
+            to { text-shadow: 0 0 15px currentColor, 0 0 25px currentColor; }
+        }
+        
+        /* Personnel entry hover */
+        .personnel-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0.3rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.08);
+            transition: all 0.2s ease;
+            cursor: default;
+            margin: 0 -0.3rem;
+        }
+        
+        .personnel-entry:hover {
+            background: rgba(139, 233, 253, 0.1);
+            padding-left: 0.6rem;
+        }
+        
+        .personnel-entry:hover .personnel-name {
+            color: #8be9fd;
+        }
+        
+        .personnel-entry:hover .personnel-status {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px currentColor;
+        }
+        
+        /* Incident entry hover */
+        .incident-entry {
+            padding: 0.3rem 0.3rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+            transition: all 0.2s ease;
+            cursor: default;
+            margin: 0 -0.3rem;
+        }
+        
+        .incident-entry:hover {
+            background: rgba(139, 233, 253, 0.08);
+            padding-left: 0.5rem;
+            border-left: 2px solid #8be9fd;
+        }
+        
+        .incident-entry:hover .incident-msg {
+            color: #8be9fd;
+        }
+        
+        .incident-entry:hover .incident-msg.alert {
+            color: #ff6b6b;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+        }
+        
+        .incident-entry:hover .incident-msg.ok {
+            color: #69ff69;
+            text-shadow: 0 0 8px rgba(105, 255, 105, 0.5);
+        }
+        
+        .incident-entry:hover .incident-msg.warn {
+            color: #ffff6b;
+            text-shadow: 0 0 8px rgba(255, 255, 107, 0.5);
+        }
+        
+        /* Comms entry hover */
+        .comms-entry {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem;
+            margin-bottom: 0.4rem;
+            border-left: 2px solid #4a7a8a;
+            font-size: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .comms-entry:hover {
+            background: rgba(139, 233, 253, 0.1);
+            border-left-width: 4px;
+            padding-left: 0.6rem;
+            transform: translateX(3px);
+        }
+        
+        .comms-entry.priority:hover {
+            background: rgba(196, 30, 58, 0.15);
+            box-shadow: 0 0 15px rgba(196, 30, 58, 0.2);
+        }
+        
+        .comms-entry:hover .comms-body {
+            color: #8be9fd;
+        }
+        
+        /* Image hover effects */
+        .project-writeup img {
+            filter: grayscale(30%) contrast(1.1);
+            border: none !important;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .project-writeup img:hover {
+            filter: grayscale(0%) contrast(1.2) brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(139, 233, 253, 0.3);
+        }
+        
+        /* Code block hover */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.75rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #8be9fd;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+            transition: all 0.3s ease;
+            cursor: text;
+        }
+        
+        .code-block:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(139, 233, 253, 0.4);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.15), inset 0 0 30px rgba(139, 233, 253, 0.03);
+        }
+        
+        /* Inline code hover */
+        .project-writeup code {
+            background: #0a0a0a;
+            color: #8be9fd;
+            padding: 0.15rem 0.3rem;
+            border-radius: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .project-writeup code:hover {
+            background: rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            color: #b4f8c3;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
+        }
+        
+        /* Redacted hover - mysterious glitch effect */
+        .redacted {
+            background: #0a1215;
+            color: #0a1215;
+            padding: 0 4px;
+            user-select: none;
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: not-allowed;
+        }
+        
+        .redacted:hover {
+            background: #1a2530;
+            animation: redacted-glitch 0.3s ease infinite;
+        }
+        
+        .redacted:hover::after {
+            background: repeating-linear-gradient(
+                90deg,
+                #1a2530 0px,
+                #1a2530 3px,
+                #253540 3px,
+                #253540 4px
+            );
+            animation: redacted-scan 0.5s linear infinite;
+        }
+        
+        @keyframes redacted-glitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-1px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        @keyframes redacted-scan {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        /* Redacted block hover */
+        .redacted-block {
+            background: #0a1215;
+            padding: 0.4rem 0.75rem;
+            margin: 0.75rem 0;
+            border-left: 3px solid #c41e3a;
+            font-style: italic;
+            color: #4a6a7a;
+            font-size: 0.75rem;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .redacted-block:hover {
+            background: rgba(139, 233, 253, 0.03);
+            border-left-color: #8be9fd;
+            color: #6a8a9a;
+        }
+        
+        /* Warning box hover */
+        .warning-box {
+            border: 2px solid #c41e3a;
+            background: rgba(196, 30, 58, 0.05);
+            padding: 0.75rem;
+            margin: 1rem 0;
+            position: relative;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .warning-box:hover {
+            background: rgba(196, 30, 58, 0.12);
+            border-color: #ff4757;
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.3), inset 0 0 30px rgba(196, 30, 58, 0.05);
+            transform: scale(1.01);
+        }
+        
+        .warning-box:hover::before {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+        }
+        
+        /* Caution box hover */
+        .caution-box {
+            border: 1px solid #f1fa8c;
+            background: rgba(241, 250, 140, 0.05);
+            padding: 0.5rem 0.75rem;
+            margin: 0.75rem 0;
+            font-size: 0.7rem;
+            color: #f1fa8c;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .caution-box:hover {
+            background: rgba(241, 250, 140, 0.12);
+            border-color: #ffff6b;
+            box-shadow: 0 0 15px rgba(241, 250, 140, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Stamp hover */
+        .stamp {
+            position: absolute;
+            transform: rotate(-15deg);
+            border: 3px solid;
+            padding: 0.4rem 0.8rem;
+            font-family: 'Special Elite', monospace;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            pointer-events: auto;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .stamp:hover {
+            opacity: 0.9;
+            transform: rotate(-15deg) scale(1.15);
+        }
+        
+        .stamp.approved:hover {
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.5);
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.8);
+        }
+        
+        .stamp.eyes-only:hover {
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+            text-shadow: 0 0 10px rgba(196, 30, 58, 0.8);
+            transform: rotate(12deg) scale(1.15);
+        }
+        
+        /* Classified header hover */
+        .classified-header {
+            text-align: center;
+            border: 3px solid #c41e3a;
+            padding: 0.4rem 1rem;
+            margin-bottom: 1rem;
+            background: rgba(196, 30, 58, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .classified-header:hover {
+            background: rgba(196, 30, 58, 0.2);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3), inset 0 0 20px rgba(196, 30, 58, 0.1);
+        }
+        
+        .classified-header:hover h1 {
+            text-shadow: 0 0 15px rgba(196, 30, 58, 0.8);
+            letter-spacing: 0.5em;
+        }
+        
+        /* Section headers hover */
+        .project-writeup h2 {
+            color: #8be9fd;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.3);
+            padding-bottom: 0.3rem;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h2:hover {
+            color: #b4f8c3;
+            border-bottom-color: rgba(180, 248, 195, 0.5);
+            text-shadow: 0 0 10px rgba(180, 248, 195, 0.5);
+            padding-left: 10px;
+        }
+        
+        .project-writeup h2:hover .section-number {
+            color: #8be9fd;
+        }
+        
+        .project-writeup h3 {
+            color: #5fcfdf;
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h3:hover {
+            color: #8be9fd;
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
+            padding-left: 8px;
+        }
+        
+        /* Document info hover */
+        .document-info {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.75rem;
+            color: #6a8a9a;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .document-info:hover {
+            background: rgba(139, 233, 253, 0.03);
+            border-color: rgba(139, 233, 253, 0.4);
+        }
+        
+        .document-info p {
+            margin: 0.2rem 0;
+            color: #6a8a9a;
+            transition: all 0.2s ease;
+            padding: 0.2rem;
+        }
+        
+        .document-info p:hover {
+            background: rgba(139, 233, 253, 0.05);
+            color: #8be9fd;
+        }
+        
+        /* List items hover */
+        .project-writeup li {
+            margin-bottom: 0.3rem;
+            transition: all 0.2s ease;
+            padding: 0.1rem 0;
+        }
+        
+        .project-writeup li:hover {
+            color: #8be9fd;
+            padding-left: 5px;
+        }
+        
+        /* Ticker hover - pause animation */
+        .ticker-wrap {
+            overflow: hidden;
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid rgba(196, 30, 58, 0.3);
+            padding: 0.3rem 0;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .ticker-wrap:hover {
+            background: rgba(196, 30, 58, 0.2);
+            border-color: rgba(196, 30, 58, 0.5);
+        }
+        
+        .ticker-wrap:hover .ticker {
+            animation-play-state: paused;
+            color: #ff6b6b;
+        }
+        
+        /* Footer link hover enhancements */
+        .back-link {
+            display: inline-block;
+            margin: 1rem 0;
+            color: #8be9fd;
+            text-decoration: none;
+            border-bottom: 1px dashed #8be9fd;
+            transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        .back-link:hover {
+            color: #b4f8c3;
+            border-bottom-color: #b4f8c3;
+            text-shadow: 0 0 10px rgba(180, 248, 195, 0.5);
+            transform: translateX(-5px);
+            display: inline-block;
+        }
+        
+        /* Document footer hover */
+        .document-footer {
+            margin-top: 2rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid rgba(139, 233, 253, 0.3);
+            text-align: center;
+            font-size: 0.65rem;
+            color: #4a6a7a;
+            transition: all 0.3s ease;
+        }
+        
+        .document-footer:hover {
+            color: #6a8a9a;
+            border-top-color: rgba(139, 233, 253, 0.5);
+        }
+        
+        /* Footnote hover */
+        .footnote {
+            font-size: 0.65rem;
+            color: #4a6a7a;
+            border-top: 1px solid rgba(139, 233, 253, 0.2);
+            margin-top: 1.5rem;
+            padding-top: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .footnote:hover {
+            color: #6a9aaa;
+            background: rgba(139, 233, 253, 0.02);
+            padding-left: 10px;
+        }
+        
+        /* Return home / UI demo button enhanced hover */
+        .doc-return-home, .doc-ui-demo {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .doc-return-home::before, .doc-ui-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .doc-return-home:hover::before, .doc-ui-demo:hover::before {
+            left: 100%;
+        }
+        
+        .doc-return-home:hover img, .doc-ui-demo:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.5);
+        }
+        
+        .doc-return-home img, .doc-ui-demo img {
+            transition: all 0.3s ease;
+        }
+        
         /* Two column layout */
         .two-col {
             display: grid;
@@ -296,17 +1023,11 @@
             margin: 0.75rem 0;
         }
         
-        .status-item {
-            text-align: center;
-            padding: 0.5rem;
-            border: 1px solid rgba(139, 233, 253, 0.15);
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
         .status-item .value {
             font-family: 'Share Tech Mono', monospace;
             font-size: 1rem;
             color: #8be9fd;
+            transition: all 0.3s ease;
         }
         
         .status-item .value.alert {
@@ -518,6 +1239,7 @@
             height: 8px;
             background: #8be9fd;
             border-radius: 50%;
+            transition: all 0.3s ease;
         }
         
         .timeline-item .date {
@@ -668,6 +1390,7 @@
             font-size: 0.55rem;
             padding: 0.1rem 0.3rem;
             border-radius: 2px;
+            transition: all 0.3s ease;
         }
         
         .personnel-status.active {
@@ -741,6 +1464,7 @@
         .network-node .node-status {
             font-size: 0.7rem;
             margin-top: 0.15rem;
+            transition: all 0.3s ease;
         }
         
         .network-node .node-status.up {
@@ -775,6 +1499,7 @@
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.85rem;
             color: #8be9fd;
+            transition: text-shadow 0.3s ease;
         }
         
         .mini-stat .label {
@@ -842,6 +1567,14 @@
             background: rgba(0, 0, 0, 0.15);
         }
         
+        /* Button container for split layout */
+        .doc-button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
         /* Integrated return home button - styled as document control */
         .doc-return-home {
             display: flex;
@@ -852,7 +1585,6 @@
             border: 1px solid rgba(139, 233, 253, 0.2);
             text-decoration: none;
             transition: all 0.2s ease;
-            margin-bottom: 1rem;
         }
         
         .doc-return-home:hover {
@@ -882,6 +1614,50 @@
         }
         
         .doc-return-home-text small {
+            font-size: 0.55rem;
+            color: #4a7a8a;
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        /* OCS Web UI Demo Button */
+        .doc-ui-demo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .doc-ui-demo:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
+        }
+        
+        .doc-ui-demo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+        }
+        
+        .doc-ui-demo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .doc-ui-demo-text span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #8be9fd;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .doc-ui-demo-text small {
             font-size: 0.55rem;
             color: #4a7a8a;
             font-family: 'Courier Prime', monospace;
@@ -926,22 +1702,35 @@
         
         /* Mobile styles */
         @media (max-width: 600px) {
-            .doc-return-home {
-                padding: 0.35rem 0.5rem;
-                gap: 0.4rem;
+            .doc-button-container {
+                grid-template-columns: 1fr;
+                gap: 0.35rem;
                 margin-bottom: 0.5rem;
             }
             
-            .doc-return-home img {
+            .doc-return-home {
+                padding: 0.35rem 0.5rem;
+                gap: 0.4rem;
+            }
+            
+            .doc-ui-demo {
+                padding: 0.35rem 0.5rem;
+                gap: 0.4rem;
+            }
+            
+            .doc-return-home img,
+            .doc-ui-demo img {
                 width: 24px;
                 height: 24px;
             }
             
-            .doc-return-home-text span {
+            .doc-return-home-text span,
+            .doc-ui-demo-text span {
                 font-size: 0.55rem;
             }
             
-            .doc-return-home-text small {
+            .doc-return-home-text small,
+            .doc-ui-demo-text small {
                 font-size: 0.45rem;
             }
             
@@ -1401,13 +2190,23 @@
         </div>
         
         <!-- Document Navigation Control -->
-        <a href="index.html" class="doc-return-home">
-            <img src="assets/wee.gif" alt="[SEAL]">
-            <div class="doc-return-home-text">
-                <span>◄ Return to Main Terminal</span>
-                <small>Exit document viewer // Return to index</small>
-            </div>
-        </a>
+        <div class="doc-button-container">
+            <a href="index.html" class="doc-return-home">
+                <img src="assets/wee.gif" alt="[SEAL]">
+                <div class="doc-return-home-text">
+                    <span>◄ Return to Main Terminal</span>
+                    <small>Exit document viewer // Return to index</small>
+                </div>
+            </a>
+            
+            <a href="OCS-web-ui-demo.html" class="doc-ui-demo">
+                <img src="assets/OCS.gif" alt="[INTERFACE]">
+                <div class="doc-ui-demo-text">
+                    <span>Launch Web UI Demo ►</span>
+                    <small>Interactive control interface // System monitoring</small>
+                </div>
+            </a>
+        </div>
         
         <!-- Alert ticker -->
         <div class="ticker-wrap">

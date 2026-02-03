@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCS Web UI Demo - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/OCS-web-ui-demo">
+    <meta property="og:title" content="OCS Web UI Demo - Tyler (in real life)">
+    <meta property="og:description" content="Interactive demo of the DeepDish OCS Web Interface">
+    <meta property="og:image" content="https://tylerirl.com/assets/OCS.png">
+    
+    <link rel="stylesheet" href="styles.css?v=1.1">
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
+        
+        .web-ui-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-radius: 0;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            position: relative;
+        }
+        
+        .web-ui-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 233, 253, 0.015) 2px,
+                    rgba(139, 233, 253, 0.015) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .web-ui-header {
+            text-align: center;
+            border: 2px solid #8be9fd;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .web-ui-header h1 {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.8rem;
+            color: #8be9fd;
+            margin: 0;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        
+        .web-ui-subheader {
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #4a7a8a;
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .back-button-container {
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            text-decoration: none;
+            color: #8be9fd;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+        
+        .back-button:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
+        }
+        
+        .demo-notice {
+            padding: 1rem;
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid #c41e3a;
+            color: #8be9fd;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .demo-notice strong {
+            color: #c41e3a;
+        }
+        
+        .ui-preview-section {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .ui-preview-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: #8be9fd;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+        }
+        
+        .mock-display {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 40, 60, 0.6));
+            border: 2px solid rgba(139, 233, 253, 0.3);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier Prime', monospace;
+            color: #8be9fd;
+            font-size: 1.2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mock-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 233, 253, 0.03) 2px,
+                    rgba(139, 233, 253, 0.03) 4px
+                ),
+                radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+        }
+        
+        .mock-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .feature-card:hover {
+            background: rgba(139, 233, 253, 0.05);
+            border-color: rgba(139, 233, 253, 0.4);
+        }
+        
+        .feature-card-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: #8be9fd;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            color: #4a7a8a;
+            line-height: 1.4;
+        }
+        
+        .mock-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(139, 233, 253, 0.1);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            color: #8be9fd;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0.25rem;
+        }
+        
+        .mock-button:hover {
+            background: rgba(139, 233, 253, 0.2);
+            border-color: rgba(139, 233, 253, 0.6);
+        }
+        
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            color: #8be9fd;
+        }
+        
+        .status-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse-light 2s infinite;
+        }
+        
+        .status-light.green {
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .status-light.blue {
+            background: #0088ff;
+            box-shadow: 0 0 10px #0088ff;
+        }
+        
+        .status-light.amber {
+            background: #ffaa00;
+            box-shadow: 0 0 10px #ffaa00;
+        }
+        
+        @keyframes pulse-light {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .documentation {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(139, 233, 253, 0.3);
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            color: #8be9fd;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .documentation h3 {
+            font-family: 'Share Tech Mono', monospace;
+            color: #8be9fd;
+            margin-top: 0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        
+        .documentation ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .documentation li {
+            margin: 0.3rem 0;
+        }
+        
+        @media (max-width: 900px) {
+            .web-ui-container {
+                margin: 1rem 30px;
+                padding: 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .web-ui-container {
+                margin: 0.5rem 15px;
+                padding: 0.75rem;
+            }
+            
+            .web-ui-header {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .web-ui-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .web-ui-subheader {
+                font-size: 0.75rem;
+            }
+            
+            .mock-display {
+                height: 200px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background -->
+    <div id="background-container"></div>
+    
+    <div class="web-ui-container">
+        <div class="back-button-container">
+            <a href="OCS.html" class="back-button">◄ Back to OCS Documentation</a>
+        </div>
+        
+        <div class="web-ui-header">
+            <h1>OCS Web UI Demo</h1>
+            <div class="web-ui-subheader">Interactive Control Interface Preview</div>
+        </div>
+        
+        <div class="demo-notice">
+            <strong>⚠️ DEMO MODE:</strong> This is a static preview of the OCS Web UI architecture. The live version requires connection to the DeepDish Eye Control API. Features shown are intended for: Real-time eye tracking visualization, system status monitoring, color/appearance control, and integrated AI communication.
+        </div>
+        
+        <!-- System Status Section -->
+        <div class="ui-preview-section">
+            <div class="ui-preview-title">► System Status Monitor</div>
+            <div class="status-indicators">
+                <div class="status-item">
+                    <div class="status-light green"></div>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-light blue"></div>
+                    <span>PROMETHEUS ACTIVE</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-light amber"></div>
+                    <span>TRACKING READY</span>
+                </div>
+            </div>
+            <div style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #f1fa8c; margin-top: 0.5rem;">
+                ⚠ UNDER DEVELOPMENT — Full interactive demo coming soon
+            </div>
+        </div>
+        
+        <!-- Live Feeds Section -->
+        <div class="ui-preview-section">
+            <div class="ui-preview-title">► Eye Display & Camera Feed</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div>
+                    <div style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #8be9fd; margin-bottom: 0.5rem;">📹 LIVE CAMERA</div>
+                    <div class="mock-display">
+                        <div class="mock-content">Camera Stream<br/><span style="font-size: 0.8rem; color: #4a7a8a;">Face Tracking Active</span></div>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-family: 'Courier Prime', monospace; font-size: 0.75rem; color: #8be9fd; margin-bottom: 0.5rem;">👁️ DEEPDISH OPTICAL</div>
+                    <div class="mock-display">
+                        <div class="mock-content">Eye Render<br/><span style="font-size: 0.8rem; color: #4a7a8a;">Real-time Output</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control Features Section -->
+        <div class="ui-preview-section">
+            <div class="ui-preview-title">► Interactive Control Features</div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-title">🎨 Color Presets</div>
+                    <div class="feature-card-desc">
+                        Select from HAL 9000, Christmas, Matrix, Cyberpunk, Ocean, Sunset, and more. Real-time preview.
+                    </div>
+                    <div style="margin-top: 0.75rem;">
+                        <button class="mock-button">HAL 9000</button>
+                        <button class="mock-button">MATRIX</button>
+                        <button class="mock-button">OCEAN</button>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-title">⚙️ Intensity Control</div>
+                    <div class="feature-card-desc">
+                        Adjust output intensity (0.1 - 2.0) and pulse rate (0.002 - 0.025) with real-time sliders.
+                    </div>
+                    <div style="margin-top: 0.75rem; font-family: 'Courier Prime', monospace; font-size: 0.7rem; color: #4a7a8a;">
+                        INTENSITY: 0.8 ▮▮▮▮▮░░░░░<br/>
+                        PULSE: 0.005 ▮▮░░░░░░░░
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-title">🎭 Custom Colors</div>
+                    <div class="feature-card-desc">
+                        Full RGB color picker for custom expressions. Combine multiple colors for complex effects.
+                    </div>
+                    <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+                        <div style="width: 30px; height: 30px; background: #ff0000; border: 1px solid #8be9fd;"></div>
+                        <div style="width: 30px; height: 30px; background: #00ff00; border: 1px solid #8be9fd;"></div>
+                        <div style="width: 30px; height: 30px; background: #0088ff; border: 1px solid #8be9fd;"></div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    
+        
+        <!-- Documentation -->
+        <div class="documentation">
+            <h3>► Key Features & Architecture</h3>
+            <ul>
+                <li><strong>Real-time Eye Tracking:</strong> WebGL-based gaze visualization with crosshair positioning, scanning rings, and depth feedback</li>
+                <li><strong>Live Camera Integration:</strong> Camera feed display with privacy mode toggle for user discretion</li>
+                <li><strong>Dynamic Color System:</strong> Preset library + custom RGB controls with real-time render preview</li>
+                <li><strong>Responsive HMI:</strong> Status bar with system indicators, connected user count, and external links</li>
+                <li><strong>Multi-Tab Interface:</strong> Eye Control, Chat AI, Drone Fleet, and Control Panel modes</li>
+                <li><strong>Privacy Controls:</strong> Built-in privacy mode for sensitive situations</li>
+                <li><strong>Mobile Optimization:</strong> Fully responsive design for tablet and mobile viewing</li>
+                <li><strong>Performance Monitoring:</strong> Frame rate display, connection status, and latency indicators</li>
+            </ul>
+            
+            <h3 style="margin-top: 1.5rem;">► API Integration Points</h3>
+            <ul>
+                <li><strong>DeepDish Eye API:</strong> Primary connection for eye tracking data and rendering commands</li>
+                <li><strong>Prometheus Metrics:</strong> System health and performance monitoring</li>
+                <li><strong>Grafana Dashboard:</strong> External link to comprehensive metrics dashboard</li>
+                <li><strong>WebSocket:</strong> Real-time bidirectional communication for low-latency updates</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(139, 233, 253, 0.1);">
+            <a href="OCS.html" class="back-button">◄ Return to OCS Documentation</a>
+        </div>
+    </div>
+    
+    <!-- Background 3D Script -->
+    <script src="background3d.js"></script>
+</body>
+</html>
