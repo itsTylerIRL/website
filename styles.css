@@ -2755,13 +2755,11 @@ footer {
     }
     
     .contact-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 1.2rem;
         justify-content: center;
-        max-width: 240px;
         margin: 0 auto;
-        justify-items: center;
     }
     
     .contact-grid .contact-icon-link {
