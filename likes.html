@@ -80,13 +80,279 @@
             51%, 100% { opacity: 0; }
         }
         
-        /* Stats bar - now acts as filter buttons */
+        /* ===== SPOTLIGHT CAROUSEL - Compact Featured Box ===== */
+        .spotlight-section {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding: 0 1rem;
+        }
         
-        /* Bento Grid */
+        .spotlight-container {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(145deg, rgba(15, 15, 20, 0.5) 0%, rgba(5, 5, 10, 0.7) 100%);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-radius: 16px;
+            min-height: 160px;
+        }
+        
+        .spotlight-main {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spotlight-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.5rem 0;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateX(20px);
+        }
+        
+        .spotlight-item.active {
+            opacity: 1;
+            position: relative;
+            transform: translateX(0);
+        }
+        
+        .spotlight-image {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(139, 233, 253, 0.05);
+            border-radius: 14px;
+            padding: 1rem;
+            border: 1px solid rgba(139, 233, 253, 0.1);
+        }
+        
+        .spotlight-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(139, 233, 253, 0.3));
+            transition: transform 0.3s;
+        }
+        
+        .spotlight-item:hover .spotlight-image img {
+            transform: scale(1.1) rotate(-3deg);
+        }
+        
+        .spotlight-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .spotlight-category {
+            font-size: 0.7rem;
+            color: #8be9fd;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .spotlight-category::before {
+            content: '★';
+            font-size: 0.5rem;
+        }
+        
+        .spotlight-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: lowercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spotlight-desc {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: lowercase;
+        }
+        
+        .spotlight-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+            color: #8be9fd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .spotlight-nav-btn:hover {
+            background: rgba(139, 233, 253, 0.2);
+            border-color: #8be9fd;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .spotlight-nav-btn.prev {
+            left: -14px;
+        }
+        
+        .spotlight-nav-btn.next {
+            right: -14px;
+        }
+        
+        .spotlight-side {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .spotlight-preview {
+            flex: 1;
+            background: linear-gradient(145deg, rgba(20, 20, 25, 0.5) 0%, rgba(10, 10, 15, 0.7) 100%);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            opacity: 0.5;
+        }
+        
+        .spotlight-preview:hover,
+        .spotlight-preview.active {
+            opacity: 1;
+            border-color: rgba(139, 233, 253, 0.4);
+            background: linear-gradient(145deg, rgba(30, 30, 40, 0.6) 0%, rgba(15, 15, 25, 0.8) 100%);
+        }
+        
+        .spotlight-preview img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-right: 0.6rem;
+        }
+        
+        .spotlight-preview-title {
+            font-size: 0.7rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        
+        /* ===== CONTROLS BAR ===== */
+        .controls-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background: rgba(139, 233, 253, 0.03);
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-pills {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .filter-pill {
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: lowercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .filter-pill:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+            background: rgba(139, 233, 253, 0.1);
+        }
+        
+        .filter-pill.active {
+            border-color: #8be9fd;
+            background: rgba(139, 233, 253, 0.15);
+            color: #8be9fd;
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+        }
+        
+        .filter-pill .count {
+            margin-left: 0.3rem;
+            opacity: 0.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: lowercase;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .action-btn:hover {
+            border-color: #ff79c6;
+            color: #ff79c6;
+            background: rgba(255, 121, 198, 0.1);
+        }
+        
+        .action-btn.shuffle:hover {
+            animation: shake 0.3s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        /* ===== BENTO GRID ===== */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-auto-rows: 80px;
+            grid-auto-rows: 90px;
             gap: 0.75rem;
             position: relative;
             grid-auto-flow: dense;
@@ -112,15 +378,15 @@
             opacity: 0.5;
         }
         
-        /* Bento Items - Glassmorphism */
+        /* Bento Items - Dark Glass (matching index.html) */
         .bento-item {
-            background: linear-gradient(145deg, 
-                rgba(20, 20, 25, 0.4) 0%, 
-                rgba(10, 10, 15, 0.6) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 233, 253, 0.15);
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
             overflow: hidden;
             position: relative;
             display: flex;
@@ -130,21 +396,27 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            animation: subtleFloat var(--float-duration, 4s) ease-in-out infinite;
+            animation-delay: var(--float-delay, 0s);
         }
         
-        /* Top reflection/shine */
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        /* Top reflection/shine - subtle */
         .bento-item::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 50%;
+            height: 40%;
             background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.08) 0%, 
-                rgba(255, 255, 255, 0.02) 50%,
+                rgba(255, 255, 255, 0.02) 0%, 
                 transparent 100%);
             pointer-events: none;
             z-index: 1;
@@ -162,9 +434,9 @@
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(139, 233, 253, 0.03) 45%,
-                rgba(139, 233, 253, 0.08) 50%,
-                rgba(139, 233, 253, 0.03) 55%,
+                rgba(139, 233, 253, 0.02) 45%,
+                rgba(139, 233, 253, 0.05) 50%,
+                rgba(139, 233, 253, 0.02) 55%,
                 transparent 100%
             );
             transform: rotate(25deg);
@@ -179,16 +451,16 @@
         }
         
         .bento-item:hover {
-            background: linear-gradient(145deg, 
-                rgba(30, 30, 40, 0.5) 0%, 
-                rgba(15, 15, 25, 0.7) 100%);
-            border-color: rgba(139, 233, 253, 0.4);
-            transform: translateY(-3px) scale(1.02);
+            background: rgba(0, 0, 0, 0.18);
+            border-color: rgba(139, 233, 253, 0.25);
+            border-top-color: rgba(139, 233, 253, 0.3);
+            transform: translateY(-5px) scale(1.02);
             box-shadow: 
-                0 12px 24px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(139, 233, 253, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                inset 0 0 20px rgba(139, 233, 253, 0.05);
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(139, 233, 253, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            animation: none;
+            z-index: 5;
         }
         
         .bento-item:hover::before {
@@ -209,20 +481,6 @@
             100% { transform: translate(0); }
         }
         
-        /* Featured sizes */
-        .bento-item.featured {
-            grid-column: span 2;
-            grid-row: span 2;
-        }
-        
-        .bento-item.wide {
-            grid-column: span 2;
-        }
-        
-        .bento-item.tall {
-            grid-row: span 2;
-        }
-        
         /* Bento Image */
         .bento-image {
             position: absolute;
@@ -233,7 +491,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem;
+            padding: 0.75rem;
             z-index: 0;
             background: transparent;
         }
@@ -242,28 +500,13 @@
             max-width: 50%;
             max-height: 50%;
             object-fit: contain;
-            filter: grayscale(30%) brightness(0.9) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+            filter: grayscale(30%) brightness(0.9) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
             transition: all 0.4s ease;
         }
         
         .bento-item:hover .bento-image img {
-            filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 12px rgba(139, 233, 253, 0.3));
+            filter: grayscale(0%) brightness(1.1) drop-shadow(0 8px 20px rgba(139, 233, 253, 0.3));
             transform: scale(1.1);
-        }
-        
-        .bento-item.featured .bento-image img {
-            max-width: 55%;
-            max-height: 55%;
-        }
-        
-        .bento-item.tall .bento-image img {
-            max-width: 60%;
-            max-height: 60%;
-        }
-        
-        .bento-item.wide .bento-image img {
-            max-width: 55%;
-            max-height: 55%;
         }
         
         /* Bento Content */
@@ -272,33 +515,39 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 0.5rem;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
             z-index: 3;
+            text-align: center;
         }
         
         .bento-content h3 {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #fff;
             margin-bottom: 0;
             text-transform: lowercase;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
         
         .bento-content p {
-            font-size: 0.5rem;
+            font-size: 0.7rem;
             color: rgba(255, 255, 255, 0.5);
             text-transform: lowercase;
             letter-spacing: 0.05em;
-            display: none;
+            line-height: 1.3;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         
         .bento-item:hover .bento-content p {
             color: #8be9fd;
+            opacity: 1;
+            max-height: 2em;
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* Category badge */
@@ -326,135 +575,165 @@
         /* Filter animation */
         .bento-item.hidden {
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0.6) rotateY(90deg);
             pointer-events: none;
-            position: absolute;
+            position: absolute !important;
+            visibility: hidden;
         }
         
         .bento-item.visible {
             opacity: 1;
-            transform: scale(1);
-            animation: fadeIn 0.4s ease forwards;
+            visibility: visible;
         }
         
-        @keyframes fadeIn {
+        .bento-item.shuffle-out {
+            animation: shuffleOut 0.3s ease forwards;
+        }
+        
+        .bento-item.shuffle-in {
+            animation: shuffleIn 0.4s ease forwards;
+        }
+        
+        @keyframes shuffleOut {
+            to {
+                opacity: 0;
+                transform: scale(0.8) rotate(10deg);
+            }
+        }
+        
+        @keyframes shuffleIn {
             from {
                 opacity: 0;
-                transform: translateY(20px) scale(0.95);
+                transform: scale(0.8) rotate(-10deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: scale(1) rotate(0);
             }
         }
         
-        /* Stats bar - clickable filter buttons */
-        .stats-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            padding: 0.75rem;
-            background: rgba(139, 233, 253, 0.03);
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .stat {
+        /* ===== SHOW MORE SECTION ===== */
+        .show-more-container {
             text-align: center;
-            padding: 0.75rem 1.25rem;
-            border: 1px solid #333;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
+            margin-top: 2rem;
         }
         
-        .stat:hover {
+        .show-more-btn {
+            padding: 0.75rem 2rem;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            border-radius: 25px;
+            background: linear-gradient(145deg, rgba(20, 20, 25, 0.6) 0%, rgba(10, 10, 15, 0.8) 100%);
+            color: #8be9fd;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: lowercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .show-more-btn:hover {
             border-color: #8be9fd;
             background: rgba(139, 233, 253, 0.1);
+            box-shadow: 0 0 25px rgba(139, 233, 253, 0.3);
+            transform: translateY(-2px);
         }
         
-        .stat.active {
-            border-color: #8be9fd;
-            background: rgba(139, 233, 253, 0.15);
-            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        .show-more-btn .arrow {
+            display: inline-block;
+            margin-left: 0.5rem;
+            transition: transform 0.3s;
         }
         
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #666;
-            transition: color 0.3s;
+        .show-more-btn:hover .arrow {
+            transform: translateY(3px);
         }
         
-        .stat:hover .stat-value,
-        .stat.active .stat-value {
-            color: #8be9fd;
+        .show-more-btn.expanded .arrow {
+            transform: rotate(180deg);
         }
         
-        .stat-label {
+        .items-counter {
+            margin-top: 1rem;
             font-size: 0.7rem;
             color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: color 0.3s;
+            text-transform: lowercase;
         }
         
-        .stat:hover .stat-label,
-        .stat.active .stat-label {
+        .items-counter span {
             color: #8be9fd;
         }
         
-        /* Responsive */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             .bento-grid {
                 grid-template-columns: repeat(4, 1fr);
-                grid-auto-rows: 70px;
+                grid-auto-rows: 85px;
             }
             
-            .bento-item.featured {
-                grid-column: span 2;
-                grid-row: span 2;
+            .spotlight-container {
+                flex-direction: column;
             }
             
-            .stats-bar {
+            .spotlight-side {
+                flex-direction: row;
+            }
+            
+            .spotlight-main {
+                min-height: 180px;
+            }
+            
+            .filter-pills {
                 justify-content: center;
-            }
-            
-            .stat {
-                padding: 0.5rem 0.75rem;
-            }
-            
-            .stat-value {
-                font-size: 1.25rem;
             }
         }
         
         @media (max-width: 600px) {
             .bento-grid {
                 grid-template-columns: repeat(3, 1fr);
-                grid-auto-rows: 65px;
+                grid-auto-rows: 80px;
             }
             
             .main-content {
                 padding: 50px 20px 60px 20px;
+            }
+            
+            .spotlight-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .spotlight-info {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .spotlight-image {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .spotlight-title {
+                font-size: 1.2rem;
+            }
+            
+            .spotlight-side {
+                display: none;
+            }
+            
+            .controls-bar {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
             }
         }
         
         @media (max-width: 500px) {
             .bento-grid {
                 grid-template-columns: repeat(2, 1fr);
-                grid-auto-rows: 80px;
-            }
-            
-            .bento-item.featured,
-            .bento-item.wide {
-                grid-column: span 2;
-            }
-            
-            .bento-item.featured {
-                grid-row: span 2;
+                grid-auto-rows: 100px;
             }
             
             .bento-header {
@@ -462,33 +741,13 @@
                 align-items: flex-start;
             }
             
-            .stats-bar {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 0.5rem;
-                padding: 0.5rem;
-                width: 100%;
-                box-sizing: border-box;
+            .filter-pills {
+                gap: 0.3rem;
             }
             
-            .stat {
-                padding: 0.5rem 0.25rem;
-                min-width: 0;
-            }
-            
-            .stat-value {
-                font-size: 1.1rem;
-            }
-            
-            .stat-label {
-                font-size: 0.55rem;
-                letter-spacing: 0.05em;
-            }
-        }
-        
-        @media (max-width: 380px) {
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
+            .filter-pill {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.6rem;
             }
         }
     </style>
@@ -513,41 +772,37 @@
                 <h2 class="bento-title">things i like</h2>
             </div>
             
-            <div class="stats-bar">
-                <div class="stat active" data-filter="all">
-                    <div class="stat-value">33</div>
-                    <div class="stat-label">total</div>
-                </div>
-                <div class="stat" data-filter="personal">
-                    <div class="stat-value">6</div>
-                    <div class="stat-label">personal</div>
-                </div>
-                <div class="stat" data-filter="crypto">
-                    <div class="stat-value">11</div>
-                    <div class="stat-label">crypto</div>
-                </div>
-                <div class="stat" data-filter="tech">
-                    <div class="stat-value">8</div>
-                    <div class="stat-label">tech</div>
-                </div>
-                <div class="stat" data-filter="fun">
-                    <div class="stat-value">2</div>
-                    <div class="stat-label">fun</div>
-                </div>
-                <div class="stat" data-filter="games">
-                    <div class="stat-value">2</div>
-                    <div class="stat-label">games</div>
-                </div>
-                <div class="stat" data-filter="art">
-                    <div class="stat-value">4</div>
-                    <div class="stat-label">art</div>
+            <!-- Spotlight Carousel -->
+            <div class="spotlight-section">
+                <div class="spotlight-container">
+                    <div class="spotlight-main" id="spotlightMain">
+                        <!-- Spotlight items will be populated by JS -->
+                    </div>
+                    <div class="spotlight-side" id="spotlightSide">
+                        <!-- Preview items will be populated by JS -->
+                    </div>
                 </div>
             </div>
             
-            <div class="bento-grid">
+            <!-- Controls Bar -->
+            <div class="controls-bar">
+                <div class="filter-pills">
+                    <button class="filter-pill active" data-filter="all">all <span class="count">(66)</span></button>
+                    <button class="filter-pill" data-filter="personal">personal <span class="count">(7)</span></button>
+                    <button class="filter-pill" data-filter="crypto">crypto <span class="count">(14)</span></button>
+                    <button class="filter-pill" data-filter="tech">tech <span class="count">(38)</span></button>
+                    <button class="filter-pill" data-filter="fun">fun <span class="count">(6)</span></button>
+                    <button class="filter-pill" data-filter="art">art <span class="count">(4)</span></button>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn shuffle" id="shuffleBtn">⟳ shuffle</button>
+                </div>
+            </div>
+            
+            <div class="bento-grid" id="bentoGrid">
                 <!-- Personal Projects -->
-                <!-- DeepDish OCS - Featured -->
-                <a href="OCS.html" class="bento-item tall visible" data-category="personal">
+                <!-- DeepDish OCS -->
+                <a href="OCS.html" class="bento-item visible" data-category="personal">
                     <span class="bento-category">personal</span>
                     <div class="bento-image">
                         <img src="assets/OCS.png" alt="DeepDish OCS">
@@ -559,7 +814,7 @@
                 </a>
                 
                 <!-- Deepdish HPR -->
-                <div class="bento-item tall visible" data-category="personal">
+                <a href="rocketry.html" class="bento-item visible" data-category="personal">
                     <span class="bento-category">personal</span>
                     <div class="bento-image">
                         <img src="assets/HPR/DeepDish_HPR.png" alt="Deepdish HPR">
@@ -568,7 +823,7 @@
                         <h3>deepdish HPR</h3>
                         <p>high powered rocketry</p>
                     </div>
-                </div>
+                </a>
                 
                 <!-- Redacted Bot -->
                 <a href="discord-bot.html" class="bento-item visible" data-category="personal">
@@ -630,8 +885,8 @@
                     </div>
                 </a>
                 
-                <!-- Featured: Ethereum -->
-                <a href="https://ethereum.org/en" target="_blank" class="bento-item featured visible" data-category="crypto">
+                <!-- Ethereum -->
+                <a href="https://ethereum.org/en" target="_blank" class="bento-item visible" data-category="crypto">
                     <span class="bento-category">crypto</span>
                     <div class="bento-image">
                         <img src="assets/eth.png" alt="Ethereum">
@@ -642,8 +897,8 @@
                     </div>
                 </a>
                 
-                <!-- Chainlink - Tall -->
-                <a href="https://chain.link" target="_blank" class="bento-item tall visible" data-category="crypto">
+                <!-- Chainlink -->
+                <a href="https://chain.link" target="_blank" class="bento-item visible" data-category="crypto">
                     <span class="bento-category">crypto</span>
                     <div class="bento-image">
                         <img src="assets/chainlink.png" alt="Chainlink">
@@ -666,8 +921,8 @@
                     </div>
                 </a>
                 
-                <!-- Featured: Remilia -->
-                <a href="https://www.remilia.org" target="_blank" class="bento-item featured visible" data-category="fun">
+                <!-- Remilia -->
+                <a href="https://www.remilia.org" target="_blank" class="bento-item visible" data-category="fun">
                     <span class="bento-category">fun</span>
                     <div class="bento-image">
                         <img src="assets/cult.png" alt="Remilia Corporation">
@@ -703,8 +958,8 @@
                 </a>
                 
                 <!-- Miladycraft -->
-                <a href="https://miladycraft.net" target="_blank" class="bento-item visible" data-category="games">
-                    <span class="bento-category">games</span>
+                <a href="https://miladycraft.net" target="_blank" class="bento-item visible" data-category="fun">
+                    <span class="bento-category">fun</span>
                     <div class="bento-image">
                         <img src="assets/miladycraft.gif" alt="Miladycraft">
                     </div>
@@ -738,8 +993,8 @@
                     </div>
                 </a>
                 
-                <!-- Radbro Webring - Tall -->
-                <a href="https://radbro.xyz" target="_blank" class="bento-item tall visible" data-category="crypto">
+                <!-- Radbro Webring -->
+                <a href="https://radbro.xyz" target="_blank" class="bento-item visible" data-category="crypto">
                     <span class="bento-category">crypto</span>
                     <div class="bento-image">
                         <img src="assets/radbro.png" alt="Radbro Webring">
@@ -894,11 +1149,11 @@
                     </div>
                 </a>
                 
-                <!-- KoL - Tall -->
-                <a href="https://www.kingdomofloathing.com/" target="_blank" class="bento-item tall visible" data-category="games">
-                    <span class="bento-category">games</span>
+                <!-- KoL -->
+                <a href="https://www.kingdomofloathing.com/" target="_blank" class="bento-item visible" data-category="fun">
+                    <span class="bento-category">fun</span>
                     <div class="bento-image">
-                        <img src="https://www.kingdomofloathing.com/favicon.ico" alt="Kingdom of Loathing">
+                        <img src="https://alternative.me/media/256/kingdom-of-loathing-icon-kdooojcg5zc8wbvi-c.png" alt="Kingdom of Loathing">
                     </div>
                     <div class="bento-content">
                         <h3>KoL</h3>
@@ -915,6 +1170,18 @@
                     <div class="bento-content">
                         <h3>miladychan</h3>
                         <p>image board</p>
+                    </div>
+                </a>
+                
+                <!-- LOC Precision -->
+                <a href="https://locprecision.com" target="_blank" class="bento-item visible" data-category="fun">
+                    <span class="bento-category">fun</span>
+                    <div class="bento-image">
+                        <img src="https://locprecision.com/cdn/shop/files/LOC-newNo40-Glow_400x.png?v=1768249365" alt="LOC Precision" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>loc precision</h3>
+                        <p>rocket kits</p>
                     </div>
                 </a>
                 
@@ -953,6 +1220,402 @@
                         <p>smart home platform</p>
                     </div>
                 </a>
+                
+                <!-- ===== TECH STACK CARDS ===== -->
+                
+                <!-- Python -->
+                <a href="https://www.python.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                    </div>
+                    <div class="bento-content">
+                        <h3>python</h3>
+                        <p>programming language</p>
+                    </div>
+                </a>
+                
+                <!-- Flask -->
+                <a href="https://flask.palletsprojects.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>flask</h3>
+                        <p>python web framework</p>
+                    </div>
+                </a>
+                
+                <!-- OpenCV -->
+                <a href="https://opencv.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg" alt="OpenCV">
+                    </div>
+                    <div class="bento-content">
+                        <h3>opencv</h3>
+                        <p>computer vision</p>
+                    </div>
+                </a>
+                
+                <!-- Selenium -->
+                <a href="https://www.selenium.dev" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" alt="Selenium">
+                    </div>
+                    <div class="bento-content">
+                        <h3>selenium</h3>
+                        <p>browser automation</p>
+                    </div>
+                </a>
+                
+                <!-- JavaScript -->
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+                    </div>
+                    <div class="bento-content">
+                        <h3>javascript</h3>
+                        <p>web programming</p>
+                    </div>
+                </a>
+                
+                <!-- HTML5 -->
+                <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+                    </div>
+                    <div class="bento-content">
+                        <h3>html5</h3>
+                        <p>markup language</p>
+                    </div>
+                </a>
+                
+                <!-- CSS3 -->
+                <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+                    </div>
+                    <div class="bento-content">
+                        <h3>css3</h3>
+                        <p>styling language</p>
+                    </div>
+                </a>
+                
+                <!-- Three.js -->
+                <a href="https://threejs.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg" alt="Three.js" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>three.js</h3>
+                        <p>3d graphics library</p>
+                    </div>
+                </a>
+                
+                <!-- Node.js -->
+                <a href="https://nodejs.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js">
+                    </div>
+                    <div class="bento-content">
+                        <h3>node.js</h3>
+                        <p>javascript runtime</p>
+                    </div>
+                </a>
+                
+                <!-- Git -->
+                <a href="https://git-scm.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git">
+                    </div>
+                    <div class="bento-content">
+                        <h3>git</h3>
+                        <p>version control</p>
+                    </div>
+                </a>
+                
+                <!-- GitHub -->
+                <a href="https://github.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>github</h3>
+                        <p>code hosting</p>
+                    </div>
+                </a>
+                
+                <!-- VS Code -->
+                <a href="https://code.visualstudio.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code">
+                    </div>
+                    <div class="bento-content">
+                        <h3>vs code</h3>
+                        <p>code editor</p>
+                    </div>
+                </a>
+                
+                <!-- Raspberry Pi -->
+                <a href="https://www.raspberrypi.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/raspberrypi/raspberrypi-original.svg" alt="Raspberry Pi">
+                    </div>
+                    <div class="bento-content">
+                        <h3>raspberry pi</h3>
+                        <p>single board computer</p>
+                    </div>
+                </a>
+                
+                <!-- Arduino -->
+                <a href="https://www.arduino.cc" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino">
+                    </div>
+                    <div class="bento-content">
+                        <h3>arduino</h3>
+                        <p>microcontroller</p>
+                    </div>
+                </a>
+                
+                <!-- Linux -->
+                <a href="https://www.linux.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux">
+                    </div>
+                    <div class="bento-content">
+                        <h3>linux</h3>
+                        <p>operating system</p>
+                    </div>
+                </a>
+                
+                <!-- Docker -->
+                <a href="https://www.docker.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                    </div>
+                    <div class="bento-content">
+                        <h3>docker</h3>
+                        <p>containerization</p>
+                    </div>
+                </a>
+                
+                <!-- NumPy -->
+                <a href="https://numpy.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy">
+                    </div>
+                    <div class="bento-content">
+                        <h3>numpy</h3>
+                        <p>numerical computing</p>
+                    </div>
+                </a>
+                
+                <!-- SQLite -->
+                <a href="https://www.sqlite.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="SQLite">
+                    </div>
+                    <div class="bento-content">
+                        <h3>sqlite</h3>
+                        <p>database engine</p>
+                    </div>
+                </a>
+                
+                <!-- Bash -->
+                <a href="https://www.gnu.org/software/bash/" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" alt="Bash" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>bash</h3>
+                        <p>shell scripting</p>
+                    </div>
+                </a>
+                
+                <!-- Nginx -->
+                <a href="https://nginx.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg" alt="Nginx">
+                    </div>
+                    <div class="bento-content">
+                        <h3>nginx</h3>
+                        <p>web server</p>
+                    </div>
+                </a>
+                
+                <!-- SSH -->
+                <a href="https://www.openssh.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ssh/ssh-original.svg" alt="SSH" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>ssh</h3>
+                        <p>secure shell</p>
+                    </div>
+                </a>
+                
+                <!-- JSON -->
+                <a href="https://www.json.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/json/json-original.svg" alt="JSON">
+                    </div>
+                    <div class="bento-content">
+                        <h3>json</h3>
+                        <p>data format</p>
+                    </div>
+                </a>
+                
+                <!-- Markdown -->
+                <a href="https://www.markdownguide.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/markdown/markdown-original.svg" alt="Markdown" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>markdown</h3>
+                        <p>documentation</p>
+                    </div>
+                </a>
+                
+                <!-- PyPI -->
+                <a href="https://pypi.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://pypi.org/static/images/logo-small.8998e9d1.svg" alt="PyPI">
+                    </div>
+                    <div class="bento-content">
+                        <h3>pypi</h3>
+                        <p>python packages</p>
+                    </div>
+                </a>
+                
+                <!-- NPM -->
+                <a href="https://www.npmjs.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" alt="NPM">
+                    </div>
+                    <div class="bento-content">
+                        <h3>npm</h3>
+                        <p>node packages</p>
+                    </div>
+                </a>
+                
+                <!-- Microsoft Excel -->
+                <a href="https://www.microsoft.com/en-us/microsoft-365/excel" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://img.icons8.com/color/512/microsoft-excel-2019.png" alt="Microsoft Excel">
+                    </div>
+                    <div class="bento-content">
+                        <h3>excel</h3>
+                        <p>spreadsheet software</p>
+                    </div>
+                </a>
+                
+                <!-- Visual Basic -->
+                <a href="https://learn.microsoft.com/en-us/dotnet/visual-basic/" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualbasic/visualbasic-original.svg" alt="Visual Basic">
+                    </div>
+                    <div class="bento-content">
+                        <h3>visual basic</h3>
+                        <p>vba scripting</p>
+                    </div>
+                </a>
+                
+                <!-- Jupyter -->
+                <a href="https://jupyter.org" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" alt="Jupyter">
+                    </div>
+                    <div class="bento-content">
+                        <h3>jupyter</h3>
+                        <p>interactive notebooks</p>
+                    </div>
+                </a>
+                
+                <!-- MySQL -->
+                <a href="https://www.mysql.com" target="_blank" class="bento-item visible" data-category="tech">
+                    <span class="bento-category">tech</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL">
+                    </div>
+                    <div class="bento-content">
+                        <h3>mysql</h3>
+                        <p>relational database</p>
+                    </div>
+                </a>
+                
+                <!-- Solidity -->
+                <a href="https://soliditylang.org" target="_blank" class="bento-item visible" data-category="crypto">
+                    <span class="bento-category">crypto</span>
+                    <div class="bento-image">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/solidity/solidity-original.svg" alt="Solidity" style="filter: invert(1);">
+                    </div>
+                    <div class="bento-content">
+                        <h3>solidity</h3>
+                        <p>smart contract language</p>
+                    </div>
+                </a>
+                
+                <!-- Vyper -->
+                <a href="https://vyperlang.org" target="_blank" class="bento-item visible" data-category="crypto">
+                    <span class="bento-category">crypto</span>
+                    <div class="bento-image">
+                        <img src="https://raw.githubusercontent.com/vyperlang/vyper/master/docs/vyper-logo-transparent.svg" alt="Vyper">
+                    </div>
+                    <div class="bento-content">
+                        <h3>vyper</h3>
+                        <p>pythonic contracts</p>
+                    </div>
+                </a>
+                
+                <!-- Hardhat -->
+                <a href="https://hardhat.org" target="_blank" class="bento-item visible" data-category="crypto">
+                    <span class="bento-category">crypto</span>
+                    <div class="bento-image">
+                        <img src="https://hardhat.org/hardhat-logo.svg" alt="Hardhat">
+                    </div>
+                    <div class="bento-content">
+                        <h3>hardhat</h3>
+                        <p>ethereum dev env</p>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Show More / Counter -->
+            <div class="show-more-container">
+                <button class="show-more-btn" id="showMoreBtn">
+                    show more <span class="arrow">↓</span>
+                </button>
+                <div class="items-counter">
+                    showing <span id="visibleCount">12</span> of <span id="totalCount">33</span> items
+                </div>
             </div>
         </div>
     </section>
@@ -1037,36 +1700,231 @@
     <!-- Bento Grid JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Filter functionality - stats are now the filter buttons
-            const statFilters = document.querySelectorAll('.stat[data-filter]');
-            const bentoItems = document.querySelectorAll('.bento-item');
+            const bentoGrid = document.getElementById('bentoGrid');
+            const bentoItems = Array.from(document.querySelectorAll('.bento-item'));
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const shuffleBtn = document.getElementById('shuffleBtn');
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            const visibleCountEl = document.getElementById('visibleCount');
+            const totalCountEl = document.getElementById('totalCount');
             
-            statFilters.forEach(stat => {
-                stat.addEventListener('click', function() {
-                    const filter = this.dataset.filter;
+            let currentFilter = 'all';
+            let isExpanded = false;
+            const INITIAL_SHOW = 12;
+            
+            // Assign random float animations
+            bentoItems.forEach((item, index) => {
+                item.style.setProperty('--float-duration', (3 + Math.random() * 2) + 's');
+                item.style.setProperty('--float-delay', (Math.random() * 2) + 's');
+            });
+            
+            // ===== SPOTLIGHT CAROUSEL =====
+            const spotlightMain = document.getElementById('spotlightMain');
+            const spotlightSide = document.getElementById('spotlightSide');
+            let spotlightItems = [];
+            let currentSpotlight = 0;
+            let spotlightInterval;
+            
+            function initSpotlight() {
+                // Get featured items for spotlight (randomly select 5)
+                const allItems = bentoItems.filter(item => {
+                    const cat = item.dataset.category;
+                    return currentFilter === 'all' || cat === currentFilter;
+                });
+                
+                spotlightItems = [...allItems].sort(() => Math.random() - 0.5).slice(0, 5);
+                
+                // Build spotlight HTML
+                spotlightMain.innerHTML = spotlightItems.map((item, idx) => {
+                    const img = item.querySelector('.bento-image img');
+                    const title = item.querySelector('.bento-content h3');
+                    const desc = item.querySelector('.bento-content p');
+                    const category = item.dataset.category;
+                    const href = item.href || '#';
+                    const imgStyle = img ? img.getAttribute('style') || '' : '';
                     
-                    // Update active stat
-                    statFilters.forEach(s => s.classList.remove('active'));
+                    return `
+                        <a href="${href}" target="${item.target || '_self'}" class="spotlight-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                            <div class="spotlight-image">
+                                <img src="${img ? img.src : ''}" alt="${title ? title.textContent : ''}" style="${imgStyle}">
+                            </div>
+                            <div class="spotlight-info">
+                                <div class="spotlight-category">${category}</div>
+                                <div class="spotlight-title">${title ? title.textContent : ''}</div>
+                                <div class="spotlight-desc">${desc ? desc.textContent : ''}</div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                
+                // Navigation buttons - add to section wrapper so they position at edges
+                const spotlightSection = document.querySelector('.spotlight-section');
+                // Remove existing buttons first
+                spotlightSection.querySelectorAll('.spotlight-nav-btn').forEach(btn => btn.remove());
+                spotlightSection.insertAdjacentHTML('beforeend', `
+                    <button class="spotlight-nav-btn prev" id="spotlightPrev">‹</button>
+                    <button class="spotlight-nav-btn next" id="spotlightNext">›</button>
+                `);
+                
+                // Side previews
+                spotlightSide.innerHTML = spotlightItems.slice(0, 3).map((item, idx) => {
+                    const img = item.querySelector('.bento-image img');
+                    const title = item.querySelector('.bento-content h3');
+                    const imgStyle = img ? img.getAttribute('style') || '' : '';
+                    
+                    return `
+                        <div class="spotlight-preview ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                            <img src="${img ? img.src : ''}" alt="" style="${imgStyle}">
+                            <span class="spotlight-preview-title">${title ? title.textContent : ''}</span>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Event listeners
+                document.getElementById('spotlightPrev')?.addEventListener('click', () => navigateSpotlight(-1));
+                document.getElementById('spotlightNext')?.addEventListener('click', () => navigateSpotlight(1));
+                
+                document.querySelectorAll('.spotlight-preview').forEach(preview => {
+                    preview.addEventListener('click', () => goToSpotlight(parseInt(preview.dataset.index)));
+                });
+                
+                // Auto-rotate
+                startSpotlightRotation();
+            }
+            
+            function navigateSpotlight(dir) {
+                currentSpotlight = (currentSpotlight + dir + spotlightItems.length) % spotlightItems.length;
+                updateSpotlight();
+                resetSpotlightRotation();
+            }
+            
+            function goToSpotlight(index) {
+                currentSpotlight = index;
+                updateSpotlight();
+                resetSpotlightRotation();
+            }
+            
+            function updateSpotlight() {
+                document.querySelectorAll('.spotlight-item').forEach((item, idx) => {
+                    item.classList.remove('active', 'prev', 'next');
+                    if (idx === currentSpotlight) item.classList.add('active');
+                    else if (idx === (currentSpotlight - 1 + spotlightItems.length) % spotlightItems.length) item.classList.add('prev');
+                    else if (idx === (currentSpotlight + 1) % spotlightItems.length) item.classList.add('next');
+                });
+                
+                document.querySelectorAll('.spotlight-preview').forEach((preview, idx) => {
+                    preview.classList.toggle('active', idx === currentSpotlight);
+                });
+            }
+            
+            function startSpotlightRotation() {
+                spotlightInterval = setInterval(() => navigateSpotlight(1), 5000);
+            }
+            
+            function resetSpotlightRotation() {
+                clearInterval(spotlightInterval);
+                startSpotlightRotation();
+            }
+            
+            // ===== FILTERING =====
+            function filterItems(filter) {
+                currentFilter = filter;
+                let visibleItems = [];
+                let hiddenItems = [];
+                
+                bentoItems.forEach(item => {
+                    const category = item.dataset.category;
+                    if (filter === 'all' || category === filter) {
+                        visibleItems.push(item);
+                    } else {
+                        hiddenItems.push(item);
+                    }
+                });
+                
+                // Hide items not matching filter
+                hiddenItems.forEach(item => {
+                    item.classList.remove('visible');
+                    item.classList.add('hidden');
+                });
+                
+                // Show matching items with staggered animation
+                const itemsToShow = isExpanded ? visibleItems : visibleItems.slice(0, INITIAL_SHOW);
+                const itemsToHide = isExpanded ? [] : visibleItems.slice(INITIAL_SHOW);
+                
+                itemsToShow.forEach((item, idx) => {
+                    item.classList.remove('hidden');
+                    item.classList.add('visible');
+                    item.style.animationDelay = (idx * 0.03) + 's';
+                });
+                
+                itemsToHide.forEach(item => {
+                    item.classList.remove('visible');
+                    item.classList.add('hidden');
+                });
+                
+                updateCounter(visibleItems.length);
+                initSpotlight();
+            }
+            
+            function updateCounter(total) {
+                const visible = Math.min(isExpanded ? total : INITIAL_SHOW, total);
+                visibleCountEl.textContent = visible;
+                totalCountEl.textContent = total;
+                
+                showMoreBtn.style.display = total <= INITIAL_SHOW ? 'none' : 'inline-block';
+                showMoreBtn.classList.toggle('expanded', isExpanded);
+                showMoreBtn.innerHTML = isExpanded ? 'show less <span class="arrow">↑</span>' : 'show more <span class="arrow">↓</span>';
+            }
+            
+            // Filter click handlers
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', function() {
+                    filterPills.forEach(p => p.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // Filter items with staggered animation
-                    bentoItems.forEach((item, index) => {
-                        const category = item.dataset.category;
-                        const shouldShow = filter === 'all' || category === filter;
-                        
-                        if (shouldShow) {
-                            item.classList.remove('hidden');
-                            item.classList.add('visible');
-                            item.style.animationDelay = (index * 0.05) + 's';
-                        } else {
-                            item.classList.remove('visible');
-                            item.classList.add('hidden');
-                        }
-                    });
+                    isExpanded = false;
+                    filterItems(this.dataset.filter);
                 });
             });
             
-            // Add parallax tilt effect on hover
+            // ===== SHUFFLE =====
+            shuffleBtn.addEventListener('click', function() {
+                const visibleItems = bentoItems.filter(item => item.classList.contains('visible'));
+                
+                // Animate out
+                visibleItems.forEach(item => {
+                    item.classList.add('shuffle-out');
+                });
+                
+                setTimeout(() => {
+                    // Shuffle DOM order
+                    const shuffled = [...visibleItems].sort(() => Math.random() - 0.5);
+                    shuffled.forEach(item => {
+                        item.classList.remove('shuffle-out');
+                        item.classList.add('shuffle-in');
+                        bentoGrid.appendChild(item);
+                    });
+                    
+                    // Reassign float animations
+                    shuffled.forEach((item, index) => {
+                        item.style.setProperty('--float-duration', (3 + Math.random() * 2) + 's');
+                        item.style.setProperty('--float-delay', (Math.random() * 2) + 's');
+                    });
+                    
+                    setTimeout(() => {
+                        shuffled.forEach(item => item.classList.remove('shuffle-in'));
+                    }, 400);
+                    
+                    initSpotlight();
+                }, 300);
+            });
+            
+            // ===== SHOW MORE =====
+            showMoreBtn.addEventListener('click', function() {
+                isExpanded = !isExpanded;
+                filterItems(currentFilter);
+            });
+            
+            // ===== PARALLAX TILT =====
             bentoItems.forEach(item => {
                 item.addEventListener('mousemove', function(e) {
                     const rect = this.getBoundingClientRect();
@@ -1076,16 +1934,34 @@
                     const centerX = rect.width / 2;
                     const centerY = rect.height / 2;
                     
-                    const rotateX = (y - centerY) / 20;
-                    const rotateY = (centerX - x) / 20;
+                    const rotateX = (y - centerY) / 15;
+                    const rotateY = (centerX - x) / 15;
                     
-                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.02)`;
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.05)`;
                 });
                 
                 item.addEventListener('mouseleave', function() {
                     this.style.transform = '';
                 });
             });
+            
+            // ===== INITIAL SHUFFLE ON LOAD =====
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            // Shuffle DOM order on load (no animation, instant)
+            const shuffledOnLoad = shuffleArray([...bentoItems]);
+            shuffledOnLoad.forEach(item => {
+                bentoGrid.appendChild(item);
+            });
+            
+            // Initialize
+            filterItems('all');
         });
     </script>
 </body>
