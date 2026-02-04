@@ -671,19 +671,62 @@
             }
             
             .spotlight-container {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                min-height: auto;
             }
             
             .spotlight-side {
                 flex-direction: row;
+                gap: 0.5rem;
+            }
+            
+            .spotlight-preview {
+                padding: 0.4rem 0.6rem;
+            }
+            
+            .spotlight-preview img {
+                width: 24px;
+                height: 24px;
+                margin-right: 0.4rem;
+            }
+            
+            .spotlight-preview-title {
+                font-size: 0.6rem;
             }
             
             .spotlight-main {
-                min-height: 180px;
+                min-height: 140px;
+            }
+            
+            .spotlight-image {
+                width: 90px;
+                height: 90px;
+                padding: 0.75rem;
+            }
+            
+            .spotlight-title {
+                font-size: 1.5rem;
+            }
+            
+            .spotlight-desc {
+                font-size: 0.8rem;
             }
             
             .filter-pills {
                 justify-content: center;
+            }
+            
+            .spotlight-nav-btn.prev {
+                left: 0.5rem;
+            }
+            
+            .spotlight-nav-btn.next {
+                right: 0.5rem;
+            }
+            
+            .spotlight-section {
+                padding: 0;
             }
         }
         
@@ -700,24 +743,44 @@
             .spotlight-item {
                 flex-direction: column;
                 text-align: center;
+                gap: 0.75rem;
             }
             
             .spotlight-info {
                 margin-left: 0;
-                margin-top: 1rem;
             }
             
             .spotlight-image {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
+                padding: 0.5rem;
             }
             
             .spotlight-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .spotlight-desc {
+                font-size: 0.7rem;
+            }
+            
+            .spotlight-category {
+                justify-content: center;
+                font-size: 0.6rem;
+                margin-bottom: 0.25rem;
             }
             
             .spotlight-side {
                 display: none;
+            }
+            
+            .spotlight-main {
+                min-height: 120px;
+            }
+            
+            .spotlight-container {
+                padding: 0.75rem;
             }
             
             .controls-bar {
@@ -748,6 +811,21 @@
             .filter-pill {
                 padding: 0.4rem 0.7rem;
                 font-size: 0.6rem;
+            }
+            
+            .spotlight-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .spotlight-title {
+                font-size: 1rem;
+            }
+            
+            .spotlight-nav-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.9rem;
             }
         }
     </style>
