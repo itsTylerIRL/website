@@ -348,11 +348,65 @@
             border-right-width: 2px;
         }
         
+        /* 3D Tilt Card Effect */
+        .bento-item {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .bento-item .bento-image {
+            transform: translateZ(40px);
+            transition: transform 0.1s ease-out;
+        }
+        
+        .bento-item .bento-image img {
+            transition: transform 0.3s ease-out, filter 0.4s ease;
+        }
+        
+        .bento-item:hover .bento-image {
+            transform: translateZ(60px);
+        }
+        
+        .bento-item .bento-content {
+            transform: translateZ(20px);
+            transition: transform 0.1s ease-out;
+        }
+        
+        .bento-item:hover .bento-content {
+            transform: translateZ(35px);
+        }
+        
+        /* Glow layer that appears on tilt */
+        .bento-item .tilt-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .bento-item:hover .tilt-glow {
+            opacity: 1;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .bento-grid {
                 grid-template-columns: repeat(2, 1fr);
                 grid-auto-rows: 140px;
+            }
+            
+            /* Reduce 3D effect on mobile for performance */
+            .bento-item .bento-image {
+                transform: translateZ(20px);
+            }
+            .bento-item:hover .bento-image {
+                transform: translateZ(30px);
             }
         }
         
@@ -603,6 +657,72 @@
     <script src="effects.js?v=1.2"></script>
     <script src="router.js?v=1.1"></script>
     <script src="sounds.js?v=1.0"></script>
+    
+    <!-- 3D Tilt Card Effect -->
+    <script>
+    (function() {
+        const cards = document.querySelectorAll('.bento-item');
+        
+        cards.forEach(card => {
+            // Add glow element
+            const glow = document.createElement('div');
+            glow.className = 'tilt-glow';
+            card.appendChild(glow);
+            
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation (max 15 degrees)
+                const rotateX = ((y - centerY) / centerY) * -15;
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                // Apply transform with smooth easing
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                
+                // Move glow to follow cursor
+                const glowX = (x / rect.width) * 100;
+                const glowY = (y / rect.height) * 100;
+                glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(139, 233, 253, 0.15) 0%, transparent 60%)`;
+                
+                // Parallax effect on image
+                const image = card.querySelector('.bento-image');
+                if (image) {
+                    const moveX = ((x - centerX) / centerX) * 8;
+                    const moveY = ((y - centerY) / centerY) * 8;
+                    image.style.transform = `translateZ(60px) translateX(${moveX}px) translateY(${moveY}px)`;
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                card.style.transition = 'transform 0.5s ease-out';
+                
+                const image = card.querySelector('.bento-image');
+                if (image) {
+                    image.style.transform = 'translateZ(40px)';
+                    image.style.transition = 'transform 0.5s ease-out';
+                }
+                
+                const glow = card.querySelector('.tilt-glow');
+                if (glow) {
+                    glow.style.background = 'transparent';
+                }
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'transform 0.1s ease-out';
+                const image = card.querySelector('.bento-image');
+                if (image) {
+                    image.style.transition = 'transform 0.1s ease-out';
+                }
+            });
+        });
+    })();
+    </script>
     
 </body>
 </html>
