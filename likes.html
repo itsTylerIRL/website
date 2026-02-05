@@ -1976,14 +1976,53 @@
                 });
             }
             
+            let isHoveringCloudIcon = false;
+            let savedSpotlightHTML = '';
+            
+            // Expose to window for cross-script access
+            window.isHoveringCloudIcon = false;
+            
             function startSpotlightRotation() {
-                spotlightInterval = setInterval(() => navigateSpotlight(1), 5000);
+                spotlightInterval = setInterval(() => {
+                    if (!window.isHoveringCloudIcon) {
+                        navigateSpotlight(1);
+                    }
+                }, 5000);
             }
             
             function resetSpotlightRotation() {
                 clearInterval(spotlightInterval);
                 startSpotlightRotation();
             }
+            
+            window.showIconInSpotlight = function(icon) {
+                if (!savedSpotlightHTML) {
+                    savedSpotlightHTML = spotlightMain.innerHTML;
+                }
+                window.isHoveringCloudIcon = true;
+                
+                spotlightMain.innerHTML = `
+                    <a href="${icon.href}" target="${icon.target}" class="spotlight-item active" data-index="0">
+                        <div class="spotlight-image">
+                            <img src="${icon.src}" alt="${icon.title}" style="${icon.imgStyle || ''}">
+                        </div>
+                        <div class="spotlight-info">
+                            <div class="spotlight-category">${icon.category}</div>
+                            <div class="spotlight-title">${icon.title}</div>
+                            <div class="spotlight-desc">${icon.desc}</div>
+                        </div>
+                    </a>
+                `;
+            };
+            
+            window.restoreSpotlight = function() {
+                if (savedSpotlightHTML) {
+                    spotlightMain.innerHTML = savedSpotlightHTML;
+                    savedSpotlightHTML = '';
+                    updateSpotlight();
+                }
+                window.isHoveringCloudIcon = false;
+            };
             
             // ===== FILTERING =====
             function filterItems(filter) {
@@ -2573,7 +2612,18 @@
                     tooltip.style.left = (e.clientX + 15) + 'px';
                     tooltip.style.top = (e.clientY + 15) + 'px';
                     tooltip.classList.add('visible');
+                    
+                    // Show in spotlight
+                    if (window.showIconInSpotlight) {
+                        window.showIconInSpotlight(found);
+                    }
                 } else {
+                    if (hoveredIcon) {
+                        // Was hovering, now not - restore spotlight
+                        if (window.restoreSpotlight) {
+                            window.restoreSpotlight();
+                        }
+                    }
                     hoveredIcon = null;
                     canvas.style.cursor = 'grab';
                     tooltip.classList.remove('visible');
@@ -2642,6 +2692,11 @@
             hoveredIcon = null;
             tooltip.classList.remove('visible');
             autoRotate = true;
+            
+            // Restore spotlight rotation
+            if (window.restoreSpotlight) {
+                window.restoreSpotlight();
+            }
         }
         
         // Filter handler
