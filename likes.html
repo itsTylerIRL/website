@@ -2355,10 +2355,13 @@
             icon.opacity = Math.max(0.3, Math.min(1, (scale - 0.5) * 2));
         }
         
-        // Draw connection lines between nearby icons
+        // Draw connection lines between nearby icons (desktop only)
         function drawConnections(visibleIcons) {
+            // Skip connection lines on mobile for cleaner look
+            if (width < 600) return;
+            
             const iconList = visibleIcons || icons;
-            const maxDist = 150;
+            const maxDist = width < 900 ? 100 : 150; // Shorter lines on tablet
             
             ctx.lineCap = 'round';
             
