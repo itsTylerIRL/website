@@ -2183,6 +2183,10 @@
                         iconCloudContainer.classList.add('hidden-view');
                         bentoGrid.classList.remove('hidden-view');
                         document.querySelector('.show-more-container').style.display = 'block';
+                        // Remove exclusion zone when cloud is hidden
+                        if (window.removeExclusionZone) {
+                            window.removeExclusionZone('iconCloud');
+                        }
                     }
                 });
             });
@@ -2334,6 +2338,9 @@
             canvas.style.height = height + 'px';
             ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
             
+            // Update exclusion zone for background particles
+            updateExclusionZone();
+            
             // Reinitialize icons with new dimensions
             if (icons.length > 0) {
                 const isMobile = width < 600;
@@ -2356,6 +2363,17 @@
                     icon.baseZ = z * radius;
                     icon.size = iconSize;
                 });
+            }
+        }
+        
+        // Update exclusion zone for the icon cloud
+        function updateExclusionZone() {
+            if (window.setExclusionZone && container.offsetParent !== null) {
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const radius = Math.min(rect.width, rect.height) * 0.45; // Slightly larger than visual cloud
+                window.setExclusionZone('iconCloud', centerX, centerY, radius);
             }
         }
         
@@ -2519,6 +2537,9 @@
         function render(time) {
             ctx.clearRect(0, 0, width, height);
             
+            // Update exclusion zone position (for scrolling)
+            updateExclusionZone();
+            
             // Auto rotation
             if (autoRotate && !isDragging) {
                 targetRotationY += 0.002;
@@ -2641,10 +2662,9 @@
         
         function onClick(e) {
             if (hoveredIcon) {
-                if (hoveredIcon.target === '_blank') {
-                    window.open(hoveredIcon.href, '_blank');
-                } else {
-                    window.location.href = hoveredIcon.href;
+                // Select the icon and show in spotlight (don't navigate)
+                if (window.showIconInSpotlight) {
+                    window.showIconInSpotlight(hoveredIcon);
                 }
             }
         }
@@ -2671,11 +2691,9 @@
                     const dist = Math.sqrt(Math.pow(icon.projX - touchStartPos.x, 2) + Math.pow(icon.projY - touchStartPos.y, 2));
                     
                     if (dist < size * 0.7 && icon.opacity > 0.5) {
-                        // Tapped on icon - navigate
-                        if (icon.target === '_blank') {
-                            window.open(icon.href, '_blank');
-                        } else {
-                            window.location.href = icon.href;
+                        // Tapped on icon - select and show in spotlight
+                        if (window.showIconInSpotlight) {
+                            window.showIconInSpotlight(icon);
                         }
                         break;
                     }

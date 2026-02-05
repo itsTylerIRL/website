@@ -7,6 +7,11 @@ let windowHalfY = window.innerHeight / 2;
 let scrollY = 0;
 let scanlineY = 0;
 let particlePositions, particleColors, originalColors;
+let particleVelocities = []; // Velocity for each particle
+
+// Exclusion zones - circles defined in screen space {x, y, radius}
+let exclusionZones = [];
+window.exclusionZones = exclusionZones;
 
 // Post-processing and effects
 let composer, bloomPass, glitchPass;
@@ -190,6 +195,7 @@ function createParticles() {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
+    particleVelocities = []; // Reset velocities
     
     // Color palette - cyan and pink accents
     const colorPalette = [
@@ -206,6 +212,16 @@ function createParticles() {
         const z = (Math.random() - 0.5) * 100 - 20; // Depth behind camera plane
         
         vertices.push(x, y, z);
+        
+        // Add random velocity for each particle (very slow drift)
+        const speed = 0.003 + Math.random() * 0.005;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+        particleVelocities.push({
+            x: Math.sin(phi) * Math.cos(theta) * speed,
+            y: Math.sin(phi) * Math.sin(theta) * speed,
+            z: Math.cos(phi) * speed * 0.2 // Less z movement
+        });
         
         // Random color from palette, weighted toward cyan
         const color = Math.random() > 0.7 
@@ -261,6 +277,97 @@ window.setFogDensity = function(density) {
 };
 
 window.getFogDensity = () => fogDensity;
+
+// Exclusion zone API
+window.setExclusionZone = function(id, x, y, radius) {
+    // Set or update an exclusion zone by id
+    const existing = exclusionZones.find(z => z.id === id);
+    if (existing) {
+        existing.x = x;
+        existing.y = y;
+        existing.radius = radius;
+    } else {
+        exclusionZones.push({ id, x, y, radius });
+    }
+};
+
+window.removeExclusionZone = function(id) {
+    const idx = exclusionZones.findIndex(z => z.id === id);
+    if (idx !== -1) exclusionZones.splice(idx, 1);
+};
+
+window.clearExclusionZones = function() {
+    exclusionZones.length = 0;
+};
+
+// Update particle positions with velocity and exclusion zone bouncing
+function updateParticlePositions() {
+    if (!particlePositions || particleVelocities.length === 0) return;
+    
+    const positions = particlePositions.array;
+    const tempVec = new THREE.Vector3();
+    
+    for (let i = 0; i < positions.length / 3; i++) {
+        const idx = i * 3;
+        
+        // Move particle by velocity
+        positions[idx] += particleVelocities[i].x;
+        positions[idx + 1] += particleVelocities[i].y;
+        positions[idx + 2] += particleVelocities[i].z;
+        
+        // Wrap around boundaries
+        if (positions[idx] > 100) positions[idx] = -100;
+        if (positions[idx] < -100) positions[idx] = 100;
+        if (positions[idx + 1] > 400) positions[idx + 1] = -400;
+        if (positions[idx + 1] < -400) positions[idx + 1] = 400;
+        if (positions[idx + 2] > 30) positions[idx + 2] = -70;
+        if (positions[idx + 2] < -70) positions[idx + 2] = 30;
+        
+        // Check exclusion zones (in screen space)
+        if (exclusionZones.length > 0) {
+            // Get particle screen position
+            tempVec.set(positions[idx], positions[idx + 1], positions[idx + 2]);
+            if (particles.matrixWorld) {
+                tempVec.applyMatrix4(particles.matrixWorld);
+            }
+            tempVec.project(camera);
+            
+            // Convert to pixel coordinates
+            const screenX = (tempVec.x + 1) * 0.5 * window.innerWidth;
+            const screenY = (1 - tempVec.y) * 0.5 * window.innerHeight;
+            
+            // Check each exclusion zone
+            for (const zone of exclusionZones) {
+                const dx = screenX - zone.x;
+                const dy = screenY - zone.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < zone.radius) {
+                    // Particle is inside exclusion zone - bounce it away
+                    // Calculate bounce direction (away from center of zone)
+                    const angle = Math.atan2(dy, dx);
+                    
+                    // Get current speed
+                    const vel = particleVelocities[i];
+                    const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
+                    
+                    // Set new velocity direction away from zone center (keep same speed)
+                    vel.x = Math.cos(angle) * speed;
+                    vel.y = Math.sin(angle) * speed;
+                    // Add tiny z variation
+                    vel.z = (Math.random() - 0.5) * speed * 0.3;
+                    
+                    // Gently push particle outside zone
+                    const pushFactor = (zone.radius - dist + 2) / 200;
+                    positions[idx] += Math.cos(angle) * pushFactor;
+                    positions[idx + 1] += Math.sin(angle) * pushFactor;
+                }
+            }
+        }
+    }
+    
+    particlePositions.needsUpdate = true;
+}
 
 function createWireframeShapes() {
     // Floating wireframe geometries - spread across entire scene
@@ -734,6 +841,9 @@ function animate() {
     
     const time = Date.now() * 0.001;
     
+    // Update particle positions with velocities and exclusion zones
+    updateParticlePositions();
+    
     // Update shader uniforms
     if (particles && particles.material.uniforms) {
         particles.material.uniforms.uTime.value = time;
@@ -939,6 +1049,7 @@ function createParticlesWithCount(count) {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
+    particleVelocities = []; // Reset velocities
     
     const colorPalette = [
         new THREE.Color(0x8be9fd),
@@ -953,6 +1064,16 @@ function createParticlesWithCount(count) {
         const z = (Math.random() - 0.5) * 100 - 20;
         
         vertices.push(x, y, z);
+        
+        // Add random velocity for each particle (very slow drift)
+        const speed = 0.003 + Math.random() * 0.005;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+        particleVelocities.push({
+            x: Math.sin(phi) * Math.cos(theta) * speed,
+            y: Math.sin(phi) * Math.sin(theta) * speed,
+            z: Math.cos(phi) * speed * 0.2
+        });
         
         const color = Math.random() > 0.7 
             ? colorPalette[Math.floor(Math.random() * colorPalette.length)]
