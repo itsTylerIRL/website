@@ -45,12 +45,12 @@
         .bento-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem 4rem 2rem;
+            padding: 0 2rem 0 2rem;
         }
         
         /* Ensure content fits within corner brackets */
         .main-content {
-            padding: 60px 25px 70px 25px;
+            padding: 30px 25px 20px 25px;
         }
         
         .bento-header {
@@ -80,55 +80,78 @@
             51%, 100% { opacity: 0; }
         }
         
-        /* ===== SPOTLIGHT CAROUSEL - Compact Featured Box ===== */
+        /* ===== UNIFIED CONTROL BAR - Spotlight + Filters ===== */
         .spotlight-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
-            padding: 0 1rem;
+            padding: 0;
         }
         
         .spotlight-container {
             display: grid;
-            grid-template-columns: 1fr 180px;
+            grid-template-columns: auto 1fr auto;
             gap: 1rem;
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             background: linear-gradient(145deg, rgba(15, 15, 20, 0.5) 0%, rgba(5, 5, 10, 0.7) 100%);
             border: 1px solid rgba(139, 233, 253, 0.1);
             border-radius: 16px;
-            min-height: 160px;
+            min-height: 100px;
+            align-items: center;
+        }
+        
+        .spotlight-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            min-width: 120px;
+        }
+        
+        .spotlight-filters .filter-pill {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.65rem;
+            text-align: left;
+            justify-content: flex-start;
+        }
+        
+        .spotlight-filters .filter-pill .count {
+            margin-left: auto;
         }
         
         .spotlight-main {
             position: relative;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
         }
         
         .spotlight-item {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
             padding: 0.5rem 0;
             text-decoration: none;
             color: inherit;
             height: 100%;
             opacity: 0;
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateX(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
-            transform: translateX(20px);
+            white-space: nowrap;
         }
         
         .spotlight-item.active {
             opacity: 1;
             position: relative;
-            transform: translateX(0);
+            top: auto;
+            left: auto;
+            transform: translate(0, 0);
         }
         
         .spotlight-image {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -173,114 +196,61 @@
         }
         
         .spotlight-title {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #fff;
             text-transform: lowercase;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .spotlight-desc {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.6);
             text-transform: lowercase;
         }
         
-        .spotlight-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 28px;
-            height: 28px;
-            border: 1px solid rgba(139, 233, 253, 0.3);
-            background: rgba(0, 0, 0, 0.9);
-            color: #8be9fd;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.1rem;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .spotlight-nav-btn:hover {
-            background: rgba(139, 233, 253, 0.2);
-            border-color: #8be9fd;
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        .spotlight-nav-btn.prev {
-            left: -14px;
-        }
-        
-        .spotlight-nav-btn.next {
-            right: -14px;
-        }
-        
-        .spotlight-side {
+        .spotlight-actions {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.3rem;
+            min-width: 90px;
         }
         
-        .spotlight-preview {
-            flex: 1;
-            background: linear-gradient(145deg, rgba(20, 20, 25, 0.5) 0%, rgba(10, 10, 15, 0.7) 100%);
-            border: 1px solid rgba(139, 233, 253, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0.75rem;
+        .spotlight-action-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: transparent;
+            color: #666;
+            font-size: 0.65rem;
             cursor: pointer;
             transition: all 0.3s;
-            text-decoration: none;
-            color: inherit;
-            opacity: 0.5;
-        }
-        
-        .spotlight-preview:hover,
-        .spotlight-preview.active {
-            opacity: 1;
-            border-color: rgba(139, 233, 253, 0.4);
-            background: linear-gradient(145deg, rgba(30, 30, 40, 0.6) 0%, rgba(15, 15, 25, 0.8) 100%);
-        }
-        
-        .spotlight-preview img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            margin-right: 0.6rem;
-        }
-        
-        .spotlight-preview-title {
-            font-size: 0.7rem;
-            color: #fff;
             text-transform: lowercase;
-        }
-        
-        /* ===== CONTROLS BAR ===== */
-        .controls-bar {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            padding: 0.75rem;
-            background: rgba(139, 233, 253, 0.03);
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 0.3rem;
         }
         
-        .filter-pills {
-            display: flex;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-            flex: 1;
+        .spotlight-action-btn:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+            background: rgba(139, 233, 253, 0.1);
         }
         
+        .spotlight-action-btn.shuffle:hover {
+            border-color: #ff79c6;
+            color: #ff79c6;
+            background: rgba(255, 121, 198, 0.1);
+        }
+        
+        .spotlight-action-btn.active {
+            border-color: #8be9fd;
+            color: #8be9fd;
+            background: rgba(139, 233, 253, 0.15);
+        }
+        
+        /* ===== FILTER PILLS ===== */
         .filter-pill {
             padding: 0.5rem 1rem;
             border: 1px solid #333;
@@ -612,6 +582,117 @@
             }
         }
         
+        /* ===== 3D ICON CLOUD ===== */
+        .icon-cloud-container {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            margin: 0.5rem 0 0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, rgba(139, 233, 253, 0.03) 0%, transparent 70%);
+        }
+        
+        .icon-cloud-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        
+        .icon-cloud-canvas:active {
+            cursor: grabbing;
+        }
+        
+        .icon-cloud-hint {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: rgba(139, 233, 253, 0.5);
+            text-transform: lowercase;
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+        
+        .icon-tooltip {
+            position: fixed;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(139, 233, 253, 0.4);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.8rem;
+            text-transform: lowercase;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        .icon-tooltip.visible {
+            opacity: 1;
+        }
+        
+        .icon-tooltip .tooltip-title {
+            color: #8be9fd;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .icon-tooltip .tooltip-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
+        }
+        
+        .view-toggle-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .view-toggle-btn {
+            padding: 0.5rem 1.25rem;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: transparent;
+            color: #666;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: lowercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .view-toggle-btn:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+        }
+        
+        .view-toggle-btn.active {
+            border-color: #8be9fd;
+            background: rgba(139, 233, 253, 0.15);
+            color: #8be9fd;
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+        }
+        
+        .bento-grid.hidden-view {
+            display: none;
+        }
+        
+        .icon-cloud-container.hidden-view {
+            display: none;
+        }
+        
         /* ===== SHOW MORE SECTION ===== */
         .show-more-container {
             text-align: center;
@@ -671,58 +752,40 @@
             }
             
             .spotlight-container {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-                min-height: auto;
+                grid-template-columns: auto 1fr;
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
             }
             
-            .spotlight-side {
-                flex-direction: row;
-                gap: 0.5rem;
+            .spotlight-actions {
+                display: none;
             }
             
-            .spotlight-preview {
-                padding: 0.4rem 0.6rem;
+            .spotlight-filters {
+                min-width: 100px;
             }
             
-            .spotlight-preview img {
-                width: 24px;
-                height: 24px;
-                margin-right: 0.4rem;
-            }
-            
-            .spotlight-preview-title {
-                font-size: 0.6rem;
+            .spotlight-filters .filter-pill {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.55rem;
             }
             
             .spotlight-main {
-                min-height: 140px;
+                min-height: 100px;
             }
             
             .spotlight-image {
-                width: 90px;
-                height: 90px;
-                padding: 0.75rem;
+                width: 70px;
+                height: 70px;
+                padding: 0.5rem;
             }
             
             .spotlight-title {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
             
             .spotlight-desc {
-                font-size: 0.8rem;
-            }
-            
-            .filter-pills {
-                justify-content: center;
-            }
-            
-            .spotlight-nav-btn.prev {
-                left: 0.5rem;
-            }
-            
-            .spotlight-nav-btn.next {
-                right: 0.5rem;
+                font-size: 0.7rem;
             }
             
             .spotlight-section {
@@ -740,10 +803,26 @@
                 padding: 50px 20px 60px 20px;
             }
             
+            .spotlight-container {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .spotlight-filters {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                min-width: auto;
+            }
+            
+            .spotlight-filters .filter-pill {
+                padding: 0.3rem 0.6rem;
+            }
+            
             .spotlight-item {
                 flex-direction: column;
                 text-align: center;
-                gap: 0.75rem;
+                gap: 0.5rem;
             }
             
             .spotlight-info {
@@ -751,45 +830,32 @@
             }
             
             .spotlight-image {
-                width: 70px;
-                height: 70px;
+                width: 60px;
+                height: 60px;
                 padding: 0.5rem;
             }
             
             .spotlight-title {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 margin-bottom: 0.25rem;
             }
             
             .spotlight-desc {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
             
             .spotlight-category {
                 justify-content: center;
-                font-size: 0.6rem;
+                font-size: 0.55rem;
                 margin-bottom: 0.25rem;
             }
             
-            .spotlight-side {
-                display: none;
-            }
-            
             .spotlight-main {
-                min-height: 120px;
+                min-height: 100px;
             }
             
-            .spotlight-container {
-                padding: 0.75rem;
-            }
-            
-            .controls-bar {
-                flex-direction: column;
-            }
-            
-            .action-buttons {
-                width: 100%;
-                justify-content: center;
+            .icon-cloud-container {
+                height: 400px;
             }
         }
         
@@ -804,13 +870,9 @@
                 align-items: flex-start;
             }
             
-            .filter-pills {
-                gap: 0.3rem;
-            }
-            
-            .filter-pill {
-                padding: 0.4rem 0.7rem;
-                font-size: 0.6rem;
+            .spotlight-filters .filter-pill {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.5rem;
             }
             
             .spotlight-image {
@@ -850,34 +912,46 @@
                 <h2 class="bento-title">things i like</h2>
             </div>
             
-            <!-- Spotlight Carousel -->
+            <!-- Unified Spotlight + Controls -->
             <div class="spotlight-section">
                 <div class="spotlight-container">
+                    <!-- Left: Filters -->
+                    <div class="spotlight-filters">
+                        <button class="filter-pill active" data-filter="all">all <span class="count">(67)</span></button>
+                        <button class="filter-pill" data-filter="personal">personal <span class="count">(7)</span></button>
+                        <button class="filter-pill" data-filter="crypto">crypto <span class="count">(14)</span></button>
+                        <button class="filter-pill" data-filter="tech">tech <span class="count">(38)</span></button>
+                        <button class="filter-pill" data-filter="fun">fun <span class="count">(7)</span></button>
+                        <button class="filter-pill" data-filter="art">art <span class="count">(4)</span></button>
+                    </div>
+                    
+                    <!-- Center: Spotlight -->
                     <div class="spotlight-main" id="spotlightMain">
                         <!-- Spotlight items will be populated by JS -->
                     </div>
-                    <div class="spotlight-side" id="spotlightSide">
-                        <!-- Preview items will be populated by JS -->
+                    
+                    <!-- Right: Actions -->
+                    <div class="spotlight-actions">
+                        <button class="spotlight-action-btn shuffle" id="shuffleBtn">⟳ shuffle</button>
+                        <button class="spotlight-action-btn view-toggle active" data-view="cloud">✧ 3d cloud</button>
+                        <button class="spotlight-action-btn view-toggle" data-view="grid">▤ grid</button>
                     </div>
                 </div>
             </div>
             
-            <!-- Controls Bar -->
-            <div class="controls-bar">
-                <div class="filter-pills">
-                    <button class="filter-pill active" data-filter="all">all <span class="count">(66)</span></button>
-                    <button class="filter-pill" data-filter="personal">personal <span class="count">(7)</span></button>
-                    <button class="filter-pill" data-filter="crypto">crypto <span class="count">(14)</span></button>
-                    <button class="filter-pill" data-filter="tech">tech <span class="count">(38)</span></button>
-                    <button class="filter-pill" data-filter="fun">fun <span class="count">(6)</span></button>
-                    <button class="filter-pill" data-filter="art">art <span class="count">(4)</span></button>
-                </div>
-                <div class="action-buttons">
-                    <button class="action-btn shuffle" id="shuffleBtn">⟳ shuffle</button>
-                </div>
+            <!-- 3D Icon Cloud -->
+            <div class="icon-cloud-container" id="iconCloudContainer">
+                <canvas class="icon-cloud-canvas" id="iconCloudCanvas"></canvas>
+                <div class="icon-cloud-hint">drag to rotate • click to explore</div>
             </div>
             
-            <div class="bento-grid" id="bentoGrid">
+            <!-- Tooltip -->
+            <div class="icon-tooltip" id="iconTooltip">
+                <div class="tooltip-title"></div>
+                <div class="tooltip-desc"></div>
+            </div>
+            
+            <div class="bento-grid hidden-view" id="bentoGrid">
                 <!-- Personal Projects -->
                 <!-- DeepDish OCS -->
                 <a href="OCS.html" class="bento-item visible" data-category="personal">
@@ -1260,6 +1334,18 @@
                     <div class="bento-content">
                         <h3>loc precision</h3>
                         <p>rocket kits</p>
+                    </div>
+                </a>
+                
+                <!-- Exo -->
+                <a href="https://exolabs.net/" target="_blank" class="bento-item visible" data-category="fun">
+                    <span class="bento-category">fun</span>
+                    <div class="bento-image">
+                        <img src="https://exolabs.net/exo-logo-hq-banner-transparent-bg.png" alt="Exo">
+                    </div>
+                    <div class="bento-content">
+                        <h3>exo</h3>
+                        <p>distributed ai</p>
                     </div>
                 </a>
                 
@@ -1798,7 +1884,6 @@
             
             // ===== SPOTLIGHT CAROUSEL =====
             const spotlightMain = document.getElementById('spotlightMain');
-            const spotlightSide = document.getElementById('spotlightSide');
             let spotlightItems = [];
             let currentSpotlight = 0;
             let spotlightInterval;
@@ -1835,49 +1920,12 @@
                     `;
                 }).join('');
                 
-                // Navigation buttons - add to section wrapper so they position at edges
-                const spotlightSection = document.querySelector('.spotlight-section');
-                // Remove existing buttons first
-                spotlightSection.querySelectorAll('.spotlight-nav-btn').forEach(btn => btn.remove());
-                spotlightSection.insertAdjacentHTML('beforeend', `
-                    <button class="spotlight-nav-btn prev" id="spotlightPrev">‹</button>
-                    <button class="spotlight-nav-btn next" id="spotlightNext">›</button>
-                `);
-                
-                // Side previews
-                spotlightSide.innerHTML = spotlightItems.slice(0, 3).map((item, idx) => {
-                    const img = item.querySelector('.bento-image img');
-                    const title = item.querySelector('.bento-content h3');
-                    const imgStyle = img ? img.getAttribute('style') || '' : '';
-                    
-                    return `
-                        <div class="spotlight-preview ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-                            <img src="${img ? img.src : ''}" alt="" style="${imgStyle}">
-                            <span class="spotlight-preview-title">${title ? title.textContent : ''}</span>
-                        </div>
-                    `;
-                }).join('');
-                
-                // Event listeners
-                document.getElementById('spotlightPrev')?.addEventListener('click', () => navigateSpotlight(-1));
-                document.getElementById('spotlightNext')?.addEventListener('click', () => navigateSpotlight(1));
-                
-                document.querySelectorAll('.spotlight-preview').forEach(preview => {
-                    preview.addEventListener('click', () => goToSpotlight(parseInt(preview.dataset.index)));
-                });
-                
-                // Auto-rotate
+                // Auto-rotate spotlight
                 startSpotlightRotation();
             }
             
             function navigateSpotlight(dir) {
                 currentSpotlight = (currentSpotlight + dir + spotlightItems.length) % spotlightItems.length;
-                updateSpotlight();
-                resetSpotlightRotation();
-            }
-            
-            function goToSpotlight(index) {
-                currentSpotlight = index;
                 updateSpotlight();
                 resetSpotlightRotation();
             }
@@ -1961,6 +2009,10 @@
                     this.classList.add('active');
                     isExpanded = false;
                     filterItems(this.dataset.filter);
+                    // Also filter the icon cloud
+                    if (window.filterIconCloud) {
+                        window.filterIconCloud(this.dataset.filter);
+                    }
                 });
             });
             
@@ -2040,7 +2092,511 @@
             
             // Initialize
             filterItems('all');
+            
+            // ===== VIEW TOGGLE =====
+            const viewToggleBtns = document.querySelectorAll('.view-toggle');
+            const iconCloudContainer = document.getElementById('iconCloudContainer');
+            
+            viewToggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewToggleBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const view = this.dataset.view;
+                    if (view === 'cloud') {
+                        iconCloudContainer.classList.remove('hidden-view');
+                        bentoGrid.classList.add('hidden-view');
+                        document.querySelector('.show-more-container').style.display = 'none';
+                    } else {
+                        iconCloudContainer.classList.add('hidden-view');
+                        bentoGrid.classList.remove('hidden-view');
+                        document.querySelector('.show-more-container').style.display = 'block';
+                    }
+                });
+            });
+            
+            // Hide show more container initially (cloud view is default)
+            document.querySelector('.show-more-container').style.display = 'none';
         });
+    </script>
+    
+    <!-- 3D Icon Cloud Script -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('iconCloudCanvas');
+        const container = document.getElementById('iconCloudContainer');
+        const tooltip = document.getElementById('iconTooltip');
+        
+        if (!canvas || !container) return;
+        
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let icons = [];
+        let isDragging = false;
+        let lastMouseX = 0, lastMouseY = 0;
+        let rotationX = 0, rotationY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        let autoRotate = true;
+        let hoveredIcon = null;
+        let animationId = null;
+        
+        // Color palette
+        const categoryColors = {
+            personal: '#ff79c6',
+            crypto: '#8be9fd',
+            tech: '#50fa7b',
+            fun: '#ffb86c',
+            art: '#bd93f9'
+        };
+        
+        // Collect items from the bento grid
+        function collectItems() {
+            const bentoItems = document.querySelectorAll('.bento-item');
+            const items = [];
+            
+            bentoItems.forEach((item, i) => {
+                const img = item.querySelector('.bento-image img');
+                const title = item.querySelector('.bento-content h3');
+                const desc = item.querySelector('.bento-content p');
+                const category = item.dataset.category;
+                
+                if (img && title) {
+                    items.push({
+                        src: img.src,
+                        title: title.textContent,
+                        desc: desc ? desc.textContent : '',
+                        category: category,
+                        href: item.href || '#',
+                        target: item.target || '_self',
+                        imgStyle: img.getAttribute('style') || '',
+                        image: null,
+                        loaded: false
+                    });
+                }
+            });
+            
+            return items;
+        }
+        
+        // Create 3D positions for icons (sphere distribution)
+        function initIcons() {
+            const itemData = collectItems();
+            icons = [];
+            
+            const radius = Math.min(width, height) * 0.35;
+            const count = itemData.length;
+            
+            // Fibonacci sphere distribution for even spacing
+            const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+            
+            itemData.forEach((data, i) => {
+                const y = 1 - (i / (count - 1)) * 2; // y goes from 1 to -1
+                const radiusAtY = Math.sqrt(1 - y * y);
+                const theta = goldenAngle * i;
+                
+                const x = Math.cos(theta) * radiusAtY;
+                const z = Math.sin(theta) * radiusAtY;
+                
+                const icon = {
+                    ...data,
+                    baseX: x * radius,
+                    baseY: y * radius,
+                    baseZ: z * radius,
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                    projX: 0,
+                    projY: 0,
+                    scale: 1,
+                    opacity: 1,
+                    size: 40,
+                    hovered: false,
+                    pulsePhase: Math.random() * Math.PI * 2
+                };
+                
+                icons.push(icon);
+                
+                // Load image - try without CORS first for local images, then with CORS
+                const loadImage = (src, useCors) => {
+                    const img = new Image();
+                    if (useCors) img.crossOrigin = 'anonymous';
+                    
+                    img.onload = () => {
+                        icon.image = img;
+                        icon.loaded = true;
+                    };
+                    img.onerror = () => {
+                        if (useCors) {
+                            // If CORS failed, try without
+                            loadImage(src, false);
+                        } else if (!useCors && src.startsWith('http')) {
+                            // External image without CORS - try with CORS
+                            loadImage(src, true);
+                        } else {
+                            // Final fallback - mark as loaded but no image
+                            icon.loaded = true;
+                            icon.fallbackLetter = data.title ? data.title.charAt(0).toUpperCase() : '?';
+                        }
+                    };
+                    img.src = src;
+                };
+                
+                // Start loading - local images without CORS, external with CORS
+                const isExternal = data.src.startsWith('http');
+                loadImage(data.src, isExternal);
+            });
+        }
+        
+        // Resize handler
+        function resize() {
+            const rect = container.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            
+            // Reinitialize icons with new dimensions
+            if (icons.length > 0) {
+                const radius = Math.min(width, height) * 0.35;
+                const count = icons.length;
+                const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+                
+                icons.forEach((icon, i) => {
+                    const y = 1 - (i / (count - 1)) * 2;
+                    const radiusAtY = Math.sqrt(1 - y * y);
+                    const theta = goldenAngle * i;
+                    
+                    const x = Math.cos(theta) * radiusAtY;
+                    const z = Math.sin(theta) * radiusAtY;
+                    
+                    icon.baseX = x * radius;
+                    icon.baseY = y * radius;
+                    icon.baseZ = z * radius;
+                });
+            }
+        }
+        
+        // Rotate point around Y axis then X axis
+        function rotatePoint(x, y, z, rx, ry) {
+            // Rotate around Y
+            let cosY = Math.cos(ry);
+            let sinY = Math.sin(ry);
+            let tempX = x * cosY - z * sinY;
+            let tempZ = x * sinY + z * cosY;
+            
+            // Rotate around X
+            let cosX = Math.cos(rx);
+            let sinX = Math.sin(rx);
+            let tempY = y * cosX - tempZ * sinX;
+            tempZ = y * sinX + tempZ * cosX;
+            
+            return { x: tempX, y: tempY, z: tempZ };
+        }
+        
+        // Project 3D to 2D
+        function project(icon) {
+            const perspective = 600;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            const rotated = rotatePoint(icon.baseX, icon.baseY, icon.baseZ, rotationX, rotationY);
+            icon.x = rotated.x;
+            icon.y = rotated.y;
+            icon.z = rotated.z;
+            
+            const scale = perspective / (perspective + rotated.z);
+            icon.projX = centerX + rotated.x * scale;
+            icon.projY = centerY + rotated.y * scale;
+            icon.scale = scale;
+            icon.opacity = Math.max(0.3, Math.min(1, (scale - 0.5) * 2));
+        }
+        
+        // Draw connection lines between nearby icons
+        function drawConnections(visibleIcons) {
+            const iconList = visibleIcons || icons;
+            const maxDist = 150;
+            
+            ctx.lineCap = 'round';
+            
+            for (let i = 0; i < iconList.length; i++) {
+                for (let j = i + 1; j < iconList.length; j++) {
+                    const a = iconList[i];
+                    const b = iconList[j];
+                    
+                    const dx = a.projX - b.projX;
+                    const dy = a.projY - b.projY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < maxDist) {
+                        const alpha = (1 - dist / maxDist) * 0.15 * Math.min(a.opacity, b.opacity);
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(139, 233, 253, ${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(a.projX, a.projY);
+                        ctx.lineTo(b.projX, b.projY);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Draw a single icon
+        function drawIcon(icon, time) {
+            const size = icon.size * icon.scale * (icon.hovered ? 1.5 : 1);
+            const x = icon.projX;
+            const y = icon.projY;
+            
+            ctx.save();
+            ctx.globalAlpha = icon.opacity;
+            
+            // Glow effect for hovered
+            if (icon.hovered) {
+                const color = categoryColors[icon.category] || '#8be9fd';
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 25;
+            }
+            
+            // Draw hexagonal frame
+            const pulse = Math.sin(time * 0.003 + icon.pulsePhase) * 0.1 + 1;
+            const frameSize = size * 0.6 * pulse;
+            
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 6;
+                const px = x + Math.cos(angle) * frameSize;
+                const py = y + Math.sin(angle) * frameSize;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            
+            // Fill with semi-transparent dark
+            ctx.fillStyle = icon.hovered 
+                ? 'rgba(20, 20, 30, 0.9)' 
+                : 'rgba(10, 10, 15, 0.6)';
+            ctx.fill();
+            
+            // Stroke
+            const color = categoryColors[icon.category] || '#8be9fd';
+            ctx.strokeStyle = icon.hovered 
+                ? color 
+                : `rgba(139, 233, 253, ${0.3 * icon.opacity})`;
+            ctx.lineWidth = icon.hovered ? 2 : 1;
+            ctx.stroke();
+            
+            // Draw image
+            if (icon.image && icon.loaded) {
+                const imgSize = size * 0.7;
+                ctx.save();
+                
+                // Clip to circle
+                ctx.beginPath();
+                ctx.arc(x, y, imgSize * 0.5, 0, Math.PI * 2);
+                ctx.clip();
+                
+                // Check for invert filter
+                if (icon.imgStyle && icon.imgStyle.includes('invert(1)')) {
+                    ctx.filter = 'invert(1)';
+                }
+                
+                ctx.drawImage(
+                    icon.image,
+                    x - imgSize / 2,
+                    y - imgSize / 2,
+                    imgSize,
+                    imgSize
+                );
+                ctx.restore();
+            } else {
+                // Fallback: draw colored circle with letter
+                const fallbackSize = size * 0.35;
+                ctx.beginPath();
+                ctx.arc(x, y, fallbackSize, 0, Math.PI * 2);
+                const fallbackColor = categoryColors[icon.category] || '#8be9fd';
+                ctx.fillStyle = fallbackColor;
+                ctx.fill();
+                
+                // Draw letter
+                if (icon.fallbackLetter) {
+                    ctx.fillStyle = '#000';
+                    ctx.font = `bold ${fallbackSize * 1.2}px monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(icon.fallbackLetter, x, y);
+                }
+            }
+            
+            ctx.restore();
+        }
+        
+        // Main render loop
+        function render(time) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Auto rotation
+            if (autoRotate && !isDragging) {
+                targetRotationY += 0.002;
+            }
+            
+            // Smooth rotation
+            rotationX += (targetRotationX - rotationX) * 0.05;
+            rotationY += (targetRotationY - rotationY) * 0.05;
+            
+            // Filter visible icons
+            const visibleIcons = icons.filter(icon => icon.visible !== false);
+            
+            // Update projections
+            visibleIcons.forEach(icon => project(icon));
+            
+            // Sort by Z for proper depth ordering (back to front)
+            visibleIcons.sort((a, b) => b.z - a.z);
+            
+            // Draw connections first (only visible icons)
+            drawConnections(visibleIcons);
+            
+            // Draw icons
+            visibleIcons.forEach(icon => drawIcon(icon, time));
+            
+            animationId = requestAnimationFrame(render);
+        }
+        
+        // Mouse/touch handlers
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+        
+        function onPointerDown(e) {
+            isDragging = true;
+            autoRotate = false;
+            const pos = getMousePos(e);
+            lastMouseX = pos.x;
+            lastMouseY = pos.y;
+        }
+        
+        function onPointerMove(e) {
+            const pos = getMousePos(e);
+            
+            if (isDragging) {
+                const dx = pos.x - lastMouseX;
+                const dy = pos.y - lastMouseY;
+                
+                targetRotationY += dx * 0.005;
+                targetRotationX += dy * 0.005;
+                
+                // Clamp X rotation
+                targetRotationX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, targetRotationX));
+                
+                lastMouseX = pos.x;
+                lastMouseY = pos.y;
+            } else {
+                // Check hover
+                let found = null;
+                const sortedByDistance = [...icons].sort((a, b) => {
+                    const distA = Math.sqrt(Math.pow(a.projX - pos.x, 2) + Math.pow(a.projY - pos.y, 2));
+                    const distB = Math.sqrt(Math.pow(b.projX - pos.x, 2) + Math.pow(b.projY - pos.y, 2));
+                    return distA - distB;
+                });
+                
+                for (const icon of sortedByDistance) {
+                    const size = icon.size * icon.scale;
+                    const dist = Math.sqrt(Math.pow(icon.projX - pos.x, 2) + Math.pow(icon.projY - pos.y, 2));
+                    
+                    if (dist < size * 0.6 && icon.opacity > 0.5) {
+                        found = icon;
+                        break;
+                    }
+                }
+                
+                icons.forEach(icon => icon.hovered = false);
+                
+                if (found) {
+                    found.hovered = true;
+                    hoveredIcon = found;
+                    canvas.style.cursor = 'pointer';
+                    
+                    // Show tooltip
+                    tooltip.querySelector('.tooltip-title').textContent = found.title;
+                    tooltip.querySelector('.tooltip-desc').textContent = found.desc;
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
+                    tooltip.classList.add('visible');
+                } else {
+                    hoveredIcon = null;
+                    canvas.style.cursor = 'grab';
+                    tooltip.classList.remove('visible');
+                }
+            }
+        }
+        
+        function onPointerUp(e) {
+            if (isDragging) {
+                isDragging = false;
+                // Resume auto rotation after a delay
+                setTimeout(() => { autoRotate = true; }, 3000);
+            }
+        }
+        
+        function onClick(e) {
+            if (hoveredIcon) {
+                if (hoveredIcon.target === '_blank') {
+                    window.open(hoveredIcon.href, '_blank');
+                } else {
+                    window.location.href = hoveredIcon.href;
+                }
+            }
+        }
+        
+        function onPointerLeave() {
+            isDragging = false;
+            icons.forEach(icon => icon.hovered = false);
+            hoveredIcon = null;
+            tooltip.classList.remove('visible');
+            autoRotate = true;
+        }
+        
+        // Filter handler
+        window.filterIconCloud = function(category) {
+            icons.forEach(icon => {
+                icon.visible = category === 'all' || icon.category === category;
+            });
+        };
+        
+        // Init
+        function init() {
+            resize();
+            initIcons();
+            
+            canvas.addEventListener('mousedown', onPointerDown);
+            canvas.addEventListener('mousemove', onPointerMove);
+            canvas.addEventListener('mouseup', onPointerUp);
+            canvas.addEventListener('mouseleave', onPointerLeave);
+            canvas.addEventListener('click', onClick);
+            
+            canvas.addEventListener('touchstart', onPointerDown, { passive: true });
+            canvas.addEventListener('touchmove', onPointerMove, { passive: true });
+            canvas.addEventListener('touchend', onPointerUp);
+            
+            window.addEventListener('resize', resize);
+            
+            render(0);
+        }
+        
+        // Wait for DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
     </script>
 </body>
 </html>
