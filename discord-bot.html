@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>████████ Bot - Tyler (in real life)</title>
+    <title>SIN Bot - Tyler (in real life)</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -32,7 +32,6 @@
     
     <!-- Three.js for 3D background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
@@ -41,58 +40,240 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
+        
         .project-writeup {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: #000000;
-            border: 1px solid #333;
-            border-radius: 8px;
-            line-height: 1.6;
+            max-width: 1100px;
+            margin: 1rem 70px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.2rem 1.8rem;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(255, 255, 255, 0.03);
+            border-radius: 0;
+            line-height: 1.3;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            font-size: 0.7rem;
         }
         
+        .project-writeup::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 233, 253, 0.015) 2px, rgba(139, 233, 253, 0.015) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .classified-header {
+            text-align: center;
+            border: 3px solid #c41e3a;
+            padding: 0.25rem 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(196, 30, 58, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .classified-header:hover {
+            background: rgba(196, 30, 58, 0.2);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3), inset 0 0 20px rgba(196, 30, 58, 0.1);
+        }
+        
+        .classified-header:hover h1 {
+            text-shadow: 0 0 15px rgba(196, 30, 58, 0.8);
+            letter-spacing: 0.5em;
+        }
+        
+        .classified-header h1 {
+            color: #c41e3a;
+            font-family: 'Special Elite', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            margin: 0;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .classification-stamp {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #000000;
+            padding: 0 10px;
+            color: #c41e3a;
+            font-weight: bold;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+        }
+        
+        /* Document bar */
+        .document-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.6rem;
+        }
+        
+        .document-bar-item {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.3rem 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .document-bar-item:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 233, 253, 0.15);
+        }
+        
+        .document-bar-item:hover label { color: #8be9fd; }
+        .document-bar-item:hover span { text-shadow: 0 0 8px rgba(139, 233, 253, 0.5); }
+        
+        .document-bar-item label {
+            color: #4a7a8a;
+            display: block;
+            font-size: 0.48rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .document-bar-item span {
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+            transition: text-shadow 0.3s ease;
+        }
+        
+        /* Document info */
+        .document-info {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.62rem;
+            color: #6a8a9a;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.3rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .document-info:hover {
+            background: rgba(139, 233, 253, 0.03);
+            border-color: rgba(139, 233, 253, 0.4);
+        }
+        
+        .document-info p {
+            margin: 0.1rem 0;
+            color: #6a8a9a;
+            transition: all 0.2s ease;
+            padding: 0.1rem;
+        }
+        
+        .document-info p:hover {
+            background: rgba(139, 233, 253, 0.05);
+            color: #8be9fd;
+        }
+        
+        /* Headings */
         .project-writeup h2 {
             color: #8be9fd;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 0.5rem;
+            margin-top: 0.7rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.3);
+            padding-bottom: 0.15rem;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h2:hover {
+            color: #b4f8c3;
+            border-bottom-color: rgba(180, 248, 195, 0.5);
+            text-shadow: 0 0 10px rgba(180, 248, 195, 0.5);
+            padding-left: 10px;
         }
         
         .project-writeup h3 {
-            color: #b4f8c3;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
+            color: #5fcfdf;
+            margin-top: 0.5rem;
+            margin-bottom: 0.2rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h3:hover {
+            color: #8be9fd;
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
+            padding-left: 8px;
         }
         
         .project-writeup p {
-            color: #bdbdbd;
-            margin-bottom: 1rem;
+            color: #9aafba;
+            margin-bottom: 0.35rem;
+            text-align: justify;
+            font-size: 0.68rem;
         }
         
         .project-writeup ul, .project-writeup ol {
-            color: #bdbdbd;
-            margin-left: 2rem;
-            margin-bottom: 1rem;
+            color: #9aafba;
+            margin-left: 1.2rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.65rem;
         }
         
         .project-writeup li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.15rem;
+            transition: all 0.2s ease;
+            padding: 0.05rem 0;
+        }
+        
+        .project-writeup li:hover {
+            color: #8be9fd;
+            padding-left: 5px;
         }
         
         .project-writeup code {
-            background: #000000;
-            color: #ff79c6;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+            background: #0a0a0a;
+            color: #8be9fd;
+            padding: 0.1rem 0.2rem;
+            border-radius: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.63rem;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .project-writeup code:hover {
+            background: rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            color: #b4f8c3;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
         }
         
         .project-writeup a {
             color: #8be9fd;
             text-decoration: none;
-            border-bottom: 1px solid #8be9fd;
+            border-bottom: 1px dashed #8be9fd;
             transition: all 0.2s;
         }
         
@@ -101,22 +282,842 @@
             border-bottom-color: #b4f8c3;
         }
         
-        .back-link {
-            display: inline-block;
-            margin: 1rem 0;
-            color: #8be9fd;
-            text-decoration: none;
-            border-bottom: 1px solid #8be9fd;
-            transition: all 0.2s;
+        /* Info boxes */
+        .info-box {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.4rem;
+            margin: 0.35rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.65rem;
+            transition: all 0.3s ease;
+            cursor: default;
         }
         
+        .info-box:hover {
+            background: rgba(139, 233, 253, 0.05);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: translateX(5px);
+            box-shadow: -3px 0 15px rgba(139, 233, 253, 0.15);
+        }
+        
+        .info-box:hover .info-box-header {
+            color: #b4f8c3;
+            text-shadow: 0 0 8px rgba(180, 248, 195, 0.5);
+        }
+        
+        .info-box-header {
+            color: #8be9fd;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.2rem;
+            padding-bottom: 0.15rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.15);
+            display: block;
+            transition: color 0.3s ease;
+        }
+        
+        /* Status grid */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.3rem;
+            margin: 0.35rem 0;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 0.3rem;
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .status-item:hover {
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        .status-item:hover .value {
+            text-shadow: 0 0 12px currentColor;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        
+        .status-item .label {
+            display: block;
+            color: #4a7a8a;
+            font-size: 0.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.1rem;
+        }
+        
+        .status-item .value {
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .value.green, .value.ok { color: #b4f8c3; }
+        .value.red, .value.alert { color: #c41e3a; }
+        .value.yellow { color: #f1fa8c; }
+        .value.cyan { color: #8be9fd; }
+        
+        /* Mini stat */
+        .mini-stat {
+            text-align: center;
+            padding: 0.25rem;
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .mini-stat:hover {
+            background: rgba(139, 233, 253, 0.1);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+        }
+        
+        .mini-stat:hover .value { text-shadow: 0 0 10px currentColor; }
+        
+        .mini-stat .value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: #8be9fd;
+            transition: text-shadow 0.3s ease;
+        }
+        
+        .mini-stat .label {
+            font-size: 0.45rem;
+            color: #4a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Image grid */
+        .intel-images {
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0.4rem 0;
+        }
+        
+        .intel-images img {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 0;
+            filter: grayscale(30%) contrast(1.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .intel-images img:hover {
+            filter: grayscale(0%) contrast(1.2) brightness(1.1);
+            border-color: rgba(139, 233, 253, 0.5);
+            box-shadow: 0 0 30px rgba(139, 233, 253, 0.3);
+            transform: scale(1.02);
+        }
+        
+        /* Redacted */
+        .redacted {
+            background: #0a1215;
+            color: #0a1215;
+            padding: 0 4px;
+            user-select: none;
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: not-allowed;
+        }
+        
+        .redacted:hover {
+            background: #1a2530;
+            animation: redacted-glitch 0.3s ease infinite;
+        }
+        
+        @keyframes redacted-glitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-1px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        .redacted-block {
+            background: #0a1215;
+            padding: 0.25rem 0.4rem;
+            margin: 0.35rem 0;
+            border-left: 3px solid #c41e3a;
+            font-style: italic;
+            color: #4a6a7a;
+            font-size: 0.63rem;
+            overflow-wrap: break-word;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .redacted-block:hover {
+            background: rgba(139, 233, 253, 0.03);
+            border-left-color: #8be9fd;
+            color: #6a8a9a;
+        }
+        
+        /* Stamps */
+        .stamp {
+            position: absolute;
+            transform: rotate(-15deg);
+            border: 3px solid;
+            padding: 0.25rem 0.5rem;
+            font-family: 'Special Elite', monospace;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            pointer-events: auto;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .stamp:hover {
+            opacity: 0.9;
+            transform: rotate(-15deg) scale(1.15);
+        }
+        
+        .stamp.approved {
+            color: #8be9fd;
+            border-color: #8be9fd;
+            top: 60px;
+            right: 30px;
+        }
+        
+        .stamp.approved:hover {
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.5);
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.8);
+        }
+        
+        .stamp.eyes-only {
+            color: #c41e3a;
+            border-color: #c41e3a;
+            bottom: 80px;
+            left: 20px;
+            transform: rotate(12deg);
+        }
+        
+        .stamp.eyes-only:hover {
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+            text-shadow: 0 0 10px rgba(196, 30, 58, 0.8);
+            transform: rotate(12deg) scale(1.15);
+        }
+        
+        /* Ticker */
+        .ticker-wrap {
+            overflow: hidden;
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid rgba(196, 30, 58, 0.3);
+            padding: 0.15rem 0;
+            margin-bottom: 0.4rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .ticker-wrap:hover {
+            background: rgba(196, 30, 58, 0.2);
+            border-color: rgba(196, 30, 58, 0.5);
+        }
+        
+        .ticker-wrap:hover .ticker {
+            animation-play-state: paused;
+            color: #ff6b6b;
+        }
+        
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.55rem;
+            color: #c41e3a;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Clearance badges */
+        .clearance-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-right: 0.3rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .clearance-badge:hover { transform: scale(1.15); box-shadow: 0 0 15px currentColor; }
+        .clearance-badge.ts { background: rgba(196, 30, 58, 0.3); color: #c41e3a; border: 1px solid #c41e3a; }
+        .clearance-badge.ts:hover { background: rgba(196, 30, 58, 0.5); box-shadow: 0 0 15px rgba(196, 30, 58, 0.6); }
+        .clearance-badge.s { background: rgba(255, 121, 198, 0.2); color: #ff79c6; border: 1px solid #ff79c6; }
+        .clearance-badge.s:hover { background: rgba(255, 121, 198, 0.4); box-shadow: 0 0 15px rgba(255, 121, 198, 0.6); }
+        .clearance-badge.c { background: rgba(139, 233, 253, 0.2); color: #8be9fd; border: 1px solid #8be9fd; }
+        .clearance-badge.c:hover { background: rgba(139, 233, 253, 0.4); box-shadow: 0 0 15px rgba(139, 233, 253, 0.6); }
+        
+        /* Section number */
+        .section-number {
+            color: #4a7a8a;
+            font-size: 0.6rem;
+            margin-right: 0.3rem;
+        }
+        
+        /* Warning box */
+        .warning-box {
+            border: 2px solid #c41e3a;
+            background: rgba(196, 30, 58, 0.05);
+            padding: 0.4rem;
+            margin: 0.4rem 0;
+            position: relative;
+            font-size: 0.63rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .warning-box::before {
+            content: '\26A0 WARNING';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #000000;
+            padding: 0 8px;
+            color: #c41e3a;
+            font-weight: bold;
+            font-size: 0.55rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .warning-box:hover {
+            background: rgba(196, 30, 58, 0.12);
+            border-color: #ff4757;
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.3), inset 0 0 30px rgba(196, 30, 58, 0.05);
+            transform: scale(1.01);
+        }
+        
+        /* Caution box */
+        .caution-box {
+            border: 1px solid #f1fa8c;
+            background: rgba(241, 250, 140, 0.05);
+            padding: 0.25rem 0.4rem;
+            margin: 0.35rem 0;
+            font-size: 0.6rem;
+            color: #f1fa8c;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .caution-box::before {
+            content: '\25B3 CAUTION: ';
+            font-weight: bold;
+        }
+        
+        .caution-box:hover {
+            background: rgba(241, 250, 140, 0.12);
+            border-color: #ffff6b;
+            box-shadow: 0 0 15px rgba(241, 250, 140, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* Code block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.35rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: #8be9fd;
+            overflow-x: auto;
+            margin: 0.35rem 0;
+            transition: all 0.3s ease;
+            cursor: text;
+        }
+        
+        .code-block:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(139, 233, 253, 0.4);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.15), inset 0 0 30px rgba(139, 233, 253, 0.03);
+        }
+        
+        .code-block .comment { color: #4a7a8a; }
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .string { color: #f1fa8c; }
+        
+        /* Two/three/four col grids */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 0.4rem 0; }
+        .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.4rem 0; }
+        .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; margin: 0.4rem 0; }
+        
+        /* Spec table */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6rem;
+            margin: 0.35rem 0;
+        }
+        
+        .spec-table th, .spec-table td {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.2rem 0.4rem;
+            text-align: left;
+        }
+        
+        .spec-table th {
+            background: rgba(139, 233, 253, 0.08);
+            color: #8be9fd;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.55rem;
+        }
+        
+        .spec-table td { color: #9aafba; background: rgba(0, 0, 0, 0.2); }
+        .spec-table td.highlight { color: #8be9fd; }
+        .spec-table tr { transition: all 0.2s ease; }
+        .spec-table tbody tr:hover, .spec-table tr:hover { background: rgba(139, 233, 253, 0.08) !important; }
+        .spec-table tr:hover td { color: #8be9fd; text-shadow: 0 0 5px rgba(139, 233, 253, 0.3); }
+        
+        /* Compact table */
+        .compact-table { width: 100%; border-collapse: collapse; font-size: 0.52rem; }
+        .compact-table th, .compact-table td { border: 1px solid rgba(139, 233, 253, 0.1); padding: 0.15rem 0.3rem; text-align: left; }
+        .compact-table th { background: rgba(139, 233, 253, 0.05); color: #5fcfdf; font-weight: normal; text-transform: uppercase; letter-spacing: 0.03em; }
+        .compact-table td { color: #7a9aaa; background: rgba(0, 0, 0, 0.15); }
+        .compact-table tr { transition: all 0.2s ease; }
+        .compact-table tr:hover { background: rgba(139, 233, 253, 0.1) !important; }
+        .compact-table tr:hover td { color: #b4f8c3 !important; }
+        
+        /* Timeline */
+        .timeline { border-left: 2px solid rgba(139, 233, 253, 0.3); padding-left: 0.7rem; margin: 0.4rem 0; }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 0.35rem;
+            font-size: 0.63rem;
+            transition: all 0.3s ease;
+            cursor: default;
+            padding-left: 0.5rem;
+            margin-left: -0.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.05rem;
+            top: 0.2rem;
+            width: 8px;
+            height: 8px;
+            background: #8be9fd;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .timeline-item:hover {
+            background: rgba(139, 233, 253, 0.05);
+            padding-left: 1rem;
+        }
+        .timeline-item:hover::before {
+            background: #b4f8c3;
+            box-shadow: 0 0 10px rgba(180, 248, 195, 0.8);
+            transform: scale(1.5);
+        }
+        .timeline-item:hover strong { color: #8be9fd; text-shadow: 0 0 8px rgba(139, 233, 253, 0.5); }
+        .timeline-item .date { color: #4a7a8a; font-size: 0.55rem; }
+        
+        /* Document layout with sidebar */
+        .document-layout {
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: 0.7rem;
+            align-items: start;
+        }
+        
+        .main-content-area { min-width: 0; }
+        
+        .intel-sidebar {
+            position: sticky;
+            top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        
+        .sidebar-panel {
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.35rem;
+            font-size: 0.58rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-panel:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.1);
+        }
+        
+        .sidebar-panel-header {
+            color: #c41e3a;
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.25rem;
+            padding-bottom: 0.15rem;
+            border-bottom: 1px solid rgba(196, 30, 58, 0.3);
+            font-family: 'Special Elite', monospace;
+        }
+        
+        .sidebar-panel-header.cyan { color: #8be9fd; border-bottom-color: rgba(139, 233, 253, 0.3); }
+        .sidebar-panel-header.green { color: #50fa7b; border-bottom-color: rgba(80, 250, 123, 0.3); }
+        
+        /* Incident log */
+        .incident-log {
+            max-height: 180px;
+            overflow-y: auto;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .incident-log::-webkit-scrollbar { width: 4px; }
+        .incident-log::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+        .incident-log::-webkit-scrollbar-thumb { background: rgba(139, 233, 253, 0.3); }
+        
+        .incident-entry {
+            padding: 0.3rem 0.3rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+            transition: all 0.2s ease;
+            cursor: default;
+            margin: 0 -0.3rem;
+        }
+        .incident-entry:last-child { border-bottom: none; }
+        .incident-entry:hover {
+            background: rgba(139, 233, 253, 0.08);
+            padding-left: 0.5rem;
+            border-left: 2px solid #8be9fd;
+        }
+        .incident-time { color: #4a7a8a; font-size: 0.48rem; }
+        .incident-msg { color: #9aafba; }
+        .incident-msg.alert { color: #c41e3a; }
+        .incident-msg.warn { color: #f1fa8c; }
+        .incident-msg.ok { color: #50fa7b; }
+        
+        /* Personnel roster */
+        .personnel-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0.3rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.08);
+            transition: all 0.2s ease;
+            cursor: default;
+            margin: 0 -0.3rem;
+        }
+        .personnel-entry:hover { background: rgba(139, 233, 253, 0.1); padding-left: 0.6rem; }
+        .personnel-entry:hover .personnel-name { color: #8be9fd; }
+        .personnel-name { color: #9aafba; }
+        .personnel-status {
+            font-size: 0.48rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .personnel-status.active { background: rgba(80, 250, 123, 0.2); color: #50fa7b; }
+        .personnel-status.standby { background: rgba(241, 250, 140, 0.2); color: #f1fa8c; }
+        .personnel-status.offline { background: rgba(196, 30, 58, 0.2); color: #c41e3a; }
+        
+        /* Comms */
+        .comms-entry {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem;
+            margin-bottom: 0.2rem;
+            border-left: 2px solid #4a7a8a;
+            font-size: 0.55rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .comms-entry:hover { background: rgba(139, 233, 253, 0.1); border-left-width: 4px; padding-left: 0.6rem; transform: translateX(3px); }
+        .comms-entry.priority { border-left-color: #c41e3a; background: rgba(196, 30, 58, 0.05); }
+        .comms-entry.priority:hover { background: rgba(196, 30, 58, 0.15); box-shadow: 0 0 15px rgba(196, 30, 58, 0.2); }
+        .comms-entry:hover .comms-body { color: #8be9fd; }
+        .comms-header { display: flex; justify-content: space-between; margin-bottom: 0.1rem; }
+        .comms-channel { color: #ff79c6; font-size: 0.48rem; }
+        .comms-time { color: #4a7a8a; font-size: 0.48rem; }
+        .comms-body { color: #9aafba; }
+        
+        /* Network grid */
+        .network-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; }
+        .network-node {
+            text-align: center;
+            padding: 0.3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .network-node:hover {
+            background: rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            transform: scale(1.1);
+            z-index: 10;
+            position: relative;
+        }
+        .network-node:hover .node-status { animation: pulse-glow 0.5s ease infinite alternate; }
+        @keyframes pulse-glow {
+            from { text-shadow: 0 0 5px currentColor; }
+            to { text-shadow: 0 0 15px currentColor, 0 0 25px currentColor; }
+        }
+        .network-node .node-id { font-size: 0.48rem; color: #4a7a8a; }
+        .network-node .node-status { font-size: 0.7rem; margin-top: 0.15rem; transition: all 0.3s ease; }
+        .network-node .node-status.up { color: #50fa7b; }
+        .network-node .node-status.down { color: #c41e3a; }
+        .network-node .node-status.degraded { color: #f1fa8c; }
+        
+        /* Blink animation */
+        .blink { animation: blink-animation 1s steps(2, start) infinite; }
+        @keyframes blink-animation { to { visibility: hidden; } }
+        
+        /* Doc button container */
+        .doc-button-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.7rem;
+        }
+        
+        .doc-return-home {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .doc-return-home::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .doc-return-home:hover::before { left: 100%; }
+        .doc-return-home:hover { background: rgba(139, 233, 253, 0.08); border-color: rgba(139, 233, 253, 0.5); }
+        .doc-return-home:hover img { transform: scale(1.1); box-shadow: 0 0 15px rgba(139, 233, 253, 0.5); }
+        
+        .doc-return-home img {
+            width: 32px; height: 32px; border-radius: 4px;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .doc-return-home-text { display: flex; flex-direction: column; align-items: flex-start; }
+        .doc-return-home-text span { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: #8be9fd; letter-spacing: 0.08em; text-transform: uppercase; }
+        .doc-return-home-text small { font-size: 0.55rem; color: #4a7a8a; font-family: 'Courier Prime', monospace; }
+        
+        /* Footnote */
+        .footnote {
+            font-size: 0.55rem;
+            color: #4a6a7a;
+            border-top: 1px solid rgba(139, 233, 253, 0.2);
+            margin-top: 0.7rem;
+            padding-top: 0.35rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .footnote:hover { color: #6a9aaa; background: rgba(139, 233, 253, 0.02); padding-left: 10px; }
+        
+        /* Document footer */
+        .document-footer {
+            margin-top: 0.7rem;
+            padding-top: 0.35rem;
+            border-top: 2px solid rgba(139, 233, 253, 0.3);
+            text-align: center;
+            font-size: 0.55rem;
+            color: #4a6a7a;
+            transition: all 0.3s ease;
+        }
+        
+        .document-footer:hover { color: #6a8a9a; border-top-color: rgba(139, 233, 253, 0.5); }
+        .document-footer p { text-align: center; color: #4a7a8a; font-size: 0.55rem; }
+        .document-footer .highlight { color: #ff79c6; }
+        
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin: 0.4rem 0;
+            color: #8be9fd;
+            text-decoration: none;
+            border-bottom: 1px dashed #8be9fd;
+            transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace;
+        }
         .back-link:hover {
             color: #b4f8c3;
             border-bottom-color: #b4f8c3;
+            text-shadow: 0 0 10px rgba(180, 248, 195, 0.5);
+            transform: translateX(-5px);
+            display: inline-block;
+        }
+        
+        /* ========================================
+           MEDIA QUERIES
+           ======================================== */
+        
+        @media (max-width: 1100px) {
+            .project-writeup { margin-left: 60px; margin-right: 60px; }
+            .document-layout { grid-template-columns: 1fr; }
+            .intel-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 900px) {
+            .project-writeup { margin-left: 55px; margin-right: 55px; }
+            .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+            .document-bar { grid-template-columns: repeat(2, 1fr); }
+            .document-info { grid-template-columns: 1fr; }
+            .status-grid { grid-template-columns: repeat(3, 1fr); }
+            .intel-sidebar { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 600px) {
+            .doc-button-container { grid-template-columns: 1fr; gap: 0.35rem; margin-bottom: 0.5rem; }
+            .doc-return-home { padding: 0.35rem 0.5rem; gap: 0.4rem; }
+            .doc-return-home img { width: 24px; height: 24px; }
+            .doc-return-home-text span { font-size: 0.55rem; }
+            .doc-return-home-text small { font-size: 0.45rem; }
+            
+            .project-writeup {
+                padding: 0.5rem 0.4rem;
+                margin: 0.15rem 50px;
+                font-size: 0.62rem;
+                line-height: 1.25;
+                max-width: calc(100% - 100px);
+                border-left: none;
+                border-right: none;
+            }
+            
+            .stamp { display: none; }
+            
+            .classified-header { padding: 0.15rem 0.25rem; margin-bottom: 0.3rem; border-width: 2px; }
+            .classified-header h1 { font-size: 0.65rem; letter-spacing: 0.1em; }
+            .classification-stamp { font-size: 0.45rem; top: -8px; right: 5px; letter-spacing: 0.08em; padding: 0 5px; }
+            
+            .document-bar { grid-template-columns: 1fr 1fr; gap: 0.2rem; margin-bottom: 0.3rem; }
+            .document-bar-item { padding: 0.15rem 0.25rem; }
+            .document-bar-item label { margin-bottom: 0.1rem; font-size: 0.45rem; }
+            .document-bar-item span { font-size: 0.55rem; }
+            
+            .mini-stat { padding: 0.2rem; }
+            .mini-stat .value { font-size: 0.6rem; }
+            .mini-stat .label { font-size: 0.4rem; }
+            
+            .ticker-wrap { margin-bottom: 0.3rem; padding: 0.1rem 0; }
+            .ticker { font-size: 0.45rem; }
+            
+            .document-info { padding: 0.25rem; font-size: 0.5rem; gap: 0.15rem; grid-template-columns: 1fr !important; }
+            .document-info p { font-size: 0.5rem; margin: 0.05rem 0; }
+            
+            .status-grid { grid-template-columns: repeat(3, 1fr); gap: 0.25rem; }
+            .status-item { padding: 0.3rem; }
+            .status-item .value { font-size: 0.7rem; }
+            .status-item .label { font-size: 0.4rem; }
+            
+            .four-col { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
+            .two-col, .three-col { grid-template-columns: 1fr !important; gap: 0.4rem; }
+            
+            .info-box { padding: 0.25rem; font-size: 0.5rem; margin: 0.2rem 0; }
+            .info-box-header { font-size: 0.45rem; margin-bottom: 0.15rem; }
+            
+            .project-writeup h2 { font-size: 0.62rem; margin-top: 0.5rem; margin-bottom: 0.15rem; letter-spacing: 0.08em; }
+            .project-writeup h3 { font-size: 0.55rem; margin-top: 0.3rem; }
+            .project-writeup p { font-size: 0.55rem; text-align: left; margin-bottom: 0.25rem; }
+            .project-writeup ul, .project-writeup ol { font-size: 0.5rem; margin-left: 0.8rem; margin-bottom: 0.25rem; }
+            .project-writeup li { margin-bottom: 0.1rem; }
+            
+            .spec-table { font-size: 0.45rem; margin: 0.2rem 0; }
+            .spec-table th, .spec-table td { padding: 0.1rem 0.2rem; }
+            .spec-table th { font-size: 0.4rem; }
+            .compact-table { font-size: 0.4rem; }
+            .compact-table th, .compact-table td { padding: 0.1rem 0.15rem; }
+            
+            .code-block { padding: 0.2rem; font-size: 0.45rem; margin: 0.2rem 0; }
+            .project-writeup code { font-size: 0.48rem; padding: 0.05rem 0.15rem; }
+            
+            .document-layout { grid-template-columns: 1fr !important; gap: 0.5rem; }
+            .intel-sidebar { position: static !important; grid-template-columns: 1fr !important; gap: 0.4rem; order: 2; }
+            .sidebar-panel { padding: 0.4rem; }
+            .sidebar-panel-header { font-size: 0.5rem; margin-bottom: 0.3rem; }
+            
+            .incident-log { max-height: 100px; }
+            .incident-time { font-size: 0.4rem; }
+            .incident-msg { font-size: 0.5rem; }
+            .incident-entry { padding: 0.2rem 0; }
+            
+            .network-grid { grid-template-columns: repeat(4, 1fr); gap: 0.2rem; }
+            .network-node { padding: 0.15rem; }
+            .network-node .node-id { font-size: 0.4rem; }
+            .network-node .node-status { font-size: 0.5rem; }
+            
+            .personnel-entry { font-size: 0.5rem; padding: 0.2rem 0; }
+            .personnel-status { font-size: 0.4rem; }
+            
+            .comms-entry { font-size: 0.45rem; padding: 0.2rem; }
+            .comms-channel, .comms-time { font-size: 0.4rem; }
+            
+            .warning-box { padding: 0.25rem; font-size: 0.48rem; margin: 0.25rem 0; }
+            .warning-box::before { font-size: 0.4rem; top: -8px; left: 8px; }
+            .caution-box { font-size: 0.45rem; padding: 0.2rem 0.3rem; margin: 0.2rem 0; }
+            
+            .timeline { padding-left: 0.4rem; margin: 0.25rem 0; }
+            .timeline-item { font-size: 0.48rem; padding: 0.15rem 0; }
+            .timeline-item .date { font-size: 0.4rem; }
+            
+            .clearance-badge { font-size: 0.4rem; padding: 0.08rem 0.2rem; }
+            
+            .document-footer { font-size: 0.42rem; margin-top: 0.4rem; padding-top: 0.25rem; }
+            .footnote { font-size: 0.4rem; margin-top: 0.4rem; padding-top: 0.25rem; }
+            .redacted-block { font-size: 0.48rem; padding: 0.15rem 0.25rem; margin: 0.2rem 0; }
+            .section-number { font-size: 0.5rem; }
+            .back-link { font-size: 0.6rem; }
+            
+            .intel-images img { max-width: 100% !important; }
+        }
+        
+        @media (max-width: 400px) {
+            .project-writeup { padding: 0.35rem 0.25rem; margin: 0.15rem 45px; max-width: calc(100% - 90px); }
+            .classified-header h1 { font-size: 0.55rem; letter-spacing: 0.08em; }
+            .document-bar { grid-template-columns: 1fr; }
+            .four-col { grid-template-columns: 1fr; }
+            .status-grid { grid-template-columns: repeat(2, 1fr); }
+            .network-grid { grid-template-columns: repeat(3, 1fr); }
+            .project-writeup h2 { font-size: 0.52rem; }
+            .project-writeup p { font-size: 0.48rem; }
+        }
+        
+        @media (max-width: 350px) {
+            .project-writeup { margin: 0.15rem 40px; max-width: calc(100% - 80px); }
+            .classified-header { padding: 0.15rem; }
+            .classified-header h1 { font-size: 0.5rem; }
+            .document-bar-item label { font-size: 0.38rem; }
+            .document-bar-item span { font-size: 0.48rem; }
+            .status-item .value { font-size: 0.55rem; }
+            .status-item .label { font-size: 0.35rem; }
         }
     </style>
-</head>
-<body>
+</head><body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
@@ -131,113 +1132,439 @@
 
     <!-- Project Write-up Section -->
     <section class="project-writeup">
-        <h1 style="color: #8be9fd; margin-bottom: 0.5rem;">████████ Bot</h1>
-        <p style="color: #ff79c6; margin-bottom: 2rem;">A radbro webring Discord bot with a wild and community-driven feature set</p>
+        <!-- Classification stamps -->
+        <div class="stamp approved">OPERATIONAL</div>
+        <div class="stamp eyes-only">EYES ONLY</div>
         
-        <h2>Overview</h2>
+        <!-- Document header -->
+        <div class="classified-header">
+            <span class="classification-stamp">CLEARANCE: RADBRO</span>
+            <h1>CLASSIFIED</h1>
+        </div>
+        
+        <!-- Return to DeepDish -->
+        <div class="doc-button-container">
+            <a href="deepdish.html" class="doc-return-home">
+                <img src="assets/wee.gif" alt="[SEAL]">
+                <div class="doc-return-home-text">
+                    <span>&#9668; Return to Main Terminal</span>
+                    <small>Exit document viewer // Return to index</small>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Alert ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                &#9888; RELAY STATUS: NOMINAL &#8212; DISCORD &#8596; TELEGRAM BRIDGE ACTIVE &#8212; LLM AGENTS: 6 ONLINE &#8212; ECONOMY POOL: 847,291 CREDITS &#8212; DEFCON LEVEL: 5 (ALL CLEAR) &#8212; NEXT MAINTENANCE: 0400Z &#8212; &#9888; RELAY STATUS: NOMINAL &#8212; DISCORD &#8596; TELEGRAM BRIDGE ACTIVE &#8212;
+            </div>
+        </div>
+        
+        <!-- Quick status bar -->
+        <div class="document-bar">
+            <div class="document-bar-item">
+                <label>Project Codename</label>
+                <span>SIN</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Platform</label>
+                <span>Discord / Telegram</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Status</label>
+                <span style="color: #50fa7b;">&#9679; OPERATIONAL</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Classification</label>
+                <span class="clearance-badge ts">RESTRICTED</span>
+            </div>
+        </div>
+        
+        <!-- Secondary stats bar -->
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; margin-bottom: 0.7rem; font-size: 0.6rem;">
+            <div class="mini-stat">
+                <div class="value">3</div>
+                <div class="label">Servers</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #50fa7b;">847K</div>
+                <div class="label">Economy Pool</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">6</div>
+                <div class="label">LLM Agents</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">23</div>
+                <div class="label">Commands/hr</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">12</div>
+                <div class="label">Modules</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #50fa7b;">99.7%</div>
+                <div class="label">Uptime</div>
+            </div>
+        </div>
+        
+        <!-- Document metadata -->
+        <div class="document-info">
+            <p><strong>PROJECT:</strong> SIN (SYNTHETIC INTELLIGENCE NODE)</p>
+            <p><strong>CLASSIFICATION:</strong> RESTRICTED // RADBRO-INDOC</p>
+            <p><strong>ORIGINATOR:</strong> <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span></p>
+            <p><strong>PLATFORM:</strong> DISCORD.PY / PYTHON 3.x</p>
+            <p><strong>HANDLING:</strong> WEBRING INTERNAL ONLY</p>
+            <p><strong>REVISION:</strong> v3.2.1-STABLE</p>
+        </div>
+        
+        <h1 style="color: #8be9fd; margin-bottom: 0.15rem; font-family: 'Special Elite', monospace; letter-spacing: 0.1em; font-size: 1.1rem;"><span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> BOT</h1>
+        <p style="color: #5fcfdf; margin-bottom: 0.7rem; font-size: 0.65rem; letter-spacing: 0.15em;">MULTI-PURPOSE DISCORD INTELLIGENCE SYSTEM &#8212; RADBRO WEBRING INTEGRATION</p>
+        
+        <div class="document-layout">
+        <div class="main-content-area">
+        
+        <!-- Capability Status Grid -->
+        <div class="status-grid">
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">Economy</div>
+            </div>
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">Gambling</div>
+            </div>
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">Moderation</div>
+            </div>
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">Cross-Platform</div>
+            </div>
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">Web3</div>
+            </div>
+            <div class="status-item">
+                <div class="value ok">ACTIVE</div>
+                <div class="label">LLM Bots</div>
+            </div>
+        </div>
+        
+        <h2><span class="section-number">01</span> Overview</h2>
         <p>
-            ████████ Bot is a multi-purpose, extensible Discord bot with deep integration into community culture, games, moderation, analytics, and cross-platform relays. It's designed for chaos, fun, and utility across Discord and Telegram with a modular system built for rapid feature expansion.
+            <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> Bot is a multi-purpose, extensible Discord bot with deep integration into community culture, games, moderation, analytics, and cross-platform relays. Designed for chaos, fun, and utility across Discord and Telegram with a modular system built for rapid feature expansion.
         </p>
         
-        <h2>Major Features</h2>
+        <div class="caution-box">All module interactions generate audit logs. Economy manipulation triggers automated review.</div>
         
-        <h3>📅 Daily !claim System</h3>
+        <h2><span class="section-number">02</span> Major Systems</h2>
+        
+        <h3>&#9658; Daily !claim System</h3>
+        <div class="info-box">
+            <span class="info-box-header">Core Engagement Loop</span>
+            <p style="margin: 0;">
+                The core engagement system rewards users for claiming daily. Each day, users can use <code>!claim</code> to receive a payout that scales with their streak of consecutive claims. The longer a user claims without missing a day, the higher their daily reward grows, incentivizing consistent community participation.
+            </p>
+        </div>
         <p>
-            The core engagement system rewards users for claiming daily. Each day, users can use the !claim command to receive a payout that scales with their streak of consecutive claims. The longer a user claims without missing a day, the higher their daily reward grows, incentivizing consistent community participation.
-        </p>
-        <p>
-            Extra claims and bonus payouts are awarded for daily engagement with community features like particiapting in Daily Radbro or generating custom RadPacks. Users who participate in these activities earn additional claim refreshes and multiplier bonuses, turning everyday gameplay into a rewarding cycle of community creation and earning.
+            Extra claims and bonus payouts are awarded for daily engagement with community features like participating in Daily Radbro or generating custom RadPacks. Users who participate in these activities earn additional claim refreshes and multiplier bonuses, turning everyday gameplay into a rewarding cycle of community creation and earning.
         </p>
         
-        <h3>🎲 Gambling & Games</h3>
+        <h3>&#9658; Gambling &amp; Games</h3>
         <p>
             Fully interactive games including Blackjack, Roulette, Dice, Rock-Paper-Scissors, Coin Flips, and Quickdraw Duels. All games feature custom embeds, emoji-rich interactions, streaks, and statistics. Users can bet in-game currency with leaderboards and detailed stats tracking. Daily claims with streak bonuses and early claim penalties keep players engaged.
         </p>
         
-        <h3>� Radpack Generation</h3>
-        <div style="display: flex; gap: 2rem; align-items: center; margin: 1rem 0;">
-            
-            <p style="margin: 0;">
-                Generate custom cigarette packs using casino credit winnings. Users can create unique Radpacks with personalized designs powered by their in-game earnings. Each generated pack is a piece of community art, converting gambling wins into shareable meme content.
-            </p>
+        <div class="two-col">
+            <div class="info-box">
+                <span class="info-box-header">Game Modules</span>
+                <ul style="margin: 0.15rem 0 0 1rem; padding: 0; font-size: 0.6rem;">
+                    <li>Blackjack (multi-hand)</li>
+                    <li>Roulette (full table)</li>
+                    <li>Dice / Coin Flip</li>
+                    <li>Rock-Paper-Scissors</li>
+                    <li>Quickdraw Duels</li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <span class="info-box-header">Tracking Systems</span>
+                <ul style="margin: 0.15rem 0 0 1rem; padding: 0; font-size: 0.6rem;">
+                    <li>Win/Loss ratios</li>
+                    <li>Best streaks</li>
+                    <li>Claim patterns</li>
+                    <li>Per-user analytics</li>
+                    <li>Leaderboards</li>
+                </ul>
+            </div>
         </div>
-            <div style="text-align: center;">
-                <img src="assets/redacted/radpack.png" alt="Radpack Generation" style="max-width: 200px; height: auto; border-radius: 8px; border: 0px solid #333;">
-            </div>
-            </div>
+        
+        <h3>&#9658; Radpack Generation</h3>
+        <p>
+            Generate custom cigarette packs using casino credit winnings. Users can create unique Radpacks with personalized designs powered by their in-game earnings. Each generated pack is a piece of community art, converting gambling wins into shareable meme content.
+        </p>
+        <div class="intel-images">
+            <img src="assets/redacted/radpack.png" alt="Radpack Generation" style="max-width: 200px; height: auto;">
+        </div>
 
-
-
-        <h3>�🛡️ Moderation & Analytics</h3>
+        <h3>&#9658; Moderation &amp; Analytics</h3>
         <p>
             Comprehensive tracking of moderator actions, ban streaks, and badge generation. Detailed per-user and per-action analytics including win/loss ratios, best streaks, claim patterns, and gambling statistics. LLM rate limiting controls access to AI features per user, per hour.
         </p>
         
-        <h3>🛰️ Cross-Platform Relays</h3>
-        <p>
-            Bi-directional message, media, and asset relays between Discord and Telegram with toggleable settings. Integration with Noosphere and webring servers for seamless cross-posting. Relay chain tracking enables moderation across platforms.
-        </p>
-        <div style="text-align: center;">
-            <img src="assets/redacted/relays.png" alt="Cross-Platform Relays" style="max-width: 600px; height: auto; border-radius: 8px; border: 0px solid #333;">
+        <h3>&#9658; Cross-Platform Relays</h3>
+        <div class="info-box">
+            <span class="info-box-header">Bi-Directional Relay Network</span>
+            <p style="margin: 0;">
+                Message, media, and asset relays between Discord and Telegram with toggleable settings. Integration with Noosphere and webring servers for seamless cross-posting. Relay chain tracking enables moderation across platforms.
+            </p>
+        </div>
+        <div class="intel-images">
+            <img src="assets/redacted/relays.png" alt="Cross-Platform Relays" style="max-width: 600px; width: 100%; height: auto;">
         </div>
         
-        <h3>🖼️ NFT & Web3 Integration</h3>
+        <h3>&#9658; NFT &amp; Web3 Integration</h3>
         <p>
             Monitor NFT sales, mints, and burns for configured collections with optional OpenSea and ENS support. RAD Token-based payment verification for in-bot actions like queue skips and claim refreshes.
         </p>
-        <div style="text-align: center; margin: 2rem 0; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <img src="assets/redacted/sale1.png" alt="NFT Sale 1" style="max-width: 45%; height: auto; border-radius: 8px; border: 0px solid #333;">
-            <img src="assets/redacted/sale2.png" alt="NFT Sale 2" style="max-width: 45%; height: auto; border-radius: 8px; border: 0px solid #333;">
+        <div class="intel-images">
+            <img src="assets/redacted/sale1.png" alt="NFT Sale 1" style="max-width: 45%; height: auto;">
+            <img src="assets/redacted/sale2.png" alt="NFT Sale 2" style="max-width: 45%; height: auto;">
         </div>
         
-        <h3>🔊 Voice & Media</h3>
+        <h3>&#9658; Voice &amp; Media</h3>
         <p>
             Control voice channels, manage user movement, play audio, and queue YouTube videos. Payment-based skip and refresh system for queue management keeps servers interactive and user-driven.
         </p>
         
-        <h3>� DEFCON System</h3>
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="assets/redacted/panel.png" alt="DEFCON Panel" style="max-width: 100%; height: auto; border-radius: 8px; border: 0px solid #333; margin-bottom: 1.5rem;">
+        <h3>&#9658; DEFCON System</h3>
+        <div class="info-box">
+            <span class="info-box-header">Alert Level Protocol</span>
+            <p style="margin: 0;">
+                An interactive DEFCON status panel that escalates server alert levels from DEFCON 5 (all clear) through DEFCON 1 (maximum alert). Each level features custom profile pictures, unique audio alerts, and dynamic status messages. The panel updates in real-time and commands can escalate or de-escalate the server's DEFCON status based on events or community decisions.
+            </p>
         </div>
-        <p>
-            An interactive DEFCON status panel that escalates server alert levels from DEFCON 5 (all clear) through DEFCON 1 (maximum alert). Each level features custom profile pictures, unique audio alerts, and dynamic status messages that reflect the community's current state. The panel updates in real-time and commands can escalate or de-escalate the server's DEFCON status based on events or community decisions.
-        </p>
-        <div style="text-align: center; margin: 2rem 0; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <img src="assets/redacted/DEFCON5.png" alt="DEFCON 5" style="max-width: 15%; height: auto; border-radius: 8px; border: 0px solid #333;">
-            <img src="assets/redacted/DEFCON4.png" alt="DEFCON 4" style="max-width: 15%; height: auto; border-radius: 8px; border: 0px solid #333;">
-            <img src="assets/redacted/DEFCON3.png" alt="DEFCON 3" style="max-width: 15%; height: auto; border-radius: 8px; border: 0px solid #333;">
-            <img src="assets/redacted/DEFCON2.png" alt="DEFCON 2" style="max-width: 15%; height: auto; border-radius: 8px; border: 0px solid #333;">
-            <img src="assets/redacted/DEFCON1.png" alt="DEFCON 1" style="max-width: 15%; height: auto; border-radius: 8px; border: 0px solid #333;">
+        <div class="intel-images">
+            <img src="assets/redacted/panel.png" alt="DEFCON Panel" style="max-width: 100%; height: auto;">
+        </div>
+        <div class="intel-images" style="margin-top: 0.3rem;">
+            <img src="assets/redacted/DEFCON5.png" alt="DEFCON 5" style="max-width: 15%; height: auto;">
+            <img src="assets/redacted/DEFCON4.png" alt="DEFCON 4" style="max-width: 15%; height: auto;">
+            <img src="assets/redacted/DEFCON3.png" alt="DEFCON 3" style="max-width: 15%; height: auto;">
+            <img src="assets/redacted/DEFCON2.png" alt="DEFCON 2" style="max-width: 15%; height: auto;">
+            <img src="assets/redacted/DEFCON1.png" alt="DEFCON 1" style="max-width: 15%; height: auto;">
         </div>
         
-        <h3>🛠️ Customization & Modes</h3>
+        <h3>&#9658; Customization &amp; Modes</h3>
         <p>
             Chinese Mode and St. Petersburg Mode provide toggleable alternate language, emoji, and payout logic. Archetype bots are modular sub-bots with unique personalities and relay logic. Dynamic image overlays power meme generation, and TempBotManager enables on-demand bot spawning and management. A Terminal Panel in dedicated channels provides live-updating status and analytics.
         </p>
         
-        <h3>🤖 v1 Schizoposter Archetype Bots</h3>
+        <h2><span class="section-number">03</span> Autonomous LLM Agents</h2>
+        
+        <div class="warning-box">
+            <p style="margin: 0; color: #c41e3a;">Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype.</p>
+        </div>
         <p>
-            Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype. The LLM layer allows for natural, context-aware responses that reflect each bot's individual personality, transforming them from simple command executors into active community participants with their own presence and voice.
+            The LLM layer allows for natural, context-aware responses that reflect each bot's individual personality, transforming them from simple command executors into active community participants with their own presence and voice.
         </p>
-        <div style="text-align: center;">
-            <img src="assets/redacted/posters.png" alt="Schizoposter Archetype Bots" style="max-width: 600px; height: auto; border-radius: 8px; border: 0px solid #333;">
+        <div class="intel-images">
+            <img src="assets/redacted/posters.png" alt="Schizoposter Archetype Bots" style="max-width: 600px; width: 100%; height: auto;">
         </div>
         
-        <h2>Built With</h2>
-        <p>Python 3.x + discord.py + web3.py, with mcstatus, PIL, dotenv, and more. Modular utility and system architecture for rapid feature expansion.</p>
+        <h2><span class="section-number">04</span> Tech Stack</h2>
+        <div class="code-block"><span class="keyword">import</span> discord, web3, mcstatus, PIL, dotenv<br><span class="comment"># Python 3.x + discord.py + web3.py</span><br><span class="comment"># Modular utility architecture for rapid expansion</span></div>
         
-        <h2>Special Thanks</h2>
+        <table class="spec-table">
+            <tr><th>Component</th><th>Technology</th><th>Status</th></tr>
+            <tr><td>Core Runtime</td><td class="highlight">Python 3.x</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+            <tr><td>Discord API</td><td class="highlight">discord.py</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+            <tr><td>Blockchain</td><td class="highlight">web3.py</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+            <tr><td>Image Processing</td><td class="highlight">Pillow (PIL)</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+            <tr><td>Server Monitoring</td><td class="highlight">mcstatus</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+        </table>
+        
+        <h2><span class="section-number">05</span> Development Timeline</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date">Phase 1</div>
+                <strong>Core Bot &#8212;</strong> Economy, claims, basic gambling modules deployed
+            </div>
+            <div class="timeline-item">
+                <div class="date">Phase 2</div>
+                <strong>Cross-Platform &#8212;</strong> Discord &#8596; Telegram relay bridge activated
+            </div>
+            <div class="timeline-item">
+                <div class="date">Phase 3</div>
+                <strong>Web3 Integration &#8212;</strong> NFT monitoring, RAD token payments online
+            </div>
+            <div class="timeline-item">
+                <div class="date">Phase 4</div>
+                <strong>LLM Agents &#8212;</strong> Schizoposter archetype bots with autonomous AI
+            </div>
+            <div class="timeline-item">
+                <div class="date">Ongoing</div>
+                <strong>Expansion &#8212;</strong> New games, deeper analytics, community-driven features
+            </div>
+        </div>
+        
+        <h2><span class="section-number">06</span> Acknowledgments</h2>
         <p>Special thanks to <a href="https://x.com/schizalcoatl" target="_blank">schizalcoatl</a> and <a href="https://x.com/giverrod" target="_blank">RiverGod</a> for their contributions and collaboration on this project.</p>
         
-        <h2>What's Next</h2>
-        <p>Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development.</p>
+        <div class="footnote">
+            <p style="margin: 0;">Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development. All systems subject to <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> review protocols.</p>
+        </div>
         
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #333;">
+        </div><!-- end main-content-area -->
         
-        <p style="text-align: center; color: #666; font-size: 0.9rem;">
-            A bot for Radbros<br>
-            <span style="color: #ff79c6;">Built by Hating the Antichrist</span>
-        </p>
+        <!-- Intel Sidebar -->
+        <div class="intel-sidebar">
+            
+            <!-- Module Status -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header cyan">Module Status</div>
+                <div class="network-grid">
+                    <div class="network-node">
+                        <div class="node-id">ECON</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">GAMBL</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">MOD</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">RELAY</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">WEB3</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">LLM</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">VOICE</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">DEFCON</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                    <div class="network-node">
+                        <div class="node-id">MEDIA</div>
+                        <div class="node-status up">&#9679;</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LLM Agent Roster -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header">Agent Roster</div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-01</span>
+                    <span class="personnel-status active">ONLINE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-02</span>
+                    <span class="personnel-status active">ONLINE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-03</span>
+                    <span class="personnel-status active">ONLINE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-04</span>
+                    <span class="personnel-status standby">STANDBY</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-05</span>
+                    <span class="personnel-status active">ONLINE</span>
+                </div>
+                <div class="personnel-entry">
+                    <span class="personnel-name">Archetype-06</span>
+                    <span class="personnel-status active">ONLINE</span>
+                </div>
+            </div>
+            
+            <!-- Activity Log -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header green">Activity Log</div>
+                <div class="incident-log">
+                    <div class="incident-entry">
+                        <div class="incident-time">0347Z</div>
+                        <div class="incident-msg ok">Economy pool rebalanced</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0312Z</div>
+                        <div class="incident-msg">!claim streak: user hit 30-day</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0258Z</div>
+                        <div class="incident-msg warn">LLM rate limit triggered</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0241Z</div>
+                        <div class="incident-msg ok">Relay bridge reconnected</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0215Z</div>
+                        <div class="incident-msg">Blackjack payout: 12,400 credits</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0203Z</div>
+                        <div class="incident-msg alert">DEFCON escalated to 3</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0147Z</div>
+                        <div class="incident-msg ok">NFT sale detected: Radbro #847</div>
+                    </div>
+                    <div class="incident-entry">
+                        <div class="incident-time">0122Z</div>
+                        <div class="incident-msg">RadPack generated by user</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Relay Comms -->
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-header">Relay Intercept</div>
+                <div class="comms-entry">
+                    <div class="comms-header">
+                        <span class="comms-channel">#general</span>
+                        <span class="comms-time">0341Z</span>
+                    </div>
+                    <div class="comms-body">Message relayed to Telegram</div>
+                </div>
+                <div class="comms-entry priority">
+                    <div class="comms-header">
+                        <span class="comms-channel">#alerts</span>
+                        <span class="comms-time">0318Z</span>
+                    </div>
+                    <div class="comms-body">DEFCON update broadcast</div>
+                </div>
+                <div class="comms-entry">
+                    <div class="comms-header">
+                        <span class="comms-channel">#noosphere</span>
+                        <span class="comms-time">0255Z</span>
+                    </div>
+                    <div class="comms-body">Cross-post from webring</div>
+                </div>
+            </div>
+            
+        </div><!-- end intel-sidebar -->
+        </div><!-- end document-layout -->
+        
+        <div class="document-footer">
+            <p>A bot for Radbros<br>
+            <span class="highlight">Built by Hating the Antichrist</span></p>
+        </div>
     </section>
     
     <!-- Floating Return Home Button -->
