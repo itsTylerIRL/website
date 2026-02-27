@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepDish TOP - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/TOP">
+    <meta property="og:title" content="DeepDish TOP - Tyler (in real life)">
+    <meta property="og:description" content="DeepDish TOP — Terminal Operations Panel. Full-stack real-time infrastructure monitoring dashboard.">
+    <meta property="og:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/TOP">
+    <meta property="twitter:title" content="DeepDish TOP - Tyler (in real life)">
+    <meta property="twitter:description" content="DeepDish TOP — Terminal Operations Panel. Full-stack real-time infrastructure monitoring dashboard.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css?v=1.1">
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
+        
+        /* ========================================
+           PROJECT WRITEUP — CLASSIFIED DOCUMENT
+           ======================================== */
+        .project-writeup {
+            max-width: 1100px;
+            margin: 1rem 70px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.2rem 1.8rem;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 10, 30, 0.12);
+            border-top-color: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(255, 255, 255, 0.03);
+            border-radius: 0;
+            line-height: 1.3;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            position: relative;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            font-size: 0.7rem;
+        }
+        
+        /* Scanline overlay */
+        .project-writeup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 10, 30, 0.012) 2px,
+                    rgba(255, 10, 30, 0.012) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* ========================================
+           PRIMARY THEME — Color Tokens
+           ======================================== */
+        :root {
+            --top-red: #ff0a1e;
+            --top-orange: #cc2233;
+            --top-amber: #ff3344;
+            --top-green: #2a9d8f;
+            --top-cyan: #8be9fd;
+            --top-dim: #4a5a6a;
+            --top-text: #9aafba;
+            --top-text-bright: #c0d0dd;
+            --top-bg-card: rgba(0, 0, 0, 0.3);
+            --top-border: rgba(255, 10, 30, 0.2);
+        }
+        
+        /* ========================================
+           CLASSIFIED HEADER
+           ======================================== */
+        .classified-header {
+            text-align: center;
+            border: 3px solid var(--top-red);
+            padding: 0.25rem 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 10, 30, 0.08);
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .classified-header:hover {
+            background: rgba(255, 10, 30, 0.15);
+            box-shadow: 0 0 30px rgba(255, 10, 30, 0.2), inset 0 0 20px rgba(255, 10, 30, 0.05);
+        }
+        
+        .classified-header:hover h1 {
+            text-shadow: 0 0 15px rgba(255, 10, 30, 0.8);
+            letter-spacing: 0.5em;
+        }
+        
+        .classified-header h1 {
+            color: var(--top-red);
+            font-family: 'Special Elite', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            margin: 0;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .classification-stamp {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #000000;
+            padding: 0 10px;
+            color: var(--top-red);
+            font-weight: bold;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+        }
+        
+        /* ========================================
+           DOCUMENT BAR
+           ======================================== */
+        .document-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.6rem;
+        }
+        
+        .document-bar-item {
+            border: 1px solid var(--top-border);
+            padding: 0.3rem 0.5rem;
+            background: var(--top-bg-card);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .document-bar-item:hover {
+            background: rgba(255, 10, 30, 0.06);
+            border-color: rgba(255, 10, 30, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 10, 30, 0.12);
+        }
+        
+        .document-bar-item label {
+            color: var(--top-dim);
+            display: block;
+            font-size: 0.48rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .document-bar-item:hover label {
+            color: var(--top-amber);
+        }
+        
+        .document-bar-item span {
+            color: var(--top-amber);
+            font-family: 'Share Tech Mono', monospace;
+            transition: text-shadow 0.3s ease;
+        }
+        
+        .document-bar-item:hover span {
+            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+        }
+        
+        /* ========================================
+           DOCUMENT INFO
+           ======================================== */
+        .document-info {
+            border: 1px solid var(--top-border);
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.62rem;
+            color: #6a7a8a;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.3rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .document-info:hover {
+            background: rgba(255, 10, 30, 0.02);
+            border-color: rgba(255, 10, 30, 0.35);
+        }
+        
+        .document-info p {
+            margin: 0.1rem 0;
+            color: #6a7a8a;
+            transition: all 0.2s ease;
+            padding: 0.1rem;
+        }
+        
+        .document-info p:hover {
+            background: rgba(255, 10, 30, 0.04);
+            color: var(--top-amber);
+        }
+        
+        /* ========================================
+           HEADINGS
+           ======================================== */
+        .project-writeup h2 {
+            color: var(--top-amber);
+            margin-top: 0.7rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(255, 10, 30, 0.3);
+            padding-bottom: 0.15rem;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h2:hover {
+            color: var(--top-red);
+            border-bottom-color: rgba(255, 10, 30, 0.6);
+            text-shadow: 0 0 10px rgba(255, 10, 30, 0.5);
+            padding-left: 10px;
+        }
+        
+        .project-writeup h3 {
+            color: var(--top-orange);
+            margin-top: 0.5rem;
+            margin-bottom: 0.2rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .project-writeup h3:hover {
+            color: var(--top-amber);
+            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+            padding-left: 8px;
+        }
+        
+        .project-writeup h4 {
+            color: var(--top-orange);
+            margin-top: 0.4rem;
+            margin-bottom: 0.15rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .section-number {
+            color: var(--top-dim);
+            font-size: 0.6rem;
+            margin-right: 0.3rem;
+        }
+        
+        /* ========================================
+           BODY TEXT
+           ======================================== */
+        .project-writeup p {
+            color: var(--top-text);
+            margin-bottom: 0.35rem;
+            text-align: justify;
+            font-size: 0.68rem;
+        }
+        
+        .project-writeup ul, .project-writeup ol {
+            color: var(--top-text);
+            margin-left: 1.2rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.65rem;
+        }
+        
+        .project-writeup li {
+            margin-bottom: 0.15rem;
+            transition: all 0.2s ease;
+            padding: 0.05rem 0;
+        }
+        
+        .project-writeup li:hover {
+            color: var(--top-amber);
+            padding-left: 5px;
+        }
+        
+        .project-writeup a {
+            color: var(--top-amber);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--top-amber);
+            transition: all 0.2s;
+        }
+        
+        .project-writeup a:hover {
+            color: var(--top-red);
+            border-bottom-color: var(--top-red);
+            text-shadow: 0 0 6px rgba(255, 10, 30, 0.4);
+        }
+        
+        /* ========================================
+           CODE & INLINE CODE
+           ======================================== */
+        .project-writeup code {
+            background: #0a0a0a;
+            color: var(--top-amber);
+            padding: 0.1rem 0.2rem;
+            border-radius: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.63rem;
+            border: 1px solid rgba(255, 10, 30, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .project-writeup code:hover {
+            background: rgba(255, 10, 30, 0.1);
+            border-color: rgba(255, 10, 30, 0.5);
+            color: var(--top-red);
+            box-shadow: 0 0 10px rgba(255, 10, 30, 0.2);
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 10, 30, 0.15);
+            padding: 0.35rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--top-amber);
+            overflow-x: auto;
+            margin: 0.35rem 0;
+            transition: all 0.3s ease;
+            cursor: text;
+        }
+        
+        .code-block:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 10, 30, 0.4);
+            box-shadow: 0 0 20px rgba(255, 10, 30, 0.1), inset 0 0 30px rgba(255, 10, 30, 0.02);
+        }
+        
+        .code-block .comment { color: #4a5a6a; }
+        .code-block .keyword { color: var(--top-red); }
+        .code-block .string { color: #f1fa8c; }
+        
+        /* ========================================
+           TABLES
+           ======================================== */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6rem;
+            margin: 0.35rem 0;
+        }
+        
+        .spec-table th, .spec-table td {
+            border: 1px solid rgba(255, 10, 30, 0.12);
+            padding: 0.2rem 0.4rem;
+            text-align: left;
+        }
+        
+        .spec-table th {
+            background: rgba(255, 10, 30, 0.06);
+            color: var(--top-amber);
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.55rem;
+        }
+        
+        .spec-table td {
+            color: var(--top-text);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .spec-table td.highlight {
+            color: var(--top-amber);
+        }
+        
+        .spec-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .spec-table tbody tr:hover,
+        .spec-table tr:hover {
+            background: rgba(255, 10, 30, 0.06) !important;
+        }
+        
+        .spec-table tr:hover td {
+            color: var(--top-amber);
+            text-shadow: 0 0 5px rgba(255, 10, 30, 0.2);
+        }
+        
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.58rem;
+            margin: 0.2rem 0;
+        }
+        
+        .compact-table th, .compact-table td {
+            border: 1px solid rgba(255, 10, 30, 0.1);
+            padding: 0.15rem 0.3rem;
+            text-align: left;
+        }
+        
+        .compact-table th {
+            background: rgba(255, 10, 30, 0.05);
+            color: var(--top-orange);
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .compact-table td {
+            color: #7a8a9a;
+            background: rgba(0, 0, 0, 0.15);
+        }
+        
+        .compact-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .compact-table tr:hover {
+            background: rgba(255, 10, 30, 0.08) !important;
+        }
+        
+        .compact-table tr:hover td {
+            color: var(--top-amber) !important;
+        }
+        
+        /* ========================================
+           INFO BOXES
+           ======================================== */
+        .info-box {
+            border: 1px solid var(--top-border);
+            padding: 0.4rem;
+            margin: 0.35rem 0;
+            background: var(--top-bg-card);
+            font-size: 0.65rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .info-box:hover {
+            background: rgba(255, 10, 30, 0.04);
+            border-color: rgba(255, 10, 30, 0.45);
+            transform: translateX(5px);
+            box-shadow: -3px 0 15px rgba(255, 10, 30, 0.1);
+        }
+        
+        .info-box-header {
+            color: var(--top-amber);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.2rem;
+            padding-bottom: 0.15rem;
+            border-bottom: 1px solid rgba(255, 10, 30, 0.15);
+        }
+        
+        .info-box:hover .info-box-header {
+            color: var(--top-red);
+            text-shadow: 0 0 8px rgba(255, 10, 30, 0.4);
+        }
+        
+        /* ========================================
+           STATUS GRID
+           ======================================== */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.3rem;
+            margin: 0.35rem 0;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 0.3rem;
+            border: 1px solid rgba(255, 10, 30, 0.15);
+            background: var(--top-bg-card);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .status-item:hover {
+            background: rgba(255, 10, 30, 0.06);
+            border-color: rgba(255, 10, 30, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 10, 30, 0.15);
+        }
+        
+        .status-item .value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--top-amber);
+            transition: all 0.3s ease;
+        }
+        
+        .status-item:hover .value {
+            text-shadow: 0 0 12px currentColor;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        
+        .status-item .value.ok { color: var(--top-green); }
+        .status-item .value.alert { color: var(--top-red); }
+        
+        .status-item .label {
+            font-size: 0.5rem;
+            color: var(--top-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.1rem;
+        }
+        
+        .mini-stat {
+            text-align: center;
+            padding: 0.25rem;
+            border: 1px solid rgba(255, 10, 30, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .mini-stat:hover {
+            background: rgba(255, 10, 30, 0.08);
+            border-color: rgba(255, 10, 30, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 10, 30, 0.15);
+        }
+        
+        .mini-stat .value {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--top-amber);
+        }
+        
+        .mini-stat:hover .value {
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        .mini-stat .label {
+            font-size: 0.45rem;
+            color: var(--top-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* ========================================
+           REDACTED
+           ======================================== */
+        .redacted {
+            background: #120a0c;
+            color: #120a0c;
+            padding: 0 4px;
+            user-select: none;
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: not-allowed;
+        }
+        
+        .redacted::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                #120a0c 0px,
+                #120a0c 3px,
+                #1a0f12 3px,
+                #1a0f12 4px
+            );
+        }
+        
+        .redacted:hover {
+            background: #1a1215;
+            animation: redacted-glitch 0.3s ease infinite;
+        }
+        
+        @keyframes redacted-glitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-1px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        .redacted-block {
+            background: #120a0c;
+            padding: 0.25rem 0.4rem;
+            margin: 0.35rem 0;
+            border-left: 3px solid var(--top-red);
+            font-style: italic;
+            color: #4a5a6a;
+            font-size: 0.63rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .redacted-block:hover {
+            background: rgba(255, 10, 30, 0.03);
+            border-left-color: var(--top-amber);
+            color: #6a7a8a;
+        }
+        
+        /* ========================================
+           WARNING / CAUTION BOXES
+           ======================================== */
+        .warning-box {
+            border: 2px solid var(--top-red);
+            background: rgba(255, 10, 30, 0.04);
+            padding: 0.4rem;
+            margin: 0.4rem 0;
+            position: relative;
+            font-size: 0.63rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .warning-box::before {
+            content: '⚠ WARNING';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #000000;
+            padding: 0 8px;
+            color: var(--top-red);
+            font-weight: bold;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .warning-box:hover {
+            background: rgba(255, 10, 30, 0.1);
+            border-color: var(--top-amber);
+            box-shadow: 0 0 20px rgba(255, 10, 30, 0.2), inset 0 0 30px rgba(255, 10, 30, 0.03);
+            transform: scale(1.01);
+        }
+        
+        .caution-box {
+            border: 1px solid #f1fa8c;
+            background: rgba(241, 250, 140, 0.05);
+            padding: 0.25rem 0.4rem;
+            margin: 0.35rem 0;
+            font-size: 0.6rem;
+            color: #f1fa8c;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .caution-box::before {
+            content: '△ CAUTION: ';
+            font-weight: bold;
+        }
+        
+        .caution-box:hover {
+            background: rgba(241, 250, 140, 0.12);
+            border-color: #ffff6b;
+            box-shadow: 0 0 15px rgba(241, 250, 140, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* ========================================
+           STAMPS
+           ======================================== */
+        .stamp {
+            position: absolute;
+            transform: rotate(-15deg);
+            border: 3px solid;
+            padding: 0.25rem 0.5rem;
+            font-family: 'Special Elite', monospace;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            pointer-events: auto;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .stamp:hover {
+            opacity: 0.9;
+            transform: rotate(-15deg) scale(1.15);
+        }
+        
+        .stamp.approved {
+            color: var(--top-amber);
+            border-color: var(--top-amber);
+            top: 60px;
+            right: 30px;
+        }
+        
+        .stamp.approved:hover {
+            box-shadow: 0 0 20px rgba(255, 51, 68, 0.5);
+            text-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+        }
+        
+        .stamp.eyes-only {
+            color: var(--top-red);
+            border-color: var(--top-red);
+            bottom: 80px;
+            left: 20px;
+            transform: rotate(12deg);
+        }
+        
+        .stamp.eyes-only:hover {
+            box-shadow: 0 0 20px rgba(255, 10, 30, 0.5);
+            text-shadow: 0 0 10px rgba(255, 10, 30, 0.8);
+            transform: rotate(12deg) scale(1.15);
+        }
+        
+        /* ========================================
+           CLEARANCE BADGES
+           ======================================== */
+        .clearance-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-right: 0.3rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .clearance-badge:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px currentColor;
+        }
+        
+        .clearance-badge.ts {
+            background: rgba(255, 10, 30, 0.3);
+            color: var(--top-red);
+            border: 1px solid var(--top-red);
+        }
+        
+        .clearance-badge.s {
+            background: rgba(255, 51, 68, 0.2);
+            color: var(--top-amber);
+            border: 1px solid var(--top-amber);
+        }
+        
+        .clearance-badge.c {
+            background: rgba(204, 34, 51, 0.2);
+            color: var(--top-orange);
+            border: 1px solid var(--top-orange);
+        }
+        
+        /* ========================================
+           TICKER
+           ======================================== */
+        .ticker-wrap {
+            overflow: hidden;
+            background: rgba(255, 10, 30, 0.06);
+            border: 1px solid rgba(255, 10, 30, 0.25);
+            padding: 0.15rem 0;
+            margin-bottom: 0.4rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .ticker-wrap:hover {
+            background: rgba(255, 10, 30, 0.12);
+            border-color: rgba(255, 10, 30, 0.5);
+        }
+        
+        .ticker-wrap:hover .ticker {
+            animation-play-state: paused;
+            color: var(--top-red);
+        }
+        
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker-scroll 30s linear infinite;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--top-orange);
+            letter-spacing: 0.05em;
+        }
+        
+        @keyframes ticker-scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* ========================================
+           LAYOUT
+           ======================================== */
+        .document-layout {
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: 0.7rem;
+            align-items: start;
+        }
+        
+        .main-content-area {
+            min-width: 0;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin: 0.4rem 0;
+        }
+        
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 0.4rem 0;
+        }
+        
+        /* ========================================
+           SIDEBAR
+           ======================================== */
+        .intel-sidebar {
+            position: sticky;
+            top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        
+        .sidebar-panel {
+            border: 1px solid rgba(255, 10, 30, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.35rem;
+            font-size: 0.58rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-panel:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 10, 30, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 10, 30, 0.08);
+        }
+        
+        .sidebar-panel-header {
+            color: var(--top-red);
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.25rem;
+            padding-bottom: 0.15rem;
+            border-bottom: 1px solid rgba(255, 10, 30, 0.3);
+            font-family: 'Special Elite', monospace;
+        }
+        
+        .sidebar-panel-header.green {
+            color: var(--top-green);
+            border-bottom-color: rgba(42, 157, 143, 0.3);
+        }
+        
+        .sidebar-panel-header.amber {
+            color: var(--top-amber);
+            border-bottom-color: rgba(255, 51, 68, 0.3);
+        }
+        
+        /* ========================================
+           NETWORK NODES
+           ======================================== */
+        .network-node {
+            text-align: center;
+            padding: 0.3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 10, 30, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .network-node:hover {
+            background: rgba(255, 10, 30, 0.12);
+            border-color: rgba(255, 10, 30, 0.5);
+            transform: scale(1.1);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .network-node:hover .node-status {
+            animation: pulse-glow-red 0.5s ease infinite alternate;
+        }
+        
+        @keyframes pulse-glow-red {
+            from { text-shadow: 0 0 5px currentColor; }
+            to { text-shadow: 0 0 15px currentColor, 0 0 25px currentColor; }
+        }
+        
+        /* ========================================
+           TIMELINE
+           ======================================== */
+        .timeline {
+            border-left: 2px solid rgba(255, 10, 30, 0.3);
+            padding-left: 0.7rem;
+            margin: 0.4rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 0.35rem;
+            font-size: 0.63rem;
+            transition: all 0.3s ease;
+            cursor: default;
+            padding-left: 0.5rem;
+            margin-left: -0.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.35rem;
+            top: 0.2rem;
+            width: 8px;
+            height: 8px;
+            background: var(--top-red);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            background: rgba(255, 10, 30, 0.04);
+            padding-left: 1rem;
+        }
+        
+        .timeline-item:hover::before {
+            background: var(--top-amber);
+            box-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+            transform: scale(1.5);
+        }
+        
+        .timeline-item .date {
+            color: var(--top-dim);
+            font-size: 0.55rem;
+        }
+        
+        .timeline-item:hover strong {
+            color: var(--top-amber);
+            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+        }
+        
+        /* ========================================
+           FOOTNOTE & FOOTER
+           ======================================== */
+        .footnote {
+            font-size: 0.55rem;
+            color: var(--top-dim);
+            border-top: 1px solid rgba(255, 10, 30, 0.2);
+            margin-top: 0.7rem;
+            padding-top: 0.35rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .footnote:hover {
+            color: #6a7a8a;
+            background: rgba(255, 10, 30, 0.02);
+            padding-left: 10px;
+        }
+        
+        .document-footer {
+            margin-top: 0.7rem;
+            padding-top: 0.35rem;
+            border-top: 2px solid rgba(255, 10, 30, 0.3);
+            text-align: center;
+            font-size: 0.55rem;
+            color: var(--top-dim);
+            transition: all 0.3s ease;
+        }
+        
+        .document-footer:hover {
+            color: #6a7a8a;
+            border-top-color: rgba(255, 10, 30, 0.5);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 0.4rem 0;
+            color: var(--top-amber);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--top-amber);
+            transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        .back-link:hover {
+            color: var(--top-red);
+            border-bottom-color: var(--top-red);
+            text-shadow: 0 0 10px rgba(255, 10, 30, 0.5);
+            transform: translateX(-5px);
+            display: inline-block;
+        }
+        
+        /* ========================================
+           BUTTON CONTAINER / NAV
+           ======================================== */
+        .doc-button-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-return-home {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--top-border);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .doc-return-home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 10, 30, 0.08), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .doc-return-home:hover::before {
+            left: 100%;
+        }
+        
+        .doc-return-home:hover {
+            background: rgba(255, 10, 30, 0.06);
+            border-color: rgba(255, 10, 30, 0.5);
+        }
+        
+        .doc-return-home img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--top-border);
+            transition: all 0.3s ease;
+        }
+        
+        .doc-return-home:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 10, 30, 0.4);
+        }
+        
+        .doc-return-home-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .doc-return-home-text span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--top-amber);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .doc-return-home-text small {
+            font-size: 0.55rem;
+            color: var(--top-dim);
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        /* ========================================
+           VIDEO EMBED
+           ======================================== */
+        .video-container {
+            position: relative;
+            border: 1px solid rgba(255, 10, 30, 0.2);
+            margin: 0.5rem 0;
+            background: #000;
+            transition: all 0.3s ease;
+        }
+        
+        .video-container:hover {
+            border-color: rgba(255, 10, 30, 0.5);
+            box-shadow: 0 0 25px rgba(255, 10, 30, 0.15);
+        }
+        
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+        
+        .video-label {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.5rem;
+            color: var(--top-red);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.1rem 0.3rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 10, 30, 0.3);
+            z-index: 2;
+        }
+        
+        /* ========================================
+           CLUSTER NODE DIAGRAM
+           ======================================== */
+        .cluster-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            margin: 0.5rem 0;
+        }
+        
+        .cluster-node {
+            padding: 0.35rem;
+            border: 1px solid rgba(255, 10, 30, 0.15);
+            background: rgba(0, 0, 0, 0.35);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .cluster-node:hover {
+            background: rgba(255, 10, 30, 0.08);
+            border-color: rgba(255, 10, 30, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(255, 10, 30, 0.12);
+        }
+        
+        .cluster-node .node-name {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--top-amber);
+            margin-bottom: 0.15rem;
+        }
+        
+        .cluster-node .node-host {
+            font-size: 0.5rem;
+            color: var(--top-dim);
+        }
+        
+        .cluster-node .node-status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--top-green);
+            margin-right: 0.2rem;
+            box-shadow: 0 0 6px rgba(42, 157, 143, 0.6);
+        }
+        
+        /* ========================================
+           ARCHITECTURE FLOW
+           ======================================== */
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            flex-wrap: wrap;
+        }
+        
+        .arch-node {
+            padding: 0.3rem 0.6rem;
+            border: 1px solid rgba(255, 10, 30, 0.25);
+            background: rgba(255, 10, 30, 0.04);
+            color: var(--top-amber);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .arch-node:hover {
+            background: rgba(255, 10, 30, 0.12);
+            border-color: var(--top-amber);
+            box-shadow: 0 0 12px rgba(255, 10, 30, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .arch-arrow {
+            color: var(--top-dim);
+            font-size: 0.7rem;
+        }
+        
+        /* ========================================
+           IMAGES
+           ======================================== */
+        .project-writeup img {
+            filter: grayscale(30%) contrast(1.1);
+            border: none !important;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .project-writeup img:hover {
+            filter: grayscale(0%) contrast(1.2) brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 10, 30, 0.2);
+        }
+        
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1100px) {
+            .project-writeup {
+                margin-left: 60px;
+                margin-right: 60px;
+            }
+            .document-layout {
+                grid-template-columns: 1fr;
+            }
+            .intel-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .project-writeup {
+                margin-left: 55px;
+                margin-right: 55px;
+            }
+            .two-col, .three-col {
+                grid-template-columns: 1fr;
+            }
+            .document-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .document-info {
+                grid-template-columns: 1fr;
+            }
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .intel-sidebar {
+                grid-template-columns: 1fr;
+            }
+            .cluster-diagram {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .project-writeup {
+                margin-left: 10px;
+                margin-right: 10px;
+                padding: 0.8rem;
+            }
+            .classified-header h1 {
+                font-size: 0.9rem;
+                letter-spacing: 0.2em;
+            }
+            .stamp {
+                display: none;
+            }
+            .secondary-stats-mobile {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .document-bar {
+                grid-template-columns: 1fr;
+            }
+            .status-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .secondary-stats-mobile {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .cluster-diagram {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div style="text-align: center; margin: 0.3rem 0;">
+                <img src="assets/remilio2.png" alt="Remilio" style="max-width: 200px; height: auto; border-radius: 8px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Write-up Section -->
+    <section class="project-writeup">
+        <!-- Classification stamps -->
+        <div class="stamp approved">VERIFIED</div>
+        <div class="stamp eyes-only">EYES ONLY</div>
+        
+        <!-- Document header -->
+        <div class="classified-header">
+            <span class="classification-stamp">TOP SECRET // SI // NOFORN</span>
+            <h1>CLASSIFIED</h1>
+        </div>
+        
+        <!-- Document Navigation Control -->
+        <div class="doc-button-container">
+            <a href="deepdish.html" class="doc-return-home">
+                <img src="assets/wee.gif" alt="[SEAL]">
+                <div class="doc-return-home-text">
+                    <span>◄ Return to Main Terminal</span>
+                    <small>Exit document viewer // Return to DeepDish index</small>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Alert ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                ⚠ SIGINT AGGREGATE: NOMINAL — CLUSTER TELEMETRY SYNC ACTIVE — 6 NODES ONLINE — PROMETHEUS FEED LOCKED — <span class="redacted">████████</span> SSE HANDSHAKE CONFIRMED — GPU THERMALS WITHIN SPEC — OBSIDIAN VAULT CACHE TTL 30s — NEXT POLL: 2000ms — ⚠ SIGINT AGGREGATE: NOMINAL — CLUSTER TELEMETRY SYNC ACTIVE —
+            </div>
+        </div>
+        
+        <!-- Quick status bar -->
+        <div class="document-bar">
+            <div class="document-bar-item">
+                <label>Document ID</label>
+                <span>DEEP-TOP-0451-Ω</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Clearance</label>
+                <span class="clearance-badge ts">TS/SCI</span><span class="clearance-badge s">SIGINT</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Status</label>
+                <span style="color: #2a9d8f;">● ACTIVE</span>
+            </div>
+            <div class="document-bar-item">
+                <label>Last Update</label>
+                <span><span class="redacted">██</span>/02/2026</span>
+            </div>
+        </div>
+        
+        <!-- Secondary mini stats -->
+        <div class="secondary-stats-mobile" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; font-size: 0.6rem;">
+            <div class="mini-stat">
+                <div class="value">6</div>
+                <div class="label">Cluster Nodes</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value" style="color: #2a9d8f;">2s</div>
+                <div class="label">Poll Interval</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">12+</div>
+                <div class="label">Subsystems</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">16</div>
+                <div class="label">Max Workers</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">2,017</div>
+                <div class="label">Lines Backend</div>
+            </div>
+            <div class="mini-stat">
+                <div class="value">11,553</div>
+                <div class="label">Lines Frontend</div>
+            </div>
+        </div>
+
+        <!-- Document info -->
+        <div class="document-info">
+            <p><strong style="color: var(--top-amber);">Project:</strong> DEEPDISH TOP (Terminal Operations Panel)</p>
+            <p><strong style="color: var(--top-amber);">Type:</strong> Full-stack real-time infrastructure monitoring dashboard</p>
+            <p><strong style="color: var(--top-amber);">Aesthetic:</strong> Cypherpunk / Covert operations command center</p>
+            <p><strong style="color: var(--top-amber);">Stack:</strong> Python 3.12 · Flask · Gunicorn + gevent · Docker · Vanilla JS</p>
+            <p><strong style="color: var(--top-amber);">Host:</strong> Privileged Docker container with host PID/network namespace</p>
+            <p><strong style="color: var(--top-amber);">Port:</strong> 5000 (host network mode)</p>
+        </div>
+
+        <!-- Main content + sidebar layout -->
+        <div class="document-layout">
+            <div class="main-content-area">
+
+                <!-- ============================
+                     SECTION 1 — ARCHITECTURE
+                     ============================ -->
+                <h2><span class="section-number">01</span> Architecture Overview</h2>
+                
+                <p>DEEPDISH TOP is deployed as a privileged Docker container with full host namespace access — PID, network, and hardware. The container runs a Gunicorn WSGI server with gevent async workers, enabling Server-Sent Events and parallel metric collection across all subsystems.</p>
+
+                <div class="arch-flow">
+                    <div class="arch-node">HOST OS</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node">DOCKER (privileged)</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node">GUNICORN + GEVENT</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node">FLASK APP</div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node">:5000</div>
+                </div>
+
+                <h3>Container Deployment</h3>
+                <table class="spec-table">
+                    <tr><th>Component</th><th>Detail</th></tr>
+                    <tr><td class="highlight">Base Image</td><td><code>python:3.12-slim</code></td></tr>
+                    <tr><td class="highlight">WSGI Server</td><td>Gunicorn 21.2.0 — <code>gevent</code> async workers, 3 workers, 120s timeout</td></tr>
+                    <tr><td class="highlight">Network Mode</td><td><code>host</code> — shares host network stack directly</td></tr>
+                    <tr><td class="highlight">PID Namespace</td><td><code>pid: host</code> — sees all host processes via <code>nsenter -t 1</code></td></tr>
+                    <tr><td class="highlight">Privilege</td><td><code>privileged: true</code> — full hardware access (GPU, sensors, Docker socket)</td></tr>
+                    <tr><td class="highlight">Restart Policy</td><td><code>unless-stopped</code></td></tr>
+                </table>
+
+                <h3>Volume Mounts</h3>
+                <table class="compact-table">
+                    <tr><th>Host Path</th><th>Container Path</th><th>Purpose</th></tr>
+                    <tr><td>/var/run/docker.sock</td><td>/var/run/docker.sock:ro</td><td>Docker API access</td></tr>
+                    <tr><td>/proc</td><td>/host/proc:ro</td><td>Host process info (CPU, mem, disk)</td></tr>
+                    <tr><td>/sys</td><td>/host/sys:ro</td><td>Hardware sensor data</td></tr>
+                    <tr><td>/etc/os-release</td><td>/etc/os-release:ro</td><td>Host OS identification</td></tr>
+                    <tr><td>/run/dbus</td><td>/run/dbus:ro</td><td>D-Bus socket for systemd</td></tr>
+                    <tr><td>/var/run/avahi-daemon</td><td>/var/run/avahi-daemon:ro</td><td>mDNS resolution for .local hosts</td></tr>
+                    <tr><td>/mnt/deepdish</td><td>/mnt/deepdish:ro</td><td>NAS mount (DeepDish storage array)</td></tr>
+                </table>
+
+                <h3>Python Dependencies</h3>
+                <table class="compact-table">
+                    <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+                    <tr><td>flask</td><td>3.0.0</td><td>Web framework</td></tr>
+                    <tr><td>psutil</td><td>5.9.8</td><td>System metrics collection</td></tr>
+                    <tr><td>docker</td><td>7.0.0</td><td>Docker Engine API client</td></tr>
+                    <tr><td>gunicorn</td><td>21.2.0</td><td>Production WSGI server</td></tr>
+                    <tr><td>gevent</td><td>24.2.1</td><td>Async worker for SSE/streaming</td></tr>
+                    <tr><td>requests</td><td>2.31.0</td><td>HTTP client for integrations</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 2 — BACKEND
+                     ============================ -->
+                <h2><span class="section-number">02</span> Backend — app.py (2,017 lines)</h2>
+                
+                <h3>mDNS IPv4 Resolution Cache</h3>
+                <p>A custom DNS resolution layer for <code>.local</code> hostnames on the LAN. Required because mDNS can return IPv6 or resolve to the wrong interface on dual-homed machines. Gathers candidate IPs from <code>avahi-resolve</code>, <code>socket.getaddrinfo</code>, and configurable fallbacks. Results are cached with a 120-second TTL and auto-invalidated on connectivity failure.</p>
+                
+                <h3>System Metric Collectors</h3>
+                <p>All collectors read from the host via <code>nsenter -t 1</code> (PID namespace) or <code>/proc/1/root</code> (mount namespace). Every metric is gathered in parallel using <code>ThreadPoolExecutor</code>.</p>
+
+                <table class="spec-table">
+                    <tr><th>Collector</th><th>Strategy</th></tr>
+                    <tr><td class="highlight">get_system_info()</td><td>Kernel, arch, distro, CPU model, core counts, total RAM — cached indefinitely</td></tr>
+                    <tr><td class="highlight">get_cpu_info()</td><td>Per-core %, total %, frequency, load averages via <code>psutil</code></td></tr>
+                    <tr><td class="highlight">get_memory_info()</td><td>Total/used/available RAM + swap via <code>psutil</code></td></tr>
+                    <tr><td class="highlight">get_disk_info()</td><td>3-strategy fallback: /proc/1/mounts → nsenter df → psutil. Filters real FSes only</td></tr>
+                    <tr><td class="highlight">get_network_info()</td><td>Per-NIC I/O, interface details, top 80 active connections</td></tr>
+                    <tr><td class="highlight">get_processes()</td><td>Top 50 processes by CPU% — PID, name, user, RSS/VMS, threads, FDs</td></tr>
+                    <tr><td class="highlight">get_gpu_info()</td><td>NVIDIA <code>nvidia-smi</code> — temps, utilization, VRAM, power, fan speed</td></tr>
+                    <tr><td class="highlight">get_temperatures()</td><td><code>psutil.sensors_temperatures()</code> — current/high/critical thresholds</td></tr>
+                    <tr><td class="highlight">get_docker_containers()</td><td>All containers with live stats fetched in parallel per running container</td></tr>
+                    <tr><td class="highlight">get_systemd_services()</td><td>Top 50 services via <code>systemctl</code> with D-Bus fallback</td></tr>
+                </table>
+
+                <h3>Cluster Node Monitoring</h3>
+                <p>Polls Prometheus <code>node_exporter</code> (port 9100) on 6 LAN nodes in parallel via <code>ThreadPoolExecutor(max_workers=6)</code>. Metrics parsed from Prometheus text format include CPU, memory, disk, network I/O, load averages, and uptime.</p>
+                
+                <div class="cluster-diagram">
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>MINI</div>
+                        <div class="node-host">mini.local:9100</div>
+                    </div>
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>CHEESE</div>
+                        <div class="node-host">cheese.local:9100</div>
+                    </div>
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>PEPPER</div>
+                        <div class="node-host">pepper.local:9100</div>
+                    </div>
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>ONION</div>
+                        <div class="node-host">onion.local:9100</div>
+                    </div>
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>GARLIC</div>
+                        <div class="node-host">garlic.local:9100</div>
+                    </div>
+                    <div class="cluster-node">
+                        <div class="node-name"><span class="node-status-dot"></span>SUPREME</div>
+                        <div class="node-host">supreme.local:9100</div>
+                    </div>
+                </div>
+
+                <h3>External Integrations</h3>
+                <div class="two-col">
+                    <div class="info-box">
+                        <div class="info-box-header">Native Planet (Urbit Machine)</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">Host: <code>nativeplanet.local:9100</code><br>Prometheus metrics — root disk, data disk, WiFi, kernel info</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Cloud Urbit Server</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">Host: <code>142.93.██.██</code> (urbit.tylerirl.com)<br>Online check via ICMP ping — extracts RTT from output</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Epic Gamer PC</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">WiFi: <code>192.168.0.███</code> / ETH: <code>192.168.1.███</code><br>Dual-interface ICMP probe — reports responding interface</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Home Assistant</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">Host: <code>homeassistant.local:8123</code><br>HA version, entity states, lights, phone tracking for 2 users — battery, steps, activity, connection type</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Obsidian Vault</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">Host: <code>localhost:27124</code> (Local REST API plugin, HTTPS)<br>Vault stats, full-text search, note viewer, 30s cache TTL</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">OCS (Ocular Control System)</div>
+                        <p style="margin:0.15rem 0;font-size:0.6rem;color:var(--top-text);">Host: <code>chef.local:5001</code><br>MJPEG stream proxy, eye expressions, vision status, face tracking</p>
+                    </div>
+                </div>
+
+                <h3>DEEPDISH Intake Portal</h3>
+                <p>Accepts text, URL, or image submissions. URLs auto-fetch <code>&lt;title&gt;</code> and meta description. Images are stored as base64 data URIs. All notes are saved to <code>DEEPDISH/intake/</code> in the Obsidian vault with YAML frontmatter.</p>
+
+                <!-- ============================
+                     SECTION 3 — API
+                     ============================ -->
+                <h2><span class="section-number">03</span> API Endpoints</h2>
+
+                <h3>Metric Routes</h3>
+                <table class="spec-table">
+                    <tr><th>Route</th><th>Description</th><th>Concurrency</th></tr>
+                    <tr><td class="highlight">GET /api/metrics</td><td>Fast local-only metrics (CPU, mem, disk, net, procs, docker, systemd, GPU, temps)</td><td>12 workers</td></tr>
+                    <tr><td class="highlight">GET /api/metrics/integrations</td><td>Slow external integrations (cluster, NP, urbit, gamer, OCS, HA, obsidian)</td><td>8 workers</td></tr>
+                    <tr><td class="highlight">GET /api/metrics/all</td><td>Combined local + integrations (chat context builder)</td><td>16 workers</td></tr>
+                </table>
+
+                <h3>Management Routes</h3>
+                <table class="compact-table">
+                    <tr><th>Route</th><th>Description</th></tr>
+                    <tr><td>POST /api/docker/&lt;name&gt;/action</td><td>Docker control: start, stop, restart, remove</td></tr>
+                    <tr><td>GET /api/docker/&lt;name&gt;/logs</td><td>Container log tail (default 80 lines)</td></tr>
+                    <tr><td>POST /api/docker/prune</td><td>Remove all stopped containers</td></tr>
+                    <tr><td>POST /api/systemd/&lt;name&gt;/action</td><td>Systemd control: start, stop, restart, enable, disable</td></tr>
+                    <tr><td>GET /api/systemd/&lt;name&gt;/logs</td><td>journald log tail (default 60 lines)</td></tr>
+                </table>
+
+                <h3>Obsidian &amp; OCS Routes</h3>
+                <table class="compact-table">
+                    <tr><th>Route</th><th>Description</th></tr>
+                    <tr><td>GET /api/obsidian/note</td><td>Fetch note content (JSON + tags + frontmatter)</td></tr>
+                    <tr><td>GET /api/obsidian/search</td><td>Full-text vault search (top 20 results)</td></tr>
+                    <tr><td>POST /api/portal/intake</td><td>Submit text/URL/image to vault intake</td></tr>
+                    <tr><td>GET /api/ocs/eye/stream</td><td>MJPEG stream proxy</td></tr>
+                    <tr><td>POST /api/ocs/eye/expression</td><td>Set eye expression + duration</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 4 — FRONTEND
+                     ============================ -->
+                <h2><span class="section-number">04</span> Frontend — Main Dashboard (11,553 lines)</h2>
+
+                <h3>Layout Architecture</h3>
+                <p>Three-column responsive grid with independent scrolling. Left column houses CPU/MEM, network I/O, disk, GPU, temps, storage, interfaces, Native Planet, and system info. Center column contains the cluster view, Obsidian vault, processes, Docker, Radgotchi virtual pet, systemd services, net flow matrix, and connections. Right column holds the OCS eye stream, DEEPDISH chat, topology visualization, Home Assistant, and event log.</p>
+
+                <div class="three-col">
+                    <div class="info-box">
+                        <div class="info-box-header">Left Column (260px)</div>
+                        <p style="margin:0.1rem 0;font-size:0.58rem;color:var(--top-text);">CPU/MEM · NET I/O · DISK I/O · GPU · TEMPS · STORAGE · INTERFACES · NATIVE PLANET · SYSTEM INFO</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Center Column (flex)</div>
+                        <p style="margin:0.1rem 0;font-size:0.58rem;color:var(--top-text);">CLUSTER · OBSIDIAN VAULT · PROCESSES · DOCKER · RADTECH · SYSTEMD · NET FLOW MATRIX · CONNECTIONS</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">Right Column (320px)</div>
+                        <p style="margin:0.1rem 0;font-size:0.58rem;color:var(--top-text);">OCS OCULAR · DEEPDISH CHAT · TOPOLOGY · HOME ASSISTANT · EVENT LOG</p>
+                    </div>
+                </div>
+
+                <h3>Dual-Theme System (Threat Red / Intel Blue)</h3>
+                <p>Two complete color themes toggled by clicking the "DEEPDISH" header text. A radial ripple animation expands from the click origin while all section panels flash with staggered 50ms delays. The class switch is delayed 300ms for dramatic reveal. Theme persists via <code>localStorage</code>.</p>
+
+                <div class="two-col">
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: var(--top-red);">Red Theme (Default)</div>
+                        <p style="margin:0.1rem 0;font-size:0.58rem;color:var(--top-text);"><code>--primary: #ff0a1e</code><br><code>--secondary: #cc2233</code><br><code>--accent: #ff3344</code><br><code>--terminal-green: #39ff14</code></p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: #0af0ff;">Blue Theme</div>
+                        <p style="margin:0.1rem 0;font-size:0.58rem;color:var(--top-text);"><code>--primary: #0af0ff</code><br><code>--secondary: #2288cc</code><br><code>--accent: #44aaff</code><br><code>--terminal-green: #00ffcc</code></p>
+                    </div>
+                </div>
+
+                <h3>Visual Effects &amp; Background Layers</h3>
+                <ul>
+                    <li><strong>Grid background</strong> — Animated CSS grid (40px cells) with slow diagonal drift (20s cycle)</li>
+                    <li><strong>Wireframe globe</strong> — Canvas-rendered rotating sphere (9 lat, 12 lon lines, equator highlight, 2 outer rings). Perspective projection, continuous <code>requestAnimationFrame</code></li>
+                    <li><strong>CRT scanlines</strong> — Repeating linear gradient overlay (2px lines)</li>
+                    <li><strong>Kanji watermarks</strong> — 神 (kami) and 経 (kei) as fixed-position decorative text</li>
+                </ul>
+
+                <h3>Section Panel System</h3>
+                <p>Every section uses a standardized <code>.section</code> component with corner accent lines, hex pattern overlays, alert pulsing, skeleton loading shimmer, collapse/expand toggles, and GPU-accelerated compositing (<code>translateZ(0)</code>, <code>contain: style paint</code>).</p>
+
+                <h3>Data Visualization</h3>
+                <ul>
+                    <li><strong>Sparklines</strong> — Inline SVG charts for CPU, memory, network, GPU (60-sample rolling history)</li>
+                    <li><strong>Progress bars</strong> — Color-coded utilization bars (green → orange → red) with animated sweep overlay</li>
+                    <li><strong>Cluster aggregates</strong> — 3 large metric cards (CPU/MEM/DISK) with sweep backgrounds, min/max per metric</li>
+                    <li><strong>Net flow matrix</strong> — Canvas-rendered heatmap of services vs remote hosts. Animated cells, pulse waves, scanline overlay, crosshair on hover</li>
+                    <li><strong>Obsidian topology</strong> — 50-node hex-grid canvas with data packets flowing along connections, comet trails, ambient glow orbs</li>
+                </ul>
+
+                <!-- ============================
+                     SECTION 5 — TOPOLOGY
+                     ============================ -->
+                <h2><span class="section-number">05</span> Network Topology Visualization</h2>
+                
+                <p>Force-directed graph rendered on a dedicated canvas element. DEEPDISH sits as the center-pinned hub node with cluster nodes on an equidistant inner ring and external integrations on an outer ring. Full physics simulation with spring forces, repulsion, velocity damping, and boundary clamping.</p>
+
+                <div class="warning-box">
+                    <p style="color: var(--top-text); margin: 0.5rem 0 0.2rem;">Data packets flow along links as diamond and circle shapes with comet trails. Colors shift green → orange → red with actual node load. Spawn rate is proportional to real utilization metrics. Threat level indicator changes based on node online/offline status: <strong style="color: var(--top-green);">NOMINAL</strong> → <strong style="color: #f1fa8c;">ELEVATED</strong> → <strong style="color: var(--top-red);">CRITICAL</strong></p>
+                </div>
+
+                <table class="compact-table">
+                    <tr><th>Node Type</th><th>Name</th><th>Layout</th></tr>
+                    <tr><td>host</td><td>DEEPDISH</td><td>Center-pinned hub (diamond SVG)</td></tr>
+                    <tr><td>cluster</td><td>mini, cheese, pepper, onion, garlic, supreme</td><td>Equidistant inner ring (Apple logo)</td></tr>
+                    <tr><td>tellurian</td><td>Native Planet</td><td>Outer ring</td></tr>
+                    <tr><td>urbit</td><td>Cloud Urbit</td><td>Outer ring</td></tr>
+                    <tr><td>pc</td><td>Epic Gamer</td><td>Outer ring (Windows logo)</td></tr>
+                    <tr><td>homeassistant</td><td>Home Assistant</td><td>Outer ring (HA gear icon)</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 6 — RADGOTCHI
+                     ============================ -->
+                <h2><span class="section-number">06</span> Radgotchi Virtual Pet System</h2>
+                
+                <p>A complete virtual pet IIFE module (<code>RG</code>) displayed in the RADTECH section. 25 sprite states, 12 CSS animations, military/SIGINT-themed status messages (e.g., "SIGINT NOMINAL", "OVERWATCH ACTIVE", "EXCESSIVE INPUT — CEASE").</p>
+
+                <div class="two-col">
+                    <div class="info-box">
+                        <div class="info-box-header">Interaction Triggers</div>
+                        <ul style="margin:0.15rem 0;font-size:0.58rem;color:var(--top-text);list-style:none;padding-left:0;">
+                            <li>▸ Mouse near section → eye tracking</li>
+                            <li>▸ Single click → random positive reaction</li>
+                            <li>▸ 3+ rapid clicks → excited</li>
+                            <li>▸ 5+ rapid clicks → angry</li>
+                            <li>▸ Double click → spin trick</li>
+                            <li>▸ Hover on dashboard sections → themed reaction (2.5s cooldown)</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">System-Aware Behavior</div>
+                        <ul style="margin:0.15rem 0;font-size:0.58rem;color:var(--top-text);list-style:none;padding-left:0;">
+                            <li>▸ CPU >90% → angry (critical mood)</li>
+                            <li>▸ Memory >92% → warn state</li>
+                            <li>▸ Temps >85°C → critical reaction</li>
+                            <li>▸ Node offline → sad</li>
+                            <li>▸ Node online → excited</li>
+                            <li>▸ 120s idle → sleep / lonely</li>
+                            <li>▸ Late night (23:00–06:00) → nap bias</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ============================
+                     SECTION 7 — OCS + CHAT
+                     ============================ -->
+                <h2><span class="section-number">07</span> OCS Eye &amp; DEEPDISH Chat</h2>
+
+                <h3>MJPEG Eye Stream</h3>
+                <p>OCS camera feed from <code>chef.local:5001</code> proxied through Flask to avoid CORS. Health check every 10 seconds, auto-reconnect on error with 5-second delay. 7 expression controls (happy, sad, angry, bored, confused, surprised, suspicious). System events automatically trigger expressions with cooldown.</p>
+
+                <h3>AI Chat Integration</h3>
+                <table class="compact-table">
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr><td>LLM Endpoint</td><td>supreme.local:1234 (LM Studio)</td></tr>
+                    <tr><td>Model</td><td>gemma-2-27b</td></tr>
+                    <tr><td>Temperature</td><td>0.7</td></tr>
+                    <tr><td>Max Tokens</td><td>300</td></tr>
+                    <tr><td>Persona</td><td>DEEPDISH — black-box intelligence, SIGINT style, lowercase/clinical</td></tr>
+                </table>
+
+                <p>The system prompt dynamically injects full live telemetry context — system info, CPU/memory/GPU/disk/network, Docker containers, systemd services, cluster nodes, Home Assistant, OCS, and Obsidian vault stats. Personal names are redacted (<code>OPERATOR</code> / <code>ASSET-2</code>) in chat history.</p>
+
+                <!-- ============================
+                     SECTION 8 — EVENT LOG
+                     ============================ -->
+                <h2><span class="section-number">08</span> Event Detection &amp; Logging</h2>
+
+                <p>The event system compares current vs previous data snapshots to detect state changes. Events are classified into 4 levels and trigger both Radgotchi reactions and OCS eye expression changes:</p>
+
+                <table class="compact-table">
+                    <tr><th>Condition</th><th>Level</th></tr>
+                    <tr><td>CPU >90%</td><td style="color:var(--top-red)">● CRITICAL</td></tr>
+                    <tr><td>CPU >70%</td><td style="color:#f1fa8c">● WARNING</td></tr>
+                    <tr><td>Memory >90%</td><td style="color:var(--top-red)">● CRITICAL</td></tr>
+                    <tr><td>Disk >90%</td><td style="color:#f1fa8c">● WARNING</td></tr>
+                    <tr><td>Temperature > critical threshold</td><td style="color:var(--top-red)">● CRITICAL</td></tr>
+                    <tr><td>Docker container state change</td><td style="color:var(--top-cyan)">● INFO</td></tr>
+                    <tr><td>Cluster node offline</td><td style="color:#f1fa8c">● WARNING</td></tr>
+                    <tr><td>Systemd service failure</td><td style="color:#f1fa8c">● WARNING</td></tr>
+                    <tr><td>Service recovery</td><td style="color:var(--top-green)">● OK</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 9 — POLLING
+                     ============================ -->
+                <h2><span class="section-number">09</span> Polling &amp; Refresh Architecture</h2>
+                
+                <p>Split polling strategy separates fast local metrics from slow external integrations:</p>
+
+                <table class="spec-table">
+                    <tr><th>Interval</th><th>Target</th><th>Purpose</th></tr>
+                    <tr><td class="highlight">2,000ms</td><td>/api/metrics + /api/metrics/integrations</td><td>Core telemetry polling (parallel)</td></tr>
+                    <tr><td class="highlight">1,000ms</td><td>—</td><td>Column height sync</td></tr>
+                    <tr><td class="highlight">3,000ms</td><td>Management logs</td><td>Docker/Systemd auto-refresh</td></tr>
+                    <tr><td class="highlight">6,000ms</td><td>—</td><td>Radgotchi idle behavior check</td></tr>
+                    <tr><td class="highlight">10,000ms</td><td>/api/ocs/eye/ping</td><td>OCS stream health check</td></tr>
+                    <tr><td class="highlight">rAF</td><td>Canvas elements</td><td>Globe, topology, net flow, Obsidian topo</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 10 — VIDEO
+                     ============================ -->
+                <h2><span class="section-number">10</span> Dashboard Preview</h2>
+
+                <div class="video-container">
+                    <div class="video-label">■ REC — CLASSIFIED DASHBOARD CAPTURE</div>
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/TOP/dashboar d.mp4" type="video/mp4">
+                        <p style="color:var(--top-dim);font-size:0.6rem;padding:1rem;text-align:center;">[VIDEO FEED UNAVAILABLE — CLEARANCE REQUIRED]</p>
+                    </video>
+                </div>
+
+                <!-- ============================
+                     SECTION 11 — PERFORMANCE
+                     ============================ -->
+                <h2><span class="section-number">11</span> Performance Optimizations</h2>
+
+                <table class="compact-table">
+                    <tr><th>Optimization</th><th>Detail</th></tr>
+                    <tr><td>Split API polling</td><td>Local metrics (fast) and integrations (slow) fetched in separate parallel requests</td></tr>
+                    <tr><td>ThreadPoolExecutor</td><td>Container stats, cluster nodes, OCS status — all fetched in parallel</td></tr>
+                    <tr><td>DOM cache</td><td>Map-based ID lookup cache avoids repeated getElementById calls</td></tr>
+                    <tr><td>CSS containment</td><td><code>.section { contain: style paint }</code> — limits layout recalculation</td></tr>
+                    <tr><td>GPU compositing</td><td><code>translateZ(0)</code> + <code>backface-visibility: hidden</code> on animated elements</td></tr>
+                    <tr><td>Static info cache</td><td>System info (kernel, CPU model) cached indefinitely after first fetch</td></tr>
+                    <tr><td>Obsidian TTL cache</td><td>30-second cache prevents API hammering on every poll cycle</td></tr>
+                    <tr><td>mDNS cache</td><td>120-second TTL with connectivity validation</td></tr>
+                    <tr><td>Connection pooling</td><td>Shared <code>requests.Session</code> with keep-alive for all external HTTP</td></tr>
+                    <tr><td>Conditional render</td><td>Row flash animations only fire on actual value changes</td></tr>
+                </table>
+
+                <!-- ============================
+                     SECTION 12 — SECURITY
+                     ============================ -->
+                <h2><span class="section-number">12</span> Security Posture</h2>
+
+                <div class="warning-box">
+                    <ul style="margin:0.5rem 0 0.2rem 1rem;font-size:0.63rem;color:var(--top-text);">
+                        <li>Container runs <strong>privileged</strong> with host PID/network — required for full system visibility</li>
+                        <li>HA token &amp; Obsidian API key in <code>.env</code> — not committed to version control</li>
+                        <li>Obsidian API uses self-signed HTTPS — SSL verification disabled</li>
+                        <li>Frontend redacts non-local IPs (e.g., <code>142.███.███.███</code>)</li>
+                        <li>Chat history redacts personal names → <code>OPERATOR</code> / <code>ASSET-2</code></li>
+                        <li>Docker/Systemd management exposed without auth — trusted LAN only</li>
+                    </ul>
+                </div>
+
+                <div class="redacted-block">
+                    Additional security protocols and network segmentation details are classified under Directive <span class="redacted">████-██</span> and cannot be disclosed in this document. Access requires SCI compartment authorization.
+                </div>
+
+                <!-- ============================
+                     SECTION 13 — DEPENDENCIES
+                     ============================ -->
+                <h2><span class="section-number">13</span> External Service Dependencies</h2>
+                
+                <table class="spec-table">
+                    <tr><th>Service</th><th>Host</th><th>Protocol</th><th>Purpose</th></tr>
+                    <tr><td class="highlight">Prometheus (×6)</td><td>{node}.local:9100</td><td>HTTP/Prometheus</td><td>Cluster node metrics</td></tr>
+                    <tr><td class="highlight">Native Planet</td><td>nativeplanet.local:9100</td><td>HTTP/Prometheus</td><td>Urbit machine metrics</td></tr>
+                    <tr><td class="highlight">Home Assistant</td><td>homeassistant.local:8123</td><td>HTTP REST</td><td>Smart home / phone tracking</td></tr>
+                    <tr><td class="highlight">Obsidian REST API</td><td>localhost:27124</td><td>HTTPS REST</td><td>Vault access</td></tr>
+                    <tr><td class="highlight">OCS</td><td>chef.local:5001</td><td>HTTP + MJPEG</td><td>Eye rendering / vision</td></tr>
+                    <tr><td class="highlight">LM Studio</td><td>supreme.local:1234</td><td>OpenAI API</td><td>AI chat (gemma-2-27b)</td></tr>
+                    <tr><td class="highlight">Docker Engine</td><td>/var/run/docker.sock</td><td>Unix socket</td><td>Container management</td></tr>
+                    <tr><td class="highlight">systemd</td><td>D-Bus</td><td>D-Bus / nsenter</td><td>Service management</td></tr>
+                </table>
+
+                <!-- Footnotes -->
+                <div class="footnote">
+                    <p>¹ All network addresses shown are partially redacted per standard operating procedure.</p>
+                    <p>² Metric collection intervals are tunable — values shown reflect production configuration.</p>
+                    <p>³ This document is auto-generated from system introspection. <span class="redacted">████████████</span></p>
+                </div>
+
+            </div>
+
+            <!-- ============================
+                 INTEL SIDEBAR
+                 ============================ -->
+            <div class="intel-sidebar">
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">System Profile</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        <strong style="color:var(--top-amber);">Codename:</strong> DEEPDISH<br>
+                        <strong style="color:var(--top-amber);">Subsystem:</strong> TOP<br>
+                        <strong style="color:var(--top-amber);">Image:</strong> python:3.12-slim<br>
+                        <strong style="color:var(--top-amber);">Server:</strong> Gunicorn 21.2.0<br>
+                        <strong style="color:var(--top-amber);">Workers:</strong> 3 (gevent)<br>
+                        <strong style="color:var(--top-amber);">Port:</strong> 5000
+                    </p>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header green">Stack</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        Python 3.12<br>
+                        Flask 3.0.0<br>
+                        psutil 5.9.8<br>
+                        docker 7.0.0<br>
+                        gevent 24.2.1<br>
+                        Vanilla JS (no frameworks)
+                    </p>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header amber">Cluster Nodes</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        <span style="color:var(--top-green);">●</span> mini<br>
+                        <span style="color:var(--top-green);">●</span> cheese<br>
+                        <span style="color:var(--top-green);">●</span> pepper<br>
+                        <span style="color:var(--top-green);">●</span> onion<br>
+                        <span style="color:var(--top-green);">●</span> garlic<br>
+                        <span style="color:var(--top-green);">●</span> supreme
+                    </p>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">Subsystems</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        ▸ System Metrics<br>
+                        ▸ Docker Management<br>
+                        ▸ Systemd Control<br>
+                        ▸ Cluster Monitoring<br>
+                        ▸ Home Assistant<br>
+                        ▸ Obsidian Vault<br>
+                        ▸ OCS Eye Stream<br>
+                        ▸ AI Chat (DEEPDISH)<br>
+                        ▸ Network Topology<br>
+                        ▸ Radgotchi Pet<br>
+                        ▸ Event Detection<br>
+                        ▸ Intake Portal
+                    </p>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">Fonts</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        <strong style="color:var(--top-amber);">Body:</strong> Berkeley Mono Nerd Font<br>
+                        <strong style="color:var(--top-amber);">Headers:</strong> Orbitron (Google Fonts)<br>
+                        <strong style="color:var(--top-amber);">Icons:</strong> NerdFont glyphs
+                    </p>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">Keyboard Shortcuts</div>
+                    <p style="margin:0.15rem 0;color:var(--top-text);font-size:0.55rem;">
+                        <code>Esc</code> — Close overlay<br>
+                        <code>Enter</code> — Send chat<br>
+                        <code>Shift+Enter</code> — Newline<br>
+                        <code>Ctrl+Enter</code> — Submit intake
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document footer -->
+        <div class="document-footer">
+            <p>DOCUMENT CLASSIFICATION: <strong style="color: var(--top-red);">TOP SECRET // SI // NOFORN</strong></p>
+            <p>UNAUTHORIZED DISCLOSURE SUBJECT TO SPECIAL PROGRAMS REVIEW BOARD</p>
+            <p style="margin-top: 0.3rem;">
+                <a href="deepdish.html" class="back-link">◄ RETURN TO DEEPDISH INDEX</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Floating Return Home Button -->
+    <a href="index.html" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <center>
+            <div style="text-align: center; margin-bottom: 0.5rem;">
+                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1); image-rendering: pixelated;">
+            </div>
+            
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.75rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+            <style>
+                #particleSlider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 12px;
+                    height: 12px;
+                    background: #ff3344;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
+                    transition: all 0.2s ease;
+                }
+                #particleSlider::-webkit-slider-thumb:hover {
+                    transform: scale(1.2);
+                    box-shadow: 0 0 15px rgba(255, 51, 68, 0.8);
+                }
+                #particleSlider::-moz-range-thumb {
+                    width: 12px;
+                    height: 12px;
+                    background: #ff3344;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
+                }
+            </style>
+            <script>
+                document.getElementById('particleSlider').addEventListener('input', function(e) {
+                    const count = parseInt(e.target.value);
+                    if (window.setParticleCount) {
+                        window.setParticleCount(count);
+                    }
+                });
+            </script>
+            
+            <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
+            <span style="font-size: 0.95rem;">radbro webring</span>
+            <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
+            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2026 tyler</span></center>
+
+        </div>
+    </footer>
+    
+    <!-- External JavaScript -->
+    <script src="background3d.js?v=1.0"></script>
+    <script src="script.js?v=1.1"></script>
+    <script src="performance.js?v=1.1"></script>
+    <script src="interactions.js?v=1.1"></script>
+    <script src="effects.js?v=1.1"></script>
+    <script src="router.js?v=1.1"></script>
+    <script src="sounds.js?v=1.0"></script>
+    
+</body>
+</html>
