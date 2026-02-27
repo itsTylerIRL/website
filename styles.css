@@ -2003,8 +2003,8 @@ footer {
     
     /* Mobile PFP Layout */
     .pfp-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.8rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.4rem;
     }
     
     .pfp-card {
@@ -2915,8 +2915,8 @@ footer {
 /* Mobile adjustments for floating button */
 @media (max-width: 768px) {
     .floating-home {
-        top: 1rem;
-        right: 1rem;
+        top: 1.8rem;
+        right: 1.8rem;
         padding: 0.8rem;
     }
     
