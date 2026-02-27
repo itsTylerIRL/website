@@ -156,10 +156,100 @@
             .deepdish-grid {
                 grid-template-columns: repeat(3, 1fr);
                 max-width: 100%;
+                gap: 0.8rem;
+                padding: 0 50px;
             }
 
             .deepdish-card {
-                padding: 1.5rem 1rem;
+                padding: 1rem 0.6rem;
+            }
+
+            .deepdish-card img {
+                width: 45px;
+                height: 45px;
+            }
+
+            .deepdish-card h3 {
+                font-size: 0.85rem;
+            }
+
+            .deepdish-card p {
+                font-size: 0.7rem;
+            }
+
+            .deepdish-card .card-tag {
+                font-size: 0.55rem;
+                padding: 0.15rem 0.4rem;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .deepdish-grid {
+                grid-template-columns: 1fr;
+                max-width: 280px;
+                margin: 0 auto 2rem;
+                padding: 0 50px;
+            }
+
+            .deepdish-card {
+                flex-direction: row;
+                padding: 0.8rem 1rem;
+                gap: 0.8rem;
+                text-align: left;
+            }
+
+            .deepdish-card img {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+
+            .deepdish-card h3 {
+                font-size: 0.9rem;
+            }
+
+            .deepdish-card p {
+                font-size: 0.75rem;
+                text-align: left;
+            }
+
+            .deepdish-card .card-tag {
+                margin-top: 0.4rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .deepdish-grid {
+                padding: 0 45px;
+                max-width: 260px;
+            }
+
+            .deepdish-hero h1 {
+                font-size: 1.2rem;
+            }
+
+            .deepdish-hero p {
+                font-size: 0.75rem;
+            }
+
+            .deepdish-card {
+                padding: 0.6rem 0.8rem;
+                gap: 0.6rem;
+            }
+
+            .deepdish-card img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .deepdish-card h3 {
+                font-size: 0.8rem;
+            }
+
+            .deepdish-card p {
+                font-size: 0.65rem;
             }
         }
     </style>
