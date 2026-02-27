@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepDish - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/deepdish">
+    <meta property="og:title" content="DeepDish - Tyler (in real life)">
+    <meta property="og:description" content="DeepDish - Custom computer build, monitoring, and projects">
+    <meta property="og:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/deepdish">
+    <meta property="twitter:title" content="DeepDish - Tyler (in real life)">
+    <meta property="twitter:description" content="DeepDish - Custom computer build, monitoring, and projects">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css?v=1.1">
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Three.js Post-processing for bloom effect -->
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    
+    <style>
+        .deepdish-hero {
+            text-align: center;
+            margin: 0.5rem auto 1rem;
+            max-width: 600px;
+        }
+
+        .deepdish-hero img {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .deepdish-hero h1 {
+            font-size: 1.6rem;
+            color: #8be9fd;
+            margin: 0.6rem 0 0.15rem;
+            letter-spacing: 0.05em;
+        }
+
+        .deepdish-hero p {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        .deepdish-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            max-width: 650px;
+            margin: 0 auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .deepdish-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .deepdish-card:hover {
+            border-color: rgba(139, 233, 253, 0.6);
+            background: rgba(139, 233, 253, 0.05);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(139, 233, 253, 0.1);
+        }
+
+        .deepdish-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 0.6rem;
+            border-radius: 8px;
+        }
+
+        .deepdish-card h3 {
+            font-size: 1rem;
+            color: #eaeaea;
+            margin: 0 0 0.4rem;
+        }
+
+        .deepdish-card p {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            margin: 0;
+        }
+
+        .deepdish-card .card-tag {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.65rem;
+            color: #8be9fd;
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .deepdish-card.coming-soon {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .deepdish-card.coming-soon:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: rgba(139, 233, 253, 0.15);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .deepdish-hero h1 {
+                font-size: 1.4rem;
+            }
+
+            .deepdish-hero img {
+                max-width: 180px;
+            }
+
+            .deepdish-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: 100%;
+            }
+
+            .deepdish-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+
+    <!-- Hero Section -->
+    <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+        <div class="container">
+            <div style="text-align: center; margin: 0.3rem 0;">
+                <img src="assets/remilio2.png" alt="Remilio" style="max-width: 200px; height: auto; border-radius: 8px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- DeepDish Header -->
+    <section style="padding-top: 0.5rem; padding-bottom: 0;">
+        <div class="container">
+            <div class="deepdish-hero">
+                <h1>DeepDish</h1>
+                <p>Custom computer projects &amp; utilities</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Cards -->
+    <section>
+        <div class="container">
+            <div class="deepdish-grid">
+                <!-- OCS Card -->
+                <a href="OCS.html" class="deepdish-card">
+                    <img src="assets/OCS/webui.png" alt="OCS">
+                    <h3>OCS</h3>
+                    <p>Ocular Control System — custom monitoring HMI</p>
+                    <span class="card-tag">Live</span>
+                </a>
+
+                <!-- TOP Card (coming soon) -->
+                <div class="deepdish-card coming-soon">
+                    <img src="assets/OCS/crosshair.gif" alt="TOP">
+                    <h3>TOP</h3>
+                    <p>Terminal Operations Panel — coming soon</p>
+                    <span class="card-tag">Coming Soon</span>
+                </div>
+
+                <!-- SIN Card -->
+                <a href="discord-bot.html" class="deepdish-card">
+                    <img src="assets/redacted/relays.png" alt="SIN">
+                    <h3>SIN</h3>
+                    <p>Social Interaction Network — Discord bot system</p>
+                    <span class="card-tag">Live</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Return Home Button -->
+    <a href="index.html" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <center>
+            <div style="text-align: center; margin-bottom: 0.5rem;">
+                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1); image-rendering: pixelated;">
+            </div>
+            
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.75rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+            <style>
+                #particleSlider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 12px;
+                    height: 12px;
+                    background: #8be9fd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+                }
+            </style>
+            <script>
+                document.getElementById('particleSlider').addEventListener('input', function(e) {
+                    const count = parseInt(e.target.value);
+                    if (window.setParticleCount) {
+                        window.setParticleCount(count);
+                    }
+                });
+            </script>
+            
+            <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
+            <span style="font-size: 0.95rem;">radbro webring</span>
+            <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
+            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2026 tyler</span></center>
+
+        </div>
+    </footer>
+    
+    <!-- External JavaScript -->
+    <script src="background3d.js?v=1.0"></script>
+    <script src="script.js?v=1.1"></script>
+    <script src="performance.js?v=1.1"></script>
+    <script src="interactions.js?v=1.1"></script>
+    <script src="effects.js?v=1.1"></script>
+    <script src="router.js?v=1.1"></script>
+    <script src="sounds.js?v=1.0"></script>
+    
+</body>
+</html>
