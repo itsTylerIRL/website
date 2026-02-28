@@ -54,7 +54,7 @@
             background: rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 10, 30, 0.12);
+            border: 1px solid rgba(139, 233, 253, 0.12);
             border-top-color: rgba(255, 255, 255, 0.05);
             border-left-color: rgba(255, 255, 255, 0.03);
             border-radius: 0;
@@ -80,8 +80,8 @@
                     0deg,
                     transparent,
                     transparent 2px,
-                    rgba(255, 10, 30, 0.012) 2px,
-                    rgba(255, 10, 30, 0.012) 4px
+                    rgba(139, 233, 253, 0.012) 2px,
+                    rgba(139, 233, 253, 0.012) 4px
                 );
             pointer-events: none;
             z-index: 1;
@@ -91,16 +91,16 @@
            PRIMARY THEME — Color Tokens
            ======================================== */
         :root {
-            --top-red: #ff0a1e;
-            --top-orange: #cc2233;
-            --top-amber: #ff3344;
+            --top-red: #8be9fd;
+            --top-orange: #5fcfdf;
+            --top-amber: #8be9fd;
             --top-green: #2a9d8f;
             --top-cyan: #8be9fd;
             --top-dim: #4a5a6a;
             --top-text: #9aafba;
             --top-text-bright: #c0d0dd;
             --top-bg-card: rgba(0, 0, 0, 0.3);
-            --top-border: rgba(255, 10, 30, 0.2);
+            --top-border: rgba(139, 233, 253, 0.2);
         }
         
         /* ========================================
@@ -108,27 +108,27 @@
            ======================================== */
         .classified-header {
             text-align: center;
-            border: 3px solid var(--top-red);
+            border: 3px solid #c41e3a;
             padding: 0.25rem 1rem;
             margin-bottom: 0.5rem;
-            background: rgba(255, 10, 30, 0.08);
+            background: rgba(196, 30, 58, 0.1);
             position: relative;
             transition: all 0.3s ease;
             cursor: default;
         }
         
         .classified-header:hover {
-            background: rgba(255, 10, 30, 0.15);
-            box-shadow: 0 0 30px rgba(255, 10, 30, 0.2), inset 0 0 20px rgba(255, 10, 30, 0.05);
+            background: rgba(196, 30, 58, 0.2);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3), inset 0 0 20px rgba(196, 30, 58, 0.1);
         }
         
         .classified-header:hover h1 {
-            text-shadow: 0 0 15px rgba(255, 10, 30, 0.8);
+            text-shadow: 0 0 15px rgba(196, 30, 58, 0.8);
             letter-spacing: 0.5em;
         }
         
         .classified-header h1 {
-            color: var(--top-red);
+            color: #c41e3a;
             font-family: 'Special Elite', monospace;
             font-size: 1.2rem;
             letter-spacing: 0.3em;
@@ -143,7 +143,7 @@
             right: 20px;
             background: #000000;
             padding: 0 10px;
-            color: var(--top-red);
+            color: #c41e3a;
             font-weight: bold;
             font-size: 0.55rem;
             letter-spacing: 0.2em;
@@ -169,10 +169,10 @@
         }
         
         .document-bar-item:hover {
-            background: rgba(255, 10, 30, 0.06);
-            border-color: rgba(255, 10, 30, 0.4);
+            background: rgba(139, 233, 253, 0.06);
+            border-color: rgba(139, 233, 253, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 10, 30, 0.12);
+            box-shadow: 0 4px 12px rgba(139, 233, 253, 0.12);
         }
         
         .document-bar-item label {
@@ -196,7 +196,7 @@
         }
         
         .document-bar-item:hover span {
-            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
         }
         
         /* ========================================
@@ -215,8 +215,8 @@
         }
         
         .document-info:hover {
-            background: rgba(255, 10, 30, 0.02);
-            border-color: rgba(255, 10, 30, 0.35);
+            background: rgba(139, 233, 253, 0.02);
+            border-color: rgba(139, 233, 253, 0.35);
         }
         
         .document-info p {
@@ -227,7 +227,7 @@
         }
         
         .document-info p:hover {
-            background: rgba(255, 10, 30, 0.04);
+            background: rgba(139, 233, 253, 0.04);
             color: var(--top-amber);
         }
         
@@ -238,7 +238,7 @@
             color: var(--top-amber);
             margin-top: 0.7rem;
             margin-bottom: 0.25rem;
-            border-bottom: 1px solid rgba(255, 10, 30, 0.3);
+            border-bottom: 1px solid rgba(139, 233, 253, 0.3);
             padding-bottom: 0.15rem;
             font-family: 'Special Elite', monospace;
             font-size: 0.82rem;
@@ -250,8 +250,8 @@
         
         .project-writeup h2:hover {
             color: var(--top-red);
-            border-bottom-color: rgba(255, 10, 30, 0.6);
-            text-shadow: 0 0 10px rgba(255, 10, 30, 0.5);
+            border-bottom-color: rgba(139, 233, 253, 0.6);
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
             padding-left: 10px;
         }
         
@@ -269,7 +269,7 @@
         
         .project-writeup h3:hover {
             color: var(--top-amber);
-            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
             padding-left: 8px;
         }
         
@@ -327,7 +327,7 @@
         .project-writeup a:hover {
             color: var(--top-red);
             border-bottom-color: var(--top-red);
-            text-shadow: 0 0 6px rgba(255, 10, 30, 0.4);
+            text-shadow: 0 0 6px rgba(139, 233, 253, 0.4);
         }
         
         /* ========================================
@@ -340,20 +340,20 @@
             border-radius: 0;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.63rem;
-            border: 1px solid rgba(255, 10, 30, 0.2);
+            border: 1px solid rgba(139, 233, 253, 0.2);
             transition: all 0.2s ease;
         }
         
         .project-writeup code:hover {
-            background: rgba(255, 10, 30, 0.1);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.1);
+            border-color: rgba(139, 233, 253, 0.5);
             color: var(--top-red);
-            box-shadow: 0 0 10px rgba(255, 10, 30, 0.2);
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.2);
         }
         
         .code-block {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 10, 30, 0.15);
+            border: 1px solid rgba(139, 233, 253, 0.15);
             padding: 0.35rem;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.6rem;
@@ -366,8 +366,8 @@
         
         .code-block:hover {
             background: rgba(0, 0, 0, 0.7);
-            border-color: rgba(255, 10, 30, 0.4);
-            box-shadow: 0 0 20px rgba(255, 10, 30, 0.1), inset 0 0 30px rgba(255, 10, 30, 0.02);
+            border-color: rgba(139, 233, 253, 0.4);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.1), inset 0 0 30px rgba(139, 233, 253, 0.02);
         }
         
         .code-block .comment { color: #4a5a6a; }
@@ -385,13 +385,13 @@
         }
         
         .spec-table th, .spec-table td {
-            border: 1px solid rgba(255, 10, 30, 0.12);
+            border: 1px solid rgba(139, 233, 253, 0.12);
             padding: 0.2rem 0.4rem;
             text-align: left;
         }
         
         .spec-table th {
-            background: rgba(255, 10, 30, 0.06);
+            background: rgba(139, 233, 253, 0.06);
             color: var(--top-amber);
             font-weight: normal;
             text-transform: uppercase;
@@ -414,12 +414,12 @@
         
         .spec-table tbody tr:hover,
         .spec-table tr:hover {
-            background: rgba(255, 10, 30, 0.06) !important;
+            background: rgba(139, 233, 253, 0.06) !important;
         }
         
         .spec-table tr:hover td {
             color: var(--top-amber);
-            text-shadow: 0 0 5px rgba(255, 10, 30, 0.2);
+            text-shadow: 0 0 5px rgba(139, 233, 253, 0.2);
         }
         
         .compact-table {
@@ -430,13 +430,13 @@
         }
         
         .compact-table th, .compact-table td {
-            border: 1px solid rgba(255, 10, 30, 0.1);
+            border: 1px solid rgba(139, 233, 253, 0.1);
             padding: 0.15rem 0.3rem;
             text-align: left;
         }
         
         .compact-table th {
-            background: rgba(255, 10, 30, 0.05);
+            background: rgba(139, 233, 253, 0.05);
             color: var(--top-orange);
             font-weight: normal;
             text-transform: uppercase;
@@ -453,7 +453,7 @@
         }
         
         .compact-table tr:hover {
-            background: rgba(255, 10, 30, 0.08) !important;
+            background: rgba(139, 233, 253, 0.08) !important;
         }
         
         .compact-table tr:hover td {
@@ -474,10 +474,10 @@
         }
         
         .info-box:hover {
-            background: rgba(255, 10, 30, 0.04);
-            border-color: rgba(255, 10, 30, 0.45);
+            background: rgba(139, 233, 253, 0.04);
+            border-color: rgba(139, 233, 253, 0.45);
             transform: translateX(5px);
-            box-shadow: -3px 0 15px rgba(255, 10, 30, 0.1);
+            box-shadow: -3px 0 15px rgba(139, 233, 253, 0.1);
         }
         
         .info-box-header {
@@ -487,12 +487,12 @@
             letter-spacing: 0.1em;
             margin-bottom: 0.2rem;
             padding-bottom: 0.15rem;
-            border-bottom: 1px solid rgba(255, 10, 30, 0.15);
+            border-bottom: 1px solid rgba(139, 233, 253, 0.15);
         }
         
         .info-box:hover .info-box-header {
             color: var(--top-red);
-            text-shadow: 0 0 8px rgba(255, 10, 30, 0.4);
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.4);
         }
         
         /* ========================================
@@ -508,17 +508,17 @@
         .status-item {
             text-align: center;
             padding: 0.3rem;
-            border: 1px solid rgba(255, 10, 30, 0.15);
+            border: 1px solid rgba(139, 233, 253, 0.15);
             background: var(--top-bg-card);
             transition: all 0.3s ease;
             cursor: default;
         }
         
         .status-item:hover {
-            background: rgba(255, 10, 30, 0.06);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.06);
+            border-color: rgba(139, 233, 253, 0.5);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 10, 30, 0.15);
+            box-shadow: 0 6px 20px rgba(139, 233, 253, 0.15);
         }
         
         .status-item .value {
@@ -548,17 +548,17 @@
         .mini-stat {
             text-align: center;
             padding: 0.25rem;
-            border: 1px solid rgba(255, 10, 30, 0.1);
+            border: 1px solid rgba(139, 233, 253, 0.1);
             background: rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             cursor: default;
         }
         
         .mini-stat:hover {
-            background: rgba(255, 10, 30, 0.08);
-            border-color: rgba(255, 10, 30, 0.4);
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.4);
             transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 10, 30, 0.15);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.15);
         }
         
         .mini-stat .value {
@@ -581,8 +581,8 @@
            REDACTED
            ======================================== */
         .redacted {
-            background: #120a0c;
-            color: #120a0c;
+            background: #0a1215;
+            color: #0a1215;
             padding: 0 4px;
             user-select: none;
             border-radius: 2px;
@@ -600,15 +600,15 @@
             bottom: 0;
             background: repeating-linear-gradient(
                 90deg,
-                #120a0c 0px,
-                #120a0c 3px,
-                #1a0f12 3px,
-                #1a0f12 4px
+                #0a1215 0px,
+                #0a1215 3px,
+                #0f1a1f 3px,
+                #0f1a1f 4px
             );
         }
         
         .redacted:hover {
-            background: #1a1215;
+            background: #0f1820;
             animation: redacted-glitch 0.3s ease infinite;
         }
         
@@ -619,10 +619,10 @@
         }
         
         .redacted-block {
-            background: #120a0c;
+            background: #0a1215;
             padding: 0.25rem 0.4rem;
             margin: 0.35rem 0;
-            border-left: 3px solid var(--top-red);
+            border-left: 3px solid #c41e3a;
             font-style: italic;
             color: #4a5a6a;
             font-size: 0.63rem;
@@ -631,7 +631,7 @@
         }
         
         .redacted-block:hover {
-            background: rgba(255, 10, 30, 0.03);
+            background: rgba(139, 233, 253, 0.03);
             border-left-color: var(--top-amber);
             color: #6a7a8a;
         }
@@ -640,8 +640,8 @@
            WARNING / CAUTION BOXES
            ======================================== */
         .warning-box {
-            border: 2px solid var(--top-red);
-            background: rgba(255, 10, 30, 0.04);
+            border: 2px solid #c41e3a;
+            background: rgba(196, 30, 58, 0.05);
             padding: 0.4rem;
             margin: 0.4rem 0;
             position: relative;
@@ -657,16 +657,16 @@
             left: 15px;
             background: #000000;
             padding: 0 8px;
-            color: var(--top-red);
+            color: #c41e3a;
             font-weight: bold;
             font-size: 0.65rem;
             letter-spacing: 0.1em;
         }
         
         .warning-box:hover {
-            background: rgba(255, 10, 30, 0.1);
-            border-color: var(--top-amber);
-            box-shadow: 0 0 20px rgba(255, 10, 30, 0.2), inset 0 0 30px rgba(255, 10, 30, 0.03);
+            background: rgba(196, 30, 58, 0.12);
+            border-color: #ff4757;
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.3), inset 0 0 30px rgba(196, 30, 58, 0.05);
             transform: scale(1.01);
         }
         
@@ -724,21 +724,21 @@
         }
         
         .stamp.approved:hover {
-            box-shadow: 0 0 20px rgba(255, 51, 68, 0.5);
-            text-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.5);
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.8);
         }
         
         .stamp.eyes-only {
-            color: var(--top-red);
-            border-color: var(--top-red);
+            color: #c41e3a;
+            border-color: #c41e3a;
             bottom: 80px;
             left: 20px;
             transform: rotate(12deg);
         }
         
         .stamp.eyes-only:hover {
-            box-shadow: 0 0 20px rgba(255, 10, 30, 0.5);
-            text-shadow: 0 0 10px rgba(255, 10, 30, 0.8);
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+            text-shadow: 0 0 10px rgba(196, 30, 58, 0.8);
             transform: rotate(12deg) scale(1.15);
         }
         
@@ -763,13 +763,13 @@
         }
         
         .clearance-badge.ts {
-            background: rgba(255, 10, 30, 0.3);
-            color: var(--top-red);
-            border: 1px solid var(--top-red);
+            background: rgba(196, 30, 58, 0.3);
+            color: #c41e3a;
+            border: 1px solid #c41e3a;
         }
         
         .clearance-badge.s {
-            background: rgba(255, 51, 68, 0.2);
+            background: rgba(139, 233, 253, 0.2);
             color: var(--top-amber);
             border: 1px solid var(--top-amber);
         }
@@ -785,8 +785,8 @@
            ======================================== */
         .ticker-wrap {
             overflow: hidden;
-            background: rgba(255, 10, 30, 0.06);
-            border: 1px solid rgba(255, 10, 30, 0.25);
+            background: rgba(139, 233, 253, 0.06);
+            border: 1px solid rgba(139, 233, 253, 0.25);
             padding: 0.15rem 0;
             margin-bottom: 0.4rem;
             transition: all 0.3s ease;
@@ -794,8 +794,8 @@
         }
         
         .ticker-wrap:hover {
-            background: rgba(255, 10, 30, 0.12);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.12);
+            border-color: rgba(139, 233, 253, 0.5);
         }
         
         .ticker-wrap:hover .ticker {
@@ -858,7 +858,7 @@
         }
         
         .sidebar-panel {
-            border: 1px solid rgba(255, 10, 30, 0.15);
+            border: 1px solid rgba(139, 233, 253, 0.15);
             background: rgba(0, 0, 0, 0.4);
             padding: 0.35rem;
             font-size: 0.58rem;
@@ -867,19 +867,19 @@
         
         .sidebar-panel:hover {
             background: rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 10, 30, 0.4);
+            border-color: rgba(139, 233, 253, 0.4);
             transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(255, 10, 30, 0.08);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.08);
         }
         
         .sidebar-panel-header {
-            color: var(--top-red);
+            color: #c41e3a;
             font-size: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.15em;
             margin-bottom: 0.25rem;
             padding-bottom: 0.15rem;
-            border-bottom: 1px solid rgba(255, 10, 30, 0.3);
+            border-bottom: 1px solid rgba(196, 30, 58, 0.3);
             font-family: 'Special Elite', monospace;
         }
         
@@ -890,7 +890,7 @@
         
         .sidebar-panel-header.amber {
             color: var(--top-amber);
-            border-bottom-color: rgba(255, 51, 68, 0.3);
+            border-bottom-color: rgba(139, 233, 253, 0.3);
         }
         
         /* ========================================
@@ -900,14 +900,14 @@
             text-align: center;
             padding: 0.3rem;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 10, 30, 0.1);
+            border: 1px solid rgba(139, 233, 253, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
         }
         
         .network-node:hover {
-            background: rgba(255, 10, 30, 0.12);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.12);
+            border-color: rgba(139, 233, 253, 0.5);
             transform: scale(1.1);
             z-index: 10;
             position: relative;
@@ -926,7 +926,7 @@
            TIMELINE
            ======================================== */
         .timeline {
-            border-left: 2px solid rgba(255, 10, 30, 0.3);
+            border-left: 2px solid rgba(139, 233, 253, 0.3);
             padding-left: 0.7rem;
             margin: 0.4rem 0;
         }
@@ -954,13 +954,13 @@
         }
         
         .timeline-item:hover {
-            background: rgba(255, 10, 30, 0.04);
+            background: rgba(139, 233, 253, 0.04);
             padding-left: 1rem;
         }
         
         .timeline-item:hover::before {
             background: var(--top-amber);
-            box-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.8);
             transform: scale(1.5);
         }
         
@@ -971,7 +971,7 @@
         
         .timeline-item:hover strong {
             color: var(--top-amber);
-            text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
         }
         
         /* ========================================
@@ -980,7 +980,7 @@
         .footnote {
             font-size: 0.55rem;
             color: var(--top-dim);
-            border-top: 1px solid rgba(255, 10, 30, 0.2);
+            border-top: 1px solid rgba(139, 233, 253, 0.2);
             margin-top: 0.7rem;
             padding-top: 0.35rem;
             transition: all 0.3s ease;
@@ -989,14 +989,14 @@
         
         .footnote:hover {
             color: #6a7a8a;
-            background: rgba(255, 10, 30, 0.02);
+            background: rgba(139, 233, 253, 0.02);
             padding-left: 10px;
         }
         
         .document-footer {
             margin-top: 0.7rem;
             padding-top: 0.35rem;
-            border-top: 2px solid rgba(255, 10, 30, 0.3);
+            border-top: 2px solid rgba(139, 233, 253, 0.3);
             text-align: center;
             font-size: 0.55rem;
             color: var(--top-dim);
@@ -1005,7 +1005,7 @@
         
         .document-footer:hover {
             color: #6a7a8a;
-            border-top-color: rgba(255, 10, 30, 0.5);
+            border-top-color: rgba(139, 233, 253, 0.5);
         }
         
         .back-link {
@@ -1021,7 +1021,7 @@
         .back-link:hover {
             color: var(--top-red);
             border-bottom-color: var(--top-red);
-            text-shadow: 0 0 10px rgba(255, 10, 30, 0.5);
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
             transform: translateX(-5px);
             display: inline-block;
         }
@@ -1056,7 +1056,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 10, 30, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.08), transparent);
             transition: left 0.5s ease;
         }
         
@@ -1065,8 +1065,8 @@
         }
         
         .doc-return-home:hover {
-            background: rgba(255, 10, 30, 0.06);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.06);
+            border-color: rgba(139, 233, 253, 0.5);
         }
         
         .doc-return-home img {
@@ -1079,7 +1079,7 @@
         
         .doc-return-home:hover img {
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 10, 30, 0.4);
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.4);
         }
         
         .doc-return-home-text {
@@ -1107,15 +1107,15 @@
            ======================================== */
         .video-container {
             position: relative;
-            border: 1px solid rgba(255, 10, 30, 0.2);
+            border: 1px solid rgba(139, 233, 253, 0.2);
             margin: 0.5rem 0;
             background: #000;
             transition: all 0.3s ease;
         }
         
         .video-container:hover {
-            border-color: rgba(255, 10, 30, 0.5);
-            box-shadow: 0 0 25px rgba(255, 10, 30, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            box-shadow: 0 0 25px rgba(139, 233, 253, 0.15);
         }
         
         .video-container video {
@@ -1134,7 +1134,7 @@
             padding: 0.1rem 0.3rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            border: 1px solid rgba(255, 10, 30, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.3);
             z-index: 2;
         }
         
@@ -1150,7 +1150,7 @@
         
         .cluster-node {
             padding: 0.35rem;
-            border: 1px solid rgba(255, 10, 30, 0.15);
+            border: 1px solid rgba(139, 233, 253, 0.15);
             background: rgba(0, 0, 0, 0.35);
             text-align: center;
             transition: all 0.3s ease;
@@ -1158,10 +1158,10 @@
         }
         
         .cluster-node:hover {
-            background: rgba(255, 10, 30, 0.08);
-            border-color: rgba(255, 10, 30, 0.5);
+            background: rgba(139, 233, 253, 0.08);
+            border-color: rgba(139, 233, 253, 0.5);
             transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(255, 10, 30, 0.12);
+            box-shadow: 0 6px 18px rgba(139, 233, 253, 0.12);
         }
         
         .cluster-node .node-name {
@@ -1202,17 +1202,17 @@
         
         .arch-node {
             padding: 0.3rem 0.6rem;
-            border: 1px solid rgba(255, 10, 30, 0.25);
-            background: rgba(255, 10, 30, 0.04);
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            background: rgba(139, 233, 253, 0.04);
             color: var(--top-amber);
             transition: all 0.3s ease;
             cursor: default;
         }
         
         .arch-node:hover {
-            background: rgba(255, 10, 30, 0.12);
+            background: rgba(139, 233, 253, 0.12);
             border-color: var(--top-amber);
-            box-shadow: 0 0 12px rgba(255, 10, 30, 0.2);
+            box-shadow: 0 0 12px rgba(139, 233, 253, 0.2);
             transform: scale(1.05);
         }
         
@@ -1234,7 +1234,7 @@
         .project-writeup img:hover {
             filter: grayscale(0%) contrast(1.2) brightness(1.1);
             transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(255, 10, 30, 0.2);
+            box-shadow: 0 0 30px rgba(139, 233, 253, 0.2);
         }
         
         /* ========================================
@@ -1918,7 +1918,7 @@
 
         <!-- Document footer -->
         <div class="document-footer">
-            <p>DOCUMENT CLASSIFICATION: <strong style="color: var(--top-red);">TOP SECRET // SI // NOFORN</strong></p>
+            <p>DOCUMENT CLASSIFICATION: <strong style="color: #c41e3a;">TOP SECRET // SI // NOFORN</strong></p>
             <p>UNAUTHORIZED DISCLOSURE SUBJECT TO SPECIAL PROGRAMS REVIEW BOARD</p>
             <p style="margin-top: 0.3rem;">
                 <a href="deepdish.html" class="back-link">◄ RETURN TO DEEPDISH INDEX</a>
@@ -1959,25 +1959,25 @@
                     appearance: none;
                     width: 12px;
                     height: 12px;
-                    background: #ff3344;
+                    background: #8be9fd;
                     border-radius: 50%;
                     cursor: pointer;
                     border: none;
-                    box-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
                     transition: all 0.2s ease;
                 }
                 #particleSlider::-webkit-slider-thumb:hover {
                     transform: scale(1.2);
-                    box-shadow: 0 0 15px rgba(255, 51, 68, 0.8);
+                    box-shadow: 0 0 15px rgba(139, 233, 253, 0.8);
                 }
                 #particleSlider::-moz-range-thumb {
                     width: 12px;
                     height: 12px;
-                    background: #ff3344;
+                    background: #8be9fd;
                     border-radius: 50%;
                     cursor: pointer;
                     border: none;
-                    box-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
+                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
                 }
             </style>
             <script>
