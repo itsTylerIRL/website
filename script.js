@@ -26,6 +26,12 @@ window.initBracketContainment = function() {
     const footer = document.querySelector('body > footer');
     if (footer) wrapper.appendChild(footer);
 
+    // Move floating-home button outside content area so it's not clipped by overflow
+    const floatingHome = wrapper.querySelector('.floating-home');
+    if (floatingHome) {
+        document.body.appendChild(floatingHome);
+    }
+
     // Expose for scroll tracking (used by background3d.js)
     window.bracketContentArea = wrapper;
 
