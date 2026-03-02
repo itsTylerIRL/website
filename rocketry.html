@@ -34,6 +34,7 @@
     
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css?v=1.1">
+    <link rel="stylesheet" href="radgotchi.css">
     
     <!-- Three.js for 3D background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -518,8 +519,9 @@
     <footer>
         <div class="container">
             <center>
-            <div style="text-align: center; margin-bottom: 0.1rem;">
-                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1) sepia(1) saturate(8) hue-rotate(155deg) brightness(1.3) drop-shadow(0 0 3px rgba(139, 233, 253, 1)) drop-shadow(0 0 8px rgba(139, 233, 253, 0.8)) drop-shadow(0 0 16px rgba(139, 233, 253, 0.4)); image-rendering: pixelated;">
+            <div id="radgotchi-container">
+                <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
             </div>
             
             <!-- Particle Count Slider -->
@@ -575,6 +577,7 @@
     <script src="effects.js?v=1.1"></script>
     <script src="router.js?v=1.1"></script>
     <script src="sounds.js?v=1.0"></script>
+    <script src="radgotchi.js"></script>
     
 </body>
 </html>
