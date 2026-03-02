@@ -85,7 +85,7 @@
         /* Bento Items - Dark Glass (deepdish style) */
         .bento-item {
             --border-angle: 0deg;
-            background: rgba(0, 0, 0, 0.82);
+            background: rgba(0, 0, 0, 0.55);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border: 1px solid rgba(139, 233, 253, 0.12);
@@ -441,6 +441,13 @@
                 grid-auto-rows: 140px;
             }
             
+            /* Ensure transparency on mobile */
+            .bento-item {
+                background: rgba(0, 0, 0, 0.45) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+            }
+            
             /* Reduce 3D effect on mobile for performance */
             .bento-item .bento-image {
                 transform: translateZ(20px);
@@ -458,6 +465,12 @@
             .ocs-circle {
                 width: 55px !important;
                 height: 55px !important;
+            }
+            
+            .bento-item {
+                background: rgba(0, 0, 0, 0.4) !important;
+                backdrop-filter: blur(8px) !important;
+                -webkit-backdrop-filter: blur(8px) !important;
             }
         }
         
