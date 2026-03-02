@@ -66,8 +66,13 @@ class SimpleNavigation {
                 this.reinitializeScripts();
             }, 100);
             
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Scroll to top (use bracket content area if available)
+            const contentArea = document.querySelector('.bracket-content-area');
+            if (contentArea) {
+                contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             
         } catch (error) {
             console.error('Failed to load page:', error);
@@ -127,6 +132,11 @@ class SimpleNavigation {
     }
 
     reinitializeScripts() {
+        // Reinitialize bracket containment after content replacement
+        if (typeof window.initBracketContainment === 'function') {
+            window.initBracketContainment();
+        }
+
         // Reinitialize effects
         if (typeof createScanline === 'function') {
             createScanline();

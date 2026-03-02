@@ -816,7 +816,7 @@ function onMouseOut(event) {
 }
 
 function onScroll() {
-    scrollY = window.scrollY || window.pageYOffset;
+    scrollY = window._contentScrollY !== undefined ? window._contentScrollY : (window.scrollY || window.pageYOffset);
 }
 
 function onWindowResize() {

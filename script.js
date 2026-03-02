@@ -1,3 +1,44 @@
+// Bracket Content Containment - constrain page content within corner brackets
+// Background particles (canvas) and corner brackets remain fullscreen
+window.initBracketContainment = function() {
+    const mainContent = document.querySelector('.main-content');
+    const cornerBrackets = document.querySelector('.corner-brackets');
+    if (!mainContent || !cornerBrackets) return;
+
+    // Don't double-initialize
+    if (document.querySelector('.bracket-content-area')) return;
+
+    // Lock body/html scrolling
+    document.documentElement.classList.add('bracket-contained');
+    document.body.classList.add('bracket-contained');
+
+    // Create scroll wrapper positioned inside the corner brackets
+    const wrapper = document.createElement('div');
+    wrapper.className = 'bracket-content-area';
+
+    // Insert wrapper before main content
+    mainContent.parentNode.insertBefore(wrapper, mainContent);
+
+    // Move main content into wrapper
+    wrapper.appendChild(mainContent);
+
+    // Move footer into wrapper if present
+    const footer = document.querySelector('body > footer');
+    if (footer) wrapper.appendChild(footer);
+
+    // Expose for scroll tracking (used by background3d.js)
+    window.bracketContentArea = wrapper;
+
+    // Forward scroll position so background parallax still works
+    wrapper.addEventListener('scroll', function() {
+        window._contentScrollY = wrapper.scrollTop;
+        window.dispatchEvent(new Event('scroll'));
+    });
+};
+
+// Initialize bracket containment immediately
+window.initBracketContainment();
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
