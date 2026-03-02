@@ -91,12 +91,12 @@
         
         /* Bento Items - Dark Glass */
         .bento-item {
-            background: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(139, 233, 253, 0.1);
-            border-top-color: rgba(255, 255, 255, 0.05);
-            border-left-color: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(40px) saturate(1.8) brightness(0.35);
+            -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(0.35);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-top-color: rgba(255, 255, 255, 0.08);
+            border-left-color: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             overflow: hidden;
             position: relative;
@@ -107,8 +107,9 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.02);
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
         }
         
         /* Top reflection/shine - subtle */
@@ -118,9 +119,10 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 40%;
+            height: 50%;
             background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.02) 0%, 
+                rgba(255, 255, 255, 0.04) 0%,
+                rgba(255, 255, 255, 0.01) 40%,
                 transparent 100%);
             pointer-events: none;
             z-index: 1;
@@ -155,14 +157,17 @@
         }
         
         .bento-item:hover {
-            background: rgba(0, 0, 0, 0.18);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(50px) saturate(2) brightness(0.4);
+            -webkit-backdrop-filter: blur(50px) saturate(2) brightness(0.4);
             border-color: rgba(139, 233, 253, 0.25);
             border-top-color: rgba(139, 233, 253, 0.3);
             transform: translateY(-5px) scale(1.02);
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(139, 233, 253, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(139, 233, 253, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
         }
         
         .bento-item:hover::before {
@@ -613,12 +618,12 @@
     <footer>
         <div class="container">
             <center>
-            <div style="text-align: center; margin-bottom: 0.5rem;">
-                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1); image-rendering: pixelated;">
+            <div style="text-align: center; margin-bottom: 0.1rem;">
+                <img src="assets/radbros/HAPPY.png" alt="Radbro" id="radbroImage" style="width: 160px; height: auto; filter: invert(1) sepia(1) saturate(8) hue-rotate(155deg) brightness(1.3) drop-shadow(0 0 3px rgba(139, 233, 253, 1)) drop-shadow(0 0 8px rgba(139, 233, 253, 0.8)) drop-shadow(0 0 16px rgba(139, 233, 253, 0.4)); image-rendering: pixelated;">
             </div>
             
             <!-- Particle Count Slider -->
-            <div style="margin: 0.75rem 0; display: flex; align-items: center; justify-content: center;">
+            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
                 <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
                     style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
             </div>
@@ -657,10 +662,7 @@
                 });
             </script>
             
-            <a href="https://schizoposters.xyz" target="_blank" class="nft-link">prev</a>
-            <span style="font-size: 0.95rem;">radbro webring</span>
-            <a href="https://radbro.xyz" target="_blank" class="nft-link">next</a> <br>
-            <span style="margin-left: 1.5rem; font-size: 0.95rem;">&copy; 2026 tyler</span></center>
+            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
 
         </div>
     </footer>
