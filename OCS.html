@@ -1706,7 +1706,7 @@
         }
         
         /* Mobile styles */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .doc-button-container {
                 grid-template-columns: 1fr;
                 gap: 0.35rem;
@@ -1740,14 +1740,11 @@
             }
             
             .project-writeup {
-                padding: 0.5rem 0.4rem;
-                margin: 0.15rem 50px;
+                margin-left: 10px;
+                margin-right: 10px;
+                padding: 0.8rem;
                 font-size: 0.62rem;
                 line-height: 1.25;
-                max-width: calc(100% - 100px);
-                border-radius: 0;
-                border-left: none;
-                border-right: none;
             }
             
             /* Hide stamps on mobile - they overlap too much */
@@ -1796,7 +1793,7 @@
             }
             
             /* Secondary stats bar */
-            .secondary-stats {
+            .secondary-stats-mobile {
                 grid-template-columns: repeat(3, 1fr) !important;
                 gap: 0.25rem !important;
                 margin-bottom: 0.5rem !important;
@@ -2096,18 +2093,7 @@
         }
         
         /* Very small screens */
-        @media (max-width: 400px) {
-            .project-writeup {
-                padding: 0.35rem 0.25rem;
-                margin: 0.15rem 45px;
-                max-width: calc(100% - 90px);
-            }
-            
-            .classified-header h1 {
-                font-size: 0.55rem;
-                letter-spacing: 0.08em;
-            }
-            
+        @media (max-width: 480px) {
             .document-bar {
                 grid-template-columns: 1fr;
             }
@@ -2117,15 +2103,20 @@
             }
             
             .status-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr 1fr;
             }
             
-            .secondary-stats {
+            .secondary-stats-mobile {
                 grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .network-grid {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .classified-header h1 {
+                font-size: 0.55rem;
+                letter-spacing: 0.08em;
             }
             
             .project-writeup h2 {
@@ -2134,38 +2125,6 @@
             
             .project-writeup p {
                 font-size: 0.48rem;
-            }
-        }
-        
-        /* Extra small - under 350px */
-        @media (max-width: 350px) {
-            .project-writeup {
-                margin: 0.25rem 40px;
-                max-width: calc(100% - 80px);
-            }
-            
-            .classified-header {
-                padding: 0.2rem;
-            }
-            
-            .classified-header h1 {
-                font-size: 0.55rem;
-            }
-            
-            .document-bar-item label {
-                font-size: 0.4rem;
-            }
-            
-            .document-bar-item span {
-                font-size: 0.5rem;
-            }
-            
-            .status-item .value {
-                font-size: 0.6rem;
-            }
-            
-            .status-item .label {
-                font-size: 0.35rem;
             }
         }
     </style>
