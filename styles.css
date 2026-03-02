@@ -222,7 +222,22 @@ input[type="range"]::-ms-thumb {
     transform: translate(-50%, -50%);
     animation: rotateCursor 2s linear infinite reverse;
     box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
-}\n\n/* Third ring - data stream effect */\n.cursor-ring-outer::before {\n    content: '';\n    position: absolute;\n    top: -4px;\n    left: -4px;\n    right: -4px;\n    bottom: -4px;\n    border: 1px dashed rgba(139, 233, 253, 0.3);\n    border-radius: 50%;\n    animation: rotateCursor 8s linear infinite;\n}
+}
+
+/* Third ring - data stream effect 
+*/
+
+.cursor-ring-outer::before {    
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 1px dashed rgba(139, 233, 253, 0.3);
+    border-radius: 50%;
+    animation: rotateCursor 8s linear infinite;
+}
 
 /* Corner brackets - 3D depth effect */
 .cursor-bracket {
@@ -2801,7 +2816,9 @@ footer {
     }
     
     .dual-card-container .card-main {
-        flex-direction: row;\n        gap: 0.5rem;\n    }
+        flex-direction: row;
+        gap: 0.5rem;
+    }
     
     .dual-card-container .profile-picture {
         width: 60px;
@@ -2941,5 +2958,64 @@ footer {
     
     .floating-home-text p {
         font-size: 0.7rem;
+    }
+}
+
+/* ===== Bracket Content Containment ===== */
+/* Constrains page content within corner brackets while background particles remain fullscreen */
+
+.bracket-contained {
+    overflow: hidden !important;
+}
+
+.bracket-content-area {
+    position: fixed;
+    top: 55px;
+    left: 55px;
+    right: 55px;
+    bottom: 55px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 233, 253, 0.3) transparent;
+}
+
+.bracket-content-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.bracket-content-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.bracket-content-area::-webkit-scrollbar-thumb {
+    background: rgba(139, 233, 253, 0.3);
+    border-radius: 2px;
+}
+
+.bracket-content-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 233, 253, 0.5);
+}
+
+/* Responsive bracket content area */
+@media (max-width: 768px) {
+    .bracket-content-area {
+        top: 45px;
+        left: 20px;
+        right: 20px;
+        bottom: 45px;
+    }
+}
+
+@media (max-width: 500px) {
+    .bracket-content-area {
+        top: 35px;
+        left: 18px;
+        right: 18px;
+        bottom: 35px;
     }
 }
