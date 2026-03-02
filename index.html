@@ -69,34 +69,23 @@
             position: relative;
         }
         
-        /* Scanline overlay */
-        .bento-grid::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.1) 2px,
-                rgba(0, 0, 0, 0.1) 4px
-            );
-            pointer-events: none;
-            z-index: 10;
-            opacity: 0.5;
+        @property --border-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateBorder {
+            to { --border-angle: 360deg; }
         }
         
-        /* Bento Items - Dark Glass */
+        /* Bento Items - Dark Glass (deepdish style) */
         .bento-item {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(40px) saturate(1.8) brightness(0.35);
-            -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(0.35);
-            border: 1px solid rgba(139, 233, 253, 0.15);
-            border-top-color: rgba(255, 255, 255, 0.08);
-            border-left-color: rgba(255, 255, 255, 0.05);
+            --border-angle: 0deg;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(139, 233, 253, 0.12);
             border-radius: 16px;
             overflow: hidden;
             position: relative;
@@ -106,87 +95,79 @@
             color: inherit;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
+            perspective: 800px;
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.06),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+                0 4px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
         
-        /* Top reflection/shine - subtle */
+        /* Holographic shimmer overlay */
         .bento-item::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.04) 0%,
-                rgba(255, 255, 255, 0.01) 40%,
-                transparent 100%);
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from var(--border-angle),
+                transparent 0%,
+                rgba(139, 233, 253, 0.03) 10%,
+                transparent 20%,
+                rgba(189, 147, 249, 0.03) 30%,
+                transparent 40%,
+                rgba(80, 250, 123, 0.03) 50%,
+                transparent 60%
+            );
+            animation: rotateBorder 8s linear infinite;
             pointer-events: none;
-            z-index: 1;
-            transition: opacity 0.3s;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         
-        /* Moving reflection effect */
+        /* Sweep light effect */
         .bento-item::after {
             content: '';
             position: absolute;
             top: -100%;
-            left: -100%;
-            width: 60%;
-            height: 200%;
+            left: -75%;
+            width: 50%;
+            height: 300%;
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(139, 233, 253, 0.02) 45%,
-                rgba(139, 233, 253, 0.05) 50%,
-                rgba(139, 233, 253, 0.02) 55%,
+                rgba(139, 233, 253, 0.04) 45%,
+                rgba(139, 233, 253, 0.08) 50%,
+                rgba(139, 233, 253, 0.04) 55%,
                 transparent 100%
             );
             transform: rotate(25deg);
-            transition: all 0.6s ease;
+            transition: left 0.7s ease;
             pointer-events: none;
-            z-index: 2;
+            z-index: 1;
         }
         
         .bento-item:hover::after {
-            left: 150%;
-            top: -50%;
+            left: 125%;
         }
         
         .bento-item:hover {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(50px) saturate(2) brightness(0.4);
-            -webkit-backdrop-filter: blur(50px) saturate(2) brightness(0.4);
-            border-color: rgba(139, 233, 253, 0.25);
-            border-top-color: rgba(139, 233, 253, 0.3);
-            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(139, 233, 253, 0.5);
+            background: rgba(5, 15, 25, 0.8);
+            transform: translateY(-8px) scale(1.03);
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 20px 50px rgba(0, 0, 0, 0.4),
                 0 0 40px rgba(139, 233, 253, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+                0 0 80px rgba(139, 233, 253, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
         
         .bento-item:hover::before {
-            opacity: 0.8;
+            opacity: 1;
         }
         
-        /* Glitch effect on hover */
-        .bento-item:hover .bento-content h3 {
-            animation: glitch 0.3s ease;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
+
         
         /* Featured sizes */
         .bento-item.featured {
@@ -213,7 +194,7 @@
             align-items: center;
             justify-content: center;
             padding: 0.75rem;
-            z-index: 0;
+            z-index: 3;
             background: transparent;
         }
         
@@ -221,13 +202,13 @@
             max-width: 85%;
             max-height: 85%;
             object-fit: contain;
-            filter: grayscale(30%) brightness(0.9) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+            filter: brightness(0.95) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
             transition: all 0.4s ease;
         }
         
         .bento-item:hover .bento-image img {
-            filter: grayscale(0%) brightness(1.1) drop-shadow(0 8px 20px rgba(139, 233, 253, 0.3));
-            transform: scale(1.05);
+            filter: brightness(1.15) drop-shadow(0 4px 16px rgba(139, 233, 253, 0.25));
+            transform: scale(1.08) translateY(-2px);
         }
         
         /* Bento Content */
@@ -238,7 +219,7 @@
             right: 0;
             padding: 0.75rem 1rem;
             background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-            z-index: 3;
+            z-index: 4;
             text-align: center;
             min-height: 55px;
             display: flex;
@@ -249,22 +230,29 @@
         .bento-content h3 {
             font-size: 0.9rem;
             font-weight: 600;
-            color: #fff;
+            color: #eaeaea;
             margin-bottom: 0.25rem;
             text-transform: lowercase;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s ease;
+        }
+        
+        .bento-item:hover .bento-content h3 {
+            color: #fff;
+            text-shadow: 0 0 20px rgba(139, 233, 253, 0.4);
         }
         
         .bento-content p {
             font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
+            color: #888;
             text-transform: lowercase;
             letter-spacing: 0.05em;
             line-height: 1.3;
+            transition: color 0.3s ease;
         }
         
         .bento-item:hover .bento-content p {
-            color: #8be9fd;
+            color: #aaa;
         }
         
         /* External link indicator */
@@ -358,33 +346,7 @@
             border-right-width: 2px;
         }
         
-        /* 3D Tilt Card Effect */
-        .bento-item {
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-        
-        .bento-item .bento-image {
-            transform: translateZ(40px);
-            transition: transform 0.1s ease-out;
-        }
-        
-        .bento-item .bento-image img {
-            transition: transform 0.3s ease-out, filter 0.4s ease;
-        }
-        
-        .bento-item:hover .bento-image {
-            transform: translateZ(60px);
-        }
-        
-        .bento-item .bento-content {
-            transform: translateZ(20px);
-            transition: transform 0.1s ease-out;
-        }
-        
-        .bento-item:hover .bento-content {
-            transform: translateZ(35px);
-        }
+
         
         /* Glow layer that appears on tilt */
         .bento-item .tilt-glow {
@@ -682,7 +644,6 @@
         const cards = document.querySelectorAll('.bento-item');
         
         cards.forEach(card => {
-            // Add glow element
             const glow = document.createElement('div');
             glow.className = 'tilt-glow';
             card.appendChild(glow);
@@ -694,45 +655,38 @@
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                // Calculate rotation (max 15 degrees)
-                const rotateX = ((y - centerY) / centerY) * -15;
-                const rotateY = ((x - centerX) / centerX) * 15;
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
                 
-                // Apply transform with smooth easing
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
                 
-                // Move glow to follow cursor
                 const glowX = (x / rect.width) * 100;
                 const glowY = (y / rect.height) * 100;
-                glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(139, 233, 253, 0.15) 0%, transparent 60%)`;
+                glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(139, 233, 253, 0.12) 0%, transparent 60%)`;
                 
-                // Parallax effect on image
+                // Float the image towards the mouse
                 const image = card.querySelector('.bento-image');
                 if (image) {
                     const moveX = ((x - centerX) / centerX) * 8;
                     const moveY = ((y - centerY) / centerY) * 8;
-                    image.style.transform = `translateZ(60px) translateX(${moveX}px) translateY(${moveY}px)`;
+                    image.style.transform = `translateX(${moveX}px) translateY(${moveY - 5}px) scale(1.08)`;
                 }
             });
             
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                card.style.transition = 'transform 0.5s ease-out';
+                card.style.transform = '';
+                card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                glow.style.background = 'transparent';
                 
                 const image = card.querySelector('.bento-image');
                 if (image) {
-                    image.style.transform = 'translateZ(40px)';
+                    image.style.transform = '';
                     image.style.transition = 'transform 0.5s ease-out';
-                }
-                
-                const glow = card.querySelector('.tilt-glow');
-                if (glow) {
-                    glow.style.background = 'transparent';
                 }
             });
             
             card.addEventListener('mouseenter', () => {
-                card.style.transition = 'transform 0.1s ease-out';
+                card.style.transition = 'all 0.1s ease-out';
                 const image = card.querySelector('.bento-image');
                 if (image) {
                     image.style.transition = 'transform 0.1s ease-out';
