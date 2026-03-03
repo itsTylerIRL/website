@@ -201,8 +201,8 @@
             background: transparent;
         }
         
-        /* CRT scanline overlay on icons */
-        .bento-image::before {
+        /* CRT scanline overlay - covers entire card */
+        .bento-item .crt-overlay {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -210,45 +210,48 @@
                 0deg,
                 transparent 0px,
                 transparent 2px,
-                rgba(0, 0, 0, 0.15) 2px,
-                rgba(0, 0, 0, 0.15) 4px
+                rgba(0, 0, 0, 0.12) 2px,
+                rgba(0, 0, 0, 0.12) 4px
             );
             pointer-events: none;
-            z-index: 10;
-            opacity: 0.6;
+            z-index: 20;
+            opacity: 0.55;
             transition: opacity 0.4s ease;
             mix-blend-mode: multiply;
+            border-radius: 16px;
+            animation: crtFlicker 4s ease-in-out infinite;
         }
         
-        /* CRT vignette + edge glow */
-        .bento-image::after {
+        .bento-item:hover .crt-overlay {
+            opacity: 0.25;
+        }
+        
+        /* CRT vignette + edge glow - covers entire card */
+        .bento-item .crt-vignette {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(
                 ellipse at center,
-                transparent 50%,
-                rgba(0, 0, 0, 0.3) 80%,
-                rgba(0, 0, 0, 0.6) 100%
+                transparent 40%,
+                rgba(0, 0, 0, 0.25) 75%,
+                rgba(0, 0, 0, 0.55) 100%
             );
             pointer-events: none;
-            z-index: 11;
-            opacity: 0.7;
+            z-index: 21;
+            opacity: 0.65;
             transition: opacity 0.4s ease;
+            border-radius: 16px;
         }
         
-        .bento-item:hover .bento-image::before {
-            opacity: 0.3;
-        }
-        
-        .bento-item:hover .bento-image::after {
-            opacity: 0.4;
+        .bento-item:hover .crt-vignette {
+            opacity: 0.35;
             background: radial-gradient(
                 ellipse at center,
-                rgba(139, 233, 253, 0.03) 30%,
-                transparent 50%,
-                rgba(0, 0, 0, 0.2) 80%,
-                rgba(0, 0, 0, 0.5) 100%
+                rgba(139, 233, 253, 0.02) 20%,
+                transparent 45%,
+                rgba(0, 0, 0, 0.18) 75%,
+                rgba(0, 0, 0, 0.45) 100%
             );
         }
         
@@ -268,15 +271,11 @@
         
         /* CRT flicker animation */
         @keyframes crtFlicker {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.55; }
-            92% { opacity: 0.6; }
-            93% { opacity: 0.4; }
-            94% { opacity: 0.6; }
-        }
-        
-        .bento-image::before {
-            animation: crtFlicker 4s ease-in-out infinite;
+            0%, 100% { opacity: 0.55; }
+            50% { opacity: 0.5; }
+            92% { opacity: 0.55; }
+            93% { opacity: 0.35; }
+            94% { opacity: 0.55; }
         }
         
         /* Bento Content */
@@ -498,9 +497,22 @@
             </div>
             
             <!-- KoL Badge -->
+            <!-- SVG filter to convert dark pixels to transparent -->
+            <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+                <defs>
+                    <filter id="brightnessToAlpha" color-interpolation-filters="sRGB">
+                        <!-- Convert luminance to alpha: dark=transparent, bright=opaque -->
+                        <feColorMatrix type="matrix" 
+                            values="1 0 0 0 0
+                                    0 1 0 0 0
+                                    0 0 1 0 0
+                                    0.2126 0.7152 0.0722 0 0"/>
+                    </filter>
+                </defs>
+            </svg>
             <div style="text-align: center; margin: 1rem 0;">
                 <a href="http://www.kingdomofloathing.com" target="_blank">
-                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg); mix-blend-mode: screen;">
+                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);">
                 </a>
             </div>
             
@@ -728,6 +740,16 @@
         const cards = document.querySelectorAll('.bento-item');
         
         cards.forEach(card => {
+            // Add CRT scanline overlay to entire card
+            const crtOverlay = document.createElement('div');
+            crtOverlay.className = 'crt-overlay';
+            card.appendChild(crtOverlay);
+            
+            // Add CRT vignette overlay to entire card
+            const crtVignette = document.createElement('div');
+            crtVignette.className = 'crt-vignette';
+            card.appendChild(crtVignette);
+            
             const glow = document.createElement('div');
             glow.className = 'tilt-glow';
             card.appendChild(glow);
