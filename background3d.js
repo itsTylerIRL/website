@@ -14,10 +14,21 @@ let exclusionZones = [];
 window.exclusionZones = exclusionZones;
 
 // Post-processing and effects
-let composer, bloomPass, glitchPass;
+let composer, bloomPass, glitchPass, chromaticAberrationPass, godRaysPass;
 let linesMesh, linesGeometry, linesPositions;
 let glitchIntensity = 0;
 let nextGlitchTime = 0;
+
+// Volumetric light (god rays) settings
+let godRaysEnabled = true;
+let godRaysIntensity = 0.75;
+let godRaysDecay = 0.95;
+let godRaysDensity = 0.5;
+let lightSource, lightSourceMesh, occlusionComposer, occlusionRenderTarget;
+
+// Chromatic aberration settings
+let chromaticAberrationEnabled = true;
+let chromaticAberrationIntensity = 0.004;
 
 // Mouse world position for line attraction
 let mouseWorldX = 0;
@@ -30,7 +41,7 @@ let bloomRadius = 0.4;
 let bloomThreshold = 0.2;
 let linesEnabled = true;
 let linesMaxDistance = 23;
-let linesOpacity = 0.25;
+let linesOpacity = 0.8; // Increased for visibility
 let glitchEnabled = false;
 let linesAttraction = 0.7; // How strongly lines are attracted to cursor (0-1)
 
@@ -58,8 +69,9 @@ function initBackground3D() {
     createParticles();
     createConnectionLines();
     createWireframeShapes();
+    createVolumetricLightSource();
     
-    // Setup post-processing (bloom + glitch)
+    // Setup post-processing (bloom + glitch + god rays + chromatic aberration)
     setupPostProcessing();
     
     camera.position.z = 50;
@@ -419,6 +431,216 @@ function createWireframeShapes() {
     window.wireframeShapes = shapes;
 }
 
+// ============== VOLUMETRIC LIGHT SOURCE ==============
+function createVolumetricLightSource() {
+    // Create a glowing light source that will emit god rays
+    const lightGeo = new THREE.SphereGeometry(3, 32, 32);
+    
+    // Inner bright core
+    const lightMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uTime: { value: 0 },
+            uColor1: { value: new THREE.Color(0x8be9fd) }, // Cyan
+            uColor2: { value: new THREE.Color(0xff79c6) }, // Pink
+        },
+        vertexShader: `
+            varying vec3 vNormal;
+            varying vec2 vUv;
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float uTime;
+            uniform vec3 uColor1;
+            uniform vec3 uColor2;
+            varying vec3 vNormal;
+            varying vec2 vUv;
+            
+            void main() {
+                // Pulsing glow effect
+                float pulse = 0.8 + 0.2 * sin(uTime * 2.0);
+                
+                // Fresnel edge glow
+                float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
+                
+                // Color cycling
+                vec3 color = mix(uColor1, uColor2, 0.5 + 0.5 * sin(uTime * 0.5));
+                
+                // Bright center, glowing edges
+                float alpha = 0.9 * pulse;
+                vec3 finalColor = color * (1.0 + fresnel * 2.0) * pulse;
+                
+                gl_FragColor = vec4(finalColor, alpha);
+            }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    
+    lightSourceMesh = new THREE.Mesh(lightGeo, lightMat);
+    lightSourceMesh.position.set(-80, 30, -80); // Off to the upper-left, out of center view
+    lightSourceMesh.scale.setScalar(0.6); // Smaller, more subtle
+    scene.add(lightSourceMesh);
+    
+    // Outer glow halo
+    const haloGeo = new THREE.SphereGeometry(5, 32, 32); // Smaller halo
+    const haloMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uTime: { value: 0 },
+            uColor: { value: new THREE.Color(0x8be9fd) }
+        },
+        vertexShader: `
+            varying vec3 vNormal;
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float uTime;
+            uniform vec3 uColor;
+            varying vec3 vNormal;
+            
+            void main() {
+                float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+                float pulse = 0.6 + 0.4 * sin(uTime * 1.5);
+                gl_FragColor = vec4(uColor, intensity * 0.3 * pulse);
+            }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.BackSide
+    });
+    
+    const halo = new THREE.Mesh(haloGeo, haloMat);
+    lightSourceMesh.add(halo);
+    
+    // Store reference
+    lightSource = lightSourceMesh;
+}
+
+// ============== CHROMATIC ABERRATION SHADER ==============
+const chromaticAberrationShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        uIntensity: { value: 0.004 },
+        uTime: { value: 0 }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float uIntensity;
+        uniform float uTime;
+        varying vec2 vUv;
+        
+        void main() {
+            // Direction from center
+            vec2 dir = vUv - vec2(0.5);
+            float dist = length(dir);
+            
+            // Radial chromatic aberration - stronger at edges
+            vec2 offset = dir * dist * uIntensity;
+            
+            // Add subtle animated wobble for more dynamic feel
+            float wobble = sin(uTime * 3.0 + dist * 10.0) * 0.0003;
+            offset += dir * wobble;
+            
+            // Sample RGB channels with offset
+            float r = texture2D(tDiffuse, vUv + offset * 1.0).r;
+            float g = texture2D(tDiffuse, vUv).g;
+            float b = texture2D(tDiffuse, vUv - offset * 1.0).b;
+            
+            // Get original alpha
+            float a = texture2D(tDiffuse, vUv).a;
+            
+            gl_FragColor = vec4(r, g, b, a);
+        }
+    `
+};
+
+// ============== GOD RAYS SHADER ==============
+const godRaysShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        tOcclusion: { value: null },
+        uLightPosition: { value: new THREE.Vector2(0.5, 0.5) },
+        uIntensity: { value: 0.75 },
+        uDecay: { value: 0.95 },
+        uDensity: { value: 0.5 },
+        uWeight: { value: 0.4 },
+        uExposure: { value: 0.3 },
+        uSamples: { value: 60 }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D tOcclusion;
+        uniform vec2 uLightPosition;
+        uniform float uIntensity;
+        uniform float uDecay;
+        uniform float uDensity;
+        uniform float uWeight;
+        uniform float uExposure;
+        uniform float uSamples;
+        varying vec2 vUv;
+        
+        void main() {
+            // Original scene color
+            vec4 color = texture2D(tDiffuse, vUv);
+            
+            // Calculate god rays from light position
+            vec2 deltaTexCoord = vUv - uLightPosition;
+            deltaTexCoord *= 1.0 / uSamples * uDensity;
+            
+            vec2 texCoord = vUv;
+            float illuminationDecay = 1.0;
+            vec3 godRayColor = vec3(0.0);
+            
+            // Ray marching from pixel toward light source
+            for (int i = 0; i < 60; i++) {
+                texCoord -= deltaTexCoord;
+                
+                // Clamp to valid UV range
+                vec2 sampleCoord = clamp(texCoord, 0.0, 1.0);
+                
+                // Sample occlusion texture (bright areas emit rays)
+                vec3 sampleColor = texture2D(tOcclusion, sampleCoord).rgb;
+                sampleColor *= illuminationDecay * uWeight;
+                
+                godRayColor += sampleColor;
+                illuminationDecay *= uDecay;
+            }
+            
+            // Tint god rays with cyan/pink
+            vec3 rayTint = mix(vec3(0.55, 0.91, 0.99), vec3(1.0, 0.47, 0.78), 
+                              0.5 + 0.5 * sin(uLightPosition.x * 3.14159));
+            godRayColor *= rayTint;
+            
+            // Combine with original scene
+            vec3 finalColor = color.rgb + godRayColor * uIntensity * uExposure;
+            
+            gl_FragColor = vec4(finalColor, color.a);
+        }
+    `
+};
+
 // ============== POST-PROCESSING (BLOOM) ==============
 function setupPostProcessing() {
     // Check if post-processing classes are available
@@ -440,10 +662,84 @@ function setupPostProcessing() {
         bloomThreshold
     );
     
+    // Create occlusion render target for god rays (lower resolution for performance)
+    const occlusionSize = new THREE.Vector2(
+        window.innerWidth * 0.5,
+        window.innerHeight * 0.5
+    );
+    occlusionRenderTarget = new THREE.WebGLRenderTarget(occlusionSize.x, occlusionSize.y);
+    
+    // God rays pass
+    if (typeof THREE.ShaderPass !== 'undefined') {
+        godRaysPass = new THREE.ShaderPass(godRaysShader);
+        godRaysPass.uniforms.tOcclusion.value = occlusionRenderTarget.texture;
+        godRaysPass.enabled = godRaysEnabled;
+        
+        // Chromatic aberration pass
+        chromaticAberrationPass = new THREE.ShaderPass(chromaticAberrationShader);
+        chromaticAberrationPass.uniforms.uIntensity.value = chromaticAberrationIntensity;
+        chromaticAberrationPass.enabled = chromaticAberrationEnabled;
+    }
+    
     // Composer
     composer = new THREE.EffectComposer(renderer);
     composer.addPass(renderPass);
     composer.addPass(bloomPass);
+    
+    // Add god rays after bloom for better integration
+    if (godRaysPass) {
+        composer.addPass(godRaysPass);
+    }
+    
+    // Chromatic aberration last for that final cinematic touch
+    if (chromaticAberrationPass) {
+        chromaticAberrationPass.renderToScreen = true;
+        composer.addPass(chromaticAberrationPass);
+    }
+}
+
+// Update god rays light position in screen space
+function updateGodRaysLightPosition() {
+    if (!lightSourceMesh || !godRaysPass) return;
+    
+    // Project light source position to screen space
+    const lightPos = lightSourceMesh.position.clone();
+    lightPos.project(camera);
+    
+    // Convert to UV coordinates (0-1 range)
+    const screenX = (lightPos.x + 1) / 2;
+    const screenY = (lightPos.y + 1) / 2;
+    
+    godRaysPass.uniforms.uLightPosition.value.set(screenX, screenY);
+}
+
+// Render occlusion texture for god rays
+function renderOcclusionTexture() {
+    if (!occlusionRenderTarget || !lightSourceMesh || !godRaysEnabled) return;
+    
+    // Store current visibility states
+    const particlesVisible = particles ? particles.visible : false;
+    const linesVisible = linesMesh ? linesMesh.visible : false;
+    const shapesVisible = window.wireframeShapes ? window.wireframeShapes.map(s => s.visible) : [];
+    
+    // Hide everything except light source for occlusion render
+    if (particles) particles.visible = false;
+    if (linesMesh) linesMesh.visible = false;
+    if (window.wireframeShapes) window.wireframeShapes.forEach(s => s.visible = false);
+    
+    // Make light source extra bright for occlusion
+    const originalColor = renderer.getClearColor(new THREE.Color());
+    renderer.setClearColor(0x000000, 1);
+    
+    // Render to occlusion target
+    renderer.setRenderTarget(occlusionRenderTarget);
+    renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+    
+    // Restore visibility
+    if (particles) particles.visible = particlesVisible;
+    if (linesMesh) linesMesh.visible = linesVisible;
+    if (window.wireframeShapes) window.wireframeShapes.forEach((s, i) => s.visible = shapesVisible[i]);
 }
 
 // ============== CONNECTION LINES ==============
@@ -526,23 +822,30 @@ function updateConnectionLines() {
     const maxLines = linesPositions.length / 6;
     const maxDist = linesMaxDistance;
     const maxDistSq = maxDist * maxDist;
-    const attractionRange = 100; // Range where cursor attraction kicks in
-    const cursorConnectRange = 40; // Range where particles connect directly to cursor
-    const maxCursorLines = 8; // Max lines connecting to cursor
+    const attractionRange = 80; // Tighter range
+    const cursorConnectRange = 35; // Range where particles connect directly to cursor
+    const maxCursorLines = 6; // Lines connecting to cursor
+    
+    // Track connections per particle to avoid over-connecting
+    const connectionCount = new Map();
+    const maxConnectionsPerParticle = 4;
     
     // Create lines prioritizing paths toward cursor
     const usedParticles = new Set();
     
-    // FIRST: Draw lines from closest particles directly to cursor
+    // FIRST: Draw lines from closest particles directly to cursor (subtle)
     for (let si = 0; si < Math.min(sortedIndices.length, maxCursorLines) && lineIndex < maxLines; si++) {
         const i = sortedIndices[si];
         const p1 = transformedPositions[i];
         
         if (p1.distToMouse > cursorConnectRange) continue;
         
-        const alpha = 1 - (p1.distToMouse / cursorConnectRange);
+        // Smooth cubic falloff for cleaner fade
+        const t = p1.distToMouse / cursorConnectRange;
+        const alpha = Math.pow(1 - t, 2); // Quadratic falloff
         
         const li = lineIndex * 6;
+        
         // Line from particle to cursor
         linesPos[li] = p1.x;
         linesPos[li + 1] = p1.y;
@@ -551,32 +854,34 @@ function updateConnectionLines() {
         linesPos[li + 4] = mouseWorldY;
         linesPos[li + 5] = mouseWorldZ;
         
-        // Bright white/cyan for cursor lines - make them pop
-        const brightness = 0.8 + alpha * 0.2;
-        linesCol[li] = brightness;
-        linesCol[li + 1] = brightness;
-        linesCol[li + 2] = brightness;
-        linesCol[li + 3] = 0.4 + alpha * 0.6; // Fade to cyan at cursor
-        linesCol[li + 4] = 0.95;
-        linesCol[li + 5] = 1.0;
+        // Soft white/cyan gradient - brighter at particle, softer at cursor
+        linesCol[li] = 0.9 * alpha + 0.1;
+        linesCol[li + 1] = 0.95 * alpha + 0.1;
+        linesCol[li + 2] = 1.0 * alpha + 0.1;
+        linesCol[li + 3] = 0.55 * alpha;
+        linesCol[li + 4] = 0.91 * alpha;
+        linesCol[li + 5] = 0.99 * alpha;
         
         usedParticles.add(i);
+        connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
         lineIndex++;
     }
     
-    // Second pass: Create path lines from particles nearest to mouse
-    for (let si = 0; si < Math.min(sortedIndices.length, 50) && lineIndex < maxLines * 0.6; si++) {
+    // Second pass: Create elegant path lines radiating outward from cursor area
+    for (let si = 0; si < Math.min(sortedIndices.length, 60) && lineIndex < maxLines * 0.6; si++) {
         const i = sortedIndices[si];
         const p1 = transformedPositions[i];
         
         if (p1.distToMouse > attractionRange) continue;
+        if ((connectionCount.get(i) || 0) >= maxConnectionsPerParticle) continue;
         
-        // Find the best neighbor that's further from mouse (creating path away)
+        // Find the best neighbor - prefer ones further from mouse (outward flow)
         let bestJ = -1;
         let bestScore = -Infinity;
         
         for (let j = 0; j < transformedPositions.length; j++) {
             if (i === j) continue;
+            if ((connectionCount.get(j) || 0) >= maxConnectionsPerParticle) continue;
             
             const p2 = transformedPositions[j];
             const dx = p2.x - p1.x;
@@ -584,15 +889,16 @@ function updateConnectionLines() {
             const dz = p2.z - p1.z;
             const distSq = dx * dx + dy * dy + dz * dz;
             
-            if (distSq > maxDistSq || distSq < 1) continue;
+            // Tighter distance threshold for cleaner connections
+            if (distSq > maxDistSq * 0.8 || distSq < 4) continue;
             
-            // Score based on: being further from mouse (creates outward path) but not too far apart
             const dist = Math.sqrt(distSq);
-            const directionScore = (p2.distToMouse - p1.distToMouse) / dist; // Positive = moving away from mouse
+            // Score: prefer outward direction, moderate distance, unused particles
+            const directionScore = (p2.distToMouse - p1.distToMouse) / dist;
             const proximityScore = 1 - (dist / maxDist);
-            const noveltyScore = usedParticles.has(j) ? 0.3 : 1; // Prefer unused particles
+            const noveltyScore = usedParticles.has(j) ? 0.4 : 1;
             
-            const score = (directionScore * linesAttraction + proximityScore * (1 - linesAttraction)) * noveltyScore;
+            const score = (directionScore * linesAttraction * 0.8 + proximityScore * 0.6) * noveltyScore;
             
             if (score > bestScore) {
                 bestScore = score;
@@ -600,20 +906,21 @@ function updateConnectionLines() {
             }
         }
         
-        if (bestJ !== -1) {
+        if (bestJ !== -1 && bestScore > 0.1) { // Only draw high-quality connections
             const p2 = transformedPositions[bestJ];
             const dist = Math.sqrt(
                 Math.pow(p2.x - p1.x, 2) + 
                 Math.pow(p2.y - p1.y, 2) + 
                 Math.pow(p2.z - p1.z, 2)
             );
-            const alpha = 1 - (dist / maxDist);
             
-            // Boost brightness for lines near cursor
-            const mouseProximity = 1 - Math.min(p1.distToMouse / attractionRange, 1);
-            const brightBoost = 1 + mouseProximity * 0.5;
+            // Smooth falloff based on distance
+            const distAlpha = Math.pow(1 - (dist / maxDist), 1.5);
+            // Proximity to cursor boosts visibility
+            const mouseProximity = Math.pow(1 - Math.min(p1.distToMouse / attractionRange, 1), 2);
             
             const li = lineIndex * 6;
+            
             linesPos[li] = p1.x;
             linesPos[li + 1] = p1.y;
             linesPos[li + 2] = p1.z;
@@ -621,28 +928,31 @@ function updateConnectionLines() {
             linesPos[li + 4] = p2.y;
             linesPos[li + 5] = p2.z;
             
-            // Brighter cyan near cursor, with pink tint
-            const r = (0.55 + 0.45 * alpha) * brightBoost;
-            const g = (0.91 + 0.09 * alpha) * brightBoost;
-            const b = (0.99 + 0.01 * alpha) * brightBoost;
-            linesCol[li] = Math.min(1, r + mouseProximity * 0.3);
-            linesCol[li + 1] = Math.min(1, g);
-            linesCol[li + 2] = Math.min(1, b);
-            linesCol[li + 3] = Math.min(1, r);
-            linesCol[li + 4] = Math.min(1, g);
-            linesCol[li + 5] = Math.min(1, b);
+            // Color with alpha baked in - closer to mouse = brighter
+            const brightness = (0.5 + mouseProximity * 0.5) * distAlpha;
+            linesCol[li] = 0.55 * (1 + mouseProximity * 0.4) * brightness + 0.1;
+            linesCol[li + 1] = 0.91 * brightness + 0.1;
+            linesCol[li + 2] = 0.99 * brightness + 0.1;
+            linesCol[li + 3] = 0.55 * brightness * 0.8;
+            linesCol[li + 4] = 0.91 * brightness * 0.8;
+            linesCol[li + 5] = 0.99 * brightness * 0.8;
             
             usedParticles.add(i);
             usedParticles.add(bestJ);
+            connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
+            connectionCount.set(bestJ, (connectionCount.get(bestJ) || 0) + 1);
             lineIndex++;
         }
     }
     
-    // Second pass: Regular connections for remaining lines
+    // Third pass: Ambient background connections (very subtle)
     for (let i = 0; i < visibleParticles.length && lineIndex < maxLines; i++) {
         const p1 = transformedPositions[i];
+        if ((connectionCount.get(i) || 0) >= maxConnectionsPerParticle) continue;
         
         for (let j = i + 1; j < transformedPositions.length && lineIndex < maxLines; j++) {
+            if ((connectionCount.get(j) || 0) >= maxConnectionsPerParticle) continue;
+            
             const p2 = transformedPositions[j];
             
             const dx = p2.x - p1.x;
@@ -650,11 +960,13 @@ function updateConnectionLines() {
             const dz = p2.z - p1.z;
             const distSq = dx * dx + dy * dy + dz * dz;
             
-            if (distSq < maxDistSq && distSq > 1) {
+            // Particles within range get ambient connections
+            if (distSq < maxDistSq * 0.7 && distSq > 4) {
                 const dist = Math.sqrt(distSq);
-                const alpha = 1 - (dist / maxDist);
+                const alpha = Math.pow(1 - (dist / (maxDist * 0.85)), 2);
                 
                 const li = lineIndex * 6;
+                
                 linesPos[li] = p1.x;
                 linesPos[li + 1] = p1.y;
                 linesPos[li + 2] = p1.z;
@@ -662,13 +974,16 @@ function updateConnectionLines() {
                 linesPos[li + 4] = p2.y;
                 linesPos[li + 5] = p2.z;
                 
-                linesCol[li] = 0.55 + 0.45 * alpha;
-                linesCol[li + 1] = 0.91 + 0.09 * alpha;
-                linesCol[li + 2] = 0.99 + 0.01 * alpha;
-                linesCol[li + 3] = 0.55 + 0.45 * alpha;
-                linesCol[li + 4] = 0.91 + 0.09 * alpha;
-                linesCol[li + 5] = 0.99 + 0.01 * alpha;
+                // Ambient cyan with alpha baked into color
+                linesCol[li] = 0.55 * alpha + 0.05;
+                linesCol[li + 1] = 0.85 * alpha + 0.05;
+                linesCol[li + 2] = 0.95 * alpha + 0.05;
+                linesCol[li + 3] = 0.55 * alpha + 0.05;
+                linesCol[li + 4] = 0.85 * alpha + 0.05;
+                linesCol[li + 5] = 0.95 * alpha + 0.05;
                 
+                connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
+                connectionCount.set(j, (connectionCount.get(j) || 0) + 1);
                 lineIndex++;
             }
         }
@@ -834,6 +1149,13 @@ function onWindowResize() {
     if (bloomPass) {
         bloomPass.resolution.set(window.innerWidth, window.innerHeight);
     }
+    // Update occlusion render target for god rays
+    if (occlusionRenderTarget) {
+        occlusionRenderTarget.setSize(
+            window.innerWidth * 0.5,
+            window.innerHeight * 0.5
+        );
+    }
 }
 
 function animate() {
@@ -910,6 +1232,37 @@ function animate() {
                 shape.material.opacity = 0.15;
             }
         });
+    }
+    
+    // Update volumetric light source
+    if (lightSourceMesh) {
+        // Animate the light source - subtle drift in the corner
+        lightSourceMesh.position.x = -80 + Math.sin(time * 0.15) * 10;
+        lightSourceMesh.position.y = targetY + 40 + Math.cos(time * 0.1) * 8;
+        
+        // Update shader uniforms
+        if (lightSourceMesh.material.uniforms) {
+            lightSourceMesh.material.uniforms.uTime.value = time;
+        }
+        // Update halo uniform
+        if (lightSourceMesh.children[0] && lightSourceMesh.children[0].material.uniforms) {
+            lightSourceMesh.children[0].material.uniforms.uTime.value = time;
+        }
+    }
+    
+    // Update god rays
+    if (godRaysEnabled && godRaysPass) {
+        renderOcclusionTexture();
+        updateGodRaysLightPosition();
+        godRaysPass.uniforms.uIntensity.value = godRaysIntensity;
+        godRaysPass.uniforms.uDecay.value = godRaysDecay;
+        godRaysPass.uniforms.uDensity.value = godRaysDensity;
+    }
+    
+    // Update chromatic aberration
+    if (chromaticAberrationPass) {
+        chromaticAberrationPass.uniforms.uTime.value = time;
+        chromaticAberrationPass.uniforms.uIntensity.value = chromaticAberrationIntensity;
     }
     
     // Render with bloom if available, otherwise standard render
@@ -1139,7 +1492,7 @@ window.setLinesMaxDistance = function(dist) {
 };
 window.setLinesOpacity = function(opacity) {
     linesOpacity = opacity;
-    if (linesMesh) linesMesh.material.opacity = opacity;
+    if (linesMesh && linesMesh.material) linesMesh.material.opacity = opacity;
 };
 window.setLinesAttraction = function(attraction) {
     linesAttraction = Math.max(0, Math.min(1, attraction));
@@ -1165,10 +1518,47 @@ window.triggerGlitch = function(intensity = 1) {
 };
 window.getGlitchSettings = () => ({ enabled: glitchEnabled, intensity: glitchIntensity });
 
+// God rays (volumetric light) controls
+window.setGodRaysEnabled = function(enabled) {
+    godRaysEnabled = enabled;
+    if (godRaysPass) godRaysPass.enabled = enabled;
+    if (lightSourceMesh) lightSourceMesh.visible = enabled;
+};
+window.setGodRaysIntensity = function(intensity) {
+    godRaysIntensity = intensity;
+};
+window.setGodRaysDecay = function(decay) {
+    godRaysDecay = decay;
+};
+window.setGodRaysDensity = function(density) {
+    godRaysDensity = density;
+};
+window.getGodRaysSettings = () => ({ 
+    enabled: godRaysEnabled, 
+    intensity: godRaysIntensity,
+    decay: godRaysDecay,
+    density: godRaysDensity
+});
+
+// Chromatic aberration controls
+window.setChromaticAberrationEnabled = function(enabled) {
+    chromaticAberrationEnabled = enabled;
+    if (chromaticAberrationPass) chromaticAberrationPass.enabled = enabled;
+};
+window.setChromaticAberrationIntensity = function(intensity) {
+    chromaticAberrationIntensity = intensity;
+};
+window.getChromaticAberrationSettings = () => ({ 
+    enabled: chromaticAberrationEnabled, 
+    intensity: chromaticAberrationIntensity 
+});
+
 // Reduce particles on mobile
 if (isMobile()) {
     console.log('Mobile detected - using reduced particle count');
     // Disable some effects on mobile for performance
     linesEnabled = false;
     glitchEnabled = false;
+    godRaysEnabled = false;
+    chromaticAberrationEnabled = false;
 }
