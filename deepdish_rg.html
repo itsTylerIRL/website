@@ -448,6 +448,105 @@
         .spec-table td { color: #9aafba; background: rgba(0, 0, 0, 0.2); }
         .spec-table td.highlight { color: #8be9fd; }
         .spec-table tr { transition: all 0.2s ease; }
+        
+        /* Install Banner */
+        .install-banner {
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.08) 0%, rgba(139, 233, 253, 0.08) 100%);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            padding: 0.4rem 0.6rem;
+            margin: 0.3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+        }
+        .install-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(80, 250, 123, 0.15), transparent);
+            animation: install-shimmer 4s infinite;
+        }
+        @keyframes install-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .install-banner:hover {
+            border-color: rgba(80, 250, 123, 0.6);
+            box-shadow: 0 0 20px rgba(80, 250, 123, 0.2);
+        }
+        .install-banner-title {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.55rem;
+            color: #50fa7b;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .install-command {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            padding: 0.35rem 0.6rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: #8be9fd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .install-command:hover {
+            background: rgba(139, 233, 253, 0.12);
+            border-color: rgba(139, 233, 253, 0.5);
+            box-shadow: 0 0 12px rgba(139, 233, 253, 0.25);
+            color: #b4f8c3;
+        }
+        .install-command::after {
+            content: '📋';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.5rem;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+        .install-command:hover::after { opacity: 1; }
+        .install-command.copied { border-color: #50fa7b !important; background: rgba(80, 250, 123, 0.15) !important; }
+        .install-command.copied::after { content: '✓'; opacity: 1; }
+        .install-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.3rem 1.2rem;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.55rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            margin-top: 0.3rem;
+        }
+        .install-link:hover {
+            background: rgba(139, 233, 253, 0.15);
+            border-color: #8be9fd;
+            color: #b4f8c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 233, 253, 0.2);
+        }
+        .install-link svg { width: 12px; height: 12px; fill: currentColor; }
         .spec-table tbody tr:hover, .spec-table tr:hover { background: rgba(139, 233, 253, 0.08) !important; }
         .spec-table tr:hover td { color: #8be9fd; text-shadow: 0 0 5px rgba(139, 233, 253, 0.3); }
         .spec-table tr:hover td.highlight { color: #b4f8c3; text-shadow: 0 0 8px rgba(180, 248, 195, 0.5); }
@@ -937,6 +1036,18 @@
                     <span>← Return to Main Terminal</span>
                     <small>DEEPDISH.HTML // PROJECT INDEX</small>
                 </div>
+            </a>
+        </div>
+
+        <!-- Install Banner -->
+        <div class="install-banner">
+            <div class="install-banner-title">◆ INSTALL ◆</div>
+            <div class="install-command" onclick="copyInstallCommand(this)" title="Click to copy">
+                curl -fsSL https://tylerirl.com/install_rg.sh | bash
+            </div>
+            <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
             </a>
         </div>
 
@@ -1536,6 +1647,16 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
     <script src="router.js?v=1.1"></script>
     <script src="sounds.js?v=1.0"></script>
     <script src="radgotchi.js"></script>
+    
+    <script>
+    function copyInstallCommand(el) {
+        const cmd = 'curl -fsSL https://tylerirl.com/install_rg.sh | bash';
+        navigator.clipboard.writeText(cmd).then(() => {
+            el.classList.add('copied');
+            setTimeout(() => el.classList.remove('copied'), 2000);
+        });
+    }
+    </script>
     
 </body>
 </html>
