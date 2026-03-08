@@ -49,6 +49,446 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap');
         
+        /* === UX REDESIGN: HERO + VALUE PROP === */
+        /* === DEMO IMAGE CARDS === */
+        .demo-card-img {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(139, 233, 253, 0.08);
+            backdrop-filter: blur(4px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.92;
+            filter: saturate(0.85) contrast(1.05);
+        }
+        .demo-card-img:hover {
+            opacity: 1;
+            filter: saturate(1) contrast(1.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 80px rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.5);
+        }
+        .hero-header-img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 0 auto 0.5rem;
+            display: block;
+            border-radius: 6px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 40px rgba(139, 233, 253, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0.95;
+        }
+        .hero-header-img:hover {
+            opacity: 1;
+            transform: scale(1.01);
+            box-shadow: 0 8px 36px rgba(0, 0, 0, 0.4), 0 0 60px rgba(139, 233, 253, 0.18);
+        }
+        .hero-radgotchi-img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto 0.6rem;
+            display: block;
+            border-radius: 12px;
+            border: 2px solid rgba(139, 233, 253, 0.35);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 80px rgba(139, 233, 253, 0.15), inset 0 0 60px rgba(139, 233, 253, 0.03);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.95;
+            filter: saturate(0.9) contrast(1.05);
+        }
+        .hero-radgotchi-img:hover {
+            opacity: 1;
+            filter: saturate(1) contrast(1.1);
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 100px rgba(139, 233, 253, 0.25);
+            border-color: rgba(139, 233, 253, 0.6);
+        }
+        /* Hero Radgotchi - clean style, no container box */
+        .radgotchi-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 0.5rem auto 0.8rem;
+            cursor: pointer;
+            text-align: center;
+        }
+        .radgotchi-hero .radgotchi-face {
+            width: 280px;
+            height: auto;
+            /* CRT cyan filter */
+            filter: invert(1) sepia(1) saturate(6) hue-rotate(160deg) brightness(1.2)
+                    drop-shadow(0 0 8px rgba(139, 233, 253, 0.6))
+                    drop-shadow(0 0 20px rgba(139, 233, 253, 0.4))
+                    drop-shadow(0 0 40px rgba(139, 233, 253, 0.2))
+                    contrast(1.1);
+            transition: all 0.3s ease;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        .radgotchi-hero:hover .radgotchi-face {
+            filter: invert(1) sepia(1) saturate(6) hue-rotate(160deg) brightness(1.3)
+                    drop-shadow(0 0 12px rgba(139, 233, 253, 0.8))
+                    drop-shadow(0 0 30px rgba(139, 233, 253, 0.6))
+                    drop-shadow(0 0 60px rgba(139, 233, 253, 0.3))
+                    contrast(1.15);
+            transform: scale(1.05);
+        }
+        .radgotchi-hero .radgotchi-status {
+            font-size: 0.65rem;
+            margin-top: 0.4rem;
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+        }
+        @media (max-width: 768px) {
+            .radgotchi-hero .radgotchi-face {
+                width: 200px;
+            }
+            .radgotchi-hero .radgotchi-status {
+                font-size: 0.55rem;
+            }
+        }
+        .feature-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.8rem;
+            margin: 0.6rem 0;
+            padding: 0.3rem;
+        }
+        .feature-preview-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(139, 233, 253, 0.18);
+            border-radius: 8px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-preview-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent, #8be9fd), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .feature-preview-card:hover {
+            background: rgba(139, 233, 253, 0.05);
+            border-color: rgba(139, 233, 253, 0.35);
+            transform: translateY(-3px);
+        }
+        .feature-preview-card:hover::before { opacity: 1; }
+        .feature-preview-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 0.35rem;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+        .feature-preview-card:hover img { opacity: 1; }
+        .feature-preview-card h4 {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.62rem;
+            color: #8be9fd;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0 0 0.2rem 0;
+        }
+        .feature-preview-card p {
+            font-size: 0.55rem;
+            color: #6a8a9a;
+            line-height: 1.35;
+            margin: 0;
+        }
+        .feature-preview-card:hover p { color: #9aafba; }
+        .feature-preview-card.pink { --accent: #ff79c6; }
+        .feature-preview-card.pink h4 { color: #ff79c6; }
+        .feature-preview-card.green { --accent: #50fa7b; }
+        .feature-preview-card.green h4 { color: #50fa7b; }
+        .feature-preview-card.yellow { --accent: #f1fa8c; }
+        .feature-preview-card.yellow h4 { color: #f1fa8c; }
+        
+        .hero-value-section {
+            text-align: center;
+            padding: 0.8rem 1rem 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .hero-tagline {
+            font-family: 'Special Elite', monospace;
+            font-size: 1.3rem;
+            color: #8be9fd;
+            letter-spacing: 0.08em;
+            margin: 0 0 0.15rem 0;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(139, 233, 253, 0.4);
+        }
+        .hero-subtitle {
+            color: #ff79c6;
+            font-size: 0.72rem;
+            margin: 0 0 0.4rem 0;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        .hero-benefits {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+        .hero-benefit {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.6rem;
+            color: #9aafba;
+            transition: all 0.3s ease;
+        }
+        .hero-benefit:hover { color: #8be9fd; }
+        .hero-benefit-icon {
+            font-size: 0.8rem;
+            filter: grayscale(0.3);
+        }
+        .hero-benefit:hover .hero-benefit-icon { filter: grayscale(0); }
+        
+        /* === PROMINENT INSTALL CTA === */
+        .install-hero {
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.12) 0%, rgba(139, 233, 253, 0.08) 50%, rgba(80, 250, 123, 0.12) 100%);
+            border: 2px solid rgba(80, 250, 123, 0.4);
+            padding: 0.6rem 0.8rem;
+            margin: 0.5rem 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 25px rgba(80, 250, 123, 0.15), inset 0 0 40px rgba(80, 250, 123, 0.03);
+        }
+        .install-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(80, 250, 123, 0.2), transparent);
+            animation: install-shimmer 3s infinite;
+        }
+        .install-hero-title {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.75rem;
+            color: #50fa7b;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(80, 250, 123, 0.6);
+        }
+        .install-hero-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .install-hero .install-commands-area { flex: 1; max-width: 500px; }
+        .install-hero .install-link {
+            padding: 0.45rem 1.8rem;
+            font-size: 0.65rem;
+            border-width: 2px;
+        }
+        
+        /* === QUICK WHAT IS SECTION === */
+        .what-is-section {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.5rem 0.7rem;
+            margin: 0.4rem 0;
+            text-align: center;
+        }
+        .what-is-question {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: #4a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.25rem;
+        }
+        .what-is-answer {
+            color: #9aafba;
+            font-size: 0.68rem;
+            line-height: 1.4;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .what-is-answer strong { color: #8be9fd; }
+        
+        /* === FEATURE SHOWCASE CARDS === */
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            margin: 0.5rem 0;
+        }
+        .feature-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-accent, #8be9fd), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .feature-card:hover {
+            background: rgba(139, 233, 253, 0.06);
+            border-color: rgba(139, 233, 253, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 233, 253, 0.15);
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+            filter: grayscale(0.2);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover .feature-card-icon { filter: grayscale(0); transform: scale(1.1); }
+        .feature-card-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: #8be9fd;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.15rem;
+        }
+        .feature-card-desc {
+            font-size: 0.55rem;
+            color: #6a8a9a;
+            line-height: 1.3;
+        }
+        .feature-card:hover .feature-card-desc { color: #9aafba; }
+        
+        /* Feature card accent colors */
+        .feature-card.chat { --card-accent: #ff79c6; }
+        .feature-card.chat .feature-card-title { color: #ff79c6; }
+        .feature-card.xp { --card-accent: #f1fa8c; }
+        .feature-card.xp .feature-card-title { color: #f1fa8c; }
+        .feature-card.system { --card-accent: #50fa7b; }
+        .feature-card.system .feature-card-title { color: #50fa7b; }
+        
+        /* === SECTION DIVIDERS === */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.6rem 0 0.4rem;
+            color: #4a7a8a;
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.3), transparent);
+        }
+        
+        /* === COLLAPSIBLE DEEP DIVE SECTIONS === */
+        .deep-dive-toggle {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.3rem 0.5rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            font-size: 0.6rem;
+        }
+        .deep-dive-toggle:hover {
+            background: rgba(139, 233, 253, 0.05);
+            border-color: rgba(139, 233, 253, 0.3);
+        }
+        .deep-dive-toggle-title {
+            color: #8be9fd;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .deep-dive-toggle-hint {
+            color: #4a7a8a;
+            font-size: 0.5rem;
+        }
+        .deep-dive-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .deep-dive-content.expanded { max-height: 2000px; }
+        
+        /* === PLATFORM BADGES === */
+        .platform-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 0.3rem 0;
+            flex-wrap: wrap;
+        }
+        .platform-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.5rem;
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            background: rgba(80, 250, 123, 0.05);
+            font-size: 0.55rem;
+            color: #50fa7b;
+            transition: all 0.3s ease;
+        }
+        .platform-badge:hover {
+            background: rgba(80, 250, 123, 0.15);
+            border-color: rgba(80, 250, 123, 0.6);
+            transform: scale(1.05);
+        }
+        
+        /* === RESPONSIVE UX FIXES === */
+        @media (max-width: 768px) {
+            .hero-tagline { font-size: 1rem; letter-spacing: 0.05em; }
+            .hero-subtitle { font-size: 0.6rem; }
+            .hero-benefits { gap: 0.6rem; }
+            .hero-benefit { font-size: 0.52rem; }
+            .feature-showcase { grid-template-columns: 1fr 1fr; }
+            .install-hero-row { flex-direction: column; gap: 0.5rem; }
+            .install-hero .install-commands-area { max-width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .hero-tagline { font-size: 0.85rem; }
+            .feature-showcase { grid-template-columns: 1fr; }
+            .hero-benefits { flex-direction: column; gap: 0.3rem; }
+            .platform-badges { gap: 0.3rem; }
+            .platform-badge { font-size: 0.48rem; padding: 0.15rem 0.35rem; }
+        }
+        
         .project-writeup {
             max-width: 1100px;
             margin-left: auto;
@@ -835,12 +1275,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(139, 233, 253, 0.3);
-            background: #0a0a0a url('assets/radgotchi_panel.png') center/contain no-repeat;
+            background: transparent;
             min-height: 240px;
             position: relative;
             z-index: 1;
-            padding: 0.25rem;
         }
         .panel-image-cell img {
             max-width: 100%;
@@ -1181,50 +1619,141 @@
         <div class="stamp approved">APPROVED</div>
         <div class="stamp eyes-only">EYES ONLY</div>
 
-        <!-- Classified Header -->
-        <div class="classified-header">
-            <span class="classification-stamp">SI // NOFORN</span>
-            <h1>TOP SECRET // RADGOTCHI</h1>
-        </div>
-
         <!-- Return Nav -->
         <div class="doc-button-container">
             <a href="deepdish.html" class="doc-return-home">
                 <img src="assets/wee.gif" alt="DeepDish Terminal">
                 <div class="doc-return-home-text">
                     <span>← Return to Main Terminal</span>
-                    <small>DEEPDISH.HTML // PROJECT INDEX</small>
+                    <small>DEEPDISH // PROJECT INDEX</small>
                 </div>
             </a>
         </div>
 
-        <!-- Install Banner -->
-        <div class="install-banner">
-            <div class="install-banner-title">◆ INSTALL ◆</div>
-            <div class="install-commands-area">
-                <div class="install-tabs">
-                    <div class="install-tab active" onclick="switchInstallTab('bash', this)">Linux / macOS</div>
-                    <div class="install-tab" onclick="switchInstallTab('ps', this)">Windows</div>
-                </div>
-                <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy">
-                    curl -fsSL https://tylerirl.com/install_rg.sh | bash
-                </div>
-                <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden>
-                    irm https://tylerirl.com/install_rg.ps1 | iex
-                </div>
+        <!-- === NEW HERO VALUE SECTION === -->
+        <div class="hero-value-section">
+            <h1 class="hero-tagline">RadGotchi</h1>
+            <p class="hero-subtitle">Your RadTech Desktop Intelligence Companion</p>
+            
+            <!-- Quick benefit highlights -->
+            <div class="hero-benefits">
+                <div class="hero-benefit"><span class="hero-benefit-icon">💬</span> Chat with Local AI</div>
+                <div class="hero-benefit"><span class="hero-benefit-icon">📈</span> Level Up & Earn XP</div>
+                <div class="hero-benefit"><span class="hero-benefit-icon">🖥️</span> System Health Monitor</div>
+                <div class="hero-benefit"><span class="hero-benefit-icon">🎮</span> 25+ Mood Animations</div>
             </div>
-            <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link">
-                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                GitHub
-            </a>
+
+            <!-- Platform badges -->
+            <div class="platform-badges">
+                <div class="platform-badge">🪟 Windows</div>
+                <div class="platform-badge">🍎 macOS</div>
+                <div class="platform-badge">🐧 Linux</div>
+                <div class="platform-badge" style="border-color: rgba(139, 233, 253, 0.3); color: #8be9fd;">📦 Open Source</div>
+            </div>
         </div>
 
-        <!-- Ticker -->
-        <div class="ticker-wrap">
-            <div class="ticker">◆ RADGOTCHI DESKTOP APP LIVE ◆ ELECTRON FRAMEWORK NOMINAL ◆ 25 CUSTOM RADBRO FACES DEPLOYED ◆ CROSS-PLATFORM: WIN/MAC/LINUX ◆ CPU+MEMORY MONITORING ACTIVE ◆ SYSTEM TRAY INTEGRATION ◆ 10 COLOR THEMES LOADED ◆ BOUNCE MODE AVAILABLE ◆ IDLE DETECTION CYCLING ◆ EYE TRACKING SUBSYSTEM CALIBRATED ◆ GITHUB REPO OPEN SOURCE ◆</div>
+        <!-- Interactive RadGotchi -->
+        <div id="radgotchi-container" class="radgotchi-hero">
+            <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+        </div>
+
+        <!-- === PROMINENT INSTALL CTA === -->
+        <div class="install-hero">
+            <div class="install-hero-title">⚡ Quick Install</div>
+            <div class="install-hero-row">
+                <div class="install-commands-area">
+                    <div class="install-tabs">
+                        <div class="install-tab active" onclick="switchInstallTab('bash', this)">Linux / macOS</div>
+                        <div class="install-tab" onclick="switchInstallTab('ps', this)">Windows</div>
+                    </div>
+                    <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy">
+                        curl -fsSL https://tylerirl.com/install_rg.sh | bash
+                    </div>
+                    <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden>
+                        irm https://tylerirl.com/install_rg.ps1 | iex
+                    </div>
+                </div>
+                <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link">
+                    <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+
+        <!-- === WHAT IS IT SECTION with SHOWCASE === -->
+        <div class="what-is-section">
+            <div class="what-is-question">What is RadGotchi?</div>
+            <p class="what-is-answer">
+                A <strong>desktop companion app</strong> that floats on your screen, <strong>chats with local AI</strong> (Ollama, LM Studio), monitors your system health, and rewards you with a <strong>full progression system</strong> — 50 levels, 13 clearance ranks, and achievement milestones. It's a virtual pet that actually does something useful.
+            </p>
+        </div>
+
+        <!-- === FEATURE SHOWCASE WITH DEMO IMAGES === -->
+        <div class="section-divider">Core Capabilities</div>
+        
+        <!-- Feature cards with emojis -->
+        <div class="feature-showcase">
+            <div class="feature-card chat">
+                <div class="feature-card-icon">💬</div>
+                <div class="feature-card-title">SIGINT Terminal</div>
+                <div class="feature-card-desc">Chat with local LLMs — Ollama, LM Studio, LocalAI. Streaming responses, markdown rendering.</div>
+            </div>
+            <div class="feature-card xp">
+                <div class="feature-card-icon">🎖️</div>
+                <div class="feature-card-title">Progression Engine</div>
+                <div class="feature-card-desc">50 levels, 13 ranks from TRAINEE to PHANTOM. XP from interactions, messages, focus sessions.</div>
+            </div>
+            <div class="feature-card system">
+                <div class="feature-card-icon">📊</div>
+                <div class="feature-card-title">System Telemetry</div>
+                <div class="feature-card-desc">CPU, memory, network monitoring. Visual alerts for high usage. Hung process detection.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🎮</div>
+                <div class="feature-card-title">Movement Protocols</div>
+                <div class="feature-card-desc">STATIC, BOUNCE, FOLLOW, or WANDER. Your companion moves how you want.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">⏱️</div>
+                <div class="feature-card-title">Focus Operations</div>
+                <div class="feature-card-desc">Built-in Pomodoro. 25min work, 5min break. +25 XP per completed session.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🔊</div>
+                <div class="feature-card-title">Audio Subsystem</div>
+                <div class="feature-card-desc">14 procedural sounds via Web Audio API. No external files. Toggle mute anytime.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🏅</div>
+                <div class="feature-card-title">Clearance Ranks</div>
+                <div class="feature-card-desc">13 ranks from TRAINEE → PHANTOM. Unlock milestones at key levels.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🏹</div>
+                <div class="feature-card-title">Asset Maintenance</div>
+                <div class="feature-card-desc">Feed via terminal. Energy via sleep mode. Stats panel tracks all vitals.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon">🧠</div>
+                <div class="feature-card-title">Behavioral Intelligence</div>
+                <div class="feature-card-desc">25+ mood states with smooth transitions. Contextual status in EN/中文.</div>
+            </div>
+        </div>
+
+        <!-- Ticker (moved below fold for info density) -->
+        <div class="ticker-wrap" style="margin-top: 0.5rem;">
+            <div class="ticker">◆ RADGOTCHI v2.0 LIVE ◆ SIGINT TERMINAL ACTIVE ◆ LOCAL LLM INTEGRATION: OLLAMA/LM STUDIO/LOCALAI ◆ 13 CLEARANCE RANKS: TRAINEE→PHANTOM ◆ 50+ LEVEL PROGRESSION ◆ 4 MOVEMENT PROTOCOLS: STATIC/BOUNCE/FOLLOW/WANDER ◆ 14 PROCEDURAL SOUND EFFECTS ◆ POMODORO FOCUS OPS: +25XP ◆ ASSET MAINTENANCE SYSTEM ◆ LOCALIZATION: EN/中文 ◆ CROSS-PLATFORM: WIN/MAC/LINUX ◆ 25+ MOOD STATES ◆ FULL XP PERSISTENCE ◆ GITHUB REPO OPEN SOURCE ◆</div>
+        </div>
+
+        <!-- Classified Header (now thematic accent, not barrier) -->
+        <div class="classified-header" style="margin-top: 0.5rem;">
+            <span class="classification-stamp">SI // NOFORN</span>
+            <h1>FIELD MANUAL // RADGOTCHI</h1>
         </div>
 
         <!-- Combined Panel + Stats Layout -->
+        <div class="section-divider" style="margin-top: 0.8rem;">Project Details</div>
         <div class="panel-stats-grid">
             <!-- RadGotchi Panel Image (left) -->
             <div class="panel-image-cell">
@@ -1237,7 +1766,7 @@
                 <div class="doc-bar-compact">
                     <div class="document-bar-item">
                         <label>Document ID</label>
-                        <span>RG-2025-0742</span>
+                        <span>RG-2026-0308</span>
                     </div>
                     <div class="document-bar-item">
                         <label>Clearance</label>
@@ -1249,42 +1778,43 @@
                     </div>
                     <div class="document-bar-item">
                         <label>Last Update</label>
-                        <span>2025.05.25 // 14:22 UTC</span>
+                        <span>2026.03.08 // 09:47 UTC</span>
                     </div>
                 </div>
                 <!-- Mini Stats Row -->
                 <div class="mini-stats-compact">
-                    <div class="mini-stat"><div class="value">25</div><div class="label">Moods</div></div>
-                    <div class="mini-stat"><div class="value">3</div><div class="label">Platforms</div></div>
-                    <div class="mini-stat"><div class="value">10</div><div class="label">Themes</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #50fa7b;">MIT</div><div class="label">License</div></div>
-                    <div class="mini-stat"><div class="value">6</div><div class="label">Files</div></div>
+                    <div class="mini-stat"><div class="value">25+</div><div class="label">Moods</div></div>
+                    <div class="mini-stat"><div class="value">13</div><div class="label">Ranks</div></div>
+                    <div class="mini-stat"><div class="value">50</div><div class="label">Levels</div></div>
+                    <div class="mini-stat"><div class="value">14</div><div class="label">Sounds</div></div>
+                    <div class="mini-stat"><div class="value">4</div><div class="label">Move Modes</div></div>
                     <div class="mini-stat"><div class="value" style="color: #50fa7b;">▲</div><div class="label">LIVE</div></div>
                 </div>
                 <!-- Document Info Compact -->
                 <div class="doc-info-compact">
-                    <div class="doc-row"><span class="doc-label">PROJECT:</span><span class="doc-value cyan">RADGOTCHI</span></div>
+                    <div class="doc-row"><span class="doc-label">PROJECT:</span><span class="doc-value cyan">RADGOTCHI v2.0</span></div>
                     <div class="doc-row"><span class="doc-label">CLASS:</span><span class="doc-value red">TOP SECRET//SI</span></div>
-                    <div class="doc-row"><span class="doc-label">CODEWORD:</span><span class="doc-value pink">RADBRO-GAMMA</span></div>
+                    <div class="doc-row"><span class="doc-label">SIGINT:</span><span class="doc-value pink">LLM TERMINAL</span></div>
                     <div class="doc-row"><span class="doc-label">PLATFORM:</span><span class="doc-value cyan">Electron + Node.js</span></div>
-                    <div class="doc-row"><span class="doc-label">TARGET:</span><span class="doc-value cyan">Win/Mac/Linux</span></div>
-                    <div class="doc-row"><span class="doc-label">AUTHOR:</span><span class="doc-value cyan">TylerIRL</span></div>
+                    <div class="doc-row"><span class="doc-label">LOCALE:</span><span class="doc-value cyan">EN / 中文</span></div>
+                    <div class="doc-row"><span class="doc-label">AUTHOR:</span><span class="doc-value cyan">TylerIRL + Contributors</span></div>
                 </div>
             </div>
         </div>
 
         <!-- Title -->
-        <h1 style="color: #8be9fd; font-family: 'Special Elite', monospace; font-size: 0.9rem; letter-spacing: 0.15em; margin: 0.15rem 0 0.05rem 0; text-transform: uppercase;">RadGotchi — Desktop Virtual Pet</h1>
-        <p style="color: #ff79c6; font-size: 0.58rem; margin-bottom: 0.2rem; font-style: italic;">Cross-platform desktop companion // Lives on your screen, reacts to your system, keeps you company</p>
+        <h1 style="color: #8be9fd; font-family: 'Special Elite', monospace; font-size: 0.9rem; letter-spacing: 0.15em; margin: 0.5rem 0 0.05rem 0; text-transform: uppercase;">RadGotchi — Desktop Intelligence Asset</h1>
+        <p style="color: #ff79c6; font-size: 0.58rem; margin-bottom: 0.2rem; font-style: italic;">Cross-platform companion // Local LLM chat // Progression system // Reacts to your system // Keeps you company</p>
 
         <!-- Document Layout: Main + Sidebar -->
+        <div class="section-divider" style="margin-top: 0.6rem;">Technical Deep Dive</div>
         <div class="document-layout">
             <div class="main-content-area">
 
                 <!-- §1.0 OVERVIEW -->
                 <h2><span class="section-number">§1.0</span> Project Overview</h2>
                 <p>
-                    RadGotchi is a cross-platform <strong>Electron desktop application</strong> — a virtual pet that floats on your screen, tracks your cursor, monitors system health, and keeps you company. Built with community culture baked in, featuring 25 expressive mood states and full system awareness.
+                    RadGotchi is a cross-platform <strong>Electron desktop application</strong> — a persistent intelligence asset that floats on your screen, interfaces with <strong>local AI</strong> via SIGINT Terminal, tracks your cursor, monitors system health, and rewards operational engagement through a full <strong>progression system</strong> with 50 levels and 13 clearance ranks.
                 </p>
 
                 <div class="info-box" style="margin-top: 0.2rem; border-color: rgba(80, 250, 123, 0.4);">
@@ -1307,55 +1837,104 @@
                         <tr><td>Windows</td><td class="highlight">10/11 (NSIS installer + portable)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
                         <tr><td>macOS</td><td class="highlight">10.15+ Catalina (DMG + ZIP)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
                         <tr><td>Linux</td><td class="highlight">Ubuntu/Debian (AppImage + DEB)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
-                        <tr><td>Sprites</td><td class="highlight">25 Custom RadBro PNGs</td><td style="color:#50fa7b;">LOADED</td></tr>
-                        <tr><td>Languages</td><td class="highlight">JS 88.8% | CSS 10% | HTML 1.2%</td><td style="color:#8be9fd;">—</td></tr>
+                        <tr><td>SIGINT Terminal</td><td class="highlight">Local LLM Chat (Ollama/LM Studio)</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+                        <tr><td>Progression</td><td class="highlight">50 Levels, 13 Ranks, XP System</td><td style="color:#50fa7b;">TRACKING</td></tr>
+                        <tr><td>Audio</td><td class="highlight">14 Procedural Sounds (Web Audio API)</td><td style="color:#50fa7b;">LOADED</td></tr>
+                        <tr><td>Localization</td><td class="highlight">English + 中文 (Chinese)</td><td style="color:#50fa7b;">READY</td></tr>
                         <tr><td>License</td><td class="highlight">MIT (Open Source)</td><td style="color:#50fa7b;">FREE</td></tr>
                     </tbody>
                 </table>
 
-                <p style="font-size: 0.58rem; color: #4a7a8a; margin-top: 0.15rem;">Built with Electron for cross-platform desktop deployment. Custom faces by <a href="https://x.com/giverrod" target="_blank">RiverGod</a>. Contributors: TylerIRL, Claude, Yuriko.</p>
+                <p style="font-size: 0.58rem; color: #4a7a8a; margin-top: 0.15rem;">Built with Electron for cross-platform desktop deployment. Custom faces by <a href="https://x.com/giverrod" target="_blank">RiverGod</a>. Contributors: TylerIRL, 0x19e02, Claude, Yuriko.</p>
 
                 <!-- §3.0 FEATURES -->
                 <h2><span class="section-number">§3.0</span> Core Features</h2>
 
                 <div class="two-col">
                     <div class="info-box">
-                        <div class="info-box-header">🎭 25 Expressive Moods</div>
-                        <p style="margin: 0; font-size: 0.62rem;">Hand-crafted pixel art sprites with smooth transitions. Contextual status messages. Every mood reflects the RadBro aesthetic — from HAPPY to INTENSE, SLEEP to EXCITED.</p>
+                        <div class="info-box-header">💬 SIGINT Terminal</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>Local LLM integration</strong> — Ollama, LM Studio, LocalAI. Streaming decode. Session persistence. Markdown rendering. CRT aesthetic terminal interface.</p>
                     </div>
                     <div class="info-box">
-                        <div class="info-box-header">🖥️ System Awareness</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>CPU monitoring</strong> — Gets intense during heavy loads. <strong>Memory tracking</strong> — Warns you about high usage. <strong>Network detection</strong> — Celebrates connectivity. <strong>Idle detection</strong> — Falls asleep when AFK.</p>
+                        <div class="info-box-header">🎮 Movement Protocols</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>4 modes:</strong> STATIC (fixed), BOUNCE (edge patrol), FOLLOW (cursor tracking), WANDER (autonomous exploration). Switch via tray menu.</p>
                     </div>
                 </div>
 
                 <div class="two-col" style="margin-top: 0.15rem;">
                     <div class="info-box">
-                        <div class="info-box-header">🎮 Interactive Controls</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>Mouse tracking</strong> — Follows cursor with eyes. <strong>Draggable</strong> — Place anywhere on desktop. <strong>Resizable</strong> — Scroll wheel to scale. <strong>10 color themes</strong> via tray. <strong>Bounce mode</strong> — DVD-style screensaver.</p>
+                        <div class="info-box-header">📈 Progression Engine</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>50 levels, 13 ranks</strong> from TRAINEE to PHANTOM. XP from interactions, messages, focus sessions. Milestone achievements. All progress persists.</p>
                     </div>
                     <div class="info-box">
-                        <div class="info-box-header">💫 Polished Details</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>Breathing animation</strong> — Subtle idle pulse. <strong>Always-on-top</strong> — Floats above windows. <strong>System tray</strong> — Minimize + settings. <strong>Transparent background</strong> — Clean floating appearance.</p>
+                        <div class="info-box-header">🔊 Audio Subsystem</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>14 procedural sounds</strong> via Web Audio API. Level ups, clicks, chat events, pomodoro alerts. Volume control. Toggle mute via UI.</p>
+                    </div>
+                </div>
+
+                <div class="two-col" style="margin-top: 0.15rem;">
+                    <div class="info-box">
+                        <div class="info-box-header">🎙️ 25+ Mood States</div>
+                        <p style="margin: 0; font-size: 0.62rem;">Hand-crafted pixel art with smooth transitions. Contextual status messages in EN/中文. Adapts to system events and user engagement.</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">📊 System Telemetry</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>CPU monitoring</strong> (80%/95% thresholds), <strong>memory pressure</strong> (85%), <strong>network status</strong>, <strong>hung process detection</strong>, <strong>idle detection</strong> (2min sleep).</p>
+                    </div>
+                </div>
+
+                <div class="two-col" style="margin-top: 0.15rem;">
+                    <div class="info-box">
+                        <div class="info-box-header">🏹 Asset Maintenance</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>Sustenance system</strong> — Feed via terminal. Energy via sleep mode. XP penalties for neglect. Stats panel tracks all vitals.</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">⏱️ Focus Operations</div>
+                        <p style="margin: 0; font-size: 0.62rem;"><strong>Pomodoro timer</strong> — 25min work, 5min break. Audio alerts. <strong>+25 XP</strong> per completed session. Stay productive, level up.</p>
                     </div>
                 </div>
 
             
 
-                <!-- System Reactions Table -->
-                <h3><span class="section-number">§3.1</span> System Reactions</h3>
+                <!-- DETAILED SPEC DEEP DIVE (collapsible) -->
+                <div class="section-divider">Technical Specifications</div>
+                <div class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span class="deep-dive-toggle-title">📋 Event Response Matrix + Movement Protocols</span>
+                    <span class="deep-dive-toggle-hint">[ click to expand ]</span>
+                </div>
+                <div class="deep-dive-content">
+                    <!-- System Reactions Table -->
+                    <h3><span class="section-number">§3.1</span> Event Response Matrix</h3>
                 <table class="spec-table">
                     <thead>
-                        <tr><th>Condition</th><th>Radgotchi Response</th><th>Mood</th></tr>
+                        <tr><th>Trigger</th><th>Asset Response</th><th>State</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>CPU &gt; 90%</td><td class="highlight">😰 Intense, shaking animation</td><td style="color:#c41e3a;">CRITICAL</td></tr>
-                        <tr><td>Memory &gt; 85%</td><td class="highlight">😟 Concerned expression</td><td style="color:#f1fa8c;">WARNING</td></tr>
-                        <tr><td>Network Lost</td><td class="highlight">😢 Sad, searching for connection</td><td style="color:#c41e3a;">ALERT</td></tr>
-                        <tr><td>User Idle 2min</td><td class="highlight">😴 Falls asleep gradually</td><td style="color:#8be9fd;">SLEEP</td></tr>
-                        <tr><td>User Returns</td><td class="highlight">😆 Excited wakeup animation</td><td style="color:#50fa7b;">EXCITED</td></tr>
+                        <tr><td>CPU &gt; 80%</td><td class="highlight">Alert state, elevated alertness</td><td style="color:#f1fa8c;">WARNING</td></tr>
+                        <tr><td>CPU &gt; 95%</td><td class="highlight">Critical alert, shaking animation</td><td style="color:#c41e3a;">CRITICAL</td></tr>
+                        <tr><td>Memory &gt; 85%</td><td class="highlight">Pressure warning indicator</td><td style="color:#f1fa8c;">WARNING</td></tr>
+                        <tr><td>Network Lost</td><td class="highlight">Connection lost indicator</td><td style="color:#c41e3a;">ALERT</td></tr>
+                        <tr><td>Network Up</td><td class="highlight">Connectivity restored</td><td style="color:#50fa7b;">OK</td></tr>
+                        <tr><td>Process Hung</td><td class="highlight">Process fault detected</td><td style="color:#c41e3a;">ALERT</td></tr>
+                        <tr><td>User Idle 2min</td><td class="highlight">Sleep mode engaged</td><td style="color:#8be9fd;">SLEEP</td></tr>
+                        <tr><td>User Returns</td><td class="highlight">Wake event, excited animation</td><td style="color:#50fa7b;">AWAKE</td></tr>
                     </tbody>
                 </table>
+
+                <!-- Movement Protocols -->
+                <h3><span class="section-number">§3.2</span> Movement Protocols</h3>
+                <table class="spec-table">
+                    <thead>
+                        <tr><th>Mode</th><th>Behavior</th><th>Use Case</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="highlight">STATIC</td><td>Fixed position, manual repositioning only</td><td>Work focus</td></tr>
+                        <tr><td class="highlight">BOUNCE</td><td>Perimeter patrol, edge reflection</td><td>Screensaver</td></tr>
+                        <tr><td class="highlight">FOLLOW</td><td>Cursor tracking, maintains visual contact</td><td>Companion</td></tr>
+                        <tr><td class="highlight">WANDER</td><td>Autonomous exploration with rest intervals</td><td>Ambient</td></tr>
+                    </tbody>
+                </table>
+                </div><!-- end deep-dive-content -->
 
              
 
@@ -1406,12 +1985,16 @@ npm run start:safe
                         <tr><th>File</th><th>Purpose</th><th>Type</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="highlight">main.js</td><td>Electron main process — window creation, tray, IPC</td><td>Main</td></tr>
-                        <tr><td class="highlight">preload.js</td><td>Secure IPC bridge — exposes safe APIs to renderer</td><td>Bridge</td></tr>
-                        <tr><td class="highlight">renderer.js</td><td>UI logic — drag, resize, interactions, system metrics</td><td>Renderer</td></tr>
-                        <tr><td class="highlight">radgotchi.js</td><td>Pet behavior module — mood engine, reactions, API</td><td>Module</td></tr>
-                        <tr><td class="highlight">styles.css</td><td>Animations, themes, glow effects, keyframes</td><td>Styles</td></tr>
-                        <tr><td class="highlight">assets/</td><td>25+ sprite images (PNG)</td><td>Assets</td></tr>
+                        <tr><td class="highlight">main.js</td><td>Electron main process — state management, IPC, tray</td><td>Main</td></tr>
+                        <tr><td class="highlight">preload.js</td><td>Secure IPC bridge for main window</td><td>Bridge</td></tr>
+                        <tr><td class="highlight">preload-chat.js</td><td>Secure IPC bridge for terminal window</td><td>Bridge</td></tr>
+                        <tr><td class="highlight">renderer.js</td><td>UI logic — drag, resize, interactions</td><td>Renderer</td></tr>
+                        <tr><td class="highlight">radgotchi.js</td><td>Pet behavior module — mood engine, reactions</td><td>Module</td></tr>
+                        <tr><td class="highlight">sounds.js</td><td>Audio synthesis — 14 procedural sounds</td><td>Audio</td></tr>
+                        <tr><td class="highlight">index.html</td><td>Primary interface — main pet window</td><td>UI</td></tr>
+                        <tr><td class="highlight">chat.html</td><td>SIGINT Terminal — LLM chat interface</td><td>UI</td></tr>
+                        <tr><td class="highlight">styles.css</td><td>Animations, themes, glow effects</td><td>Styles</td></tr>
+                        <tr><td class="highlight">assets/</td><td>25+ sprite images (gotchi/ folder)</td><td>Assets</td></tr>
                     </tbody>
                 </table>
 
@@ -1483,28 +2066,42 @@ npm run start:safe
                 </div>
 
                 <!-- §4.4 CONTROLS -->
-                <h3><span class="section-number">§4.4</span> Controls &amp; Interactions</h3>
+                <h3><span class="section-number">§4.4</span> Controls &amp; XP Rewards</h3>
 
                 <table class="spec-table">
                     <thead>
-                        <tr><th>Action</th><th>Effect</th><th>Detail</th></tr>
+                        <tr><th>Action</th><th>Effect</th><th>XP Reward</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="highlight">Drag</td><td>Move Radgotchi around your screen</td><td>Click + hold</td></tr>
-                        <tr><td class="highlight">Scroll Wheel</td><td>Resize (scale up/down)</td><td>Anywhere on window</td></tr>
-                        <tr><td class="highlight">Click</td><td>Pet interaction with milestone rewards</td><td>10, 50, 100 clicks</td></tr>
-                        <tr><td class="highlight">Double-click</td><td>Spin animation</td><td>360° rotation</td></tr>
-                        <tr><td class="highlight">Right-click Tray</td><td>Access menu and settings</td><td>System tray icon</td></tr>
+                        <tr><td class="highlight">Drag</td><td>Reposition asset on screen</td><td style="color:#8be9fd;">—</td></tr>
+                        <tr><td class="highlight">Scroll Wheel</td><td>Scale adjustment (resize)</td><td style="color:#8be9fd;">—</td></tr>
+                        <tr><td class="highlight">Click</td><td>Interaction event (3s cooldown)</td><td style="color:#50fa7b;">+2 XP</td></tr>
+                        <tr><td class="highlight">Passive</td><td>Every 30 seconds of uptime</td><td style="color:#50fa7b;">+1 XP</td></tr>
+                        <tr><td class="highlight">Send Message</td><td>Chat transmission to LLM</td><td style="color:#50fa7b;">+5 XP</td></tr>
+                        <tr><td class="highlight">Receive Message</td><td>LLM response received</td><td style="color:#50fa7b;">+3 XP</td></tr>
+                        <tr><td class="highlight">Focus Complete</td><td>Pomodoro session done (25min)</td><td style="color:#50fa7b;">+25 XP</td></tr>
+                        <tr><td class="highlight">Alert Response</td><td>Attention event triggered</td><td style="color:#50fa7b;">+15 XP</td></tr>
+                        <tr><td class="highlight">Right-click Tray</td><td>Access Command Center menu</td><td style="color:#8be9fd;">—</td></tr>
                     </tbody>
                 </table>
 
-                <h3><span class="section-number">§4.5</span> Tray Menu Options</h3>
-                <div class="four-col" style="margin-top: 0.1rem;">
-                    <div class="mini-stat"><div class="value">🔄</div><div class="label">Bounce Mode</div></div>
-                    <div class="mini-stat"><div class="value">🎨</div><div class="label">Color</div></div>
-                    <div class="mini-stat"><div class="value">📌</div><div class="label">Always Top</div></div>
-                    <div class="mini-stat"><div class="value">🔄</div><div class="label">Reset Pos</div></div>
-                </div>
+                <h3><span class="section-number">§4.5</span> Command Center (Tray Menu)</h3>
+                <table class="spec-table">
+                    <thead>
+                        <tr><th>Option</th><th>Function</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="highlight">Always on Top</td><td>Window priority toggle</td></tr>
+                        <tr><td class="highlight">Reset Position</td><td>Return to origin coordinates</td></tr>
+                        <tr><td class="highlight">Movement</td><td>Protocol selection (STATIC/BOUNCE/FOLLOW/WANDER)</td></tr>
+                        <tr><td class="highlight">Color</td><td>Visual theme configuration (10 themes)</td></tr>
+                        <tr><td class="highlight">Language</td><td>Localization toggle (EN/中文)</td></tr>
+                        <tr><td class="highlight">Chat Settings</td><td>LLM endpoint configuration</td></tr>
+                        <tr><td class="highlight">Dev Tools</td><td>Debug interface</td></tr>
+                        <tr><td class="highlight">Update</td><td>Pull latest from repository</td></tr>
+                        <tr><td class="highlight">Quit</td><td>Terminate session</td></tr>
+                    </tbody>
+                </table>
 
                 <!-- §5.0 BUILDING -->
                 <h2><span class="section-number">§5.0</span> Building Distributables</h2>
@@ -1537,30 +2134,82 @@ npm run build:portable
                     </tbody>
                 </table>
 
-                <!-- §6.0 API -->
-                <h2><span class="section-number">§6.0</span> Programmatic API</h2>
-                <p>The global <code>RG</code> module provides full programmatic control:</p>
+                <!-- §5.3 SIGINT TERMINAL -->
+                <h2><span class="section-number">§5.3</span> SIGINT Terminal (LLM Chat)</h2>
+                <p>Integrated communication interface with local language model support. All traffic stays local unless you configure external endpoints.</p>
 
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Method / Property</th><th>Description</th><th>Return</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">RG.setMood(mood, opts)</td><td>Set mood with <code>{ anim, duration, status }</code></td><td>void</td></tr>
-                        <tr><td class="highlight">RG.react(severity, msg)</td><td>Trigger reaction: 'critical' | 'warning' | 'ok'</td><td>void</td></tr>
-                        <tr><td class="highlight">RG.assessHealth(metrics)</td><td>Feed system metrics: { cpu, memory }</td><td>void</td></tr>
-                        <tr><td class="highlight">RG.mood</td><td>Read current mood state string</td><td>string</td></tr>
-                        <tr><td class="highlight">RG.petCount</td><td>Read total click interaction count</td><td>number</td></tr>
-                    </tbody>
-                </table>
+                <div class="two-col">
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: #ff79c6;">📶 Compatible Endpoints</div>
+                        <table class="spec-table" style="margin: 0;">
+                            <tbody>
+                                <tr><td class="highlight">Ollama</td><td>localhost:11434/v1/chat/completions</td></tr>
+                                <tr><td class="highlight">LM Studio</td><td>localhost:1234/v1/chat/completions</td></tr>
+                                <tr><td class="highlight">LocalAI</td><td>Custom configuration</td></tr>
+                                <tr><td class="highlight">OpenAI</td><td>Any conformant endpoint</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: #50fa7b;">💻 Terminal Features</div>
+                        <ul style="margin: 0; padding-left: 1rem; font-size: 0.58rem;">
+                            <li>CRT scanlines, grid overlay, retro aesthetic</li>
+                            <li>Real-time streaming token decode</li>
+                            <li>Session history persistence</li>
+                            <li>Activity log (XP, milestones, system)</li>
+                            <li>Markdown with code block copy</li>
+                            <li>Movement, theme, language controls</li>
+                            <li>Stats panel, focus timer, MUTE toggle</li>
+                        </ul>
+                    </div>
+                </div>
 
-                <div class="code-block" style="margin-top: 0.15rem;">
+                <p style="margin-top: 0.15rem; font-size: 0.58rem;"><strong>Configuration:</strong> Command Center → Chat Settings → Enable, set endpoint URL, model ID (llama2, mistral, etc.), optional system prompt.</p>
+
+                <!-- §6.0 CLEARANCE PROGRESSION -->
+                <h2><span class="section-number">§6.0</span> Clearance Progression</h2>
+                <p>Operational engagement generates XP. Sustained activity advances clearance level through 50 levels and 13 ranks.</p>
+
+                <div class="two-col">
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: #f1fa8c;">🎖️ Clearance Ranks (13 Tiers)</div>
+                        <table class="spec-table" style="margin: 0; font-size: 0.55rem;">
+                            <tbody>
+                                <tr><td>TRAINEE</td><td>Lv 1</td><td class="highlight">CONTROLLER</td><td>Lv 17</td></tr>
+                                <tr><td>ANALYST</td><td>Lv 3</td><td class="highlight">DIRECTOR</td><td>Lv 20</td></tr>
+                                <tr><td>OPERATIVE</td><td>Lv 5</td><td class="highlight">EXECUTIVE</td><td>Lv 24</td></tr>
+                                <tr><td>AGENT</td><td>Lv 8</td><td class="highlight">OVERSEER</td><td>Lv 28</td></tr>
+                                <tr><td>SPECIALIST</td><td>Lv 11</td><td class="highlight">SENTINEL</td><td>Lv 33</td></tr>
+                                <tr><td>HANDLER</td><td>Lv 14</td><td class="highlight">ARCHITECT</td><td>Lv 40</td></tr>
+                                <tr><td colspan="2"></td><td class="highlight" style="color: #ff79c6;">PHANTOM</td><td>Lv 50</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header" style="color: #50fa7b;">🏆 Milestone Objectives</div>
+                        <table class="spec-table" style="margin: 0; font-size: 0.55rem;">
+                            <tbody>
+                                <tr><td>Interactions</td><td class="highlight">10→50→100→500→1K→5K</td></tr>
+                                <tr><td>Transmissions</td><td class="highlight">5→25→50→100→250→500</td></tr>
+                                <tr><td>Sessions</td><td class="highlight">5→10→25→50→100</td></tr>
+                                <tr><td>Total XP</td><td class="highlight">100→500→1K→5K→10K→50K</td></tr>
+                                <tr><td>Uptime</td><td class="highlight">1h→4h→12h→24h→48h→72h</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <p style="margin-top: 0.15rem; font-size: 0.58rem;"><strong>Persistence:</strong> All XP, levels, milestones, and chat history stored in user data directory (JSON). Survives updates.</p>
+
+                <!-- §7.0 API -->
+                <h2><span class="section-number">§7.0</span> Programmatic API</h2>
+
+                <h3><span class="section-number">§7.1</span> RG Module</h3>
+                <p>The global <code>RG</code> object for asset manipulation:</p>
+
+                <div class="code-block" style="margin-top: 0.1rem;">
 <span class="comment">// Set mood with options</span>
-RG.setMood(<span class="string">'happy'</span>, { 
-  duration: <span class="keyword">3000</span>,    <span class="comment">// Auto-reset after 3s</span>
-  anim: <span class="string">'bounce'</span>,    <span class="comment">// Animation class</span>
-  status: <span class="string">'Custom!'</span>  <span class="comment">// Status text</span>
-});
+RG.setMood(<span class="string">'happy'</span>, { duration: <span class="keyword">3000</span>, anim: <span class="string">'bounce'</span>, status: <span class="string">'Custom!'</span> });
 
 <span class="comment">// React to severity levels</span>
 RG.react(<span class="string">'critical'</span>, <span class="string">'Alert!'</span>);
@@ -1568,21 +2217,35 @@ RG.react(<span class="string">'warning'</span>, <span class="string">'Heads up'<
 RG.react(<span class="string">'ok'</span>, <span class="string">'All good'</span>);
 
 <span class="comment">// Feed system metrics</span>
-RG.assessHealth({
-  cpu: { usage_total: <span class="keyword">45</span> },
-  memory: { percent: <span class="keyword">60</span> }
-});
+RG.assessHealth({ cpu: { usage_total: <span class="keyword">45</span> }, memory: { percent: <span class="keyword">60</span> } });
 
 <span class="comment">// Read state</span>
-console.log(RG.mood);      <span class="comment">// → "happy"</span>
-console.log(RG.petCount);  <span class="comment">// → 42</span>
+console.log(RG.mood, RG.petCount);
                 </div>
 
-                <!-- §7.0 CUSTOMIZATION -->
-                <h2><span class="section-number">§7.0</span> Customization</h2>
+                <h3><span class="section-number">§7.2</span> SoundSystem API</h3>
+                <p>Procedural audio control via Web Audio API:</p>
 
-                <h3><span class="section-number">§7.1</span> Color Themes (10 Presets)</h3>
-                <p>Right-click tray → Color. Available themes:</p>
+                <div class="code-block" style="margin-top: 0.1rem;">
+<span class="comment">// Playback</span>
+SoundSystem.play(<span class="string">'levelUp'</span>);
+SoundSystem.play(<span class="string">'click'</span>);
+SoundSystem.play(<span class="string">'messageReceive'</span>);
+
+<span class="comment">// Available: chatOpen, chatClose, messageSend, messageReceive, click,</span>
+<span class="comment">// sleepStart, sleepEnd, attentionStart, attentionEnd, levelUp,</span>
+<span class="comment">// milestone, pomodoroStart, pomodoroComplete, xpGain, xpLoss</span>
+
+<span class="comment">// Enable/disable & volume</span>
+SoundSystem.setEnabled(<span class="keyword">true</span>);
+SoundSystem.setVolume(<span class="keyword">0.5</span>);  <span class="comment">// 0.0 - 1.0</span>
+                </div>
+
+                <!-- §8.0 CUSTOMIZATION -->
+                <h2><span class="section-number">§8.0</span> Customization</h2>
+
+                <h3><span class="section-number">§8.1</span> Visual Themes (10 Presets)</h3>
+                <p>Right-click tray → Color, or use terminal dropdown:</p>
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.15rem; margin: 0.1rem 0;">
                     <div class="mini-stat"><div class="value" style="color: #ff3344;">●</div><div class="label">Red</div></div>
                     <div class="mini-stat"><div class="value" style="color: #8be9fd;">●</div><div class="label">Cyan</div></div>
@@ -1590,13 +2253,23 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
                     <div class="mini-stat"><div class="value" style="color: #bd93f9;">●</div><div class="label">Purple</div></div>
                     <div class="mini-stat"><div class="value" style="color: #ff79c6;">●</div><div class="label">Pink</div></div>
                     <div class="mini-stat"><div class="value" style="color: #ffb86c;">●</div><div class="label">Orange</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #f1fa8c;">●</div><div class="label">Gold</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #ff6bcb;">●</div><div class="label">Hot Pink</div></div>
+                    <div class="mini-stat"><div class="value" style="color: #f1fa8c;">●</div><div class="label">Yellow</div></div>
+                    <div class="mini-stat"><div class="value" style="color: #a8ff60;">●</div><div class="label">Lime</div></div>
                     <div class="mini-stat"><div class="value" style="color: #6272a4;">●</div><div class="label">Blue</div></div>
                     <div class="mini-stat"><div class="value" style="color: #f8f8f2;">●</div><div class="label">White</div></div>
                 </div>
 
-                <h3><span class="section-number">§7.2</span> CSS Variables</h3>
+                <h3><span class="section-number">§8.2</span> Localization</h3>
+                <p>Switch instantly via tray or terminal. All interface elements localize automatically:</p>
+                <div class="two-col" style="margin-top: 0.1rem;">
+                    <div class="mini-stat"><div class="value">🇺🇸</div><div class="label">English (Default)</div></div>
+                    <div class="mini-stat"><div class="value">🇨🇳</div><div class="label">中文 (Chinese)</div></div>
+                </div>
+
+                <h3><span class="section-number">§8.3</span> Sleepy Mode</h3>
+                <p>Low-power rest state via terminal toggle. Reduces visual activity, prevents energy loss.</p>
+
+                <h3><span class="section-number">§8.4</span> CSS Variables</h3>
                 <p>For deeper customization, edit <code>styles.css</code>:</p>
                 <div class="code-block">
 :root {
@@ -1606,18 +2279,27 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
 }
                 </div>
 
-                <p style="margin-top: 0.15rem;">Edit <code>statusText</code> object in <code>radgotchi.js</code> for custom mood messages.</p>
+                <h3><span class="section-number">§8.5</span> Persistent Data</h3>
+                <p>Stored in user data directory (survives updates):</p>
+                <table class="spec-table" style="margin-top: 0.1rem;">
+                    <tbody>
+                        <tr><td class="highlight">llm-config.json</td><td>LLM endpoint configuration</td></tr>
+                        <tr><td class="highlight">xp-data.json</td><td>Progression state, streaks</td></tr>
+                        <tr><td class="highlight">chat-data.json</td><td>Message history</td></tr>
+                        <tr><td class="highlight">milestones.json</td><td>Achievement records</td></tr>
+                    </tbody>
+                </table>
 
                 <!-- Document Footer -->
                 <div class="document-footer">
                     <p>DOCUMENT CLASSIFICATION: <span style="color: #c41e3a; font-weight: bold;">TOP SECRET // SI // NOFORN</span></p>
                     <p>Dissemination and extraction of information from this document is controlled by originator.</p>
-                    <p style="margin-top: 0.2rem;">"Lives on your screen, reacts to your system, keeps you company."</p>
+                    <p style="margin-top: 0.2rem;">"Desktop Intelligence Asset — Monitors your system, interfaces with local AI, rewards operational engagement."</p>
                 </div>
 
                 <div class="footnote">
-                    <p>† RadGotchi faces developed with RiverGod (<a href="https://x.com/giverrod" target="_blank">@giverrod</a>). Desktop app by TylerIRL, Claude, Yuriko. MIT License — <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank">GitHub</a></p>
-                    <p>‡ Clone the repo, build, customize. Contributions welcome. Issues → <a href="https://github.com/itsTylerIRL/radgotchi/issues" target="_blank">github.com/itsTylerIRL/radgotchi/issues</a></p>
+                    <p>† RadGotchi faces by RiverGod (<a href="https://x.com/giverrod" target="_blank">@giverrod</a>). Desktop app by TylerIRL, 0x19e02, Claude, Yuriko. MIT License — <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank">GitHub</a></p>
+                    <p>‡ Inspired by <a href="https://radbro.xyz" target="_blank">Radbro Webring</a> and <a href="https://remilio.org" target="_blank">Remilio</a> (Remilia Corporation). Clone, build, customize. Contributions welcome.</p>
                 </div>
 
             </div><!-- /main-content-area -->
@@ -1627,27 +2309,50 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
 
                 <!-- App Status -->
                 <div class="sidebar-panel">
-                    <div class="sidebar-panel-header green">App Status</div>
+                    <div class="sidebar-panel-header green">Subsystems</div>
                     <div style="display: flex; flex-direction: column; gap: 0.2rem;">
                         <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">main.js</span><span style="color: #50fa7b;">● RUNNING</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">renderer.js</span><span style="color: #50fa7b;">● ACTIVE</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">sprite atlas</span><span style="color: #50fa7b;">● 25/25</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">mood engine</span><span style="color: #50fa7b;">● RUNNING</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">eye tracker</span><span style="color: #50fa7b;">● ACTIVE</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">system tray</span><span style="color: #8be9fd;">● READY</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">SIGINT terminal</span><span style="color: #50fa7b;">● ACTIVE</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">progression</span><span style="color: #50fa7b;">● 50 LVL</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">audio engine</span><span style="color: #50fa7b;">● 14 SFX</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">mood states</span><span style="color: #50fa7b;">● 25+</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">localization</span><span style="color: #8be9fd;">● EN/中文</span></div>
                     </div>
                 </div>
 
-                <!-- Platform Support -->
+                <!-- Clearance Ranks -->
                 <div class="sidebar-panel">
-                    <div class="sidebar-panel-header">Platform Support</div>
+                    <div class="sidebar-panel-header" style="color: #f1fa8c;">Clearance Ranks</div>
+                    <div style="display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.5rem;">
+                        <span style="color: #4a7a8a;">TRAINEE → ANALYST → OPERATIVE</span>
+                        <span style="color: #8be9fd;">AGENT → SPECIALIST → HANDLER</span>
+                        <span style="color: #50fa7b;">CONTROLLER → DIRECTOR → EXECUTIVE</span>
+                        <span style="color: #ff79c6;">OVERSEER → SENTINEL → ARCHITECT</span>
+                        <span style="color: #c41e3a; font-weight: bold;">→ PHANTOM (Lv 50)</span>
+                    </div>
+                </div>
+
+                <!-- LLM Endpoints -->
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header cyan">LLM Endpoints</div>
                     <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Windows</span><span style="color: #50fa7b;">10/11 ✓</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">macOS</span><span style="color: #50fa7b;">10.15+ ✓</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Linux</span><span style="color: #50fa7b;">DEB/App ✓</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Node.js</span><span style="color: #8be9fd;">v18+</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Electron</span><span style="color: #8be9fd;">Latest</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">License</span><span style="color: #50fa7b;">MIT</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Ollama</span><span style="color: #50fa7b;">:11434 ✓</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LM Studio</span><span style="color: #50fa7b;">:1234 ✓</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LocalAI</span><span style="color: #8be9fd;">Custom</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">OpenAI-compat</span><span style="color: #8be9fd;">Any</span></div>
+                    </div>
+                </div>
+
+                <!-- Movement Protocols -->
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">Movement Protocols</div>
+                    <div class="network-grid">
+                        <div class="network-node"><div class="node-id">STATIC</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">BOUNCE</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">FOLLOW</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">WANDER</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">FOCUS</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">SLEEP</div><div class="node-status up">●</div></div>
                     </div>
                 </div>
 
@@ -1662,68 +2367,16 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
                     </div>
                 </div>
 
-                <!-- System Monitors -->
+                <!-- XP Sources -->
                 <div class="sidebar-panel">
-                    <div class="sidebar-panel-header">System Monitors</div>
-                    <div class="network-grid">
-                        <div class="network-node"><div class="node-id">CPU</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">MEM</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">NET</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">IDLE</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">TRAY</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">IPC</div><div class="node-status up">●</div></div>
-                    </div>
-                </div>
-
-                <!-- Tech Stack -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header cyan">Tech Stack</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.55rem;">
-                        <span style="color: #8be9fd;">Electron</span>
-                        <span style="color: #8be9fd;">Node.js 18+</span>
-                        <span style="color: #8be9fd;">Chromium</span>
-                        <span style="color: #8be9fd;">JavaScript (88.8%)</span>
-                        <span style="color: #8be9fd;">CSS3 Animations</span>
-                        <span style="color: #8be9fd;">IPC Bridge</span>
-                    </div>
-                </div>
-
-                <!-- Activity Log -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header">Startup Log</div>
-                    <div class="incident-log">
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:01</div>
-                            <div class="incident-msg ok">Electron main started</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:02</div>
-                            <div class="incident-msg ok">25 sprites loaded</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:03</div>
-                            <div class="incident-msg">IPC bridge active</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:04</div>
-                            <div class="incident-msg ok">System tray ready</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:05</div>
-                            <div class="incident-msg ok">CPU monitor online</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:06</div>
-                            <div class="incident-msg ok">Memory monitor online</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:07</div>
-                            <div class="incident-msg">Eye tracker calibrated</div>
-                        </div>
-                        <div class="incident-entry">
-                            <div class="incident-time">00:00:08</div>
-                            <div class="incident-msg ok">READY <span class="blink">▮</span></div>
-                        </div>
+                    <div class="sidebar-panel-header" style="color: #50fa7b;">XP Sources</div>
+                    <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Passive</span><span style="color: #50fa7b;">+1 /30s</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Click</span><span style="color: #50fa7b;">+2 XP</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Send Msg</span><span style="color: #50fa7b;">+5 XP</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Receive Msg</span><span style="color: #50fa7b;">+3 XP</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Pomodoro</span><span style="color: #50fa7b;">+25 XP</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Alert</span><span style="color: #50fa7b;">+15 XP</span></div>
                     </div>
                 </div>
 
@@ -1732,9 +2385,23 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
                     <div class="sidebar-panel-header cyan">Contributors</div>
                     <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.55rem;">
                         <a href="https://github.com/itsTylerIRL" target="_blank" style="color: #8be9fd; text-decoration: none;">@itsTylerIRL</a>
+                        <a href="https://github.com/0x19e02" target="_blank" style="color: #8be9fd; text-decoration: none;">@0x19e02</a>
                         <a href="https://github.com/claude" target="_blank" style="color: #8be9fd; text-decoration: none;">@claude</a>
                         <a href="https://github.com/yurikoeth" target="_blank" style="color: #8be9fd; text-decoration: none;">@yurikoeth</a>
                         <a href="https://x.com/giverrod" target="_blank" style="color: #ff79c6; text-decoration: none;">@giverrod (faces)</a>
+                    </div>
+                </div>
+
+                <!-- System Monitors -->
+                <div class="sidebar-panel">
+                    <div class="sidebar-panel-header">System Monitors</div>
+                    <div class="network-grid">
+                        <div class="network-node"><div class="node-id">CPU</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">MEM</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">NET</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">PROC</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">IDLE</div><div class="node-status up">●</div></div>
+                        <div class="network-node"><div class="node-id">XP</div><div class="node-status up">●</div></div>
                     </div>
                 </div>
 
@@ -1747,10 +2414,6 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
     <footer>
         <div class="container">
             <center>
-            <div id="radgotchi-container">
-                <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            </div>
             
             <!-- Particle Count Slider -->
             <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
@@ -1820,6 +2483,20 @@ console.log(RG.petCount);  <span class="comment">// → 42</span>
         tabEl.classList.add('active');
         document.getElementById('install-bash').hidden = (tab !== 'bash');
         document.getElementById('install-ps').hidden = (tab !== 'ps');
+    }
+    function toggleDeepDive(toggleEl) {
+        const content = toggleEl.nextElementSibling;
+        const hint = toggleEl.querySelector('.deep-dive-toggle-hint');
+        const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+        if (isOpen) {
+            content.style.maxHeight = '0px';
+            hint.textContent = '[ click to expand ]';
+            toggleEl.classList.remove('active');
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            hint.textContent = '[ click to collapse ]';
+            toggleEl.classList.add('active');
+        }
     }
     </script>
     
