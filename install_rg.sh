@@ -133,20 +133,119 @@ npm install
 info "Installation complete!"
 echo ""
 
-# Ask if user wants to run it now (only if running interactively)
+# --- Desktop shortcut creation ---
+create_shortcut() {
+    local os
+    os="$(uname -s)"
+    case "$os" in
+        Linux*)
+            local desktop_file="$HOME/.local/share/applications/radgotchi.desktop"
+            mkdir -p "$HOME/.local/share/applications"
+            cat > "$desktop_file" <<DESK
+[Desktop Entry]
+Name=Radgotchi
+Comment=Launch Radgotchi
+Exec=bash -c 'cd $INSTALL_DIR && npm start'
+Terminal=true
+Type=Application
+Categories=Game;
+DESK
+            chmod +x "$desktop_file"
+            # Also copy to ~/Desktop if it exists
+            if [ -d "$HOME/Desktop" ]; then
+                cp "$desktop_file" "$HOME/Desktop/radgotchi.desktop"
+                chmod +x "$HOME/Desktop/radgotchi.desktop"
+                info "Desktop shortcut created on ~/Desktop"
+            fi
+            info "App menu entry created at $desktop_file"
+            ;;
+        Darwin*)
+            local app_dir="$HOME/Desktop/Radgotchi.app/Contents/MacOS"
+            mkdir -p "$app_dir"
+            cat > "$app_dir/radgotchi" <<SCRIPT
+#!/bin/bash
+cd "$INSTALL_DIR" && npm start
+SCRIPT
+            chmod +x "$app_dir/radgotchi"
+            cat > "$HOME/Desktop/Radgotchi.app/Contents/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>radgotchi</string>
+    <key>CFBundleName</key>
+    <string>Radgotchi</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+</dict>
+</plist>
+PLIST
+            info "App shortcut created at ~/Desktop/Radgotchi.app"
+            ;;
+        MINGW*|MSYS*|CYGWIN*)
+            local shortcut_vbs
+            shortcut_vbs=$(mktemp /tmp/radgotchi_shortcut.XXXXXX.vbs)
+            cat > "$shortcut_vbs" <<VBS
+Set WshShell = CreateObject("WScript.Shell")
+Set lnk = WshShell.CreateShortcut(WshShell.SpecialFolders("Desktop") & "\Radgotchi.lnk")
+lnk.TargetPath = "cmd.exe"
+lnk.Arguments = "/c cd /d $INSTALL_DIR && npm start"
+lnk.WorkingDirectory = "$INSTALL_DIR"
+lnk.Description = "Launch Radgotchi"
+lnk.Save
+VBS
+            if command -v cscript.exe >/dev/null 2>&1; then
+                cscript.exe //Nologo "$shortcut_vbs"
+                rm -f "$shortcut_vbs"
+                info "Desktop shortcut created"
+            else
+                rm -f "$shortcut_vbs"
+                warn "Could not create Windows shortcut automatically."
+            fi
+            ;;
+        *)
+            warn "Unsupported OS for desktop shortcut. You can run manually:"
+            echo "  cd $INSTALL_DIR && npm start"
+            ;;
+    esac
+}
+
+# Always present the menu (interactive or piped)
 if [ -t 0 ]; then
-    read -p "Would you like to run radgotchi now? (y/n) " -n 1 -r
+    echo "What would you like to do?"
+    echo "  1) Create desktop shortcut & run now"
+    echo "  2) Create desktop shortcut only"
+    echo "  3) Run now only"
+    echo "  4) Exit"
+    read -p "Choose [1-4]: " -n 1 -r
     echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        info "Starting radgotchi..."
-        npm start
-    else
-        echo "To run radgotchi later:"
-        echo "  cd $INSTALL_DIR && npm start"
-        echo ""
-        echo "Or create an alias:"
-        echo "  alias radgotchi='cd $INSTALL_DIR && npm start'"
-    fi
+    case "$REPLY" in
+        1)
+            create_shortcut
+            echo ""
+            info "Starting radgotchi..."
+            npm start
+            ;;
+        2)
+            create_shortcut
+            echo ""
+            echo "To run radgotchi later:"
+            echo "  cd $INSTALL_DIR && npm start"
+            ;;
+        3)
+            info "Starting radgotchi..."
+            npm start
+            ;;
+        *)
+            echo "To run radgotchi later:"
+            echo "  cd $INSTALL_DIR && npm start"
+            echo ""
+            echo "Or create an alias:"
+            echo "  alias radgotchi='cd $INSTALL_DIR && npm start'"
+            ;;
+    esac
 else
     echo "To run radgotchi:"
     echo "  cd $INSTALL_DIR && npm start"

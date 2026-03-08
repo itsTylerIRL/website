@@ -69,15 +69,62 @@ npm install
 Info "Installation complete!"
 Write-Host ""
 
-# Ask if user wants to run it now
-$reply = Read-Host "Would you like to run radgotchi now? (y/n)"
-if ($reply -match '^[Yy]') {
-    Info "Starting radgotchi..."
-    npm start
-} else {
-    Write-Host "To run radgotchi later:"
-    Write-Host "  cd $INSTALL_DIR; npm start"
-    Write-Host ""
+# --- Desktop / Start Menu shortcut creation ---
+function Create-Shortcut {
+    $WshShell = New-Object -ComObject WScript.Shell
+
+    # Desktop shortcut
+    $desktopPath = [System.Environment]::GetFolderPath("Desktop")
+    $desktopLnk  = Join-Path $desktopPath "Radgotchi.lnk"
+    $shortcut = $WshShell.CreateShortcut($desktopLnk)
+    $shortcut.TargetPath       = "cmd.exe"
+    $shortcut.Arguments        = "/c cd /d `"$INSTALL_DIR`" && npm start"
+    $shortcut.WorkingDirectory = $INSTALL_DIR
+    $shortcut.Description      = "Launch Radgotchi"
+    $shortcut.Save()
+    Info "Desktop shortcut created at $desktopLnk"
+
+    # Start Menu shortcut
+    $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
+    $startLnk  = Join-Path $startMenu "Radgotchi.lnk"
+    $shortcut2 = $WshShell.CreateShortcut($startLnk)
+    $shortcut2.TargetPath       = "cmd.exe"
+    $shortcut2.Arguments        = "/c cd /d `"$INSTALL_DIR`" && npm start"
+    $shortcut2.WorkingDirectory = $INSTALL_DIR
+    $shortcut2.Description      = "Launch Radgotchi"
+    $shortcut2.Save()
+    Info "Start Menu shortcut created at $startLnk"
+}
+
+# Present menu
+Write-Host "What would you like to do?"
+Write-Host "  1) Create desktop shortcut & run now"
+Write-Host "  2) Create desktop shortcut only"
+Write-Host "  3) Run now only"
+Write-Host "  4) Exit"
+$choice = Read-Host "Choose [1-4]"
+
+switch ($choice) {
+    "1" {
+        Create-Shortcut
+        Write-Host ""
+        Info "Starting radgotchi..."
+        npm start
+    }
+    "2" {
+        Create-Shortcut
+        Write-Host ""
+        Write-Host "To run radgotchi later:"
+        Write-Host "  cd $INSTALL_DIR; npm start"
+    }
+    "3" {
+        Info "Starting radgotchi..."
+        npm start
+    }
+    default {
+        Write-Host "To run radgotchi later:"
+        Write-Host "  cd $INSTALL_DIR; npm start"
+    }
 }
 
 Pop-Location
