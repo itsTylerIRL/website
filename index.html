@@ -724,8 +724,10 @@
         
         /* Install Banner */
         .install-banner {
-            background: linear-gradient(135deg, rgba(139, 233, 253, 0.15) 0%, rgba(139, 233, 253, 0.1) 50%, rgba(139, 233, 253, 0.15) 100%);
-            border: 2px solid rgba(139, 233, 253, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 233, 253, 0.35);
             padding: 0.6rem 1rem;
             margin: 0.5rem auto;
             max-width: 450px;
@@ -739,19 +741,19 @@
             gap: 0.6rem;
             box-shadow: 0 0 15px rgba(139, 233, 253, 0.2), inset 0 0 30px rgba(139, 233, 253, 0.05);
             animation: install-pulse 2s ease-in-out infinite;
-            border-radius: 8px;
+            border-radius: 16px;
         }
         @keyframes install-pulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(139, 233, 253, 0.2), inset 0 0 30px rgba(139, 233, 253, 0.05); border-color: rgba(139, 233, 253, 0.5); }
-            50% { box-shadow: 0 0 25px rgba(139, 233, 253, 0.4), inset 0 0 40px rgba(139, 233, 253, 0.1); border-color: rgba(139, 233, 253, 0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(139, 233, 253, 0.2), inset 0 0 30px rgba(139, 233, 253, 0.05); border-color: rgba(139, 233, 253, 0.35); }
+            50% { box-shadow: 0 0 25px rgba(139, 233, 253, 0.4), inset 0 0 40px rgba(139, 233, 253, 0.1); border-color: rgba(139, 233, 253, 0.6); }
         }
         .install-banner::before {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.25), rgba(255, 255, 255, 0.1), rgba(139, 233, 253, 0.25), transparent);
-            animation: install-shimmer 2.5s infinite;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.15), rgba(255, 255, 255, 0.05), rgba(139, 233, 253, 0.15), transparent);
+            animation: install-shimmer 4s infinite;
             pointer-events: none;
         }
         @keyframes install-shimmer {
@@ -759,8 +761,8 @@
             100% { left: 100%; }
         }
         .install-banner:hover {
-            border-color: rgba(139, 233, 253, 0.9);
-            box-shadow: 0 0 35px rgba(139, 233, 253, 0.5), inset 0 0 50px rgba(139, 233, 253, 0.15);
+            border-color: rgba(139, 233, 253, 0.6);
+            box-shadow: 0 0 25px rgba(139, 233, 253, 0.35), inset 0 0 40px rgba(139, 233, 253, 0.1);
             transform: scale(1.01);
             animation: none;
         }
@@ -900,12 +902,34 @@
         
         @media (max-width: 600px) {
             .install-banner {
-                flex-direction: column;
-                gap: 0.4rem;
-                padding: 0.4rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.3rem;
+                padding: 0.5rem 0.6rem;
+                max-width: 100%;
+                border-radius: 16px;
+            }
+            .install-banner > div:first-child {
+                margin-bottom: 0.1rem;
+            }
+            .install-banner .radgotchi-face {
+                width: 60px !important;
+                height: auto !important;
+            }
+            #radgotchi-container {
+                flex: 0 0 70px;
+            }
+            .install-commands-area {
+                flex: 1;
+                min-width: 150px;
             }
             .install-link {
-                width: 100%;
+                flex: 1;
+                justify-content: center;
+            }
+            .install-banner > div:first-child > div {
+                font-size: 0.65rem !important;
+                letter-spacing: 0.15em !important;
             }
         }
     </style>
@@ -1278,10 +1302,29 @@
     
     function copyInstallCommand(element) {
         const cmd = element.getAttribute('data-cmd');
-        navigator.clipboard.writeText(cmd).then(() => {
-            element.classList.add('copied');
-            setTimeout(() => element.classList.remove('copied'), 1500);
-        });
+        // Fallback for non-secure contexts (no clipboard API)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(cmd).then(() => {
+                element.classList.add('copied');
+                setTimeout(() => element.classList.remove('copied'), 1500);
+            });
+        } else {
+            // Fallback: create temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = cmd;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                element.classList.add('copied');
+                setTimeout(() => element.classList.remove('copied'), 1500);
+            } catch (e) {
+                console.error('Copy failed:', e);
+            }
+            document.body.removeChild(textarea);
+        }
     }
     </script>
     
