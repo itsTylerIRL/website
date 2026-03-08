@@ -383,39 +383,40 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            border-color: rgba(139, 233, 253, 0.5);
+            border-color: var(--bracket-color, rgba(139, 233, 253, 0.5));
             border-style: solid;
             border-width: 0;
+            transition: top 0.3s ease, bottom 0.3s ease, left 0.3s ease, right 0.3s ease, border-color 0.3s ease;
         }
         
         /* Top-left */
         .corner-brackets::before {
-            top: 15px;
-            left: 15px;
+            top: calc(15px - var(--scroll-expand, 0px));
+            left: calc(15px - var(--scroll-expand, 0px));
             border-top-width: 2px;
             border-left-width: 2px;
         }
         
         /* Top-right */
         .corner-brackets::after {
-            top: 15px;
-            right: 15px;
+            top: calc(15px - var(--scroll-expand, 0px));
+            right: calc(15px - var(--scroll-expand, 0px));
             border-top-width: 2px;
             border-right-width: 2px;
         }
         
         /* Bottom-left */
         .corner-brackets .bottom::before {
-            bottom: 15px;
-            left: 15px;
+            bottom: calc(15px - var(--scroll-expand, 0px));
+            left: calc(15px - var(--scroll-expand, 0px));
             border-bottom-width: 2px;
             border-left-width: 2px;
         }
         
         /* Bottom-right */
         .corner-brackets .bottom::after {
-            bottom: 15px;
-            right: 15px;
+            bottom: calc(15px - var(--scroll-expand, 0px));
+            right: calc(15px - var(--scroll-expand, 0px));
             border-bottom-width: 2px;
             border-right-width: 2px;
         }
@@ -932,6 +933,28 @@
                 letter-spacing: 0.15em !important;
             }
         }
+        
+        /* Staggered entrance animations */
+        .bento-item {
+            opacity: 0;
+        }
+        .bento-item.visible {
+            animation: bentoReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: var(--reveal-delay, 0s);
+        }
+        @keyframes bentoReveal {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Touch feedback on mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .bento-item:active {
+                transform: scale(0.96) !important;
+                transition: transform 0.1s ease !important;
+                border-color: rgba(139, 233, 253, 0.5);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1006,7 +1029,7 @@
             <!-- Install Banner -->
             <div class="install-banner" style="flex-wrap: wrap; margin: 1rem auto;">
                 <div style="width: 100%; text-align: center; margin-bottom: 0.3rem;">
-                    <div style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #8be9fd; letter-spacing: 0.25em; text-transform: uppercase; text-shadow: 0 0 12px rgba(139, 233, 253, 0.9), 0 0 25px rgba(139, 233, 253, 0.5); font-weight: bold;">RADGOTCHI INSTALLER</div>
+                    <div id="install-title" style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #8be9fd; letter-spacing: 0.25em; text-transform: uppercase; text-shadow: 0 0 12px rgba(139, 233, 253, 0.9), 0 0 25px rgba(139, 233, 253, 0.5); font-weight: bold;">RADGOTCHI INSTALLER</div>
                 </div>
                 <div id="radgotchi-container" style="flex-shrink: 0; text-align: center;">
                     <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
@@ -1014,13 +1037,13 @@
                 </div>
                 <div class="install-commands-area">
                     <div class="install-tabs">
-                        <div class="install-tab active" onclick="switchInstallTab('bash', this)">Linux / macOS</div>
-                        <div class="install-tab" onclick="switchInstallTab('ps', this)">Windows</div>
+                        <div class="install-tab active" onclick="switchInstallTab('bash', this)" tabindex="0" role="button">Linux / macOS</div>
+                        <div class="install-tab" onclick="switchInstallTab('ps', this)" tabindex="0" role="button">Windows</div>
                     </div>
-                    <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy">
+                    <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy" tabindex="0" role="button">
                         curl -fsSL https://tylerirl.com/install_rg.sh | bash
                     </div>
-                    <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden>
+                    <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden tabindex="0" role="button">
                         irm https://tylerirl.com/install_rg.ps1 | iex
                     </div>
                     <div style="display: flex; gap: 0.4rem; margin-top: 0.3rem;">
@@ -1276,6 +1299,21 @@
                 }
             });
         });
+
+        // Staggered entrance animation via IntersectionObserver
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach((card, i) => {
+            card.style.setProperty('--reveal-delay', `${i * 0.08}s`);
+            revealObserver.observe(card);
+        });
     })();
     </script>
     
@@ -1292,12 +1330,28 @@
         document.getElementById('install-ps').hidden = (type !== 'ps');
     }
     
+    function flashInstallTitle(element) {
+        const titleEl = document.getElementById('install-title');
+        if (!titleEl) return;
+        const hint = element.id === 'install-ps' ? 'PASTE INTO POWERSHELL' : 'PASTE INTO TERMINAL';
+        const original = titleEl.textContent;
+        titleEl.textContent = hint;
+        titleEl.style.color = '#50fa7b';
+        titleEl.style.textShadow = '0 0 12px rgba(80, 250, 123, 0.9), 0 0 25px rgba(80, 250, 123, 0.5)';
+        setTimeout(() => {
+            titleEl.textContent = original;
+            titleEl.style.color = '';
+            titleEl.style.textShadow = '';
+        }, 1500);
+    }
+
     function copyInstallCommand(element) {
         const cmd = element.getAttribute('data-cmd');
         // Fallback for non-secure contexts (no clipboard API)
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(cmd).then(() => {
                 element.classList.add('copied');
+                flashInstallTitle(element);
                 setTimeout(() => element.classList.remove('copied'), 1500);
             });
         } else {
@@ -1311,6 +1365,7 @@
             try {
                 document.execCommand('copy');
                 element.classList.add('copied');
+                flashInstallTitle(element);
                 setTimeout(() => element.classList.remove('copied'), 1500);
             } catch (e) {
                 console.error('Copy failed:', e);
@@ -1318,6 +1373,57 @@
             document.body.removeChild(textarea);
         }
     }
+
+    // Keyboard accessibility for install banner
+    document.querySelectorAll('.install-tab, .install-command').forEach(el => {
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                el.click();
+            }
+        });
+    });
+
+    // Terminal-style scramble effect on installer title
+    (function() {
+        const titleEl = document.getElementById('install-title');
+        if (!titleEl) return;
+        const target = titleEl.textContent;
+        const chars = '!@#$%^&*_+-=|;:<>?/~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let iteration = 0;
+        titleEl.textContent = target.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+        const interval = setInterval(() => {
+            titleEl.textContent = target.split('').map((char, i) => {
+                if (char === ' ') return ' ';
+                if (i < iteration) return target[i];
+                return chars[Math.floor(Math.random() * chars.length)];
+            }).join('');
+            iteration += 0.5;
+            if (iteration >= target.length) {
+                titleEl.textContent = target;
+                clearInterval(interval);
+            }
+        }, 40);
+    })();
+
+    // Scroll-reactive corner brackets
+    (function() {
+        const brackets = document.querySelector('.corner-brackets');
+        if (!brackets) return;
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                    const f = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+                    brackets.style.setProperty('--scroll-expand', (f * 8) + 'px');
+                    brackets.style.setProperty('--bracket-color', `rgba(139, 233, 253, ${(0.5 + f * 0.3).toFixed(2)})`);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    })();
     </script>
     
 </body>
