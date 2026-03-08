@@ -451,10 +451,10 @@
         
         /* Install Banner */
         .install-banner {
-            background: linear-gradient(135deg, rgba(80, 250, 123, 0.08) 0%, rgba(139, 233, 253, 0.08) 100%);
-            border: 1px solid rgba(80, 250, 123, 0.3);
-            padding: 0.4rem 0.6rem;
-            margin: 0.3rem 0;
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.15) 0%, rgba(139, 233, 253, 0.1) 50%, rgba(80, 250, 123, 0.15) 100%);
+            border: 2px solid rgba(80, 250, 123, 0.5);
+            padding: 0.5rem 0.7rem;
+            margin: 0.35rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -463,31 +463,45 @@
             align-items: center;
             justify-content: space-between;
             gap: 0.6rem;
+            box-shadow: 0 0 15px rgba(80, 250, 123, 0.2), inset 0 0 30px rgba(80, 250, 123, 0.05);
+            animation: install-pulse 2s ease-in-out infinite;
+        }
+        @keyframes install-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(80, 250, 123, 0.2), inset 0 0 30px rgba(80, 250, 123, 0.05); border-color: rgba(80, 250, 123, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(80, 250, 123, 0.4), inset 0 0 40px rgba(80, 250, 123, 0.1); border-color: rgba(80, 250, 123, 0.8); }
         }
         .install-banner::before {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(80, 250, 123, 0.15), transparent);
-            animation: install-shimmer 4s infinite;
+            background: linear-gradient(90deg, transparent, rgba(80, 250, 123, 0.25), rgba(255, 255, 255, 0.1), rgba(80, 250, 123, 0.25), transparent);
+            animation: install-shimmer 2.5s infinite;
         }
         @keyframes install-shimmer {
             0% { left: -100%; }
             100% { left: 100%; }
         }
         .install-banner:hover {
-            border-color: rgba(80, 250, 123, 0.6);
-            box-shadow: 0 0 20px rgba(80, 250, 123, 0.2);
+            border-color: rgba(80, 250, 123, 0.9);
+            box-shadow: 0 0 35px rgba(80, 250, 123, 0.5), inset 0 0 50px rgba(80, 250, 123, 0.15);
+            transform: scale(1.01);
+            animation: none;
         }
         .install-banner-title {
             font-family: 'Special Elite', monospace;
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             color: #50fa7b;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             white-space: nowrap;
             flex-shrink: 0;
+            text-shadow: 0 0 8px rgba(80, 250, 123, 0.6);
+            animation: title-glow 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes title-glow {
+            0% { text-shadow: 0 0 5px rgba(80, 250, 123, 0.4); }
+            100% { text-shadow: 0 0 12px rgba(80, 250, 123, 0.8), 0 0 20px rgba(80, 250, 123, 0.4); }
         }
         .install-command {
             flex: 1;
@@ -562,26 +576,41 @@
             align-items: center;
             justify-content: center;
             gap: 0.4rem;
-            padding: 0.3rem 1.2rem;
-            border: 1px solid rgba(139, 233, 253, 0.3);
-            background: rgba(0, 0, 0, 0.4);
+            padding: 0.35rem 1.4rem;
+            border: 2px solid rgba(139, 233, 253, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: #8be9fd;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 0.55rem;
+            font-size: 0.58rem;
             text-decoration: none;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             transition: all 0.3s ease;
             margin-top: 0.3rem;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .install-link::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.2), transparent);
+            animation: link-shimmer 3s infinite;
+        }
+        @keyframes link-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         .install-link:hover {
-            background: rgba(139, 233, 253, 0.15);
+            background: rgba(139, 233, 253, 0.2);
             border-color: #8be9fd;
             color: #b4f8c3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 233, 253, 0.2);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(139, 233, 253, 0.35);
         }
-        .install-link svg { width: 12px; height: 12px; fill: currentColor; }
+        .install-link svg { width: 14px; height: 14px; fill: currentColor; }
         .spec-table tbody tr:hover, .spec-table tr:hover { background: rgba(139, 233, 253, 0.08) !important; }
         .spec-table tr:hover td { color: #8be9fd; text-shadow: 0 0 5px rgba(139, 233, 253, 0.3); }
         .spec-table tr:hover td.highlight { color: #b4f8c3; text-shadow: 0 0 8px rgba(180, 248, 195, 0.5); }
@@ -793,6 +822,85 @@
         }
         .sprite-cell:hover .sprite-label { color: #8be9fd; }
         
+        /* Panel + Stats Combined Layout */
+        .panel-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem;
+            margin-bottom: 0.25rem;
+            align-items: stretch;
+            min-height: 240px;
+        }
+        .panel-image-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            background: #0a0a0a url('assets/radgotchi_panel.png') center/contain no-repeat;
+            min-height: 240px;
+            position: relative;
+            z-index: 1;
+            padding: 0.25rem;
+        }
+        .panel-image-cell img {
+            max-width: 100%;
+            max-height: 230px;
+            object-fit: contain;
+            filter: none !important;
+            opacity: 1 !important;
+        }
+        .panel-info-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .mini-stats-compact {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.1rem;
+        }
+        .mini-stats-compact .mini-stat {
+            padding: 0.12rem 0.08rem;
+        }
+        .doc-info-compact {
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            padding: 0.2rem 0.35rem;
+            background: rgba(0, 0, 0, 0.15);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+        .doc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.06rem 0;
+            font-size: 0.56rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.05);
+        }
+        .doc-row:last-child { border-bottom: none; }
+        .doc-label { color: #4a7a8a; font-weight: bold; font-size: 0.5rem; }
+        .doc-value { font-family: 'Share Tech Mono', monospace; }
+        .doc-value.cyan { color: #8be9fd; }
+        .doc-value.red { color: #c41e3a; }
+        .doc-value.pink { color: #ff79c6; }
+        
+        .doc-bar-compact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.15rem;
+        }
+        .doc-bar-compact .document-bar-item {
+            padding: 0.12rem 0.25rem;
+        }
+        .doc-bar-compact .document-bar-item label {
+            font-size: 0.42rem;
+            margin-bottom: 0.05rem;
+        }
+        .doc-bar-compact .document-bar-item span {
+            font-size: 0.52rem;
+        }
+        
         /* Responsive */
         @media (max-width: 1100px) {
             .project-writeup { margin-left: 60px; margin-right: 60px; }
@@ -839,6 +947,16 @@
             .mini-stat { padding: 0.2rem; }
             .mini-stat .value { font-size: 0.6rem; }
             .mini-stat .label { font-size: 0.4rem; }
+            
+            .panel-stats-grid { grid-template-columns: 1fr; }
+            .panel-image-cell { min-height: 150px; max-height: 180px; }
+            .mini-stats-compact { grid-template-columns: repeat(6, 1fr); }
+            .doc-info-compact { padding: 0.2rem 0.3rem; }
+            .doc-row { font-size: 0.52rem; }
+            .doc-bar-compact { grid-template-columns: repeat(4, 1fr); gap: 0.1rem; }
+            .doc-bar-compact .document-bar-item { padding: 0.1rem 0.15rem; }
+            .doc-bar-compact .document-bar-item label { font-size: 0.38rem; }
+            .doc-bar-compact .document-bar-item span { font-size: 0.48rem; }
             
             .ticker-wrap { margin-bottom: 0.3rem; padding: 0.1rem 0; }
             .ticker { font-size: 0.45rem; }
@@ -919,6 +1037,12 @@
             .project-writeup p { font-size: 0.48rem; }
             .sprite-grid { grid-template-columns: repeat(2, 1fr); }
             .sprite-cell img { width: 32px; height: 32px; }
+            
+            .mini-stats-compact { grid-template-columns: repeat(3, 1fr); }
+            .doc-row { font-size: 0.48rem; padding: 0.05rem 0; }
+            .doc-bar-compact { grid-template-columns: 1fr 1fr; gap: 0.1rem; }
+            .doc-bar-compact .document-bar-item label { font-size: 0.35rem; }
+            .doc-bar-compact .document-bar-item span { font-size: 0.42rem; }
         }
         
         /* Hologram Hero Image Effects */
@@ -1100,62 +1224,53 @@
             <div class="ticker">◆ RADGOTCHI DESKTOP APP LIVE ◆ ELECTRON FRAMEWORK NOMINAL ◆ 25 CUSTOM RADBRO FACES DEPLOYED ◆ CROSS-PLATFORM: WIN/MAC/LINUX ◆ CPU+MEMORY MONITORING ACTIVE ◆ SYSTEM TRAY INTEGRATION ◆ 10 COLOR THEMES LOADED ◆ BOUNCE MODE AVAILABLE ◆ IDLE DETECTION CYCLING ◆ EYE TRACKING SUBSYSTEM CALIBRATED ◆ GITHUB REPO OPEN SOURCE ◆</div>
         </div>
 
-        <!-- Document Bar -->
-        <div class="document-bar">
-            <div class="document-bar-item">
-                <label>Document ID</label>
-                <span>RG-2025-0742</span>
+        <!-- Combined Panel + Stats Layout -->
+        <div class="panel-stats-grid">
+            <!-- RadGotchi Panel Image (left) -->
+            <div class="panel-image-cell">
+                <img src="assets/radgotchi_panel.png" alt="RadGotchi Panel" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
-            <div class="document-bar-item">
-                <label>Clearance</label>
-                <span><span class="clearance-badge ts">TS</span>SI-GAMMA</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Status</label>
-                <span style="color: #50fa7b;">● ACTIVE</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Last Update</label>
-                <span>2025.05.25 // 14:22 UTC</span>
-            </div>
-        </div>
 
-        <!-- Mini Stats -->
-        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.15rem; margin-bottom: 0.25rem;">
-            <div class="mini-stat">
-                <div class="value">25</div>
-                <div class="label">Moods</div>
+            <!-- Stats + Info (right) -->
+            <div class="panel-info-cell">
+                <!-- Document Bar Compact (2x2) -->
+                <div class="doc-bar-compact">
+                    <div class="document-bar-item">
+                        <label>Document ID</label>
+                        <span>RG-2025-0742</span>
+                    </div>
+                    <div class="document-bar-item">
+                        <label>Clearance</label>
+                        <span><span class="clearance-badge ts">TS</span>SI-GAMMA</span>
+                    </div>
+                    <div class="document-bar-item">
+                        <label>Status</label>
+                        <span style="color: #50fa7b;">● ACTIVE</span>
+                    </div>
+                    <div class="document-bar-item">
+                        <label>Last Update</label>
+                        <span>2025.05.25 // 14:22 UTC</span>
+                    </div>
+                </div>
+                <!-- Mini Stats Row -->
+                <div class="mini-stats-compact">
+                    <div class="mini-stat"><div class="value">25</div><div class="label">Moods</div></div>
+                    <div class="mini-stat"><div class="value">3</div><div class="label">Platforms</div></div>
+                    <div class="mini-stat"><div class="value">10</div><div class="label">Themes</div></div>
+                    <div class="mini-stat"><div class="value" style="color: #50fa7b;">MIT</div><div class="label">License</div></div>
+                    <div class="mini-stat"><div class="value">6</div><div class="label">Files</div></div>
+                    <div class="mini-stat"><div class="value" style="color: #50fa7b;">▲</div><div class="label">LIVE</div></div>
+                </div>
+                <!-- Document Info Compact -->
+                <div class="doc-info-compact">
+                    <div class="doc-row"><span class="doc-label">PROJECT:</span><span class="doc-value cyan">RADGOTCHI</span></div>
+                    <div class="doc-row"><span class="doc-label">CLASS:</span><span class="doc-value red">TOP SECRET//SI</span></div>
+                    <div class="doc-row"><span class="doc-label">CODEWORD:</span><span class="doc-value pink">RADBRO-GAMMA</span></div>
+                    <div class="doc-row"><span class="doc-label">PLATFORM:</span><span class="doc-value cyan">Electron + Node.js</span></div>
+                    <div class="doc-row"><span class="doc-label">TARGET:</span><span class="doc-value cyan">Win/Mac/Linux</span></div>
+                    <div class="doc-row"><span class="doc-label">AUTHOR:</span><span class="doc-value cyan">TylerIRL</span></div>
+                </div>
             </div>
-            <div class="mini-stat">
-                <div class="value">3</div>
-                <div class="label">Platforms</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">10</div>
-                <div class="label">Themes</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">MIT</div>
-                <div class="label">License</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">6</div>
-                <div class="label">Files</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">▲</div>
-                <div class="label">LIVE</div>
-            </div>
-        </div>
-
-        <!-- Document Info -->
-        <div class="document-info">
-            <p><strong style="color: #4a7a8a;">PROJECT:</strong> <span style="color: #8be9fd;">RADGOTCHI</span></p>
-            <p><strong style="color: #4a7a8a;">CLASSIFICATION:</strong> <span style="color: #c41e3a;">TOP SECRET//SI</span></p>
-            <p><strong style="color: #4a7a8a;">CODEWORD:</strong> <span style="color: #ff79c6;">RADBRO-GAMMA</span></p>
-            <p><strong style="color: #4a7a8a;">PLATFORM:</strong> <span style="color: #8be9fd;">Electron + Node.js</span></p>
-            <p><strong style="color: #4a7a8a;">TARGET:</strong> <span style="color: #8be9fd;">Win/Mac/Linux</span></p>
-            <p><strong style="color: #4a7a8a;">AUTHOR:</strong> <span style="color: #8be9fd;">TylerIRL</span></p>
         </div>
 
         <!-- Title -->
