@@ -54,14 +54,22 @@ npm install
 info "Installation complete!"
 echo ""
 
-# Ask if user wants to run it now
-read -p "Would you like to run radgotchi now? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    info "Starting radgotchi..."
-    npm start
+# Ask if user wants to run it now (only if running interactively)
+if [ -t 0 ]; then
+    read -p "Would you like to run radgotchi now? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        info "Starting radgotchi..."
+        npm start
+    else
+        echo "To run radgotchi later:"
+        echo "  cd $INSTALL_DIR && npm start"
+        echo ""
+        echo "Or create an alias:"
+        echo "  alias radgotchi='cd $INSTALL_DIR && npm start'"
+    fi
 else
-    echo "To run radgotchi later:"
+    echo "To run radgotchi:"
     echo "  cd $INSTALL_DIR && npm start"
     echo ""
     echo "Or create an alias:"
