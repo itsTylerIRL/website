@@ -1,0 +1,3348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>grep dojo - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://grep.tylerirl.com/">
+    <meta property="og:title" content="grep dojo - Learn grep the fun way">
+    <meta property="og:description" content="Master grep through interactive challenges. Level up your terminal skills!">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://grep.tylerirl.com/">
+    <meta property="twitter:title" content="grep dojo - Learn grep the fun way">
+    <meta property="twitter:description" content="Master grep through interactive challenges. Level up your terminal skills!">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css?v=1.1">
+    <link rel="stylesheet" href="radgotchi.css">
+    
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <style>
+        /* Hologram Hero Image Effects */
+        .hologram-container {
+            position: relative;
+            display: inline-block;
+            max-width: 200px;
+            overflow: visible;
+            -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+            mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+        }
+        .hologram-image {
+            max-width: 200px;
+            height: auto;
+            filter: contrast(1.1) saturate(1.2);
+            animation: hologramPhase 4s ease-in-out infinite, hologramGlitch 8s step-end infinite;
+            image-rendering: pixelated;
+        }
+        .hologram-container::before, .hologram-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: inherit;
+            pointer-events: none;
+        }
+        .hologram-container::before {
+            background: url('assets/remilio2.png') center/contain no-repeat;
+            mix-blend-mode: screen;
+            opacity: 0.4;
+            filter: hue-rotate(-30deg) saturate(1.5);
+            animation: chromaShiftRed 3s ease-in-out infinite;
+        }
+        .hologram-container::after {
+            background: url('assets/remilio2.png') center/contain no-repeat;
+            mix-blend-mode: screen;
+            opacity: 0.4;
+            filter: hue-rotate(30deg) saturate(1.5);
+            animation: chromaShiftBlue 3s ease-in-out infinite reverse;
+        }
+        .hologram-scanlines {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
+            pointer-events: none;
+            z-index: 10;
+            animation: scanlineMove 0.1s linear infinite;
+        }
+        .hologram-flicker {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(139, 233, 253, 0.03);
+            pointer-events: none;
+            z-index: 11;
+            animation: hologramFlicker 0.15s infinite;
+            mix-blend-mode: overlay;
+        }
+        @keyframes hologramPhase {
+            0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); filter: contrast(1.1) saturate(1.2) brightness(1); }
+            25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); filter: contrast(1.2) saturate(1.4) brightness(1.1); }
+            50% { opacity: 0.9; transform: scale(0.99) translateY(1px); filter: contrast(1.15) saturate(1.3) brightness(0.95); }
+            75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); filter: contrast(1.25) saturate(1.5) brightness(1.15); }
+        }
+        @keyframes hologramGlitch {
+            0%, 95%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            96% { clip-path: inset(20% 0 30% 0); transform: translate(-3px, 0); }
+            97% { clip-path: inset(50% 0 10% 0); transform: translate(3px, 0); }
+            98% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
+            99% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
+        }
+        @keyframes chromaShiftRed { 0%, 100% { transform: translate(-1px, 0); } 50% { transform: translate(-2px, 1px); } }
+        @keyframes chromaShiftBlue { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(2px, -1px); } }
+        @keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+        @keyframes hologramFlicker {
+            0%, 100% { opacity: 0.03; } 10% { opacity: 0.08; } 20% { opacity: 0.02; } 30% { opacity: 0.1; }
+            40% { opacity: 0.04; } 50% { opacity: 0.15; } 60% { opacity: 0.05; } 70% { opacity: 0.12; }
+            80% { opacity: 0.03; } 90% { opacity: 0.08; }
+        }
+
+        /* Home Link - Top Right */
+        .home-link {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            color: #8be9fd;
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .home-link:hover {
+            color: #fff;
+            border-color: rgba(139, 233, 253, 0.6);
+            background: rgba(139, 233, 253, 0.1);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        }
+
+        .home-link svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Grep Dojo Specific Styles */
+        .grep-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0.5rem;
+            padding-top: 0;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .grep-header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .grep-header h1 {
+            font-size: 1.4rem;
+            color: #50fa7b;
+            text-shadow: 0 0 20px rgba(80, 250, 123, 0.5);
+            margin-bottom: 0;
+            margin-top: 0.25rem;
+            letter-spacing: 0.1em;
+        }
+
+        .grep-header h1 span {
+            color: #8be9fd;
+        }
+
+        .grep-header .subtitle {
+            color: #6272a4;
+            font-size: 0.7rem;
+            margin-top: 0;
+        }
+
+        /* Compact Stats Row - combines all stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .stats-row .stat-mini {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0 0.5rem;
+            border-right: 1px solid rgba(139, 233, 253, 0.15);
+        }
+
+        .stats-row .stat-mini:last-child {
+            border-right: none;
+        }
+
+        .stats-row .stat-mini .label {
+            font-size: 0.6rem;
+            color: #6272a4;
+            text-transform: uppercase;
+        }
+
+        .stats-row .stat-mini .value {
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .stats-row .stat-mini .value.score { color: #50fa7b; }
+        .stats-row .stat-mini .value.level { color: #8be9fd; }
+        .stats-row .stat-mini .value.streak { color: #ffb86c; }
+        .stats-row .stat-mini .value.accuracy { color: #8be9fd; }
+        .stats-row .stat-mini .value.hints { color: #ff79c6; }
+
+        /* XP Bar - more compact */
+        .xp-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+            padding: 0 0.25rem;
+        }
+
+        .xp-row .xp-rank {
+            font-size: 0.65rem;
+            color: #8be9fd;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .xp-row .xp-bar-wrapper {
+            flex: 1;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+        }
+
+        .xp-row .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8be9fd, #50fa7b);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .xp-row .xp-text {
+            font-size: 0.55rem;
+            color: #6272a4;
+            white-space: nowrap;
+        }
+
+        /* Level Progress */
+        .level-progress {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            height: 4px;
+            margin-bottom: 0.4rem;
+            overflow: hidden;
+            border: 1px solid rgba(139, 233, 253, 0.1);
+        }
+
+        .level-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #50fa7b, #8be9fd);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 6px rgba(139, 233, 253, 0.5);
+        }
+
+        /* Level Progression Meter - Compact */
+        .level-meter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.35rem 0;
+            position: relative;
+        }
+
+        .level-meter::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background: rgba(139, 233, 253, 0.2);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .level-meter-progress {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            height: 2px;
+            background: linear-gradient(90deg, #50fa7b, #8be9fd);
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 6px rgba(80, 250, 123, 0.5);
+        }
+
+        .level-node {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(139, 233, 253, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #6272a4;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .level-node:hover {
+            transform: scale(1.15);
+            border-color: rgba(139, 233, 253, 0.5);
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
+        }
+
+        .level-node.completed {
+            background: rgba(80, 250, 123, 0.2);
+            border-color: #50fa7b;
+            color: #50fa7b;
+        }
+
+        .level-node.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            font-size: 0.45rem;
+            background: #50fa7b;
+            color: #000;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .level-node.current {
+            background: rgba(139, 233, 253, 0.25);
+            border-color: #8be9fd;
+            color: #8be9fd;
+            box-shadow: 0 0 12px rgba(139, 233, 253, 0.4);
+            animation: currentPulse 2s ease-in-out infinite;
+        }
+
+        .level-node.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .level-node.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        @keyframes currentPulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(139, 233, 253, 0.4); }
+            50% { box-shadow: 0 0 18px rgba(139, 233, 253, 0.6); }
+        }
+
+        .level-node-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            padding: 0.25rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+            color: #f8f8f2;
+            z-index: 100;
+        }
+
+        .level-node:hover .level-node-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hints System */
+        .hint-btn {
+            background: rgba(255, 184, 108, 0.15);
+            border: 1px solid rgba(255, 184, 108, 0.4);
+            color: #ffb86c;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .hint-btn:hover:not(:disabled) {
+            background: rgba(255, 184, 108, 0.25);
+            border-color: #ffb86c;
+        }
+
+        .hint-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .hint-display {
+            background: rgba(255, 184, 108, 0.1);
+            border: 1px solid rgba(255, 184, 108, 0.3);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            margin-top: 0.4rem;
+            font-size: 0.7rem;
+            color: #ffb86c;
+            display: none;
+        }
+
+        .hint-display.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Achievements Panel */
+        .achievements-btn {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 2.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            color: #8be9fd;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            transition: all 0.3s ease;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .achievements-btn:hover {
+            border-color: #8be9fd;
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.3);
+        }
+
+        .achievement-count {
+            background: #8be9fd;
+            color: #000;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .achievements-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+        }
+
+        .achievements-modal.show {
+            display: flex;
+        }
+
+        .achievements-content {
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .achievements-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .achievements-header h2 {
+            color: #8be9fd;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .achievements-close {
+            background: none;
+            border: none;
+            color: #6272a4;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .achievements-close:hover {
+            color: #f8f8f2;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .achievement-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+
+        .achievement-card.unlocked {
+            border-color: rgba(80, 250, 123, 0.4);
+            background: rgba(80, 250, 123, 0.05);
+        }
+
+        .achievement-card.unlocked.new {
+            animation: achievementGlow 2s ease-in-out;
+        }
+
+        @keyframes achievementGlow {
+            0%, 100% { box-shadow: 0 0 0 rgba(80, 250, 123, 0); }
+            50% { box-shadow: 0 0 30px rgba(80, 250, 123, 0.5); }
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-name {
+            color: #f8f8f2;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .achievement-desc {
+            color: #6272a4;
+            font-size: 0.7rem;
+        }
+
+        /* Command History */
+        .history-container {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139, 233, 253, 0.1);
+        }
+
+        .history-label {
+            font-size: 0.7rem;
+            color: #6272a4;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .history-item {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+        }
+
+        .history-item.correct {
+            border-color: rgba(80, 250, 123, 0.3);
+            color: #50fa7b;
+        }
+
+        .history-item.wrong {
+            border-color: rgba(255, 85, 85, 0.3);
+            color: #ff5555;
+            text-decoration: line-through;
+        }
+
+        /* Stats Summary - Hidden, using stats-row instead */
+        .stats-summary {
+            display: none;
+        }
+
+        /* XP Container - Hidden, using xp-row instead */
+        .xp-container {
+            display: none;
+        }
+
+        /* Stats Display - Cyberpunk Style */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            text-align: center;
+            min-width: 85px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: rgba(139, 233, 253, 0.6);
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.3), inset 0 0 20px rgba(139, 233, 253, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8be9fd, transparent);
+            animation: scanline 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.1), transparent);
+            animation: dataStream 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes dataStream {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 5px currentColor; }
+            50% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(139, 233, 253, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(139, 233, 253, 0.5), 0 0 30px rgba(139, 233, 253, 0.2); }
+        }
+
+        .stat-box.accent-green { border-color: rgba(80, 250, 123, 0.3); }
+        .stat-box.accent-green::before { background: linear-gradient(90deg, transparent, #50fa7b, transparent); }
+        .stat-box.accent-green:hover { border-color: rgba(80, 250, 123, 0.6); box-shadow: 0 0 20px rgba(80, 250, 123, 0.3); }
+
+        .stat-box.accent-cyan { border-color: rgba(139, 233, 253, 0.3); }
+        .stat-box.accent-cyan::before { background: linear-gradient(90deg, transparent, #8be9fd, transparent); }
+        .stat-box.accent-cyan:hover { border-color: rgba(139, 233, 253, 0.6); box-shadow: 0 0 20px rgba(139, 233, 253, 0.3); }
+
+        .stat-box.accent-orange { border-color: rgba(255, 184, 108, 0.3); }
+        .stat-box.accent-orange::before { background: linear-gradient(90deg, transparent, #ffb86c, transparent); }
+        .stat-box.accent-orange:hover { border-color: rgba(255, 184, 108, 0.6); box-shadow: 0 0 20px rgba(255, 184, 108, 0.3); }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #6272a4;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #8be9fd;
+            font-family: 'JetBrains Mono', monospace;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .stat-box.accent-green .stat-value { color: #50fa7b; }
+        .stat-box.accent-cyan .stat-value { color: #8be9fd; }
+        .stat-box.accent-orange .stat-value { color: #ffb86c; }
+
+        /* XP Bar */
+        .xp-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .xp-rank {
+            font-size: 0.85rem;
+            color: #8be9fd;
+            font-weight: bold;
+            white-space: nowrap;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .xp-bar-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .xp-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #50fa7b, #8be9fd);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+            animation: xpGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes xpGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(139, 233, 253, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(139, 233, 253, 0.8), 0 0 25px rgba(80, 250, 123, 0.4); }
+        }
+
+        .xp-text {
+            font-size: 0.7rem;
+            color: #8be9fd;
+            white-space: nowrap;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* New Achievement Popup */
+        .achievement-popup {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(20, 20, 30, 0.95);
+            border: 2px solid #50fa7b;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 40px rgba(80, 250, 123, 0.4);
+        }
+
+        .achievement-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .achievement-popup-icon {
+            font-size: 2.5rem;
+        }
+
+        .achievement-popup-text h4 {
+            color: #50fa7b;
+            margin: 0 0 0.2rem 0;
+            font-size: 0.8rem;
+        }
+
+        .achievement-popup-text p {
+            color: #f8f8f2;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Challenge Card */
+        .challenge-card {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(139, 233, 253, 0.18);
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #50fa7b, #8be9fd, #f1fa8c);
+        }
+
+        .challenge-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .challenge-title h2 {
+            color: #8be9fd;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .challenge-tag {
+            background: rgba(139, 233, 253, 0.2);
+            color: #8be9fd;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .challenge-description {
+            color: #f8f8f2;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+            font-size: 0.8rem;
+        }
+
+        .challenge-hint {
+            color: #6272a4;
+            font-size: 0.7rem;
+            margin-bottom: 0.5rem;
+            padding: 0.3rem 0.5rem;
+            background: rgba(98, 114, 164, 0.08);
+            border-left: 2px solid #6272a4;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* Terminal/File Display */
+        .file-display {
+            background: #1a1a2e;
+            border: 1px solid rgba(139, 233, 253, 0.12);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .file-header {
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.25rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.08);
+        }
+
+        .file-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        .file-dot.red { background: #ff5555; }
+        .file-dot.yellow { background: #f1fa8c; }
+        .file-dot.green { background: #50fa7b; }
+
+        .file-name {
+            color: #6272a4;
+            font-size: 0.65rem;
+            margin-left: 0.3rem;
+        }
+
+        .file-content {
+            padding: 0.5rem 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .file-content .line {
+            color: #f8f8f2;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .file-content .line-number {
+            color: #6272a4;
+            user-select: none;
+            margin-right: 0.6rem;
+            min-width: 2ch;
+            display: inline-block;
+        }
+
+        .file-content .highlight {
+            background: rgba(80, 250, 123, 0.25);
+            color: #50fa7b;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* Input Area */
+        .grep-input-area {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .grep-prompt {
+            color: #50fa7b;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.4rem 0.5rem;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px 0 0 4px;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            border-right: none;
+            font-size: 0.8rem;
+        }
+
+        .grep-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            color: #f8f8f2;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.5rem;
+            outline: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .grep-input:focus {
+            border-color: rgba(139, 233, 253, 0.5);
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.1);
+        }
+
+        .grep-submit {
+            background: linear-gradient(135deg, #50fa7b, #8be9fd);
+            border: none;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            padding: 0.4rem 0.75rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .grep-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(80, 250, 123, 0.4);
+        }
+
+        /* Output Display */
+        .output-display {
+            background: #0d0d1a;
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 4px;
+            padding: 0.4rem 0.5rem;
+            min-height: 40px;
+            max-height: 60px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        .output-display.success {
+            border-color: rgba(80, 250, 123, 0.5);
+            box-shadow: 0 0 20px rgba(80, 250, 123, 0.1);
+        }
+
+        .output-display.error {
+            border-color: rgba(255, 85, 85, 0.5);
+            box-shadow: 0 0 20px rgba(255, 85, 85, 0.1);
+        }
+
+        .output-line {
+            color: #f8f8f2;
+            line-height: 1.3;
+        }
+
+        .output-line.matched {
+            color: #50fa7b;
+        }
+
+        .output-line.error-msg {
+            color: #ff5555;
+        }
+
+        /* Feedback Messages */
+        .feedback {
+            text-align: center;
+            padding: 0.4rem 0.5rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: feedbackPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .feedback.success {
+            background: rgba(80, 250, 123, 0.15);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            color: #50fa7b;
+        }
+
+        .feedback.wrong {
+            background: rgba(255, 85, 85, 0.15);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            color: #ff5555;
+        }
+
+        .feedback.hint-msg {
+            background: rgba(255, 184, 108, 0.15);
+            border: 1px solid rgba(255, 184, 108, 0.3);
+            color: #ffb86c;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Cheatsheet Panel */
+        .cheatsheet {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .cheatsheet-toggle {
+            display: none;
+        }
+
+        .cheatsheet-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cheatsheet.open .cheatsheet-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .cheatsheet-content {
+            display: block;
+            padding-top: 0.3rem;
+            border-top: none;
+        }
+
+        .cheatsheet.open .cheatsheet-content {
+            display: block;
+        }
+
+        .cheatsheet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.4rem;
+        }
+
+        .cheatsheet-item {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .cheatsheet-cmd {
+            color: #50fa7b;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(80, 250, 123, 0.1);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            white-space: nowrap;
+            font-size: 0.7rem;
+        }
+
+        .cheatsheet-desc {
+            color: #6272a4;
+            font-size: 0.7rem;
+        }
+
+        /* Celebration Animation */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Lesson Panel - Teaching before challenges */
+        .lesson-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(189, 147, 249, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8be9fd, #50fa7b, #f1fa8c);
+        }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .lesson-header h3 {
+            color: #8be9fd;
+            font-size: 0.85rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .lesson-tag {
+            background: rgba(139, 233, 253, 0.2);
+            color: #8be9fd;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lesson-content {
+            color: #f8f8f2;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .lesson-content p {
+            margin: 0 0 0.4rem 0;
+        }
+
+        .lesson-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .syntax-box {
+            background: #1a1a2e;
+            border: 1px solid rgba(80, 250, 123, 0.2);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            margin: 0.4rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .syntax-box code {
+            color: #50fa7b;
+            font-size: 0.75rem;
+        }
+
+        .syntax-box .comment {
+            color: #6272a4;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 0.3rem;
+        }
+
+        .lesson-examples {
+            margin-top: 0.75rem;
+        }
+
+        .lesson-examples h4 {
+            color: #8be9fd;
+            font-size: 0.8rem;
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .example-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+        }
+
+        .example-cmd {
+            color: #50fa7b;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(80, 250, 123, 0.1);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .example-desc {
+            color: #aaa;
+        }
+
+        .lesson-tip {
+            background: rgba(255, 184, 108, 0.1);
+            border-left: 3px solid #ffb86c;
+            padding: 0.5rem 0.75rem;
+            margin-top: 0.75rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85rem;
+            color: #ffb86c;
+        }
+
+        /* Two-Column Grid for Learn + Challenge */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-grid .lesson-panel {
+            margin-bottom: 0;
+        }
+
+        .content-grid .challenge-card {
+            margin-bottom: 0;
+        }
+
+        /* Level Complete Modal */
+        .level-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .level-modal.show {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .level-modal-content {
+            background: rgba(13, 13, 26, 0.95);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+            animation: modalPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+
+        .level-modal-content h2 {
+            color: #50fa7b;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-modal-content p {
+            color: #f8f8f2;
+            margin-bottom: 1.5rem;
+        }
+
+        .level-modal-content .xp-gained {
+            color: #8be9fd;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .next-level-btn {
+            background: linear-gradient(135deg, #8be9fd, #50fa7b);
+            border: none;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: none !important;
+            transition: all 0.3s ease;
+        }
+
+        .next-level-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(139, 233, 253, 0.4);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .grep-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .stats-row {
+                gap: 0.4rem;
+            }
+
+            .stat-box {
+                padding: 0.4rem 0.6rem;
+                min-width: 55px;
+            }
+
+            .stat-label {
+                font-size: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+
+            .xp-display {
+                padding: 0.3rem 0.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .grep-input-area {
+                flex-direction: column;
+            }
+
+            .grep-prompt {
+                border-radius: 4px;
+                border-right: 1px solid rgba(139, 233, 253, 0.2);
+            }
+
+            .grep-input {
+                border-radius: 4px;
+            }
+
+            .grep-submit {
+                border-radius: 4px;
+            }
+
+            .home-link {
+                top: 0.5rem;
+                right: 0.5rem;
+                font-size: 0.6rem;
+                padding: 0.3rem 0.5rem;
+            }
+
+            .hologram-container,
+            .hologram-image {
+                max-width: 120px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-panel {
+                padding: 0.4rem 0.5rem;
+            }
+
+            .lesson-header {
+                flex-wrap: wrap;
+                gap: 0.3rem;
+            }
+
+            .lesson-header h3 {
+                font-size: 0.75rem;
+            }
+
+            .syntax-box {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .example-item {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+
+            .level-node {
+                width: 18px;
+                height: 18px;
+                font-size: 0.55rem;
+            }
+
+            .challenge-card {
+                padding: 0.5rem;
+            }
+
+            .file-content {
+                max-height: 80px;
+                font-size: 0.65rem;
+            }
+
+            .output-display {
+                max-height: 50px;
+            }
+        }
+
+        /* Scrollbar styling */
+        .file-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .file-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .file-content::-webkit-scrollbar-thumb {
+            background: rgba(139, 233, 253, 0.3);
+            border-radius: 3px;
+        }
+
+        .file-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 233, 253, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <div class="cursor-bracket tl"></div>
+        <div class="cursor-bracket tr"></div>
+        <div class="cursor-bracket bl"></div>
+        <div class="cursor-bracket br"></div>
+    </div>
+    <div class="corner-brackets"><div class="bottom"></div></div>
+
+    <!-- Floating Return Home Button -->
+    <a href="index.html" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+
+    <main class="main-content">
+        <!-- Hero Section with Hologram -->
+        <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+            <div class="container" style="text-align: center; padding-top: 0.5rem;">
+                <div class="hologram-container">
+                    <img src="assets/remilio2.png" alt="Remilio" class="hologram-image">
+                    <div class="hologram-scanlines"></div>
+                    <div class="hologram-flicker"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grep-container">
+            <header class="grep-header">
+                <h1><span>grep</span> dojo 🥋</h1>
+                <p class="subtitle">master the art of text searching</p>
+            </header>
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-box accent-green">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+                <div class="stat-box accent-cyan">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="level">1</div>
+                </div>
+                <div class="stat-box accent-orange">
+                    <div class="stat-label">Streak</div>
+                    <div class="stat-value" id="streak">🔥 0</div>
+                </div>
+                <div class="stat-box accent-cyan">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy">0%</div>
+                </div>
+                <div class="stat-box accent-green">
+                    <div class="stat-label">Solved</div>
+                    <div class="stat-value" id="total-solved">0</div>
+                </div>
+                <div class="stat-box accent-cyan">
+                    <div class="stat-label">Best</div>
+                    <div class="stat-value" id="best-streak">0</div>
+                </div>
+                <div class="stat-box accent-cyan">
+                    <div class="stat-label">Hints</div>
+                    <div class="stat-value" id="hints-remaining">3</div>
+                </div>
+            </div>
+
+            <!-- XP Display -->
+            <div class="xp-display">
+                <span class="xp-rank" id="xp-rank">🌱 Novice</span>
+                <div class="xp-bar-container">
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="xp-text"><span id="xp-current">0</span>/<span id="xp-needed">100</span> XP</span>
+                </div>
+            </div>
+
+            <!-- Level Progression Meter -->
+            <div class="level-meter" id="level-meter">
+                <div class="level-meter-progress" id="level-meter-progress"></div>
+                <div class="level-node" data-level="1" onclick="jumpToLevel(1)">
+                    1
+                    <span class="level-node-tooltip">Basic grep</span>
+                </div>
+                <div class="level-node" data-level="2" onclick="jumpToLevel(2)">
+                    2
+                    <span class="level-node-tooltip">Case-Insensitive (-i)</span>
+                </div>
+                <div class="level-node" data-level="3" onclick="jumpToLevel(3)">
+                    3
+                    <span class="level-node-tooltip">Recursive Search (-r)</span>
+                </div>
+                <div class="level-node" data-level="4" onclick="jumpToLevel(4)">
+                    4
+                    <span class="level-node-tooltip">Line Numbers (-n)</span>
+                </div>
+                <div class="level-node" data-level="5" onclick="jumpToLevel(5)">
+                    5
+                    <span class="level-node-tooltip">Count Matches (-c)</span>
+                </div>
+                <div class="level-node" data-level="6" onclick="jumpToLevel(6)">
+                    6
+                    <span class="level-node-tooltip">Invert Match (-v)</span>
+                </div>
+                <div class="level-node" data-level="7" onclick="jumpToLevel(7)">
+                    7
+                    <span class="level-node-tooltip">Regex Patterns</span>
+                </div>
+                <div class="level-node" data-level="8" onclick="jumpToLevel(8)">
+                    8
+                    <span class="level-node-tooltip">Extended Regex (-E)</span>
+                </div>
+                <div class="level-node" data-level="9" onclick="jumpToLevel(9)">
+                    9
+                    <span class="level-node-tooltip">Boss Level 🏆</span>
+                </div>
+            </div>
+
+            <!-- Two-Column Grid: Learn + Challenge -->
+            <div class="content-grid">
+                <!-- Lesson Panel -->
+                <div class="lesson-panel" id="lesson-panel">
+                    <div class="lesson-header">
+                        <h3>📚 <span id="lesson-title">Learn: Basic grep</span></h3>
+                        <span class="lesson-tag" id="lesson-tag">new skill</span>
+                    </div>
+                    <div class="lesson-content" id="lesson-content">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Challenge Card -->
+            <div class="challenge-card">
+                <div class="challenge-title">
+                    <h2 id="challenge-title">Loading challenge...</h2>
+                    <span class="challenge-tag" id="challenge-tag">basics</span>
+                </div>
+                <p class="challenge-description" id="challenge-description"></p>
+                <p class="challenge-hint" id="challenge-hint"></p>
+
+                <!-- File Display -->
+                <div class="file-display">
+                    <div class="file-header">
+                        <span class="file-dot red"></span>
+                        <span class="file-dot yellow"></span>
+                        <span class="file-dot green"></span>
+                        <span class="file-name" id="file-name">sample.txt</span>
+                    </div>
+                    <div class="file-content" id="file-content"></div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="grep-input-area">
+                    <span class="grep-prompt">$</span>
+                    <input type="text" class="grep-input" id="grep-input" placeholder="grep ..." autocomplete="off" spellcheck="false">
+                    <button class="grep-submit" id="submit-btn">Run</button>
+                    <button class="hint-btn" id="hint-btn" onclick="useHint()">💡 Hint <span id="hint-count">(3)</span></button>
+                </div>
+
+                <!-- Hint Display -->
+                <div class="hint-display" id="hint-display"></div>
+
+                <!-- Output Display -->
+                <div class="output-display" id="output-display">
+                    <div class="output-line" style="color: #6272a4;">// output will appear here</div>
+                </div>
+
+                <!-- Feedback -->
+                <div class="feedback" id="feedback"></div>
+
+                <!-- Command History -->
+                <div class="history-container" id="history-container" style="display: none;">
+                    <div class="history-label">Previous Attempts</div>
+                    <div class="history-list" id="history-list"></div>
+                </div>
+            </div>
+            </div><!-- end content-grid -->
+
+            <!-- Cheatsheet -->
+            <div class="cheatsheet" id="cheatsheet">
+                <div class="cheatsheet-toggle" onclick="toggleCheatsheet()">
+                    📖 grep cheatsheet
+                </div>
+                <div class="cheatsheet-content">
+                    <div class="cheatsheet-grid">
+                        <div class="cheatsheet-item">
+                            <span class="cheatsheet-cmd">grep "text"</span>
+                            <span class="cheatsheet-desc">basic search</span>
+                        </div>
+                        <div class="cheatsheet-item">
+                            <span class="cheatsheet-cmd">-i</span>
+                            <span class="cheatsheet-desc">case insensitive</span>
+                        </div>
+                        <div class="cheatsheet-item">
+                            <span class="cheatsheet-cmd">-v</span>
+                            <span class="cheatsheet-desc">invert match</span>
+                        </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">-c</span>
+                        <span class="cheatsheet-desc">count matches</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">-n</span>
+                        <span class="cheatsheet-desc">show line numbers</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">-w</span>
+                        <span class="cheatsheet-desc">whole words only</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">-E</span>
+                        <span class="cheatsheet-desc">extended regex</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">^</span>
+                        <span class="cheatsheet-desc">start of line</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">$</span>
+                        <span class="cheatsheet-desc">end of line</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">.</span>
+                        <span class="cheatsheet-desc">any character</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">*</span>
+                        <span class="cheatsheet-desc">zero or more</span>
+                    </div>
+                    <div class="cheatsheet-item">
+                        <span class="cheatsheet-cmd">[abc]</span>
+                        <span class="cheatsheet-desc">character class</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <!-- Level Complete Modal -->
+    <div class="level-modal" id="level-modal">
+        <div class="level-modal-content">
+            <h2>🎉 Level Complete!</h2>
+            <p id="level-complete-msg">You've mastered the basics!</p>
+            <div class="xp-gained" id="xp-gained">+100 XP</div>
+            <button class="next-level-btn" onclick="startNextLevel()">Next Level →</button>
+        </div>
+    </div>
+
+    <!-- Celebration container -->
+    <div class="celebration" id="celebration"></div>
+
+    <!-- Achievements Button -->
+    <button class="achievements-btn" onclick="toggleAchievements()">
+        🏆 Achievements <span class="achievement-count" id="achievement-count">0/11</span>
+    </button>
+
+    <!-- Achievements Modal -->
+    <div class="achievements-modal" id="achievements-modal">
+        <div class="achievements-content">
+            <div class="achievements-header">
+                <h2>🏆 Achievements</h2>
+                <button class="achievements-close" onclick="toggleAchievements()">&times;</button>
+            </div>
+            <div class="achievements-grid" id="achievements-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievement-popup">
+        <div class="achievement-popup-icon" id="achievement-popup-icon">🏆</div>
+        <div class="achievement-popup-text">
+            <h4>ACHIEVEMENT UNLOCKED!</h4>
+            <p id="achievement-popup-name">First Steps</p>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // GREP DOJO - Interactive grep Learning Game
+        // ═══════════════════════════════════════════════════════════════
+
+        // Game State
+        let gameState = {
+            score: 0,
+            level: 1,
+            streak: 0,
+            currentChallenge: 0,
+            challengesInLevel: 0,
+            totalCorrect: 0,
+            totalAttempts: 0,
+            bestStreak: 0,
+            hintsRemaining: 3,
+            hintsUsedThisChallenge: false,
+            xp: 0,
+            completedLevels: new Set(),
+            highestUnlockedLevel: 1,
+            unlockedAchievements: new Set(),
+            commandHistory: []
+        };
+
+        // Ranks based on XP
+        const ranks = [
+            { name: '🌱 Novice', minXP: 0 },
+            { name: '📖 Student', minXP: 100 },
+            { name: '⚔️ Apprentice', minXP: 300 },
+            { name: '🗡️ Warrior', minXP: 600 },
+            { name: '🛡️ Guardian', minXP: 1000 },
+            { name: '⚡ Expert', minXP: 1500 },
+            { name: '🔥 Master', minXP: 2500 },
+            { name: '👑 Grandmaster', minXP: 4000 },
+            { name: '🌟 Legend', minXP: 6000 }
+        ];
+
+        // Achievements definitions
+        const achievements = {
+            firstBlood: { id: 'firstBlood', icon: '🎯', name: 'First Blood', desc: 'Complete your first challenge' },
+            streak3: { id: 'streak3', icon: '🔥', name: 'On Fire', desc: 'Get a 3 streak' },
+            streak5: { id: 'streak5', icon: '💥', name: 'Unstoppable', desc: 'Get a 5 streak' },
+            streak10: { id: 'streak10', icon: '🌟', name: 'Legendary', desc: 'Get a 10 streak' },
+            noHints: { id: 'noHints', icon: '🧠', name: 'Big Brain', desc: 'Complete a level without hints' },
+            level3: { id: 'level3', icon: '🥉', name: 'Getting Started', desc: 'Reach level 3' },
+            level5: { id: 'level5', icon: '🥈', name: 'Halfway There', desc: 'Reach level 5' },
+            level9: { id: 'level9', icon: '🥇', name: 'Master', desc: 'Complete all levels' },
+            perfectLevel: { id: 'perfectLevel', icon: '💎', name: 'Flawless', desc: 'Complete a level with 100% accuracy' },
+            points500: { id: 'points500', icon: '💰', name: 'Point Collector', desc: 'Earn 500 points' },
+            points1000: { id: 'points1000', icon: '💎', name: 'High Roller', desc: 'Earn 1000 points' }
+        };
+
+        // Challenge Database
+        // Lesson content for each level
+        const lessons = {
+            1: {
+                title: "Basic grep Search",
+                tag: "fundamentals",
+                content: `
+                    <p><strong>grep</strong> (Global Regular Expression Print) is one of the most powerful text-searching tools in Unix/Linux. It searches through files line by line and prints lines matching a pattern.</p>
+                    <div class="syntax-box">
+                        <code>grep "pattern" filename</code>
+                        <span class="comment"># Search for "pattern" in a file</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "error" log.txt</span>
+                            <span class="example-desc">Find all lines containing "error"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "404" access.log</span>
+                            <span class="example-desc">Find 404 errors in access log</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 grep is case-sensitive by default. "Error" and "error" are different!</div>
+                `
+            },
+            2: {
+                title: "Case-Insensitive Search (-i)",
+                tag: "flags",
+                content: `
+                    <p>Sometimes you want to find text regardless of whether it's uppercase or lowercase. The <strong>-i</strong> flag makes grep ignore case differences.</p>
+                    <div class="syntax-box">
+                        <code>grep -i "pattern" filename</code>
+                        <span class="comment"># -i = ignore case (case-insensitive)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -i "error" log.txt</span>
+                            <span class="example-desc">Matches ERROR, Error, error, eRrOr...</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -i "warning" system.log</span>
+                            <span class="example-desc">Find all warning variants</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Combining -i with other flags is common: grep -in "pattern" file</div>
+                `
+            },
+            3: {
+                title: "Invert Match (-v)",
+                tag: "filtering",
+                content: `
+                    <p>Sometimes you want to see everything <em>except</em> lines matching a pattern. The <strong>-v</strong> flag inverts the match — showing only non-matching lines.</p>
+                    <div class="syntax-box">
+                        <code>grep -v "pattern" filename</code>
+                        <span class="comment"># -v = invert match (show NON-matching lines)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -v "DEBUG" app.log</span>
+                            <span class="example-desc">Show all lines WITHOUT "DEBUG"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -v "^#" config.ini</span>
+                            <span class="example-desc">Filter out comment lines</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Great for filtering out noise like debug messages or comments!</div>
+                `
+            },
+            4: {
+                title: "Line Numbers & Counting (-n, -c)",
+                tag: "information",
+                content: `
+                    <p>Need to know WHERE matches are or HOW MANY? Use <strong>-n</strong> to show line numbers and <strong>-c</strong> to count matches.</p>
+                    <div class="syntax-box">
+                        <code>grep -n "pattern" filename</code>
+                        <span class="comment"># -n = show line numbers</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -c "pattern" filename</code>
+                        <span class="comment"># -c = count matching lines</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -n "TODO" code.js</span>
+                            <span class="example-desc">Output: "15:// TODO: fix this"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -c "error" log.txt</span>
+                            <span class="example-desc">Output: "42" (number of matches)</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 -n is essential for debugging — jump right to the line!</div>
+                `
+            },
+            5: {
+                title: "Whole Word Matching (-w)",
+                tag: "precision",
+                content: `
+                    <p>Searching for "is" but matching "this", "island", and "his"? Use <strong>-w</strong> to match whole words only — no partial matches!</p>
+                    <div class="syntax-box">
+                        <code>grep -w "pattern" filename</code>
+                        <span class="comment"># -w = match whole words only</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -w "log" code.py</span>
+                            <span class="example-desc">Matches "log" but NOT "login" or "catalog"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -w "is" text.txt</span>
+                            <span class="example-desc">Matches "is" but NOT "this" or "island"</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 -w treats the pattern as a whole word, bounded by non-word characters!</div>
+                `
+            },
+            6: {
+                title: "Combining Flags",
+                tag: "power-user",
+                content: `
+                    <p>The real power of grep comes from <strong>combining multiple flags</strong>. You can chain flags together for precise searches!</p>
+                    <div class="syntax-box">
+                        <code>grep -in "pattern" filename</code>
+                        <span class="comment"># -i (ignore case) + -n (line numbers)</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -cv "pattern" filename</code>
+                        <span class="comment"># -c (count) + -v (invert) = count non-matches</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -inw "error" log.txt</span>
+                            <span class="example-desc">Case-insensitive, line numbers, whole word</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -ic "test" results.txt</span>
+                            <span class="example-desc">Count case-insensitive matches</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Flags can be combined: -inv is the same as -i -n -v</div>
+                `
+            },
+            7: {
+                title: "Line Anchors (^ and $)",
+                tag: "regex",
+                content: `
+                    <p>Regular expressions let you match <em>where</em> in a line the pattern appears. <strong>^</strong> matches the start, <strong>$</strong> matches the end.</p>
+                    <div class="syntax-box">
+                        <code>grep "^pattern" filename</code>
+                        <span class="comment"># ^ = pattern must be at START of line</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep "pattern$" filename</code>
+                        <span class="comment"># $ = pattern must be at END of line</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "^ERROR" log.txt</span>
+                            <span class="example-desc">Lines STARTING with "ERROR"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep ";$" code.c</span>
+                            <span class="example-desc">Lines ENDING with semicolon</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Use ^$ together to match empty lines: grep "^$" file</div>
+                `
+            },
+            8: {
+                title: "Wildcards & Character Classes",
+                tag: "regex",
+                content: `
+                    <p>Take your patterns to the next level! <strong>.</strong> matches any single character, and <strong>[...]</strong> matches any character in the set.</p>
+                    <div class="syntax-box">
+                        <code>grep "c.t" filename</code>
+                        <span class="comment"># . = any single character (cat, cut, cot...)</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep "colo[u]r" filename</code>
+                        <span class="comment"># [u] = optionally match 'u' (color OR colour)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "b.g" words.txt</span>
+                            <span class="example-desc">Matches bag, big, bug, bog...</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "[0-9]" data.txt</span>
+                            <span class="example-desc">Lines containing any digit</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 [a-z] = any lowercase letter, [A-Za-z0-9] = alphanumeric</div>
+                `
+            },
+            9: {
+                title: "Boss Level: Real-World grep",
+                tag: "master",
+                content: `
+                    <p>You've learned the fundamentals! Now combine everything you know. Real grep mastery means knowing <em>which tool to use when</em>.</p>
+                    <div class="syntax-box">
+                        <code>grep -E "pattern1|pattern2" file</code>
+                        <span class="comment"># -E = extended regex (OR with |)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Pro Techniques</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -r "TODO" ./src</span>
+                            <span class="example-desc">Recursive search in directory</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -l "pattern" *.txt</span>
+                            <span class="example-desc">List only filenames with matches</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -A2 -B2 "error" log</span>
+                            <span class="example-desc">Show 2 lines before/after match</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">🏆 You're ready for the final challenge. Show what you've learned!</div>
+                `
+            }
+        };
+
+        const challenges = [
+            // ═══ LEVEL 1: Basics ═══
+            {
+                level: 1,
+                tag: "basics",
+                title: "Find the Pattern",
+                description: "Find all lines containing the word 'error'. Just use a simple grep search!",
+                hint: "💡 Syntax: grep \"pattern\" filename",
+                fileName: "server.log",
+                fileContent: [
+                    "2024-01-15 10:23:45 INFO Server started",
+                    "2024-01-15 10:24:01 error Connection refused",
+                    "2024-01-15 10:24:15 INFO User logged in",
+                    "2024-01-15 10:25:00 error Database timeout",
+                    "2024-01-15 10:25:30 INFO Request processed"
+                ],
+                expectedOutput: [
+                    "2024-01-15 10:24:01 error Connection refused",
+                    "2024-01-15 10:25:00 error Database timeout"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?error["']?\s+\S+$/i,
+                    /^grep\s+["']error["']\s+\S+$/i,
+                    /^grep\s+error\s+\S+$/i
+                ],
+                successMsg: "Nice! You found all the errors! 🎯"
+            },
+            {
+                level: 1,
+                tag: "basics",
+                title: "Search for Success",
+                description: "Find all lines containing 'success' in the deployment log.",
+                hint: "💡 Just like before - grep \"pattern\" filename",
+                fileName: "deploy.log",
+                fileContent: [
+                    "Build started...",
+                    "Compiling assets...",
+                    "Tests: 42 passed",
+                    "Deployment success",
+                    "Cache cleared",
+                    "Final check: success",
+                    "Deploy complete"
+                ],
+                expectedOutput: [
+                    "Deployment success",
+                    "Final check: success"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?success["']?\s+\S+$/i
+                ],
+                successMsg: "You're getting the hang of it! 💪"
+            },
+            {
+                level: 1,
+                tag: "basics",
+                title: "Hunt for Warnings",
+                description: "Find every line that mentions 'WARNING' (watch the case!).",
+                hint: "💡 Be careful - grep is case-sensitive by default!",
+                fileName: "app.log",
+                fileContent: [
+                    "INFO: Starting application",
+                    "WARNING: Low memory",
+                    "INFO: Loading modules",
+                    "WARNING: Deprecated function used",
+                    "warning: this won't match",
+                    "INFO: Ready"
+                ],
+                expectedOutput: [
+                    "WARNING: Low memory",
+                    "WARNING: Deprecated function used"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?WARNING["']?\s+\S+$/
+                ],
+                successMsg: "Excellent! You noticed the case sensitivity! 🔍"
+            },
+
+            // ═══ LEVEL 2: Case Insensitive ═══
+            {
+                level: 2,
+                tag: "flags",
+                title: "Case Doesn't Matter",
+                description: "Find ALL lines with 'todo' regardless of case (TODO, Todo, todo, etc).",
+                hint: "💡 Use -i flag for case-insensitive search: grep -i \"pattern\" file",
+                fileName: "notes.txt",
+                fileContent: [
+                    "Buy groceries",
+                    "TODO: Fix the bug",
+                    "Call mom",
+                    "Todo: Review PR",
+                    "todo - update docs",
+                    "Meeting at 3pm"
+                ],
+                expectedOutput: [
+                    "TODO: Fix the bug",
+                    "Todo: Review PR",
+                    "todo - update docs"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-i\s+["']?todo["']?\s+\S+$/i,
+                    /^grep\s+--ignore-case\s+["']?todo["']?\s+\S+$/i
+                ],
+                successMsg: "The -i flag is super useful! 🌟"
+            },
+            {
+                level: 2,
+                tag: "flags",
+                title: "Find All Errors",
+                description: "Find all error messages, whether they say 'Error', 'ERROR', or 'error'.",
+                hint: "💡 Remember: -i makes the search case-insensitive",
+                fileName: "mixed.log",
+                fileContent: [
+                    "Error: File not found",
+                    "Success: Operation complete",
+                    "ERROR: Permission denied",
+                    "Info: Starting service",
+                    "error: connection lost",
+                    "Done!"
+                ],
+                expectedOutput: [
+                    "Error: File not found",
+                    "ERROR: Permission denied",
+                    "error: connection lost"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-i\s+["']?error["']?\s+\S+$/i
+                ],
+                successMsg: "Perfect use of -i! Now you can catch all variants! 🎉"
+            },
+
+            // ═══ LEVEL 3: Invert Match ═══
+            {
+                level: 3,
+                tag: "invert",
+                title: "Show Me the Opposite",
+                description: "Find all lines that do NOT contain 'DEBUG'. We only want the important stuff!",
+                hint: "💡 Use -v to invert the match (show non-matching lines)",
+                fileName: "verbose.log",
+                fileContent: [
+                    "DEBUG: Variable x = 5",
+                    "INFO: User action completed",
+                    "DEBUG: Entering function foo",
+                    "ERROR: Something went wrong",
+                    "DEBUG: Loop iteration 42"
+                ],
+                expectedOutput: [
+                    "INFO: User action completed",
+                    "ERROR: Something went wrong"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-v\s+["']?DEBUG["']?\s+\S+$/,
+                    /^grep\s+--invert-match\s+["']?DEBUG["']?\s+\S+$/
+                ],
+                successMsg: "The -v flag is great for filtering out noise! 🔇"
+            },
+            {
+                level: 3,
+                tag: "invert",
+                title: "No Comments Allowed",
+                description: "Filter out all lines starting with '#' (comments).",
+                hint: "💡 Use -v with the ^ anchor for start of line",
+                fileName: "config.ini",
+                fileContent: [
+                    "# This is a comment",
+                    "host=localhost",
+                    "# Another comment",
+                    "port=8080",
+                    "debug=false",
+                    "# End of config"
+                ],
+                expectedOutput: [
+                    "host=localhost",
+                    "port=8080",
+                    "debug=false"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-v\s+["']?\^#["']?\s+\S+$/,
+                    /^grep\s+-v\s+["']\^#["']\s+\S+$/
+                ],
+                successMsg: "Pro move! Filtering comments is a common task! 📝"
+            },
+
+            // ═══ LEVEL 4: Line Numbers ═══
+            {
+                level: 4,
+                tag: "numbers",
+                title: "Where Is It?",
+                description: "Find 'function' and show the line numbers. We need to know exactly where they are!",
+                hint: "💡 Use -n to display line numbers with matches",
+                fileName: "script.js",
+                fileContent: [
+                    "const x = 10;",
+                    "function hello() {",
+                    "  console.log('hi');",
+                    "}",
+                    "function goodbye() {",
+                    "  console.log('bye');",
+                    "}"
+                ],
+                expectedOutput: [
+                    "2:function hello() {",
+                    "5:function goodbye() {"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-n\s+["']?function["']?\s+\S+$/i
+                ],
+                successMsg: "Line numbers make debugging so much easier! 🔢"
+            },
+            {
+                level: 4,
+                tag: "numbers",
+                title: "Count the Lines",
+                description: "How many lines contain 'import'? Just give me the count!",
+                hint: "💡 Use -c to count matching lines instead of showing them",
+                fileName: "app.py",
+                fileContent: [
+                    "import os",
+                    "import sys",
+                    "from typing import List",
+                    "import json",
+                    "",
+                    "def main():",
+                    "    pass"
+                ],
+                expectedOutput: ["4"],
+                acceptedPatterns: [
+                    /^grep\s+-c\s+["']?import["']?\s+\S+$/i
+                ],
+                successMsg: "The -c flag is perfect for quick statistics! 📊"
+            },
+
+            // ═══ LEVEL 5: Word Boundaries ═══
+            {
+                level: 5,
+                tag: "precision",
+                title: "Whole Words Only",
+                description: "Find the word 'is' but NOT 'this', 'island', or 'his'. Exact matches only!",
+                hint: "💡 Use -w to match whole words only",
+                fileName: "essay.txt",
+                fileContent: [
+                    "This is a test.",
+                    "The island is beautiful.",
+                    "His cat is sleeping.",
+                    "It is what it is.",
+                    "This isn't right."
+                ],
+                expectedOutput: [
+                    "This is a test.",
+                    "The island is beautiful.",
+                    "His cat is sleeping.",
+                    "It is what it is."
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-w\s+["']?is["']?\s+\S+$/i
+                ],
+                successMsg: "The -w flag prevents partial matches! Precision matters! 🎯"
+            },
+            {
+                level: 5,
+                tag: "precision",
+                title: "Exact Function Names",
+                description: "Find 'log' but not 'login', 'logout', or 'catalog'. Match the whole word!",
+                hint: "💡 Remember: -w matches complete words only",
+                fileName: "functions.txt",
+                fileContent: [
+                    "def log(msg):",
+                    "def login(user):",
+                    "def logout():",
+                    "def log(level, msg):",
+                    "def catalog_items():"
+                ],
+                expectedOutput: [
+                    "def log(msg):",
+                    "def log(level, msg):"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-w\s+["']?log["']?\s+\S+$/i
+                ],
+                successMsg: "Perfect! You avoided the false positives! 🛡️"
+            },
+
+            // ═══ LEVEL 6: Combining Flags ═══
+            {
+                level: 6,
+                tag: "combo",
+                title: "Flag Combo!",
+                description: "Find all lines with 'error' (any case) AND show line numbers.",
+                hint: "💡 You can combine flags: grep -in \"pattern\" file",
+                fileName: "system.log",
+                fileContent: [
+                    "Starting system...",
+                    "Error: Config missing",
+                    "Loading modules",
+                    "ERROR: Failed to connect",
+                    "Retry succeeded",
+                    "error: timeout"
+                ],
+                expectedOutput: [
+                    "2:Error: Config missing",
+                    "4:ERROR: Failed to connect",
+                    "6:error: timeout"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+(-[in]{2}|-i\s+-n|-n\s+-i)\s+["']?error["']?\s+\S+$/i
+                ],
+                successMsg: "Combining flags is where grep gets powerful! ⚡"
+            },
+            {
+                level: 6,
+                tag: "combo",
+                title: "Ultimate Combo",
+                description: "Count how many lines contain 'test' (case-insensitive).",
+                hint: "💡 Combine -c with -i for case-insensitive counting",
+                fileName: "ci.log",
+                fileContent: [
+                    "Running tests...",
+                    "Test: login passed",
+                    "TEST: api passed",
+                    "test: database passed",
+                    "All tests complete",
+                    "Deploying..."
+                ],
+                expectedOutput: ["5"],
+                acceptedPatterns: [
+                    /^grep\s+(-[ic]{2}|-i\s+-c|-c\s+-i)\s+["']?test["']?\s+\S+$/i
+                ],
+                successMsg: "You're becoming a grep master! 🏆"
+            },
+
+            // ═══ LEVEL 7: Simple Regex ═══
+            {
+                level: 7,
+                tag: "regex",
+                title: "Start of Line",
+                description: "Find all lines that START with 'ERROR' (not just contain it).",
+                hint: "💡 Use ^ to anchor to the start of line: grep \"^pattern\"",
+                fileName: "logs.txt",
+                fileContent: [
+                    "ERROR: Critical failure",
+                    "Info: Process ERROR handled",
+                    "ERROR: Out of memory",
+                    "Warning: ERROR rate high",
+                    "ERROR: Connection lost"
+                ],
+                expectedOutput: [
+                    "ERROR: Critical failure",
+                    "ERROR: Out of memory",
+                    "ERROR: Connection lost"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']\^ERROR["']\s+\S+$/,
+                    /^grep\s+\^ERROR\s+\S+$/
+                ],
+                successMsg: "The ^ anchor is essential for precise matching! 📍"
+            },
+            {
+                level: 7,
+                tag: "regex",
+                title: "End of Line",
+                description: "Find all lines that END with a semicolon (;).",
+                hint: "💡 Use $ to anchor to the end of line: grep \"pattern$\"",
+                fileName: "code.c",
+                fileContent: [
+                    "int x = 5;",
+                    "if (x > 0) {",
+                    "    return x;",
+                    "}",
+                    "int y = 10;"
+                ],
+                expectedOutput: [
+                    "int x = 5;",
+                    "    return x;",
+                    "int y = 10;"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["'];?\$["']\s+\S+$/,
+                    /^grep\s+["'];\$["']\s+\S+$/
+                ],
+                successMsg: "The $ anchor finds line endings! 🔚"
+            },
+
+            // ═══ LEVEL 8: More Regex ═══
+            {
+                level: 8,
+                tag: "regex",
+                title: "Any Character",
+                description: "Find lines matching 'c.t' (cat, cut, cot, etc). The dot matches any character!",
+                hint: "💡 The . (dot) matches any single character",
+                fileName: "words.txt",
+                fileContent: [
+                    "The cat sat on the mat",
+                    "I cut the paper",
+                    "The cot was comfortable",
+                    "Connect to server",
+                    "A cool cat"
+                ],
+                expectedOutput: [
+                    "The cat sat on the mat",
+                    "I cut the paper",
+                    "The cot was comfortable",
+                    "Connect to server",
+                    "A cool cat"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?c\.t["']?\s+\S+$/i,
+                    /^grep\s+["']c\.t["']\s+\S+$/i
+                ],
+                successMsg: "The dot is your wildcard for single characters! 🃏"
+            },
+            {
+                level: 8,
+                tag: "regex",
+                title: "Character Class",
+                description: "Find lines with 'color' or 'colour' using a character class.",
+                hint: "💡 Use [ou] to match either 'o' or 'u': grep \"colo[u]r\"",
+                fileName: "text.txt",
+                fileContent: [
+                    "The color is red",
+                    "British spelling: colour",
+                    "Colorful sunset",
+                    "What colour is it?",
+                    "Rainbow colors"
+                ],
+                expectedOutput: [
+                    "The color is red",
+                    "British spelling: colour",
+                    "What colour is it?"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?colou?r["']?\s+\S+$/i,
+                    /^grep\s+["']colo\[u\]r["']\s+\S+$/i,
+                    /^grep\s+["']colo\[ou\]r["']\s+\S+$/i
+                ],
+                successMsg: "Character classes give you flexible matching! 🔤"
+            },
+
+            // ═══ LEVEL 9: Boss Level ═══
+            {
+                level: 9,
+                tag: "boss",
+                title: "🏆 Final Boss: Email Hunter",
+                description: "Find all lines containing email addresses. This is the ultimate test!",
+                hint: "💡 Emails have @ in them. What pattern could match them?",
+                fileName: "contacts.txt",
+                fileContent: [
+                    "John Doe",
+                    "Contact: john@example.com",
+                    "Phone: 555-1234",
+                    "Email: jane.doe@company.org",
+                    "Website: example.com",
+                    "Support: help@site.io"
+                ],
+                expectedOutput: [
+                    "Contact: john@example.com",
+                    "Email: jane.doe@company.org",
+                    "Support: help@site.io"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?@["']?\s+\S+$/i,
+                    /^grep\s+["'].*@.*["']\s+\S+$/i
+                ],
+                successMsg: "🎊 CONGRATULATIONS! You've mastered grep! You are now a grep ninja! 🥷"
+            }
+        ];
+
+        // DOM Elements
+        const scoreEl = document.getElementById('score');
+        const levelEl = document.getElementById('level');
+        const streakEl = document.getElementById('streak');
+        const progressFill = document.getElementById('progress-fill');
+        const challengeTitle = document.getElementById('challenge-title');
+        const challengeTag = document.getElementById('challenge-tag');
+        const challengeDesc = document.getElementById('challenge-description');
+        const challengeHint = document.getElementById('challenge-hint');
+        const fileName = document.getElementById('file-name');
+        const fileContent = document.getElementById('file-content');
+        const grepInput = document.getElementById('grep-input');
+        const outputDisplay = document.getElementById('output-display');
+        const feedbackEl = document.getElementById('feedback');
+        const levelModal = document.getElementById('level-modal');
+        const levelCompleteMsg = document.getElementById('level-complete-msg');
+        const xpGainedEl = document.getElementById('xp-gained');
+
+        // Update level meter UI
+        function updateLevelMeter() {
+            const nodes = document.querySelectorAll('.level-node');
+            const progressBar = document.getElementById('level-meter-progress');
+            
+            nodes.forEach(node => {
+                const level = parseInt(node.dataset.level);
+                node.classList.remove('current', 'completed', 'locked');
+                
+                if (level === gameState.level) {
+                    node.classList.add('current');
+                } else if (gameState.completedLevels.has(level)) {
+                    node.classList.add('completed');
+                } else if (level > gameState.highestUnlockedLevel) {
+                    node.classList.add('locked');
+                }
+            });
+            
+            // Update progress line (based on completed levels)
+            const completedCount = gameState.completedLevels.size;
+            const progressWidth = completedCount > 0 ? ((completedCount) / 8) * 100 : 0;
+            progressBar.style.width = `calc(${progressWidth}% - 2rem)`;
+        }
+
+        // Jump to a specific level
+        function jumpToLevel(level) {
+            // Can only jump to unlocked levels
+            if (level > gameState.highestUnlockedLevel) {
+                showFeedback(`Level ${level} is locked! Complete earlier levels first.`, 'error');
+                return;
+            }
+            
+            gameState.level = level;
+            gameState.challengesInLevel = 0;
+            updateStats();
+            updateLevelMeter();
+            loadChallenge();
+        }
+
+        // Initialize Game
+        function initGame() {
+            console.log('initGame starting...');
+            loadSavedProgress();
+            renderAchievements();
+            updateLevelMeter();
+            updateAllStats();
+            loadChallenge();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            console.log('Submit button found:', submitBtn);
+            
+            grepInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAnswer();
+            });
+            
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    console.log('Submit button clicked!');
+                    checkAnswer();
+                });
+            } else {
+                console.error('Submit button not found!');
+            }
+            
+            console.log('initGame complete');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // HINTS SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function useHint() {
+            if (gameState.hintsRemaining <= 0 || gameState.hintsUsedThisChallenge) return;
+            
+            const levelChallenges = getLevelChallenges(gameState.level);
+            const challenge = levelChallenges[gameState.challengesInLevel];
+            
+            if (!challenge || !challenge.hint) return;
+            
+            gameState.hintsRemaining--;
+            gameState.hintsUsedThisChallenge = true;
+            
+            document.getElementById('hint-count').textContent = `(${gameState.hintsRemaining})`;
+            document.getElementById('hints-remaining').textContent = gameState.hintsRemaining;
+            
+            const hintDisplay = document.getElementById('hint-display');
+            hintDisplay.textContent = '💡 ' + challenge.hint;
+            hintDisplay.classList.add('show');
+            
+            if (gameState.hintsRemaining <= 0) {
+                document.getElementById('hint-btn').disabled = true;
+            }
+            
+            saveProgress();
+        }
+        
+        function resetHintDisplay() {
+            gameState.hintsUsedThisChallenge = false;
+            document.getElementById('hint-display').classList.remove('show');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // ACHIEVEMENTS SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function checkAchievements(context) {
+            const newAchievements = [];
+            
+            // First challenge completed
+            if (gameState.totalCorrect >= 1 && !gameState.unlockedAchievements.has('firstBlood')) {
+                newAchievements.push('firstBlood');
+            }
+            
+            // Streak achievements
+            if (gameState.streak >= 3 && !gameState.unlockedAchievements.has('streak3')) {
+                newAchievements.push('streak3');
+            }
+            if (gameState.streak >= 5 && !gameState.unlockedAchievements.has('streak5')) {
+                newAchievements.push('streak5');
+            }
+            if (gameState.streak >= 10 && !gameState.unlockedAchievements.has('streak10')) {
+                newAchievements.push('streak10');
+            }
+            
+            // Level achievements
+            if (gameState.level >= 3 && !gameState.unlockedAchievements.has('level3')) {
+                newAchievements.push('level3');
+            }
+            if (gameState.level >= 5 && !gameState.unlockedAchievements.has('level5')) {
+                newAchievements.push('level5');
+            }
+            if (gameState.completedLevels.size >= 9 && !gameState.unlockedAchievements.has('level9')) {
+                newAchievements.push('level9');
+            }
+            
+            // Points achievements
+            if (gameState.score >= 500 && !gameState.unlockedAchievements.has('points500')) {
+                newAchievements.push('points500');
+            }
+            if (gameState.score >= 1000 && !gameState.unlockedAchievements.has('points1000')) {
+                newAchievements.push('points1000');
+            }
+            
+            // No hints used this level
+            if (context.levelComplete && !context.hintsUsedThisLevel && !gameState.unlockedAchievements.has('noHints')) {
+                newAchievements.push('noHints');
+            }
+            
+            // Perfect level (no wrong answers)
+            if (context.levelComplete && context.levelAccuracy === 100 && !gameState.unlockedAchievements.has('perfectLevel')) {
+                newAchievements.push('perfectLevel');
+            }
+            
+            // Unlock new achievements
+            newAchievements.forEach((id, index) => {
+                gameState.unlockedAchievements.add(id);
+                setTimeout(() => showAchievementPopup(achievements[id]), index * 2500);
+            });
+            
+            if (newAchievements.length > 0) {
+                renderAchievements();
+                saveProgress();
+            }
+        }
+        
+        function showAchievementPopup(achievement) {
+            const popup = document.getElementById('achievement-popup');
+            document.getElementById('achievement-popup-icon').textContent = achievement.icon;
+            document.getElementById('achievement-popup-name').textContent = achievement.name;
+            
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 2000);
+        }
+        
+        function renderAchievements() {
+            const grid = document.getElementById('achievements-grid');
+            grid.innerHTML = '';
+            
+            Object.values(achievements).forEach(ach => {
+                const unlocked = gameState.unlockedAchievements.has(ach.id);
+                const card = document.createElement('div');
+                card.className = `achievement-card ${unlocked ? 'unlocked' : 'locked'}`;
+                card.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                    <div class="achievement-desc">${ach.desc}</div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('achievement-count').textContent = 
+                `${gameState.unlockedAchievements.size}/${Object.keys(achievements).length}`;
+        }
+        
+        function toggleAchievements() {
+            document.getElementById('achievements-modal').classList.toggle('show');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // COMMAND HISTORY
+        // ═══════════════════════════════════════════════════════════════
+        
+        function addToHistory(command, correct) {
+            gameState.commandHistory.push({ command, correct });
+            
+            // Keep only last 10
+            if (gameState.commandHistory.length > 10) {
+                gameState.commandHistory.shift();
+            }
+            
+            updateHistoryDisplay();
+        }
+        
+        function updateHistoryDisplay() {
+            const container = document.getElementById('history-container');
+            const list = document.getElementById('history-list');
+            
+            if (gameState.commandHistory.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            list.innerHTML = gameState.commandHistory.map(item => 
+                `<span class="history-item ${item.correct ? 'correct' : 'wrong'}">${item.command}</span>`
+            ).join('');
+        }
+        
+        function clearHistory() {
+            gameState.commandHistory = [];
+            updateHistoryDisplay();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // XP & RANK SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function addXP(amount) {
+            gameState.xp += amount;
+            updateXPDisplay();
+            saveProgress();
+        }
+        
+        function getCurrentRank() {
+            let currentRank = ranks[0];
+            for (const rank of ranks) {
+                if (gameState.xp >= rank.minXP) {
+                    currentRank = rank;
+                }
+            }
+            return currentRank;
+        }
+        
+        function getNextRank() {
+            for (const rank of ranks) {
+                if (gameState.xp < rank.minXP) {
+                    return rank;
+                }
+            }
+            return null;
+        }
+        
+        function updateXPDisplay() {
+            const currentRank = getCurrentRank();
+            const nextRank = getNextRank();
+            
+            document.getElementById('xp-rank').textContent = currentRank.name;
+            document.getElementById('xp-current').textContent = gameState.xp;
+            
+            if (nextRank) {
+                document.getElementById('xp-needed').textContent = nextRank.minXP;
+                const progress = ((gameState.xp - currentRank.minXP) / (nextRank.minXP - currentRank.minXP)) * 100;
+                document.getElementById('xp-fill').style.width = `${progress}%`;
+            } else {
+                document.getElementById('xp-needed').textContent = 'MAX';
+                document.getElementById('xp-fill').style.width = '100%';
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // STATS & SAVE SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function updateAllStats() {
+            updateStats();
+            updateXPDisplay();
+            
+            const accuracy = gameState.totalAttempts > 0 
+                ? Math.round((gameState.totalCorrect / gameState.totalAttempts) * 100) 
+                : 0;
+            
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('best-streak').textContent = gameState.bestStreak;
+            document.getElementById('total-solved').textContent = gameState.totalCorrect;
+            document.getElementById('hints-remaining').textContent = gameState.hintsRemaining;
+            document.getElementById('hint-count').textContent = `(${gameState.hintsRemaining})`;
+        }
+        
+        function saveProgress() {
+            const saveData = {
+                score: gameState.score,
+                level: gameState.level,
+                xp: gameState.xp,
+                totalCorrect: gameState.totalCorrect,
+                totalAttempts: gameState.totalAttempts,
+                bestStreak: gameState.bestStreak,
+                hintsRemaining: gameState.hintsRemaining,
+                completedLevels: Array.from(gameState.completedLevels),
+                highestUnlockedLevel: gameState.highestUnlockedLevel,
+                unlockedAchievements: Array.from(gameState.unlockedAchievements)
+            };
+            localStorage.setItem('grepDojoSave', JSON.stringify(saveData));
+        }
+        
+        function loadSavedProgress() {
+            const saved = localStorage.getItem('grepDojoSave');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    gameState.score = data.score || 0;
+                    gameState.level = data.level || 1;
+                    gameState.xp = data.xp || 0;
+                    gameState.totalCorrect = data.totalCorrect || 0;
+                    gameState.totalAttempts = data.totalAttempts || 0;
+                    gameState.bestStreak = data.bestStreak || 0;
+                    gameState.hintsRemaining = data.hintsRemaining ?? 3;
+                    gameState.completedLevels = new Set(data.completedLevels || []);
+                    gameState.highestUnlockedLevel = data.highestUnlockedLevel || 1;
+                    gameState.unlockedAchievements = new Set(data.unlockedAchievements || []);
+                } catch (e) {
+                    console.log('Could not load save data');
+                }
+            }
+        }
+
+        // Get challenges for current level
+        function getLevelChallenges(level) {
+            return challenges.filter(c => c.level === level);
+        }
+
+        // Load lesson content for current level
+        function loadLesson() {
+            const lesson = lessons[gameState.level];
+            if (lesson) {
+                document.getElementById('lesson-title').textContent = 'Learn: ' + lesson.title;
+                document.getElementById('lesson-tag').textContent = lesson.tag;
+                document.getElementById('lesson-content').innerHTML = lesson.content;
+                // Keep collapsed by default - user can expand if needed
+            }
+        }
+
+        // Toggle lesson panel
+        function toggleLesson() {
+            const panel = document.getElementById('lesson-panel');
+            const btn = panel.querySelector('.lesson-collapse-btn');
+            panel.classList.toggle('collapsed');
+            btn.textContent = panel.classList.contains('collapsed') ? 'show' : 'hide';
+        }
+
+        // Load current challenge
+        function loadChallenge() {
+            const levelChallenges = getLevelChallenges(gameState.level);
+            
+            if (levelChallenges.length === 0) {
+                // Game complete!
+                showGameComplete();
+                return;
+            }
+
+            if (gameState.challengesInLevel >= levelChallenges.length) {
+                // Level complete!
+                showLevelComplete();
+                return;
+            }
+
+            const challenge = levelChallenges[gameState.challengesInLevel];
+            
+            // Load lesson for this level (show on first challenge of level)
+            if (gameState.challengesInLevel === 0) {
+                loadLesson();
+                clearHistory();
+            }
+            
+            // Reset hint display for new challenge
+            resetHintDisplay();
+            
+            challengeTitle.textContent = challenge.title;
+            challengeTag.textContent = challenge.tag;
+            challengeDesc.textContent = challenge.description;
+            challengeHint.textContent = challenge.hint;
+            fileName.textContent = challenge.fileName;
+            
+            // Render file content with line numbers
+            fileContent.innerHTML = challenge.fileContent.map((line, i) => 
+                `<div class="line"><span class="line-number">${i + 1}</span>${escapeHtml(line)}</div>`
+            ).join('');
+
+            // Clear input and output
+            grepInput.value = '';
+            outputDisplay.innerHTML = '<div class="output-line" style="color: #6272a4;">// output will appear here</div>';
+            outputDisplay.className = 'output-display';
+            feedbackEl.className = 'feedback';
+            grepInput.focus();
+
+            // Update progress
+            updateProgress();
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Check answer
+        function checkAnswer() {
+            console.log('checkAnswer called');
+            const userInput = grepInput.value.trim();
+            const levelChallenges = getLevelChallenges(gameState.level);
+            const challenge = levelChallenges[gameState.challengesInLevel];
+            
+            console.log('Level:', gameState.level, 'Challenge index:', gameState.challengesInLevel);
+            console.log('Level challenges count:', levelChallenges.length);
+
+            if (!challenge) {
+                console.error('No challenge found!');
+                showFeedback("Error: No challenge loaded!", "wrong");
+                return;
+            }
+
+            if (!userInput) {
+                showFeedback("Type a grep command first!", "wrong");
+                return;
+            }
+
+            // Simulate grep output
+            const output = simulateGrep(userInput, challenge);
+            displayOutput(output);
+
+            // Check if correct
+            const isCorrect = checkPattern(userInput, challenge);
+            
+            if (isCorrect) {
+                handleCorrectAnswer(challenge);
+            } else {
+                handleWrongAnswer();
+            }
+        }
+
+        // Simulate grep command
+        function simulateGrep(command, challenge) {
+            // Parse the command
+            const parts = command.match(/grep\s+((?:-\w+\s+)*)?["']?([^"'\s]+|[^"']+)["']?\s+(\S+)/i);
+            
+            if (!parts) {
+                return { error: "Invalid grep syntax. Try: grep [options] \"pattern\" filename" };
+            }
+
+            const flags = parts[1] || '';
+            let pattern = parts[2];
+            
+            try {
+                // Build regex based on flags
+                let regexFlags = '';
+                let showLineNumbers = flags.includes('-n');
+                let invertMatch = flags.includes('-v');
+                let countOnly = flags.includes('-c');
+                let wholeWord = flags.includes('-w');
+                
+                if (flags.includes('-i')) regexFlags += 'i';
+                
+                // Handle anchors and special chars
+                let regexPattern = pattern;
+                
+                if (wholeWord) {
+                    regexPattern = `\\b${pattern}\\b`;
+                }
+
+                const regex = new RegExp(regexPattern, regexFlags);
+                
+                let matches = [];
+                
+                challenge.fileContent.forEach((line, index) => {
+                    const isMatch = regex.test(line);
+                    const shouldInclude = invertMatch ? !isMatch : isMatch;
+                    
+                    if (shouldInclude) {
+                        if (showLineNumbers) {
+                            matches.push(`${index + 1}:${line}`);
+                        } else {
+                            matches.push(line);
+                        }
+                    }
+                });
+
+                if (countOnly) {
+                    return { lines: [matches.length.toString()], count: matches.length };
+                }
+
+                return { lines: matches, count: matches.length };
+            } catch (e) {
+                return { error: `Invalid pattern: ${e.message}` };
+            }
+        }
+
+        // Display grep output
+        function displayOutput(output) {
+            if (output.error) {
+                outputDisplay.innerHTML = `<div class="output-line error-msg">${output.error}</div>`;
+                outputDisplay.className = 'output-display error';
+            } else if (output.lines.length === 0) {
+                outputDisplay.innerHTML = '<div class="output-line" style="color: #6272a4;">// no matches found</div>';
+            } else {
+                outputDisplay.innerHTML = output.lines.map(line => 
+                    `<div class="output-line matched">${escapeHtml(line)}</div>`
+                ).join('');
+                outputDisplay.className = 'output-display success';
+            }
+        }
+
+        // Check if pattern matches
+        function checkPattern(userInput, challenge) {
+            // Check against accepted patterns
+            for (const pattern of challenge.acceptedPatterns) {
+                if (pattern.test(userInput)) {
+                    return true;
+                }
+            }
+            
+            // Also check if output matches expected
+            const output = simulateGrep(userInput, challenge);
+            if (!output.error && output.lines.length === challenge.expectedOutput.length) {
+                const allMatch = output.lines.every((line, i) => 
+                    line === challenge.expectedOutput[i] || 
+                    line.replace(/^\d+:/, '') === challenge.expectedOutput[i]
+                );
+                if (allMatch) return true;
+            }
+            
+            return false;
+        }
+
+        // Handle correct answer
+        function handleCorrectAnswer(challenge) {
+            // Calculate points
+            const basePoints = 100 + (gameState.streak * 10);
+            
+            gameState.score += basePoints;
+            gameState.streak++;
+            gameState.challengesInLevel++;
+            gameState.totalCorrect++;
+            gameState.totalAttempts++;
+            
+            // Update best streak
+            if (gameState.streak > gameState.bestStreak) {
+                gameState.bestStreak = gameState.streak;
+            }
+            
+            // Add XP (more for harder levels)
+            const xpGained = 10 + (gameState.level * 5);
+            addXP(xpGained);
+            
+            // Add to history
+            addToHistory(grepInput.value, true);
+            
+            updateAllStats();
+            showFeedback(challenge.successMsg, "success");
+            createConfetti();
+            
+            // Check achievements
+            checkAchievements({});
+            
+            // Save progress
+            saveProgress();
+
+            // Move to next challenge after delay
+            setTimeout(() => {
+                loadChallenge();
+            }, 2000);
+        }
+
+        // Handle wrong answer
+        function handleWrongAnswer() {
+            gameState.streak = 0;
+            gameState.totalAttempts++;
+            
+            // Add to history
+            addToHistory(grepInput.value, false);
+            
+            updateAllStats();
+            
+            const hints = [
+                "Not quite... Check your syntax! 🤔",
+                "Almost! Read the hint carefully 💭",
+                "Keep trying! grep mastery takes practice 💪",
+                "Hmm, that's not it. Try the cheatsheet! 📖"
+            ];
+            
+            showFeedback(hints[Math.floor(Math.random() * hints.length)], "wrong");
+            
+            saveProgress();
+        }
+
+        // Show feedback message
+        function showFeedback(message, type) {
+            feedbackEl.textContent = message;
+            feedbackEl.className = `feedback ${type} show`;
+        }
+
+        // Update stats display
+        function updateStats() {
+            scoreEl.textContent = gameState.score;
+            levelEl.textContent = gameState.level;
+            streakEl.textContent = `🔥 ${gameState.streak}`;
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const levelChallenges = getLevelChallenges(gameState.level);
+            const progress = (gameState.challengesInLevel / levelChallenges.length) * 100;
+            if (progressFill) {
+                progressFill.style.width = `${progress}%`;
+            }
+        }
+
+        // Show level complete modal
+        function showLevelComplete() {
+            const messages = [
+                "You've mastered the basics! 🎓",
+                "Flags unlocked! You're leveling up! 🚀",
+                "Invert match mastered! 🔄",
+                "Numbers guru! 🔢",
+                "Precision expert! 🎯",
+                "Combo master! ⚡",
+                "Regex warrior! 🗡️",
+                "Regex ninja! 🥷",
+                "GREP MASTER ACHIEVED! 👑"
+            ];
+
+            // Calculate level accuracy
+            const levelChallenges = getLevelChallenges(gameState.level);
+            const levelAccuracy = Math.round((levelChallenges.length / gameState.totalAttempts) * 100) || 100;
+
+            levelCompleteMsg.textContent = messages[Math.min(gameState.level - 1, messages.length - 1)];
+            xpGainedEl.textContent = `+${gameState.level * 100} XP`;
+            
+            // Add level completion XP
+            addXP(gameState.level * 100);
+            
+            // Check level-related achievements
+            checkAchievements({ 
+                levelComplete: true, 
+                hintsUsedThisLevel: gameState.hintsUsedThisChallenge,
+                levelAccuracy 
+            });
+            
+            levelModal.classList.add('show');
+            createConfetti();
+        }
+
+        // Start next level
+        function startNextLevel() {
+            // Mark current level as completed
+            gameState.completedLevels.add(gameState.level);
+            gameState.level++;
+            gameState.highestUnlockedLevel = Math.max(gameState.highestUnlockedLevel, gameState.level);
+            gameState.challengesInLevel = 0;
+            levelModal.classList.remove('show');
+            
+            // Check level achievements
+            checkAchievements({});
+            
+            updateAllStats();
+            updateLevelMeter();
+            saveProgress();
+            loadChallenge();
+        }
+
+        // Show game complete
+        function showGameComplete() {
+            // Mark final level as completed
+            gameState.completedLevels.add(gameState.level);
+            updateLevelMeter();
+            
+            // Final XP bonus
+            addXP(500);
+            
+            // Check final achievements
+            checkAchievements({ levelComplete: true, levelAccuracy: 100 });
+            
+            saveProgress();
+            
+            challengeTitle.textContent = "🏆 You've Completed grep dojo!";
+            challengeDesc.innerHTML = `
+                <strong>Final Score: ${gameState.score}</strong><br>
+                <strong>Total XP: ${gameState.xp}</strong> | <strong>Rank: ${getCurrentRank().name}</strong><br>
+                <strong>Achievements: ${gameState.unlockedAchievements.size}/${Object.keys(achievements).length}</strong><br><br>
+                You've mastered grep! You can now search through files like a pro.
+                <br><br>
+                Try these next:<br>
+                • Use grep in your terminal<br>
+                • Learn about recursive grep (-r)<br>
+                • Explore egrep and fgrep<br>
+                • Master regular expressions
+            `;
+            challengeHint.textContent = "🎉 Share your score with friends!";
+            document.querySelector('.file-display').style.display = 'none';
+            document.querySelector('.grep-input-area').style.display = 'none';
+            document.getElementById('lesson-panel').style.display = 'none';
+            document.getElementById('history-container').style.display = 'none';
+            outputDisplay.innerHTML = '<div class="output-line matched">grep_dojo --status "COMPLETE" --mastery "100%"</div>';
+            
+            // Mega celebration
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createConfetti, i * 500);
+            }
+        }
+
+        // Confetti celebration
+        function createConfetti() {
+            const celebration = document.getElementById('celebration');
+            const colors = ['#50fa7b', '#8be9fd', '#6ee7ff', '#00ffff', '#ffb86c', '#f1fa8c'];
+            
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                celebration.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3500);
+            }
+        }
+
+        // Cheatsheet toggle
+        function toggleCheatsheet() {
+            document.getElementById('cheatsheet').classList.toggle('open');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+
+    <!-- 3D Background Script -->
+    <script src="background3d.js"></script>
+    <script src="script.js"></script>
+    <script src="interactions.js"></script>
+</body>
+</html>
