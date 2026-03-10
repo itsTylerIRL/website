@@ -13,14 +13,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://grep.tylerirl.com/">
-    <meta property="og:title" content="grep dojo - Learn grep the fun way">
+    <meta property="og:title" content="grep dojo">
     <meta property="og:description" content="Master grep through interactive challenges. Level up your terminal skills!">
     <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://grep.tylerirl.com/">
-    <meta property="twitter:title" content="grep dojo - Learn grep the fun way">
+    <meta property="twitter:title" content="grep dojo">
     <meta property="twitter:description" content="Master grep through interactive challenges. Level up your terminal skills!">
     <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
@@ -1414,6 +1414,183 @@
             box-shadow: 0 0 30px rgba(139, 233, 253, 0.4);
         }
 
+        /* Stage Indicator */
+        .stat-box.stage-indicator {
+            position: relative;
+            background: linear-gradient(135deg, rgba(189, 147, 249, 0.15), rgba(139, 233, 253, 0.1));
+            border: 1px solid rgba(189, 147, 249, 0.3);
+        }
+
+        .stat-box.stage-indicator .stat-multiplier {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 0.5rem;
+            color: #ffb86c;
+            opacity: 0.9;
+        }
+
+        .stat-box.accent-purple {
+            border-color: rgba(189, 147, 249, 0.3);
+        }
+
+        .stat-box.accent-purple .stat-value {
+            color: #bd93f9;
+        }
+
+        /* Stage Complete Modal */
+        .stage-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .stage-modal.show {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .stage-modal-content {
+            background: linear-gradient(180deg, rgba(13, 13, 30, 0.98), rgba(20, 20, 40, 0.98));
+            border: 2px solid rgba(189, 147, 249, 0.4);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: modalPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 60px rgba(189, 147, 249, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .stage-modal-content h2 {
+            color: #bd93f9;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(189, 147, 249, 0.5);
+        }
+
+        .stage-modal-content .stage-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .stage-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .stage-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stage-stat-label {
+            font-size: 0.7rem;
+            color: #6272a4;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        .stage-stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #50fa7b;
+        }
+
+        .stage-stat-value.stage-xp {
+            color: #8be9fd;
+        }
+
+        .next-stage-preview {
+            background: rgba(139, 233, 253, 0.05);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .next-stage-preview h3 {
+            font-size: 0.8rem;
+            color: #6272a4;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .next-stage-preview .next-stage-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .next-stage-preview .next-stage-desc {
+            font-size: 0.75rem;
+            color: #f8f8f2;
+        }
+
+        .next-stage-preview .next-stage-desc span {
+            color: #ffb86c;
+            font-weight: bold;
+        }
+
+        .stage-modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .stage-advance-btn {
+            background: linear-gradient(135deg, #bd93f9, #ff79c6);
+            border: none;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .stage-advance-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(189, 147, 249, 0.5);
+        }
+
+        .stage-end-btn {
+            background: transparent;
+            border: 1px solid rgba(98, 114, 164, 0.5);
+            color: #6272a4;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stage-end-btn:hover {
+            border-color: rgba(255, 85, 85, 0.5);
+            color: #ff5555;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 600px) {
             .grep-header h1 {
@@ -1584,6 +1761,11 @@
 
             <!-- Stats Row -->
             <div class="stats-row">
+                <div class="stat-box accent-purple stage-indicator">
+                    <div class="stat-label">Stage</div>
+                    <div class="stat-value" id="current-stage">🌱 1</div>
+                    <div class="stat-multiplier" id="stage-multiplier">1.0x</div>
+                </div>
                 <div class="stat-box accent-green">
                     <div class="stat-label">Score</div>
                     <div class="stat-value" id="score">0</div>
@@ -1797,12 +1979,39 @@
         </div>
     </div>
 
+    <!-- Stage Complete Modal -->
+    <div class="stage-modal" id="stage-modal">
+        <div class="stage-modal-content">
+            <h2 id="stage-complete-title">🏆 Stage 1 Complete!</h2>
+            <p class="stage-name" id="stage-complete-name">Apprentice</p>
+            <div class="stage-stats">
+                <div class="stage-stat">
+                    <span class="stage-stat-label">Score</span>
+                    <span class="stage-stat-value" id="stage-score">0</span>
+                </div>
+                <div class="stage-stat">
+                    <span class="stage-stat-label">Stage Bonus</span>
+                    <span class="stage-stat-value stage-xp" id="stage-xp-gained">+200 XP</span>
+                </div>
+            </div>
+            <div class="next-stage-preview">
+                <h3>Next Stage</h3>
+                <p class="next-stage-name" id="next-stage-name">⚔️ Warrior</p>
+                <p class="next-stage-desc">Challenges get harder! New score multiplier: <span id="next-stage-multiplier">1.5x</span></p>
+            </div>
+            <div class="stage-modal-buttons">
+                <button class="stage-advance-btn" onclick="advanceToNextStage()">🚀 Advance to Next Stage</button>
+                <button class="stage-end-btn" onclick="document.getElementById('stage-modal').classList.remove('show'); showGameComplete();">End Run</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Celebration container -->
     <div class="celebration" id="celebration"></div>
 
     <!-- Achievements Button -->
     <button class="achievements-btn" onclick="toggleAchievements()">
-        🏆 Achievements <span class="achievement-count" id="achievement-count">0/11</span>
+        🏆 Achievements <span class="achievement-count" id="achievement-count">0/16</span>
     </button>
 
     <!-- Achievements Modal -->
@@ -1836,6 +2045,7 @@
         let gameState = {
             score: 0,
             level: 1,
+            stage: 1,
             streak: 0,
             currentChallenge: 0,
             challengesInLevel: 0,
@@ -1847,9 +2057,39 @@
             xp: 0,
             completedLevels: new Set(),
             highestUnlockedLevel: 1,
+            highestStageReached: 1,
             unlockedAchievements: new Set(),
             commandHistory: []
         };
+
+        // Stage names and colors
+        const stageInfo = [
+            { name: 'Apprentice', color: '#50fa7b', icon: '🌱' },
+            { name: 'Warrior', color: '#8be9fd', icon: '⚔️' },
+            { name: 'Master', color: '#ffb86c', icon: '🔥' },
+            { name: 'Grandmaster', color: '#ff79c6', icon: '💎' },
+            { name: 'Legend', color: '#bd93f9', icon: '👑' },
+            { name: 'Mythic', color: '#ff5555', icon: '🌟' }
+        ];
+
+        // Get stage difficulty multipliers
+        function getStageMultipliers() {
+            const stage = gameState.stage;
+            return {
+                scoreMultiplier: 1 + (stage - 1) * 0.5,  // 1x, 1.5x, 2x, 2.5x...
+                xpMultiplier: 1 + (stage - 1) * 0.25,    // 1x, 1.25x, 1.5x...
+                stricterPatterns: stage >= 2,            // Require more precise patterns
+                timeChallenge: stage >= 3,               // Time pressure at stage 3+
+                hintsPerStage: Math.max(1, 4 - stage),   // Fewer hints at higher stages
+                bonusXPPerStage: stage * 200             // Bonus XP for completing stage
+            };
+        }
+
+        // Get current stage info
+        function getCurrentStageInfo() {
+            const idx = Math.min(gameState.stage - 1, stageInfo.length - 1);
+            return stageInfo[idx];
+        }
 
         // Ranks based on XP
         const ranks = [
@@ -1876,7 +2116,13 @@
             level9: { id: 'level9', icon: '🥇', name: 'Master', desc: 'Complete all levels' },
             perfectLevel: { id: 'perfectLevel', icon: '💎', name: 'Flawless', desc: 'Complete a level with 100% accuracy' },
             points500: { id: 'points500', icon: '💰', name: 'Point Collector', desc: 'Earn 500 points' },
-            points1000: { id: 'points1000', icon: '💎', name: 'High Roller', desc: 'Earn 1000 points' }
+            points1000: { id: 'points1000', icon: '💎', name: 'High Roller', desc: 'Earn 1000 points' },
+            stage2: { id: 'stage2', icon: '⚔️', name: 'Warrior Path', desc: 'Reach Stage 2' },
+            stage3: { id: 'stage3', icon: '🔥', name: 'Master Path', desc: 'Reach Stage 3' },
+            stage4: { id: 'stage4', icon: '💎', name: 'Grandmaster Path', desc: 'Reach Stage 4' },
+            stage5: { id: 'stage5', icon: '👑', name: 'Legend Path', desc: 'Reach Stage 5' },
+            points5000: { id: 'points5000', icon: '🏆', name: 'Score King', desc: 'Earn 5000 points' },
+            points10000: { id: 'points10000', icon: '👑', name: 'Score Legend', desc: 'Earn 10000 points' }
         };
 
         // Challenge Database
@@ -2639,6 +2885,7 @@
             loadSavedProgress();
             renderAchievements();
             updateLevelMeter();
+            updateStageDisplay();
             updateAllStats();
             loadChallenge();
             
@@ -2729,12 +2976,32 @@
                 newAchievements.push('level9');
             }
             
+            // Stage achievements
+            if (gameState.stage >= 2 && !gameState.unlockedAchievements.has('stage2')) {
+                newAchievements.push('stage2');
+            }
+            if (gameState.stage >= 3 && !gameState.unlockedAchievements.has('stage3')) {
+                newAchievements.push('stage3');
+            }
+            if (gameState.stage >= 4 && !gameState.unlockedAchievements.has('stage4')) {
+                newAchievements.push('stage4');
+            }
+            if (gameState.stage >= 5 && !gameState.unlockedAchievements.has('stage5')) {
+                newAchievements.push('stage5');
+            }
+            
             // Points achievements
             if (gameState.score >= 500 && !gameState.unlockedAchievements.has('points500')) {
                 newAchievements.push('points500');
             }
             if (gameState.score >= 1000 && !gameState.unlockedAchievements.has('points1000')) {
                 newAchievements.push('points1000');
+            }
+            if (gameState.score >= 5000 && !gameState.unlockedAchievements.has('points5000')) {
+                newAchievements.push('points5000');
+            }
+            if (gameState.score >= 10000 && !gameState.unlockedAchievements.has('points10000')) {
+                newAchievements.push('points10000');
             }
             
             // No hints used this level
@@ -2880,6 +3147,7 @@
         function updateAllStats() {
             updateStats();
             updateXPDisplay();
+            updateStageDisplay();
             
             const accuracy = gameState.totalAttempts > 0 
                 ? Math.round((gameState.totalCorrect / gameState.totalAttempts) * 100) 
@@ -2896,6 +3164,7 @@
             const saveData = {
                 score: gameState.score,
                 level: gameState.level,
+                stage: gameState.stage,
                 xp: gameState.xp,
                 totalCorrect: gameState.totalCorrect,
                 totalAttempts: gameState.totalAttempts,
@@ -2903,6 +3172,7 @@
                 hintsRemaining: gameState.hintsRemaining,
                 completedLevels: Array.from(gameState.completedLevels),
                 highestUnlockedLevel: gameState.highestUnlockedLevel,
+                highestStageReached: gameState.highestStageReached,
                 unlockedAchievements: Array.from(gameState.unlockedAchievements)
             };
             localStorage.setItem('grepDojoSave', JSON.stringify(saveData));
@@ -2915,6 +3185,7 @@
                     const data = JSON.parse(saved);
                     gameState.score = data.score || 0;
                     gameState.level = data.level || 1;
+                    gameState.stage = data.stage || 1;
                     gameState.xp = data.xp || 0;
                     gameState.totalCorrect = data.totalCorrect || 0;
                     gameState.totalAttempts = data.totalAttempts || 0;
@@ -2922,6 +3193,7 @@
                     gameState.hintsRemaining = data.hintsRemaining ?? 3;
                     gameState.completedLevels = new Set(data.completedLevels || []);
                     gameState.highestUnlockedLevel = data.highestUnlockedLevel || 1;
+                    gameState.highestStageReached = data.highestStageReached || 1;
                     gameState.unlockedAchievements = new Set(data.unlockedAchievements || []);
                 } catch (e) {
                     console.log('Could not load save data');
@@ -2957,9 +3229,9 @@
         function loadChallenge() {
             const levelChallenges = getLevelChallenges(gameState.level);
             
-            if (levelChallenges.length === 0) {
-                // Game complete!
-                showGameComplete();
+            if (levelChallenges.length === 0 || gameState.level > 9) {
+                // Stage complete! Show stage advancement option
+                showStageComplete();
                 return;
             }
 
@@ -2980,7 +3252,9 @@
             // Reset hint display for new challenge
             resetHintDisplay();
             
-            challengeTitle.textContent = challenge.title;
+            // Add stage difficulty indicator to title
+            const stageIndicator = gameState.stage > 1 ? ` [Stage ${gameState.stage}]` : '';
+            challengeTitle.textContent = challenge.title + stageIndicator;
             challengeTag.textContent = challenge.tag;
             challengeDesc.textContent = challenge.description;
             challengeHint.textContent = challenge.hint;
@@ -3139,10 +3413,14 @@
 
         // Handle correct answer
         function handleCorrectAnswer(challenge) {
-            // Calculate points
-            const basePoints = 100 + (gameState.streak * 10);
+            // Get stage multipliers
+            const multipliers = getStageMultipliers();
             
-            gameState.score += basePoints;
+            // Calculate points with stage multiplier
+            const basePoints = 100 + (gameState.streak * 10);
+            const scaledPoints = Math.round(basePoints * multipliers.scoreMultiplier);
+            
+            gameState.score += scaledPoints;
             gameState.streak++;
             gameState.challengesInLevel++;
             gameState.totalCorrect++;
@@ -3153,15 +3431,19 @@
                 gameState.bestStreak = gameState.streak;
             }
             
-            // Add XP (more for harder levels)
-            const xpGained = 10 + (gameState.level * 5);
+            // Add XP (more for harder levels and stages)
+            const baseXP = 10 + (gameState.level * 5);
+            const xpGained = Math.round(baseXP * multipliers.xpMultiplier);
             addXP(xpGained);
             
             // Add to history
             addToHistory(grepInput.value, true);
             
             updateAllStats();
-            showFeedback(challenge.successMsg, "success");
+            
+            // Show multiplier in success message if stage > 1
+            const multiplierMsg = gameState.stage > 1 ? ` (${multipliers.scoreMultiplier.toFixed(1)}x bonus!)` : '';
+            showFeedback(challenge.successMsg + multiplierMsg, "success");
             createConfetti();
             
             // Check achievements
@@ -3273,23 +3555,87 @@
             loadChallenge();
         }
 
-        // Show game complete
-        function showGameComplete() {
+        // Show stage complete modal
+        function showStageComplete() {
             // Mark final level as completed
             gameState.completedLevels.add(gameState.level);
             updateLevelMeter();
             
-            // Final XP bonus
-            addXP(500);
+            const multipliers = getStageMultipliers();
+            const stageBonus = multipliers.bonusXPPerStage;
+            const currentStageInfo = getCurrentStageInfo();
+            const nextStageIdx = Math.min(gameState.stage, stageInfo.length - 1);
+            const nextStageInfo = stageInfo[nextStageIdx];
             
-            // Check final achievements
-            checkAchievements({ levelComplete: true, levelAccuracy: 100 });
+            // Stage complete XP bonus
+            addXP(stageBonus);
+            
+            // Check stage achievements
+            checkAchievements({ stageComplete: true });
             
             saveProgress();
             
-            challengeTitle.textContent = "🏆 You've Completed grep dojo!";
+            // Show stage complete modal
+            const stageModal = document.getElementById('stage-modal');
+            document.getElementById('stage-complete-title').textContent = `${currentStageInfo.icon} Stage ${gameState.stage} Complete!`;
+            document.getElementById('stage-complete-name').textContent = currentStageInfo.name;
+            document.getElementById('stage-complete-name').style.color = currentStageInfo.color;
+            document.getElementById('stage-xp-gained').textContent = `+${stageBonus} XP`;
+            document.getElementById('stage-score').textContent = gameState.score;
+            
+            // Next stage preview
+            document.getElementById('next-stage-name').textContent = `${nextStageInfo.icon} ${nextStageInfo.name}`;
+            document.getElementById('next-stage-name').style.color = nextStageInfo.color;
+            document.getElementById('next-stage-multiplier').textContent = `${(1 + gameState.stage * 0.5).toFixed(1)}x`;
+            
+            stageModal.classList.add('show');
+            
+            // Mega celebration
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createConfetti, i * 500);
+            }
+        }
+
+        // Advance to next stage
+        function advanceToNextStage() {
+            gameState.stage++;
+            gameState.highestStageReached = Math.max(gameState.highestStageReached, gameState.stage);
+            gameState.level = 1;
+            gameState.challengesInLevel = 0;
+            gameState.completedLevels.clear();
+            gameState.highestUnlockedLevel = 1;
+            
+            // Reset hints for new stage (fewer hints at higher stages)
+            const multipliers = getStageMultipliers();
+            gameState.hintsRemaining = multipliers.hintsPerStage;
+            
+            document.getElementById('stage-modal').classList.remove('show');
+            
+            // Check stage achievements
+            checkAchievements({ newStage: gameState.stage });
+            
+            // Restore UI elements
+            document.querySelector('.file-display').style.display = '';
+            document.querySelector('.grep-input-area').style.display = '';
+            document.getElementById('lesson-panel').style.display = '';
+            document.getElementById('history-container').style.display = '';
+            
+            updateAllStats();
+            updateLevelMeter();
+            updateStageDisplay();
+            saveProgress();
+            loadChallenge();
+            
+            showFeedback(`Welcome to Stage ${gameState.stage}: ${getCurrentStageInfo().name}! Difficulty increased!`, 'success');
+        }
+
+        // Show game complete (after all stages or as final message)
+        function showGameComplete() {
+            // This is now called from stage complete if player doesn't want to continue
+            challengeTitle.textContent = "🏆 You've Mastered grep dojo!";
             challengeDesc.innerHTML = `
                 <strong>Final Score: ${gameState.score}</strong><br>
+                <strong>Stage: ${gameState.stage} (${getCurrentStageInfo().name})</strong><br>
                 <strong>Total XP: ${gameState.xp}</strong> | <strong>Rank: ${getCurrentRank().name}</strong><br>
                 <strong>Achievements: ${gameState.unlockedAchievements.size}/${Object.keys(achievements).length}</strong><br><br>
                 You've mastered grep! You can now search through files like a pro.
@@ -3310,6 +3656,22 @@
             // Mega celebration
             for (let i = 0; i < 5; i++) {
                 setTimeout(createConfetti, i * 500);
+            }
+        }
+
+        // Update stage display
+        function updateStageDisplay() {
+            const currentStage = getCurrentStageInfo();
+            const stageEl = document.getElementById('current-stage');
+            const stageMultEl = document.getElementById('stage-multiplier');
+            
+            if (stageEl) {
+                stageEl.textContent = `${currentStage.icon} ${gameState.stage}`;
+                stageEl.style.color = currentStage.color;
+            }
+            if (stageMultEl) {
+                const mult = getStageMultipliers();
+                stageMultEl.textContent = `${mult.scoreMultiplier.toFixed(1)}x`;
             }
         }
 
