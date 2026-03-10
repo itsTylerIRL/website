@@ -152,6 +152,114 @@
             height: 14px;
         }
 
+        /* Reset Button - Bottom Right */
+        .reset-button {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            color: #ff5555;
+            font-size: 0.65rem;
+            padding: 0.35rem 0.6rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: inherit;
+        }
+
+        .reset-button:hover {
+            color: #fff;
+            border-color: #ff5555;
+            background: rgba(255, 85, 85, 0.15);
+            box-shadow: 0 0 20px rgba(255, 85, 85, 0.3);
+        }
+
+        .reset-button svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Reset Confirmation Modal */
+        .reset-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .reset-modal.show {
+            display: flex;
+        }
+
+        .reset-modal-content {
+            background: linear-gradient(145deg, rgba(40, 42, 54, 0.98), rgba(30, 32, 44, 0.98));
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .reset-modal-content h3 {
+            color: #ff5555;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .reset-modal-content p {
+            color: #f8f8f2;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .reset-modal-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+
+        .reset-modal-buttons button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .reset-confirm-btn {
+            background: rgba(255, 85, 85, 0.8);
+            color: #fff;
+        }
+
+        .reset-confirm-btn:hover {
+            background: rgba(255, 85, 85, 1);
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.4);
+        }
+
+        .reset-cancel-btn {
+            background: rgba(98, 114, 164, 0.5);
+            color: #f8f8f2;
+        }
+
+        .reset-cancel-btn:hover {
+            background: rgba(98, 114, 164, 0.8);
+        }
+
         /* Grep Dojo Specific Styles */
         .grep-container {
             max-width: 1100px;
@@ -1741,6 +1849,27 @@
         </div>
     </a>
 
+    <!-- Reset Button -->
+    <button class="reset-button" onclick="showResetModal()" title="Reset all progress">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+        </svg>
+        Reset
+    </button>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="reset-modal">
+        <div class="reset-modal-content">
+            <h3>⚠️ Reset Progress?</h3>
+            <p>This will clear ALL your stats, achievements, and progress. This action cannot be undone!</p>
+            <div class="reset-modal-buttons">
+                <button class="reset-cancel-btn" onclick="hideResetModal()">Cancel</button>
+                <button class="reset-confirm-btn" onclick="confirmReset()">Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
     <main class="main-content">
         <!-- Hero Section with Hologram -->
         <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
@@ -2354,6 +2483,510 @@
                     </div>
                     <div class="lesson-tip">🏆 You're ready for the final challenge. Show what you've learned!</div>
                 `
+            },
+            // ═══════════════════════════════════════════
+            // ═══ STAGE 2 LESSONS ═══
+            // ═══════════════════════════════════════════
+            "2-1": {
+                title: "Extended Regex (-E)",
+                tag: "extended",
+                content: `
+                    <p>Stage 2 introduces <strong>Extended Regular Expressions</strong>. Use <code>-E</code> (or <code>egrep</code>) to unlock powerful quantifiers and alternation.</p>
+                    <div class="syntax-box">
+                        <code>grep -E "pattern+" filename</code>
+                        <span class="comment"># + = one or more of preceding character</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -E "a|b|c" filename</code>
+                        <span class="comment"># | = alternation (OR)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Extended Quantifiers</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "go+" text</span>
+                            <span class="example-desc">go, goo, gooo... (one or more o)</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "colou?r" text</span>
+                            <span class="example-desc">color OR colour (? = zero or one)</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 In basic grep, you need \\+ and \\?. With -E, just use + and ?</div>
+                `
+            },
+            "2-2": {
+                title: "Context Lines (-A, -B, -C)",
+                tag: "context",
+                content: `
+                    <p>When debugging, you often need to see lines <em>around</em> the match. Use context flags to see before, after, or both!</p>
+                    <div class="syntax-box">
+                        <code>grep -A N "pattern" file</code>
+                        <span class="comment"># -A N = N lines After match</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -B N "pattern" file</code>
+                        <span class="comment"># -B N = N lines Before match</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -C N "pattern" file</code>
+                        <span class="comment"># -C N = N lines Context (before AND after)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -A 3 "ERROR" log</span>
+                            <span class="example-desc">Show error + 3 lines after (stack trace)</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -C 2 "crash" log</span>
+                            <span class="example-desc">Show 2 lines before and after</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Perfect for viewing stack traces and understanding error context!</div>
+                `
+            },
+            "2-3": {
+                title: "Multiple Patterns (-e)",
+                tag: "multi-pattern",
+                content: `
+                    <p>Need to search for several different patterns at once? Use multiple <code>-e</code> flags or extended regex alternation.</p>
+                    <div class="syntax-box">
+                        <code>grep -e "pat1" -e "pat2" file</code>
+                        <span class="comment"># Multiple -e flags for OR</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -E "pat1|pat2|pat3" file</code>
+                        <span class="comment"># Extended regex alternation</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -e "GET" -e "POST" access.log</span>
+                            <span class="example-desc">Find GET or POST requests</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "error|warn|fail" log</span>
+                            <span class="example-desc">Any problem indicators</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 For many patterns, consider putting them in a file and using -f</div>
+                `
+            },
+            "2-4": {
+                title: "Advanced Quantifiers",
+                tag: "quantifiers",
+                content: `
+                    <p>Master precise repetition with quantifiers: exactly N times, ranges, and more!</p>
+                    <div class="syntax-box">
+                        <code>grep -E "a{3}" file</code>
+                        <span class="comment"># Exactly 3 a's</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -E "a{2,4}" file</code>
+                        <span class="comment"># Between 2 and 4 a's</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -E "[0-9]{3}" file</code>
+                        <span class="comment"># Exactly 3 digits</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "[0-9]{3}-[0-9]{4}" phones</span>
+                            <span class="example-desc">Match phone format XXX-XXXX</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "^.{80,}$" file</span>
+                            <span class="example-desc">Lines with 80+ characters</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 {n,} means n or more, {,n} means up to n</div>
+                `
+            },
+            "2-5": {
+                title: "Word Boundaries (\\b)",
+                tag: "boundaries",
+                content: `
+                    <p>You know <code>-w</code> for whole words. Now learn the underlying regex: <code>\\b</code> for word boundaries!</p>
+                    <div class="syntax-box">
+                        <code>grep -E "\\bword\\b" file</code>
+                        <span class="comment"># \\b = word boundary</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep "^$" file</code>
+                        <span class="comment"># Empty lines (start + immediate end)</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -E "\\bthe\\b" text</span>
+                            <span class="example-desc">Same as grep -w "the"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -v "^$" file</span>
+                            <span class="example-desc">Remove empty lines</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 \\b is more flexible - you can use it on one side only!</div>
+                `
+            },
+            "2-6": {
+                title: "Negation & Character Classes",
+                tag: "classes",
+                content: `
+                    <p>Character classes can be negated with <code>^</code> inside brackets. Match anything EXCEPT certain characters!</p>
+                    <div class="syntax-box">
+                        <code>grep "[^abc]" file</code>
+                        <span class="comment"># Any char EXCEPT a, b, or c</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep "^[^#]" file</code>
+                        <span class="comment"># Lines NOT starting with #</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "[^0-9]" file</span>
+                            <span class="example-desc">Lines with non-digits</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep "^[^a-zA-Z]" file</span>
+                            <span class="example-desc">Lines starting with non-letter</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Note: ^ means START outside [], but NEGATION inside []</div>
+                `
+            },
+            "2-7": {
+                title: "Output Control (-o, -l)",
+                tag: "output",
+                content: `
+                    <p>Control what grep outputs: just the match, just filenames, or suppress output entirely!</p>
+                    <div class="syntax-box">
+                        <code>grep -o "pattern" file</code>
+                        <span class="comment"># -o = only matching part (not whole line)</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -l "pattern" files*</code>
+                        <span class="comment"># -l = list only filenames with matches</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -oE "[a-z]+@[a-z]+\\.[a-z]+" file</span>
+                            <span class="example-desc">Extract email addresses only</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -l "TODO" src/*.js</span>
+                            <span class="example-desc">Which files have TODOs?</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 -L gives the opposite: files WITHOUT matches</div>
+                `
+            },
+            "2-8": {
+                title: "Expert Flag Combinations",
+                tag: "expert",
+                content: `
+                    <p>Mastery means combining flags fluently. Most flags can be combined in any order!</p>
+                    <div class="syntax-box">
+                        <code>grep -inE "error|warn" file</code>
+                        <span class="comment"># case-insensitive, line numbers, extended regex</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -rnw "function" ./src</code>
+                        <span class="comment"># recursive, line numbers, whole word</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Power Combos</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -rniE "todo|fixme" --include="*.js"</span>
+                            <span class="example-desc">Find all TODOs in JS files</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -c "^" file</span>
+                            <span class="example-desc">Count all lines (like wc -l)</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">🔥 You're almost at Stage 2 mastery!</div>
+                `
+            },
+            "2-9": {
+                title: "Stage 2 Boss: Real Patterns",
+                tag: "boss",
+                content: `
+                    <p>The ultimate test! You'll match real-world patterns like IP addresses, dates, and more.</p>
+                    <div class="syntax-box">
+                        <code>grep -E "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+"</code>
+                        <span class="comment"># IPv4 address pattern</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}"</code>
+                        <span class="comment"># ISO date at line start</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Real-World Patterns</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">IP: [0-9]{1,3}(\\.[0-9]{1,3}){3}</span>
+                            <span class="example-desc">More precise IP matching</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">Email: [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+</span>
+                            <span class="example-desc">Basic email pattern</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">🏆 Complete Stage 2 to unlock even harder challenges!</div>
+                `
+            },
+            // ═══════════════════════════════════════════
+            // ═══ STAGE 3 LESSONS ═══
+            // ═══════════════════════════════════════════
+            "3-1": {
+                title: "Perl-Compatible Regex (-P)",
+                tag: "pcre",
+                content: `
+                    <p>Stage 3 introduces <strong>Perl-Compatible Regular Expressions (PCRE)</strong>. Use <code>-P</code> for powerful shortcuts and advanced features!</p>
+                    <div class="syntax-box">
+                        <code>grep -P "\\d+" filename</code>
+                        <span class="comment"># \\d = digit [0-9], \\w = word char, \\s = whitespace</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -P "\\w+@\\w+" filename</code>
+                        <span class="comment"># Match word chars around @</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>PCRE Shortcuts</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">\\d \\D</span>
+                            <span class="example-desc">Digit / Non-digit</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">\\w \\W</span>
+                            <span class="example-desc">Word char / Non-word</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">\\s \\S</span>
+                            <span class="example-desc">Whitespace / Non-whitespace</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 PCRE is faster and more powerful than basic or extended regex!</div>
+                `
+            },
+            "3-2": {
+                title: "Non-Greedy Matching",
+                tag: "greedy",
+                content: `
+                    <p>By default, quantifiers are <strong>greedy</strong> - they match as much as possible. Add <code>?</code> after them to make them <strong>non-greedy</strong> (minimal).</p>
+                    <div class="syntax-box">
+                        <code>grep -oP '".*?"' file</code>
+                        <span class="comment"># Non-greedy: match shortest string in quotes</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -oP '<.*>' file</code>
+                        <span class="comment"># Greedy: matches entire "<div>text</div>"</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Greedy vs Non-Greedy</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">.*</span>
+                            <span class="example-desc">Greedy - match as MUCH as possible</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">.*?</span>
+                            <span class="example-desc">Non-greedy - match as LITTLE as possible</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Non-greedy is essential when parsing structured text like HTML or JSON!</div>
+                `
+            },
+            "3-3": {
+                title: "Lookahead Assertions",
+                tag: "lookahead",
+                content: `
+                    <p><strong>Lookaheads</strong> let you assert what follows without including it in the match. They "look ahead" without consuming characters.</p>
+                    <div class="syntax-box">
+                        <code>grep -P "foo(?=bar)" file</code>
+                        <span class="comment"># Positive: match "foo" only if followed by "bar"</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -P "foo(?!bar)" file</code>
+                        <span class="comment"># Negative: match "foo" only if NOT followed by "bar"</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -P "\\d+(?= dollars)"</span>
+                            <span class="example-desc">Numbers followed by " dollars"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">grep -P "test(?!ing)"</span>
+                            <span class="example-desc">"test" but not "testing"</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Lookaheads are zero-width - they check but don't consume!</div>
+                `
+            },
+            "3-4": {
+                title: "Lookbehind Assertions",
+                tag: "lookbehind",
+                content: `
+                    <p><strong>Lookbehinds</strong> assert what comes BEFORE the match. Perfect for extracting text after a known prefix!</p>
+                    <div class="syntax-box">
+                        <code>grep -oP "(?<=Price: )\\d+" file</code>
+                        <span class="comment"># Extract number after "Price: "</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -P "(?<!un)happy" file</code>
+                        <span class="comment"># Negative: "happy" but not "unhappy"</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">(?&lt;=\\$)\\d+</span>
+                            <span class="example-desc">Digits after $ (prices)</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">(?&lt;!@)\\w+</span>
+                            <span class="example-desc">Words not preceded by @</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">⚠️ Lookbehinds must have fixed length in most regex engines!</div>
+                `
+            },
+            "3-5": {
+                title: "Capture Groups & Backreferences",
+                tag: "groups",
+                content: `
+                    <p><strong>Capture groups</strong> let you save parts of a match and reference them later. Essential for finding duplicates!</p>
+                    <div class="syntax-box">
+                        <code>grep -P "(\\w+) \\1" file</code>
+                        <span class="comment"># \\1 refers to first captured group</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -P "(?P<tag>\\w+).*(?P=tag)" file</code>
+                        <span class="comment"># Named group and backreference</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">(\\w+) \\1</span>
+                            <span class="example-desc">Repeated words: "the the"</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd"><(\\w+)>.*</\\1></span>
+                            <span class="example-desc">Matching HTML/XML tags</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Named groups (?P<name>...) make complex patterns more readable!</div>
+                `
+            },
+            "3-6": {
+                title: "Log File Parsing",
+                tag: "logs",
+                content: `
+                    <p>Combine everything to parse real log files: extract log levels, timestamps, and messages!</p>
+                    <div class="syntax-box">
+                        <code>grep -oP '(?<=\\[)\\w+(?=\\])' file</code>
+                        <span class="comment"># Extract text inside brackets</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -oP '\\d{2}:\\d{2}:\\d{2}' file</code>
+                        <span class="comment"># Extract HH:MM:SS timestamps</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Real Patterns</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">^\\S+ \\S+ \\[(\\d+/\\w+/\\d+)</span>
+                            <span class="example-desc">Apache log date</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">"(GET|POST) ([^"]+)"</span>
+                            <span class="example-desc">HTTP method and path</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">🔥 Log parsing is where grep truly shines in production!</div>
+                `
+            },
+            "3-7": {
+                title: "URL & Data Extraction",
+                tag: "urls",
+                content: `
+                    <p>Extract structured data like URLs, domains, and paths from text using combined techniques.</p>
+                    <div class="syntax-box">
+                        <code>grep -oP 'https?://\\S+' file</code>
+                        <span class="comment"># Extract full URLs</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -oP '(?<=://)[^/]+' file</code>
+                        <span class="comment"># Extract domain names only</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Data Patterns</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">(?&lt;=@)[\\w.-]+</span>
+                            <span class="example-desc">Email domains</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">/[\\w/]+\\.\\w+</span>
+                            <span class="example-desc">File paths</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">💡 Combine -o with patterns to build data pipelines!</div>
+                `
+            },
+            "3-8": {
+                title: "Data Validation Patterns",
+                tag: "validate",
+                content: `
+                    <p>Use grep to validate data formats: hex colors, phone numbers, credit cards, and more!</p>
+                    <div class="syntax-box">
+                        <code>grep -P '#[0-9a-fA-F]{6}\\b' file</code>
+                        <span class="comment"># Validate hex colors</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -P '\\(\\d{3}\\) \\d{3}-\\d{4}' file</code>
+                        <span class="comment"># US phone format</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Validation Examples</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$</span>
+                            <span class="example-desc">Email validation</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">^\\d{5}(-\\d{4})?$</span>
+                            <span class="example-desc">US ZIP code</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">⚠️ For production, use proper validation libraries - regex has limits!</div>
+                `
+            },
+            "3-9": {
+                title: "Stage 3 Boss: Master Extraction",
+                tag: "boss",
+                content: `
+                    <p>The ultimate challenge! Extract complex nested data using everything you've learned.</p>
+                    <div class="syntax-box">
+                        <code>grep -oP '"\\w+"(?=:)' file</code>
+                        <span class="comment"># Extract JSON keys</span>
+                    </div>
+                    <div class="syntax-box">
+                        <code>grep -oP '(?<="value": ")[^"]+'</code>
+                        <span class="comment"># Extract JSON string values</span>
+                    </div>
+                    <div class="lesson-examples">
+                        <h4>Master Techniques</h4>
+                        <div class="example-item">
+                            <span class="example-cmd">Combine lookahead + lookbehind</span>
+                            <span class="example-desc">Precise extraction</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="example-cmd">Named groups for clarity</span>
+                            <span class="example-desc">Maintainable patterns</span>
+                        </div>
+                    </div>
+                    <div class="lesson-tip">👑 You've reached the pinnacle of grep mastery!</div>
+                `
             }
         };
 
@@ -2819,6 +3452,1036 @@
                     /^grep\s+["'].*@.*["']\s+\S+$/i
                 ],
                 successMsg: "🎊 CONGRATULATIONS! You've mastered grep! You are now a grep ninja! 🥷"
+            },
+
+            // ═══════════════════════════════════════════════════════════════════
+            // ═══ STAGE 2: ADVANCED GREP - Extended regex, context, recursion ═══
+            // ═══════════════════════════════════════════════════════════════════
+
+            // ═══ STAGE 2 - LEVEL 1: Extended Regex Basics ═══
+            {
+                stage: 2,
+                level: 1,
+                tag: "extended",
+                title: "The Plus Quantifier",
+                description: "Find lines with one or more 'o' characters in a row using extended regex. Match 'o', 'oo', 'ooo', etc.",
+                hint: "💡 Use -E for extended regex, then + means 'one or more': grep -E \"o+\"",
+                fileName: "sounds.txt",
+                fileContent: [
+                    "The cow says moo",
+                    "The ghost says boo",
+                    "The owl says hoot",
+                    "A quiet whisper",
+                    "Booooring meeting",
+                    "Just code"
+                ],
+                expectedOutput: [
+                    "The cow says moo",
+                    "The ghost says boo",
+                    "The owl says hoot",
+                    "Booooring meeting",
+                    "Just code"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?o\+["']?\s+\S+$/i,
+                    /^grep\s+--extended-regexp\s+["']?o\+["']?\s+\S+$/i,
+                    /^egrep\s+["']?o\+["']?\s+\S+$/i
+                ],
+                successMsg: "Extended regex unlocks powerful quantifiers! ⚡"
+            },
+            {
+                stage: 2,
+                level: 1,
+                tag: "extended",
+                title: "Optional Characters",
+                description: "Match both 'color' and 'colour' using the ? quantifier (zero or one).",
+                hint: "💡 Use -E and ? for optional: grep -E \"colou?r\"",
+                fileName: "spelling.txt",
+                fileContent: [
+                    "American color",
+                    "British colour",
+                    "Colorful art",
+                    "Colourful day",
+                    "The collar fits"
+                ],
+                expectedOutput: [
+                    "American color",
+                    "British colour"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?colou\?r["']?\s+\S+$/i,
+                    /^grep\s+-Ew\s+["']?colou\?r["']?\s+\S+$/i
+                ],
+                successMsg: "The ? quantifier handles optional characters! 🎨"
+            },
+            {
+                stage: 2,
+                level: 1,
+                tag: "extended",
+                title: "Alternation Power",
+                description: "Find lines containing 'error' OR 'warning' OR 'critical' using the | operator.",
+                hint: "💡 Use | for OR: grep -E \"error|warning|critical\"",
+                fileName: "alerts.log",
+                fileContent: [
+                    "INFO: System started",
+                    "error: disk full",
+                    "warning: low memory",
+                    "INFO: Backup complete",
+                    "critical: database down",
+                    "DEBUG: connection open"
+                ],
+                expectedOutput: [
+                    "error: disk full",
+                    "warning: low memory",
+                    "critical: database down"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?(error\|warning\|critical|warning\|error\|critical|critical\|error\|warning|critical\|warning\|error|error\|critical\|warning|warning\|critical\|error)["']?\s+\S+$/i,
+                    /^grep\s+-Ei\s+["']?(error\|warning\|critical|warning\|error\|critical|critical\|error\|warning)["']?\s+\S+$/i
+                ],
+                successMsg: "Alternation lets you search multiple patterns at once! 🔀"
+            },
+
+            // ═══ STAGE 2 - LEVEL 2: Context Lines ═══
+            {
+                stage: 2,
+                level: 2,
+                tag: "context",
+                title: "Show Lines After",
+                description: "Find 'ERROR' and show 2 lines AFTER each match. We need context!",
+                hint: "💡 Use -A N for N lines after: grep -A 2 \"ERROR\"",
+                fileName: "crash.log",
+                fileContent: [
+                    "Starting process",
+                    "Loading config",
+                    "ERROR: Null pointer",
+                    "at main.js:42",
+                    "at index.js:10",
+                    "Process crashed",
+                    "Restarting..."
+                ],
+                expectedOutput: [
+                    "ERROR: Null pointer",
+                    "at main.js:42",
+                    "at index.js:10"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-A\s*2\s+["']?ERROR["']?\s+\S+$/i,
+                    /^grep\s+--after-context[=\s]*2\s+["']?ERROR["']?\s+\S+$/i
+                ],
+                successMsg: "Context after helps you see stack traces! 📚"
+            },
+            {
+                stage: 2,
+                level: 2,
+                tag: "context",
+                title: "Show Lines Before",
+                description: "Find 'FATAL' and show 1 line BEFORE the match.",
+                hint: "💡 Use -B N for N lines before: grep -B 1 \"FATAL\"",
+                fileName: "server.log",
+                fileContent: [
+                    "User: admin",
+                    "Action: delete_all",
+                    "FATAL: Database wiped",
+                    "Shutdown initiated"
+                ],
+                expectedOutput: [
+                    "Action: delete_all",
+                    "FATAL: Database wiped"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-B\s*1\s+["']?FATAL["']?\s+\S+$/i,
+                    /^grep\s+--before-context[=\s]*1\s+["']?FATAL["']?\s+\S+$/i
+                ],
+                successMsg: "Context before shows you what caused the issue! 🔍"
+            },
+            {
+                stage: 2,
+                level: 2,
+                tag: "context",
+                title: "Full Context",
+                description: "Find 'Exception' with 1 line before AND 1 line after (use -C for combined context).",
+                hint: "💡 Use -C N for N lines before AND after: grep -C 1 \"Exception\"",
+                fileName: "java.log",
+                fileContent: [
+                    "Method: processData()",
+                    "Exception: ArrayIndexOutOfBounds",
+                    "Recovery: Skipping record",
+                    "Method: saveData()"
+                ],
+                expectedOutput: [
+                    "Method: processData()",
+                    "Exception: ArrayIndexOutOfBounds",
+                    "Recovery: Skipping record"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-C\s*1\s+["']?Exception["']?\s+\S+$/i,
+                    /^grep\s+--context[=\s]*1\s+["']?Exception["']?\s+\S+$/i
+                ],
+                successMsg: "Full context gives you the complete picture! 🖼️"
+            },
+
+            // ═══ STAGE 2 - LEVEL 3: Multiple Patterns ═══
+            {
+                stage: 2,
+                level: 3,
+                tag: "multi",
+                title: "Multiple Patterns",
+                description: "Find lines containing 'GET' or 'POST' using multiple -e flags.",
+                hint: "💡 Use multiple -e: grep -e \"GET\" -e \"POST\"",
+                fileName: "access.log",
+                fileContent: [
+                    "GET /index.html 200",
+                    "POST /api/login 200",
+                    "DELETE /api/user 403",
+                    "GET /styles.css 200",
+                    "PUT /api/update 201",
+                    "POST /api/data 500"
+                ],
+                expectedOutput: [
+                    "GET /index.html 200",
+                    "POST /api/login 200",
+                    "GET /styles.css 200",
+                    "POST /api/data 500"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-e\s+["']?GET["']?\s+-e\s+["']?POST["']?\s+\S+$/i,
+                    /^grep\s+-e\s+["']?POST["']?\s+-e\s+["']?GET["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?(GET\|POST|POST\|GET)["']?\s+\S+$/i
+                ],
+                successMsg: "Multiple -e flags are great for complex searches! 🎯"
+            },
+            {
+                stage: 2,
+                level: 3,
+                tag: "multi",
+                title: "Pattern File",
+                description: "When patterns get complex, you can use -f with a file. For now, find 'success' OR 'complete' OR 'done'.",
+                hint: "💡 You can use -E with alternation: grep -E \"success|complete|done\"",
+                fileName: "tasks.log",
+                fileContent: [
+                    "Task 1: success",
+                    "Task 2: failed",
+                    "Task 3: complete",
+                    "Task 4: pending",
+                    "Task 5: done",
+                    "Task 6: error"
+                ],
+                expectedOutput: [
+                    "Task 1: success",
+                    "Task 3: complete",
+                    "Task 5: done"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?(success\|complete\|done|success\|done\|complete|complete\|success\|done|complete\|done\|success|done\|success\|complete|done\|complete\|success)["']?\s+\S+$/i,
+                    /^grep\s+-e\s+["']?success["']?\s+-e\s+["']?complete["']?\s+-e\s+["']?done["']?\s+\S+$/i
+                ],
+                successMsg: "You're mastering complex pattern matching! 💪"
+            },
+
+            // ═══ STAGE 2 - LEVEL 4: Quantifiers ═══
+            {
+                stage: 2,
+                level: 4,
+                tag: "quantifier",
+                title: "Zero or More",
+                description: "Find lines with 'go', 'goo', 'gooo', etc. The pattern 'go*d' won't work here - think about it!",
+                hint: "💡 Use * carefully! 'go+d' means one or more 'o'. For go, goo, etc: grep -E \"goo*\"",
+                fileName: "expressions.txt",
+                fileContent: [
+                    "Let's go!",
+                    "That's good",
+                    "What a gooood idea",
+                    "God bless",
+                    "gd is wrong"
+                ],
+                expectedOutput: [
+                    "Let's go!",
+                    "That's good",
+                    "What a gooood idea"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?goo\*["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?go\+["']?\s+\S+$/i,
+                    /^grep\s+["']?goo\*["']?\s+\S+$/i
+                ],
+                successMsg: "Quantifiers take practice but they're powerful! ⭐"
+            },
+            {
+                stage: 2,
+                level: 4,
+                tag: "quantifier",
+                title: "Exact Repetition",
+                description: "Find lines with exactly 3 digits in a row (like '123' but not '12' or '1234').",
+                hint: "💡 Use {n} for exact count: grep -E \"[0-9]{3}\" (but needs word boundaries for exact!)",
+                fileName: "codes.txt",
+                fileContent: [
+                    "Code: 123",
+                    "ID: 45",
+                    "Reference: 6789",
+                    "Pin: 007",
+                    "Room 42"
+                ],
+                expectedOutput: [
+                    "Code: 123",
+                    "Reference: 6789",
+                    "Pin: 007"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?\[0-9\]\{3\}["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?\[0-9\]\[0-9\]\[0-9\]["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?\\d\{3\}["']?\s+\S+$/i
+                ],
+                successMsg: "Repetition quantifiers give precise control! 🔢"
+            },
+
+            // ═══ STAGE 2 - LEVEL 5: Advanced Anchors ═══
+            {
+                stage: 2,
+                level: 5,
+                tag: "anchors",
+                title: "Word Boundaries",
+                description: "Find the word 'the' but NOT 'they', 'there', or 'other'. Use word boundaries!",
+                hint: "💡 Use \\b for word boundary: grep -E \"\\bthe\\b\" or just grep -w \"the\"",
+                fileName: "article.txt",
+                fileContent: [
+                    "The quick fox",
+                    "They went there",
+                    "It was the best",
+                    "Other than that",
+                    "Do the thing"
+                ],
+                expectedOutput: [
+                    "The quick fox",
+                    "It was the best",
+                    "Do the thing"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-w\s+["']?the["']?\s+\S+$/i,
+                    /^grep\s+-wi\s+["']?the["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?\\bthe\\b["']?\s+\S+$/i
+                ],
+                successMsg: "Word boundaries prevent false matches! 🎯"
+            },
+            {
+                stage: 2,
+                level: 5,
+                tag: "anchors",
+                title: "Empty Lines",
+                description: "Find all EMPTY lines in the file (lines with nothing on them).",
+                hint: "💡 An empty line: starts and immediately ends. Pattern: ^$",
+                fileName: "spaced.txt",
+                fileContent: [
+                    "First paragraph",
+                    "",
+                    "Second paragraph",
+                    "Still second",
+                    "",
+                    "Third paragraph"
+                ],
+                expectedOutput: [
+                    "",
+                    ""
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']\^\$["']\s+\S+$/,
+                    /^grep\s+-E\s+["']?\^\$["']?\s+\S+$/
+                ],
+                successMsg: "Empty line detection is useful for parsing! 📄"
+            },
+
+            // ═══ STAGE 2 - LEVEL 6: Negation & Character Classes ═══
+            {
+                stage: 2,
+                level: 6,
+                tag: "classes",
+                title: "Negated Character Class",
+                description: "Find lines that DON'T start with a letter (start with number or symbol).",
+                hint: "💡 Use [^...] to negate: grep \"^[^a-zA-Z]\"",
+                fileName: "mixed.txt",
+                fileContent: [
+                    "Apple pie",
+                    "123 Main St",
+                    "Banana split",
+                    "#hashtag",
+                    "Cake recipe",
+                    "@mention"
+                ],
+                expectedOutput: [
+                    "123 Main St",
+                    "#hashtag",
+                    "@mention"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?\^\[^a-zA-Z\]["']?\s+\S+$/,
+                    /^grep\s+["']?\^\[\^a-zA-Z\]["']?\s+\S+$/,
+                    /^grep\s+-E\s+["']?\^\[^a-zA-Z\]["']?\s+\S+$/
+                ],
+                successMsg: "Negated classes find what you DON'T want! 🚫"
+            },
+            {
+                stage: 2,
+                level: 6,
+                tag: "classes",
+                title: "Digit Ranges",
+                description: "Find lines containing any digit from 5 to 9.",
+                hint: "💡 Use ranges in character class: grep \"[5-9]\"",
+                fileName: "numbers.txt",
+                fileContent: [
+                    "Count: 3",
+                    "Score: 7",
+                    "Level: 2",
+                    "Rating: 9",
+                    "Rank: 4",
+                    "Grade: 5"
+                ],
+                expectedOutput: [
+                    "Score: 7",
+                    "Rating: 9",
+                    "Grade: 5"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+["']?\[5-9\]["']?\s+\S+$/,
+                    /^grep\s+-E\s+["']?\[5-9\]["']?\s+\S+$/
+                ],
+                successMsg: "Character ranges make digit matching easy! 🔢"
+            },
+
+            // ═══ STAGE 2 - LEVEL 7: Only Matching ═══
+            {
+                stage: 2,
+                level: 7,
+                tag: "output",
+                title: "Only The Match",
+                description: "Extract ONLY the email addresses from each line, not the whole line.",
+                hint: "💡 Use -o to print only the matching part: grep -o \"pattern\"",
+                fileName: "contacts.txt",
+                fileContent: [
+                    "Name: John, Email: john@test.com",
+                    "Name: Jane, Email: jane@work.org",
+                    "Name: Bob, No email provided",
+                    "Name: Alice, Email: alice@mail.io"
+                ],
+                expectedOutput: [
+                    "john@test.com",
+                    "jane@work.org",
+                    "alice@mail.io"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-o\s+["']?[a-zA-Z0-9._-]*@[a-zA-Z0-9.-]*["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?[a-zA-Z0-9._+-]*@[a-zA-Z0-9.-]+["']?\s+\S+$/i,
+                    /^grep\s+-Eo\s+["']?\S+@\S+["']?\s+\S+$/i
+                ],
+                successMsg: "The -o flag extracts exactly what you need! ✂️"
+            },
+            {
+                stage: 2,
+                level: 7,
+                tag: "output",
+                title: "List Files Only",
+                description: "Sometimes you just want to know WHICH files match, not the content. Find files containing 'TODO'.",
+                hint: "💡 Use -l to list only filenames: grep -l \"TODO\" (in our simulation, just use -l)",
+                fileName: "project_notes.txt",
+                fileContent: [
+                    "Feature complete",
+                    "TODO: Add tests",
+                    "Documentation done",
+                    "TODO: Review code"
+                ],
+                expectedOutput: [
+                    "project_notes.txt"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-l\s+["']?TODO["']?\s+\S+$/,
+                    /^grep\s+--files-with-matches\s+["']?TODO["']?\s+\S+$/
+                ],
+                successMsg: "The -l flag is perfect for searching across many files! 📁"
+            },
+
+            // ═══ STAGE 2 - LEVEL 8: Combining Everything ═══
+            {
+                stage: 2,
+                level: 8,
+                tag: "expert",
+                title: "Flag Mastery",
+                description: "Find 'warning' or 'error' (case-insensitive) with line numbers.",
+                hint: "💡 Combine flags: grep -inE \"warning|error\"",
+                fileName: "system.log",
+                fileContent: [
+                    "System boot OK",
+                    "WARNING: Low disk",
+                    "Service started",
+                    "Error: timeout",
+                    "Retrying...",
+                    "ERROR: Failed"
+                ],
+                expectedOutput: [
+                    "2:WARNING: Low disk",
+                    "4:Error: timeout",
+                    "6:ERROR: Failed"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-(inE|iEn|niE|nEi|Ein|Eni)\s+["']?(warning\|error|error\|warning)["']?\s+\S+$/i,
+                    /^grep\s+-in\s+-E\s+["']?(warning\|error|error\|warning)["']?\s+\S+$/i
+                ],
+                successMsg: "You're combining flags like a pro! 🏆"
+            },
+            {
+                stage: 2,
+                level: 8,
+                tag: "expert",
+                title: "Regex Combination",
+                description: "Find lines starting with a date pattern: YYYY-MM-DD (like 2024-01-15).",
+                hint: "💡 Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                fileName: "dated.log",
+                fileContent: [
+                    "2024-01-15 Started",
+                    "Started 2024-01-15",
+                    "2024-12-31 Ended",
+                    "Date: 2024-06-01",
+                    "2023-07-20 Old entry"
+                ],
+                expectedOutput: [
+                    "2024-01-15 Started",
+                    "2024-12-31 Ended",
+                    "2023-07-20 Old entry"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?\^\[0-9\]\{4\}-\[0-9\]\{2\}-\[0-9\]\{2\}["']?\s+\S+$/,
+                    /^grep\s+-E\s+["']?\^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}["']?\s+\S+$/,
+                    /^grep\s+["']?\^\[0-9\]\{4\}-\[0-9\]\{2\}-\[0-9\]\{2\}["']?\s+\S+$/
+                ],
+                successMsg: "Complex patterns become second nature! 📅"
+            },
+
+            // ═══ STAGE 2 - LEVEL 9: Final Boss ═══
+            {
+                stage: 2,
+                level: 9,
+                tag: "boss",
+                title: "🏆 IP Address Hunter",
+                description: "Find all lines containing valid IPv4 addresses (like 192.168.1.1).",
+                hint: "💡 IP format: N.N.N.N where N is 1-3 digits. Pattern: [0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+",
+                fileName: "network.log",
+                fileContent: [
+                    "Connection from 192.168.1.100",
+                    "Server at localhost",
+                    "Ping to 10.0.0.1 successful",
+                    "DNS: 8.8.8.8",
+                    "Error: host unreachable",
+                    "Gateway: 172.16.0.1"
+                ],
+                expectedOutput: [
+                    "Connection from 192.168.1.100",
+                    "Ping to 10.0.0.1 successful",
+                    "DNS: 8.8.8.8",
+                    "Gateway: 172.16.0.1"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-E\s+["']?\[0-9\]\+\\\.\[0-9\]\+\\\.\[0-9\]\+\\\.\[0-9\]\+["']?\s+\S+$/,
+                    /^grep\s+-E\s+["']?\[0-9\]\{1,3\}\\\.\[0-9\]\{1,3\}\\\.\[0-9\]\{1,3\}\\\.\[0-9\]\{1,3\}["']?\s+\S+$/,
+                    /^grep\s+-E\s+["']?[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+["']?\s+\S+$/i,
+                    /^grep\s+["']?[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*["']?\s+\S+$/i
+                ],
+                successMsg: "🎊 STAGE 2 COMPLETE! You've mastered advanced grep! Ready for Stage 3! 🥷"
+            },
+
+            // ═══════════════════════════════════════════════════════════════════
+            // ═══ STAGE 3: MASTER GREP - Perl regex, lookaheads, complex patterns ═══
+            // ═══════════════════════════════════════════════════════════════════
+
+            // ═══ STAGE 3 - LEVEL 1: Perl-Compatible Regex ═══
+            {
+                stage: 3,
+                level: 1,
+                tag: "pcre",
+                title: "Digit Shorthand",
+                description: "Find lines containing digits using \\d (Perl shorthand for [0-9]).",
+                hint: "💡 Use -P for Perl regex: grep -P \"\\d+\" (\\d = digit)",
+                fileName: "data.txt",
+                fileContent: [
+                    "Name: John Smith",
+                    "Age: 25",
+                    "City: New York",
+                    "ID: 12345",
+                    "Status: Active"
+                ],
+                expectedOutput: [
+                    "Age: 25",
+                    "ID: 12345"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\\d\+?["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\\d\+["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?\[0-9\]\+["']?\s+\S+$/i
+                ],
+                successMsg: "Perl regex shortcuts save typing! ⚡"
+            },
+            {
+                stage: 3,
+                level: 1,
+                tag: "pcre",
+                title: "Word Character Class",
+                description: "Find lines with word characters followed by @ (like usernames in emails). Use \\w+ for word chars.",
+                hint: "💡 \\w matches [a-zA-Z0-9_]. Try: grep -P \"\\w+@\"",
+                fileName: "emails.txt",
+                fileContent: [
+                    "Contact: john_doe@mail.com",
+                    "Invalid: @broken.com",
+                    "Support: help123@site.org",
+                    "Missing: no email here",
+                    "Admin: root@server.net"
+                ],
+                expectedOutput: [
+                    "Contact: john_doe@mail.com",
+                    "Support: help123@site.org",
+                    "Admin: root@server.net"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\\w\+@["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\[\\w\]\+@["']?\s+\S+$/i
+                ],
+                successMsg: "\\w is your friend for word matching! 🔤"
+            },
+            {
+                stage: 3,
+                level: 1,
+                tag: "pcre",
+                title: "Whitespace Matching",
+                description: "Find lines with multiple spaces (2+ whitespace chars in a row). Use \\s for whitespace.",
+                hint: "💡 \\s matches space, tab, newline. Try: grep -P \"\\s{2,}\"",
+                fileName: "messy.txt",
+                fileContent: [
+                    "Normal spacing here",
+                    "Too  many  spaces",
+                    "Single word",
+                    "Tab\there",
+                    "Extra   spacing   everywhere"
+                ],
+                expectedOutput: [
+                    "Too  many  spaces",
+                    "Extra   spacing   everywhere"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\\s\{2,\}["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\\s\\s\+["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\\s\+\\s["']?\s+\S+$/i
+                ],
+                successMsg: "\\s catches all whitespace types! 📄"
+            },
+
+            // ═══ STAGE 3 - LEVEL 2: Non-Greedy Matching ═══
+            {
+                stage: 3,
+                level: 2,
+                tag: "greedy",
+                title: "Greedy vs Non-Greedy",
+                description: "Extract just the FIRST quoted string on each line. Default * is greedy - use *? for non-greedy.",
+                hint: "💡 \".*\" matches too much! Use \".*?\" for minimal match: grep -oP '\".*?\"'",
+                fileName: "quotes.txt",
+                fileContent: [
+                    "He said \"hello\" and \"goodbye\"",
+                    "The \"quick\" fox",
+                    "No quotes here",
+                    "Single \"word\" only"
+                ],
+                expectedOutput: [
+                    "\"hello\"",
+                    "\"quick\"",
+                    "\"word\""
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+['"]['"].*?\?['"]["']\s+\S+$/i,
+                    /^grep\s+-Po\s+['"]['"].*?\?['"]["']\s+\S+$/i
+                ],
+                successMsg: "Non-greedy matching is crucial for parsing! 🎯"
+            },
+            {
+                stage: 3,
+                level: 2,
+                tag: "greedy",
+                title: "Extract HTML Tags",
+                description: "Extract HTML tag names only (like 'div', 'span') from opening tags. Match <tagname but not the full tag.",
+                hint: "💡 Match < followed by word chars: grep -oP '<\\w+'",
+                fileName: "page.html",
+                fileContent: [
+                    "<div class=\"container\">",
+                    "<span>Hello</span>",
+                    "Just text here",
+                    "<p id=\"intro\">",
+                    "<a href=\"link\">"
+                ],
+                expectedOutput: [
+                    "<div",
+                    "<span",
+                    "<p",
+                    "<a"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?<\\w\+["']?\s+\S+$/i,
+                    /^grep\s+-Po\s+["']?<\\w\+["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?<\[a-zA-Z\]\+["']?\s+\S+$/i
+                ],
+                successMsg: "You're parsing HTML like a pro! 🏷️"
+            },
+
+            // ═══ STAGE 3 - LEVEL 3: Lookaheads ═══
+            {
+                stage: 3,
+                level: 3,
+                tag: "lookahead",
+                title: "Positive Lookahead",
+                description: "Find 'error' only when followed by a colon. Use (?=:) lookahead.",
+                hint: "💡 Lookahead (?=...) checks what's ahead without consuming: grep -P \"error(?=:)\"",
+                fileName: "messages.log",
+                fileContent: [
+                    "error: disk full",
+                    "error occurred",
+                    "error: timeout",
+                    "no error here",
+                    "error: connection lost"
+                ],
+                expectedOutput: [
+                    "error: disk full",
+                    "error: timeout",
+                    "error: connection lost"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?error\(\?=:\)["']?\s+\S+$/i,
+                    /^grep\s+["']?error:["']?\s+\S+$/i
+                ],
+                successMsg: "Lookaheads assert without consuming! 👀"
+            },
+            {
+                stage: 3,
+                level: 3,
+                tag: "lookahead",
+                title: "Negative Lookahead",
+                description: "Find 'test' but NOT when followed by 'ing'. Use (?!ing) negative lookahead.",
+                hint: "💡 Negative lookahead (?!...) ensures pattern is NOT followed by something",
+                fileName: "words.txt",
+                fileContent: [
+                    "testing in progress",
+                    "run the test",
+                    "test failed",
+                    "testing complete",
+                    "final test"
+                ],
+                expectedOutput: [
+                    "run the test",
+                    "test failed",
+                    "final test"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?test\(\?!ing\)["']?\s+\S+$/i,
+                    /^grep\s+-Pw\s+["']?test["']?\s+\S+$/i
+                ],
+                successMsg: "Negative lookahead for precise exclusion! 🚫"
+            },
+
+            // ═══ STAGE 3 - LEVEL 4: Lookbehinds ═══
+            {
+                stage: 3,
+                level: 4,
+                tag: "lookbehind",
+                title: "Positive Lookbehind",
+                description: "Extract numbers that come AFTER a $ sign (prices). Use (?<=\\$) lookbehind.",
+                hint: "💡 Lookbehind (?<=...) checks what's behind: grep -oP '(?<=\\$)\\d+'",
+                fileName: "prices.txt",
+                fileContent: [
+                    "Item costs $50",
+                    "Reference: 12345",
+                    "Price: $199",
+                    "Quantity: 5",
+                    "Total: $75"
+                ],
+                expectedOutput: [
+                    "50",
+                    "199",
+                    "75"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?\(\?<=\\\$\)\\d\+["']?\s+\S+$/i,
+                    /^grep\s+-Po\s+["']?\(\?<=\\\$\)\\d\+["']?\s+\S+$/i
+                ],
+                successMsg: "Lookbehinds extract what follows patterns! 💰"
+            },
+            {
+                stage: 3,
+                level: 4,
+                tag: "lookbehind",
+                title: "Negative Lookbehind",
+                description: "Find 'port' but NOT when preceded by 'im' or 're'. Skip 'import' and 'report'.",
+                hint: "💡 Negative lookbehind: grep -P '(?<!im)(?<!re)port'",
+                fileName: "code.txt",
+                fileContent: [
+                    "import os",
+                    "port = 8080",
+                    "report generated",
+                    "set port number",
+                    "export data"
+                ],
+                expectedOutput: [
+                    "port = 8080",
+                    "set port number",
+                    "export data"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\(\?<!im\)\(\?<!re\)port["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\(\?<!\[ir\]\[me\]\)port["']?\s+\S+$/i
+                ],
+                successMsg: "Lookbehinds complete your assertion toolkit! 🔧"
+            },
+
+            // ═══ STAGE 3 - LEVEL 5: Capture Groups ═══
+            {
+                stage: 3,
+                level: 5,
+                tag: "groups",
+                title: "Basic Grouping",
+                description: "Find repeated words using backreferences. Match 'the the', 'is is', etc.",
+                hint: "💡 Capture and backreference: grep -P '\\b(\\w+)\\s+\\1\\b'",
+                fileName: "typos.txt",
+                fileContent: [
+                    "This is is wrong",
+                    "Correct sentence here",
+                    "The the problem",
+                    "No issues found",
+                    "Going to to work"
+                ],
+                expectedOutput: [
+                    "This is is wrong",
+                    "The the problem",
+                    "Going to to work"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\\b\(\\w\+\)\\s\+\\1\\b["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?\(\\w\+\)\s\+\\1["']?\s+\S+$/i
+                ],
+                successMsg: "Backreferences find duplicates! 🔁"
+            },
+            {
+                stage: 3,
+                level: 5,
+                tag: "groups",
+                title: "Named Groups",
+                description: "Find lines with matching opening and closing XML tags. Use named groups.",
+                hint: "💡 Named groups: (?P<name>...) and (?P=name) - grep -P '<(?P<tag>\\w+)>.*</(?P=tag)>'",
+                fileName: "xml.txt",
+                fileContent: [
+                    "<div>content</div>",
+                    "<span>text</p>",
+                    "<h1>title</h1>",
+                    "<div>broken</span>",
+                    "<a>link</a>"
+                ],
+                expectedOutput: [
+                    "<div>content</div>",
+                    "<h1>title</h1>",
+                    "<a>link</a>"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?<\(\?P<tag>\\w\+\)>.*<\/\(\?P=tag\)>["']?\s+\S+$/i,
+                    /^grep\s+-P\s+["']?<\(\\w\+\)>.*<\/\\1>["']?\s+\S+$/i
+                ],
+                successMsg: "Named groups make complex patterns readable! 📛"
+            },
+
+            // ═══ STAGE 3 - LEVEL 6: Real Log Parsing ═══
+            {
+                stage: 3,
+                level: 6,
+                tag: "logs",
+                title: "Parse Log Levels",
+                description: "Extract just the log level (ERROR, WARN, INFO) from each line.",
+                hint: "💡 Extract with -o and lookaround: grep -oP '(?<=\\[)[A-Z]+(?=\\])'",
+                fileName: "app.log",
+                fileContent: [
+                    "[INFO] Starting server",
+                    "[ERROR] Connection failed",
+                    "[WARN] Low memory",
+                    "[DEBUG] Variable dump",
+                    "[INFO] Request processed"
+                ],
+                expectedOutput: [
+                    "INFO",
+                    "ERROR",
+                    "WARN",
+                    "DEBUG",
+                    "INFO"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?\(\?<=\\\[\)\[A-Z\]\+\(\?=\\\]\)["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?\[A-Z\]\+["']?\s+\S+$/i
+                ],
+                successMsg: "Log parsing is a critical sysadmin skill! 📊"
+            },
+            {
+                stage: 3,
+                level: 6,
+                tag: "logs",
+                title: "Extract Timestamps",
+                description: "Extract timestamps in HH:MM:SS format from the log.",
+                hint: "💡 Time pattern: grep -oP '\\d{2}:\\d{2}:\\d{2}'",
+                fileName: "times.log",
+                fileContent: [
+                    "2024-01-15 10:23:45 Server started",
+                    "2024-01-15 10:24:01 User login",
+                    "Invalid timestamp",
+                    "2024-01-15 15:30:22 Backup complete",
+                    "2024-01-15 23:59:59 Day end"
+                ],
+                expectedOutput: [
+                    "10:23:45",
+                    "10:24:01",
+                    "15:30:22",
+                    "23:59:59"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?\\d\{2\}:\\d\{2\}:\\d\{2\}["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?\[0-9\]\{2\}:\[0-9\]\{2\}:\[0-9\]\{2\}["']?\s+\S+$/i
+                ],
+                successMsg: "Timestamp extraction is essential for analysis! ⏰"
+            },
+
+            // ═══ STAGE 3 - LEVEL 7: URL & Data Extraction ═══
+            {
+                stage: 3,
+                level: 7,
+                tag: "urls",
+                title: "Extract URLs",
+                description: "Extract full URLs (http:// or https://) from the text.",
+                hint: "💡 URL pattern: grep -oP 'https?://\\S+'",
+                fileName: "links.txt",
+                fileContent: [
+                    "Visit https://example.com for more",
+                    "Old site: http://legacy.org/page",
+                    "No URL here",
+                    "API: https://api.service.io/v1",
+                    "FTP not HTTP: ftp://files.com"
+                ],
+                expectedOutput: [
+                    "https://example.com",
+                    "http://legacy.org/page",
+                    "https://api.service.io/v1"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?https\?:\/\/\\S\+["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?https\?:\/\/\[^ \]\+["']?\s+\S+$/i
+                ],
+                successMsg: "URL extraction is a common task! 🔗"
+            },
+            {
+                stage: 3,
+                level: 7,
+                tag: "urls",
+                title: "Extract Domains",
+                description: "Extract just the domain name from URLs (e.g., 'example.com' from 'https://example.com/path').",
+                hint: "💡 Use lookbehind: grep -oP '(?<=://)[^/]+'",
+                fileName: "sites.txt",
+                fileContent: [
+                    "https://github.com/user/repo",
+                    "http://localhost:3000/api",
+                    "https://docs.python.org/3/",
+                    "Not a URL",
+                    "https://api.stripe.com/v1"
+                ],
+                expectedOutput: [
+                    "github.com",
+                    "localhost:3000",
+                    "docs.python.org",
+                    "api.stripe.com"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?\(\?<=:\/\/\)\[^\/\]\+["']?\s+\S+$/i,
+                    /^grep\s+-oP\s+["']?\(\?<=:\/\/\)\\S\+\(\?=\/\)["']?\s+\S+$/i
+                ],
+                successMsg: "Domain extraction for analytics! 🌐"
+            },
+
+            // ═══ STAGE 3 - LEVEL 8: Complex Validation ═══
+            {
+                stage: 3,
+                level: 8,
+                tag: "validate",
+                title: "Validate Hex Colors",
+                description: "Find valid hex color codes (#RGB or #RRGGBB format).",
+                hint: "💡 Hex pattern: grep -P '#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\\b'",
+                fileName: "styles.css",
+                fileContent: [
+                    "color: #fff;",
+                    "background: #123456;",
+                    "border: #gg0000;",
+                    "fill: #a1b2c3;",
+                    "invalid: #12;"
+                ],
+                expectedOutput: [
+                    "color: #fff;",
+                    "background: #123456;",
+                    "fill: #a1b2c3;"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?#\(\[0-9a-fA-F\]\{6\}\|\[0-9a-fA-F\]\{3\}\)\\b["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?#\[0-9a-fA-F\]\{3,6\}["']?\s+\S+$/i
+                ],
+                successMsg: "Hex validation for CSS processing! 🎨"
+            },
+            {
+                stage: 3,
+                level: 8,
+                tag: "validate",
+                title: "Phone Number Format",
+                description: "Find US phone numbers in format (XXX) XXX-XXXX.",
+                hint: "💡 Pattern: grep -P '\\(\\d{3}\\) \\d{3}-\\d{4}'",
+                fileName: "contacts.txt",
+                fileContent: [
+                    "Call: (555) 123-4567",
+                    "Mobile: 555-123-4567",
+                    "Office: (800) 555-0199",
+                    "Fax: 555.123.4567",
+                    "Home: (415) 867-5309"
+                ],
+                expectedOutput: [
+                    "Call: (555) 123-4567",
+                    "Office: (800) 555-0199",
+                    "Home: (415) 867-5309"
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-P\s+["']?\\\(\\d\{3\}\\\)\s\\d\{3\}-\\d\{4\}["']?\s+\S+$/i,
+                    /^grep\s+-E\s+["']?\\\([0-9]\{3\}\\\)\s\[0-9\]\{3\}-\[0-9\]\{4\}["']?\s+\S+$/i
+                ],
+                successMsg: "Data validation is grep's superpower! 📞"
+            },
+
+            // ═══ STAGE 3 - LEVEL 9: Final Boss ═══
+            {
+                stage: 3,
+                level: 9,
+                tag: "boss",
+                title: "🏆 JSON Key Extractor",
+                description: "Extract all JSON keys (text before colons in quotes) from the data.",
+                hint: "💡 JSON key pattern: grep -oP '\"\\w+\"(?=:)' or use lookbehind/ahead",
+                fileName: "data.json",
+                fileContent: [
+                    "{\"name\": \"John\",",
+                    "\"age\": 30,",
+                    "\"email\": \"john@test.com\",",
+                    "\"active\": true,",
+                    "\"score\": 100}"
+                ],
+                expectedOutput: [
+                    "\"name\"",
+                    "\"age\"",
+                    "\"email\"",
+                    "\"active\"",
+                    "\"score\""
+                ],
+                acceptedPatterns: [
+                    /^grep\s+-oP\s+["']?"\\w\+"\(\?=:\)["']?\s+\S+$/i,
+                    /^grep\s+-oP\s+["']?"\[a-zA-Z_\]\+"\(\?=:\)["']?\s+\S+$/i,
+                    /^grep\s+-oE\s+["']?"[a-zA-Z_]+":["']?\s+\S+$/i
+                ],
+                successMsg: "🎊 STAGE 3 COMPLETE! You are a TRUE GREP MASTER! The terminal bows to you! 👑🥷✨"
             }
         ];
 
@@ -3201,14 +4864,70 @@
             }
         }
 
-        // Get challenges for current level
-        function getLevelChallenges(level) {
-            return challenges.filter(c => c.level === level);
+        // Reset modal functions
+        function showResetModal() {
+            document.getElementById('reset-modal').classList.add('show');
         }
 
-        // Load lesson content for current level
+        function hideResetModal() {
+            document.getElementById('reset-modal').classList.remove('show');
+        }
+
+        function confirmReset() {
+            // Clear localStorage
+            localStorage.removeItem('grepDojoSave');
+            
+            // Reset gameState to initial values
+            gameState.score = 0;
+            gameState.level = 1;
+            gameState.stage = 1;
+            gameState.xp = 0;
+            gameState.streak = 0;
+            gameState.bestStreak = 0;
+            gameState.totalCorrect = 0;
+            gameState.totalAttempts = 0;
+            gameState.hintsRemaining = 3;
+            gameState.hintsUsedThisLevel = false;
+            gameState.correctThisLevel = 0;
+            gameState.attemptsThisLevel = 0;
+            gameState.completedLevels = new Set();
+            gameState.highestUnlockedLevel = 1;
+            gameState.highestStageReached = 1;
+            gameState.unlockedAchievements = new Set();
+            gameState.challengesInLevel = 0;
+            gameState.commandHistory = [];
+            
+            // Hide modal
+            hideResetModal();
+            
+            // Refresh UI
+            renderAchievements();
+            updateLevelMeter();
+            updateStageDisplay();
+            updateAllStats();
+            loadChallenge();
+            clearHistory();
+            
+            // Show feedback
+            showFeedback('Progress reset! Starting fresh 🌱', 'success');
+        }
+
+        // Get challenges for current level and stage
+        function getLevelChallenges(level) {
+            const stage = gameState.stage;
+            return challenges.filter(c => {
+                const challengeStage = c.stage || 1; // Default to stage 1 if not specified
+                return c.level === level && challengeStage === stage;
+            });
+        }
+
+        // Load lesson content for current level and stage
         function loadLesson() {
-            const lesson = lessons[gameState.level];
+            // Use compound key for stage 2+, simple number for stage 1
+            const lessonKey = gameState.stage > 1 
+                ? `${gameState.stage}-${gameState.level}` 
+                : gameState.level;
+            const lesson = lessons[lessonKey];
             if (lesson) {
                 document.getElementById('lesson-title').textContent = 'Learn: ' + lesson.title;
                 document.getElementById('lesson-tag').textContent = lesson.tag;
@@ -3320,8 +5039,8 @@
 
         // Simulate grep command
         function simulateGrep(command, challenge) {
-            // Parse the command
-            const parts = command.match(/grep\s+((?:-\w+\s+)*)?["']?([^"'\s]+|[^"']+)["']?\s+(\S+)/i);
+            // Parse the command - more flexible for extended options
+            const parts = command.match(/grep\s+((?:-[\w]+\s+|-\w\s+\d+\s+|--[\w-]+=?\d*\s+)*)?["']?([^"'\s]+|[^"']+)["']?\s+(\S+)/i);
             
             if (!parts) {
                 return { error: "Invalid grep syntax. Try: grep [options] \"pattern\" filename" };
@@ -3337,6 +5056,22 @@
                 let invertMatch = flags.includes('-v');
                 let countOnly = flags.includes('-c');
                 let wholeWord = flags.includes('-w');
+                let filesOnly = flags.includes('-l') || flags.includes('--files-with-matches');
+                let onlyMatching = flags.includes('-o');
+                let extendedRegex = flags.includes('-E') || flags.includes('--extended-regexp');
+                let perlRegex = flags.includes('-P') || flags.includes('--perl-regexp');
+                
+                // Parse context flags
+                let afterContext = 0, beforeContext = 0;
+                const afterMatch = flags.match(/-A\s*(\d+)/);
+                const beforeMatch = flags.match(/-B\s*(\d+)/);
+                const contextMatch = flags.match(/-C\s*(\d+)/);
+                if (afterMatch) afterContext = parseInt(afterMatch[1]);
+                if (beforeMatch) beforeContext = parseInt(beforeMatch[1]);
+                if (contextMatch) {
+                    afterContext = parseInt(contextMatch[1]);
+                    beforeContext = parseInt(contextMatch[1]);
+                }
                 
                 if (flags.includes('-i')) regexFlags += 'i';
                 
@@ -3347,25 +5082,62 @@
                     regexPattern = `\\b${pattern}\\b`;
                 }
 
-                const regex = new RegExp(regexPattern, regexFlags);
+                const regex = new RegExp(regexPattern, regexFlags + 'g');
                 
                 let matches = [];
+                let matchedLineIndices = new Set();
                 
+                // First pass: find matching lines
                 challenge.fileContent.forEach((line, index) => {
                     const isMatch = regex.test(line);
+                    regex.lastIndex = 0; // Reset for next test
                     const shouldInclude = invertMatch ? !isMatch : isMatch;
                     
                     if (shouldInclude) {
-                        if (showLineNumbers) {
-                            matches.push(`${index + 1}:${line}`);
+                        matchedLineIndices.add(index);
+                    }
+                });
+                
+                // If -l flag, just return filename
+                if (filesOnly && matchedLineIndices.size > 0) {
+                    return { lines: [challenge.fileName], count: 1 };
+                }
+                
+                // Handle context lines
+                if (beforeContext > 0 || afterContext > 0) {
+                    let contextIndices = new Set();
+                    matchedLineIndices.forEach(idx => {
+                        for (let i = idx - beforeContext; i <= idx + afterContext; i++) {
+                            if (i >= 0 && i < challenge.fileContent.length) {
+                                contextIndices.add(i);
+                            }
+                        }
+                    });
+                    // Build output with context
+                    let sortedIndices = Array.from(contextIndices).sort((a, b) => a - b);
+                    sortedIndices.forEach(idx => {
+                        matches.push(challenge.fileContent[idx]);
+                    });
+                } else {
+                    // Normal output
+                    matchedLineIndices.forEach(idx => {
+                        const line = challenge.fileContent[idx];
+                        if (onlyMatching) {
+                            // Extract only matching parts
+                            const lineMatches = line.match(regex);
+                            if (lineMatches) {
+                                lineMatches.forEach(m => matches.push(m));
+                            }
+                        } else if (showLineNumbers) {
+                            matches.push(`${idx + 1}:${line}`);
                         } else {
                             matches.push(line);
                         }
-                    }
-                });
+                    });
+                }
 
                 if (countOnly) {
-                    return { lines: [matches.length.toString()], count: matches.length };
+                    return { lines: [matchedLineIndices.size.toString()], count: matchedLineIndices.size };
                 }
 
                 return { lines: matches, count: matches.length };
