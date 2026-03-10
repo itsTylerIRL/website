@@ -3,12 +3,31 @@
 
 $ErrorActionPreference = "Stop"
 
+# Fix execution policy for this session (allows npm.ps1 and other scripts to run)
+try {
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force -ErrorAction SilentlyContinue
+} catch {
+    # Silently continue - we'll use npm.cmd fallback if needed
+}
+
 $REPO = "https://github.com/itsTylerIRL/radgotchi.git"
 $INSTALL_DIR = if ($env:RADGOTCHI_INSTALL_DIR) { $env:RADGOTCHI_INSTALL_DIR } else { Join-Path $HOME "radgotchi" }
 
 function Info($msg)  { Write-Host "[INFO] $msg" -ForegroundColor Green }
 function Warn($msg)  { Write-Host "[WARN] $msg" -ForegroundColor Yellow }
 function Error($msg) { Write-Host "[ERROR] $msg" -ForegroundColor Red; exit 1 }
+
+# Run npm using the .cmd wrapper to avoid execution policy issues with npm.ps1
+function Run-Npm {
+    param([string[]]$Arguments)
+    $npmCmd = Get-Command npm.cmd -ErrorAction SilentlyContinue
+    if ($npmCmd) {
+        & $npmCmd.Source @Arguments
+    } else {
+        # Fallback: try npm directly (will work if execution policy is set)
+        npm @Arguments
+    }
+}
 
 # Install a missing dependency via winget or choco
 function Install-Dep($name, $wingetId, $chocoName) {
@@ -64,7 +83,7 @@ if (Test-Path $INSTALL_DIR) {
 
 # Install dependencies
 Info "Installing dependencies..."
-npm install
+Run-Npm install
 
 Info "Installation complete!"
 Write-Host ""
@@ -109,7 +128,7 @@ switch ($choice) {
         Create-Shortcut
         Write-Host ""
         Info "Starting radgotchi..."
-        npm start
+        Run-Npm start
     }
     "2" {
         Create-Shortcut
@@ -119,7 +138,7 @@ switch ($choice) {
     }
     "3" {
         Info "Starting radgotchi..."
-        npm start
+        Run-Npm start
     }
     default {
         Write-Host "To run radgotchi later:"
