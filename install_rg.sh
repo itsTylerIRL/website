@@ -73,6 +73,32 @@ prompt_install() {
     fi
 }
 
+# macOS: ensure Xcode CLI tools and Homebrew are available
+if [ "$(uname -s)" = "Darwin" ]; then
+    if ! xcode-select -p >/dev/null 2>&1; then
+        info "Installing Xcode Command Line Tools (required on macOS)..."
+        xcode-select --install 2>/dev/null
+        # Wait for the GUI installer to finish
+        until xcode-select -p >/dev/null 2>&1; do
+            sleep 5
+        done
+        info "Xcode Command Line Tools installed."
+    fi
+
+    if ! command -v brew >/dev/null 2>&1; then
+        info "Installing Homebrew (macOS package manager)..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # Add brew to PATH for Apple Silicon and Intel Macs
+        if [ -f /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -f /usr/local/bin/brew ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+        command -v brew >/dev/null 2>&1 || error "Homebrew installation failed. Install manually from https://brew.sh"
+        info "Homebrew installed."
+    fi
+fi
+
 # Check dependencies
 if ! command -v git >/dev/null 2>&1; then
     if prompt_install "git"; then

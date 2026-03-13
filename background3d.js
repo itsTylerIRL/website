@@ -14,7 +14,7 @@ let exclusionZones = [];
 window.exclusionZones = exclusionZones;
 
 // Post-processing and effects
-let composer, bloomPass, glitchPass, chromaticAberrationPass, godRaysPass;
+let composer, bloomPass, glitchPass, chromaticAberrationPass, godRaysPass, vignettePass;
 let linesMesh, linesGeometry, linesPositions;
 let glitchIntensity = 0;
 let nextGlitchTime = 0;
@@ -68,7 +68,6 @@ function initBackground3D() {
     // Create particle systems
     createParticles();
     createConnectionLines();
-    createWireframeShapes();
     createVolumetricLightSource();
     
     // Setup post-processing (bloom + glitch + god rays + chromatic aberration)
@@ -108,6 +107,8 @@ function trackScanline() {
 // Dithering shader for particles - subtle and professional
 const particleVertexShader = `
     attribute vec3 color;
+    attribute float size;
+    attribute vec3 velocity;
     varying vec3 vColor;
     varying vec2 vScreenPos;
     varying float vDepth;
@@ -115,7 +116,15 @@ const particleVertexShader = `
     void main() {
         vColor = color;
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = 3.0 * (300.0 / -mvPosition.z);
+        
+        // Velocity gives a subtle size boost (faster = slightly bigger glow)
+        vec3 velView = mat3(modelViewMatrix) * velocity;
+        float speed = length(velView.xy);
+        float velBoost = 1.0 + clamp(speed * 60.0, 0.0, 0.3);
+        
+        // Size variation
+        float baseSize = size * (300.0 / -mvPosition.z);
+        gl_PointSize = min(baseSize * velBoost, 80.0);
         gl_Position = projectionMatrix * mvPosition;
         
         // Pass screen position for dithering
@@ -157,7 +166,7 @@ const particleFragmentShader = `
     }
     
     void main() {
-        // Circular particle shape
+        // Spherical particle shape
         vec2 center = gl_PointCoord - vec2(0.5);
         float dist = length(center);
         if (dist > 0.5) discard;
@@ -207,14 +216,14 @@ function createParticles() {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
+    const sizes = [];
+    const velocityData = [];
     particleVelocities = []; // Reset velocities
     
-    // Color palette - cyan and pink accents
+    // Color palette - cyan primary, rare white accent
     const colorPalette = [
-        new THREE.Color(0x8be9fd), // Cyan
-        new THREE.Color(0xff79c6), // Pink
-        new THREE.Color(0x50fa7b), // Green
-        new THREE.Color(0xf8f8f2), // White
+        new THREE.Color(0x8be9fd), // Cyan - primary
+        new THREE.Color(0xf8f8f2), // White - rare accent
     ];
 
     for (let i = 0; i < 3000; i++) {
@@ -225,25 +234,30 @@ function createParticles() {
         
         vertices.push(x, y, z);
         
+        // Size variation: most small, few large (power curve distribution)
+        sizes.push(0.5 + Math.pow(Math.random(), 2.5) * 4.5);
+        
         // Add random velocity for each particle (very slow drift)
         const speed = 0.003 + Math.random() * 0.005;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.random() * Math.PI;
-        particleVelocities.push({
-            x: Math.sin(phi) * Math.cos(theta) * speed,
-            y: Math.sin(phi) * Math.sin(theta) * speed,
-            z: Math.cos(phi) * speed * 0.2 // Less z movement
-        });
+        const vx = Math.sin(phi) * Math.cos(theta) * speed;
+        const vy = Math.sin(phi) * Math.sin(theta) * speed;
+        const vz = Math.cos(phi) * speed * 0.2;
+        particleVelocities.push({ x: vx, y: vy, z: vz });
+        velocityData.push(vx, vy, vz);
         
-        // Random color from palette, weighted toward cyan
-        const color = Math.random() > 0.7 
-            ? colorPalette[Math.floor(Math.random() * colorPalette.length)]
-            : colorPalette[0];
+        // Color: 92% cyan, 8% white accent
+        const color = Math.random() > 0.92 
+            ? colorPalette[1]  // Rare white accent
+            : colorPalette[0]; // Cyan primary
         colors.push(color.r, color.g, color.b);
     }
 
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+    geometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocityData, 3));
     
     // Store references for animation
     particlePositions = geometry.attributes.position;
@@ -379,56 +393,6 @@ function updateParticlePositions() {
     }
     
     particlePositions.needsUpdate = true;
-}
-
-function createWireframeShapes() {
-    // Floating wireframe geometries - spread across entire scene
-    const shapes = [];
-    const geometries = [
-        new THREE.IcosahedronGeometry(3, 0),
-        new THREE.OctahedronGeometry(2.5, 0),
-        new THREE.TetrahedronGeometry(2, 0),
-        new THREE.BoxGeometry(2, 2, 2),
-    ];
-
-    for (let i = 0; i < 12; i++) {
-        const geo = geometries[Math.floor(Math.random() * geometries.length)];
-        const material = new THREE.MeshBasicMaterial({
-            color: Math.random() > 0.5 ? 0x8be9fd : 0xff79c6,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
-        });
-        
-        const mesh = new THREE.Mesh(geo, material);
-        mesh.position.set(
-            (Math.random() - 0.5) * 150,
-            (Math.random() - 0.5) * 600, // Tall spread to cover scroll
-            (Math.random() - 0.5) * 60 - 10
-        );
-        mesh.rotation.set(
-            Math.random() * Math.PI,
-            Math.random() * Math.PI,
-            Math.random() * Math.PI
-        );
-        
-        // Store rotation speeds
-        mesh.userData = {
-            rotationSpeed: {
-                x: (Math.random() - 0.5) * 0.01,
-                y: (Math.random() - 0.5) * 0.01,
-                z: (Math.random() - 0.5) * 0.01
-            },
-            floatSpeed: Math.random() * 0.5 + 0.5,
-            floatOffset: Math.random() * Math.PI * 2
-        };
-        
-        scene.add(mesh);
-        shapes.push(mesh);
-    }
-    
-    // Store for animation
-    window.wireframeShapes = shapes;
 }
 
 // ============== VOLUMETRIC LIGHT SOURCE ==============
@@ -641,6 +605,33 @@ const godRaysShader = {
     `
 };
 
+// ============== VIGNETTE SHADER ==============
+const vignetteShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        uIntensity: { value: 0.4 }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float uIntensity;
+        varying vec2 vUv;
+        
+        void main() {
+            vec4 color = texture2D(tDiffuse, vUv);
+            vec2 center = vUv - vec2(0.5);
+            float vignette = 1.0 - dot(center, center) * uIntensity * 2.0;
+            gl_FragColor = vec4(color.rgb * vignette, color.a);
+        }
+    `
+};
+
 // ============== POST-PROCESSING (BLOOM) ==============
 function setupPostProcessing() {
     // Check if post-processing classes are available
@@ -691,10 +682,16 @@ function setupPostProcessing() {
         composer.addPass(godRaysPass);
     }
     
-    // Chromatic aberration last for that final cinematic touch
+    // Chromatic aberration
     if (chromaticAberrationPass) {
-        chromaticAberrationPass.renderToScreen = true;
         composer.addPass(chromaticAberrationPass);
+    }
+    
+    // Vignette - final pass for cinematic framing
+    if (typeof THREE.ShaderPass !== 'undefined') {
+        vignettePass = new THREE.ShaderPass(vignetteShader);
+        vignettePass.renderToScreen = true;
+        composer.addPass(vignettePass);
     }
 }
 
@@ -720,12 +717,10 @@ function renderOcclusionTexture() {
     // Store current visibility states
     const particlesVisible = particles ? particles.visible : false;
     const linesVisible = linesMesh ? linesMesh.visible : false;
-    const shapesVisible = window.wireframeShapes ? window.wireframeShapes.map(s => s.visible) : [];
     
     // Hide everything except light source for occlusion render
     if (particles) particles.visible = false;
     if (linesMesh) linesMesh.visible = false;
-    if (window.wireframeShapes) window.wireframeShapes.forEach(s => s.visible = false);
     
     // Make light source extra bright for occlusion
     const originalColor = renderer.getClearColor(new THREE.Color());
@@ -739,7 +734,6 @@ function renderOcclusionTexture() {
     // Restore visibility
     if (particles) particles.visible = particlesVisible;
     if (linesMesh) linesMesh.visible = linesVisible;
-    if (window.wireframeShapes) window.wireframeShapes.forEach((s, i) => s.visible = shapesVisible[i]);
 }
 
 // ============== CONNECTION LINES ==============
@@ -1212,28 +1206,6 @@ function animate() {
     applyGlitchToRenderer();
     updateGlitchOverlay();
     
-    // Animate wireframe shapes
-    if (window.wireframeShapes) {
-        window.wireframeShapes.forEach((shape, i) => {
-            shape.rotation.x += shape.userData.rotationSpeed.x;
-            shape.rotation.y += shape.userData.rotationSpeed.y;
-            shape.rotation.z += shape.userData.rotationSpeed.z;
-            
-            // Gentle floating motion
-            shape.position.y += Math.sin(time * shape.userData.floatSpeed + shape.userData.floatOffset) * 0.02;
-            
-            // Pulse opacity when scanline passes
-            const shapeScreenY = getScreenY(shape.position);
-            const distToScanline = Math.abs(shapeScreenY - scanlineY);
-            if (distToScanline < 100) {
-                const intensity = 1 - (distToScanline / 100);
-                shape.material.opacity = 0.15 + intensity * 0.4;
-            } else {
-                shape.material.opacity = 0.15;
-            }
-        });
-    }
-    
     // Update volumetric light source
     if (lightSourceMesh) {
         // Animate the light source - subtle drift in the corner
@@ -1402,13 +1374,13 @@ function createParticlesWithCount(count) {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
+    const sizes = [];
+    const velocityData = [];
     particleVelocities = []; // Reset velocities
     
     const colorPalette = [
-        new THREE.Color(0x8be9fd),
-        new THREE.Color(0xff79c6),
-        new THREE.Color(0x50fa7b),
-        new THREE.Color(0xf8f8f2),
+        new THREE.Color(0x8be9fd), // Cyan - primary
+        new THREE.Color(0xf8f8f2), // White - rare accent
     ];
 
     for (let i = 0; i < count; i++) {
@@ -1418,24 +1390,30 @@ function createParticlesWithCount(count) {
         
         vertices.push(x, y, z);
         
+        // Size variation: most small, few large (power curve distribution)
+        sizes.push(0.5 + Math.pow(Math.random(), 2.5) * 4.5);
+        
         // Add random velocity for each particle (very slow drift)
         const speed = 0.003 + Math.random() * 0.005;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.random() * Math.PI;
-        particleVelocities.push({
-            x: Math.sin(phi) * Math.cos(theta) * speed,
-            y: Math.sin(phi) * Math.sin(theta) * speed,
-            z: Math.cos(phi) * speed * 0.2
-        });
+        const vx = Math.sin(phi) * Math.cos(theta) * speed;
+        const vy = Math.sin(phi) * Math.sin(theta) * speed;
+        const vz = Math.cos(phi) * speed * 0.2;
+        particleVelocities.push({ x: vx, y: vy, z: vz });
+        velocityData.push(vx, vy, vz);
         
-        const color = Math.random() > 0.7 
-            ? colorPalette[Math.floor(Math.random() * colorPalette.length)]
-            : colorPalette[0];
+        // Color: 92% cyan, 8% white accent
+        const color = Math.random() > 0.92 
+            ? colorPalette[1]  // Rare white accent
+            : colorPalette[0]; // Cyan primary
         colors.push(color.r, color.g, color.b);
     }
 
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+    geometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocityData, 3));
     
     particlePositions = geometry.attributes.position;
     particleColors = geometry.attributes.color;
@@ -1551,6 +1529,14 @@ window.setChromaticAberrationIntensity = function(intensity) {
 window.getChromaticAberrationSettings = () => ({ 
     enabled: chromaticAberrationEnabled, 
     intensity: chromaticAberrationIntensity 
+});
+
+// Vignette controls
+window.setVignetteIntensity = function(intensity) {
+    if (vignettePass) vignettePass.uniforms.uIntensity.value = intensity;
+};
+window.getVignetteSettings = () => ({ 
+    intensity: vignettePass ? vignettePass.uniforms.uIntensity.value : 0.4 
 });
 
 // Reduce particles on mobile
