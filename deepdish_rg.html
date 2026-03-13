@@ -393,6 +393,30 @@
         .feature-card.system { --card-accent: #50fa7b; }
         .feature-card.system .feature-card-title { color: #50fa7b; }
         
+        /* === DEMO VIDEO === */
+        .demo-video-wrap {
+            margin-top: 0.3rem;
+        }
+        .demo-video-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.45rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.15rem;
+            text-align: center;
+        }
+        .demo-video-wrap video {
+            width: 100%;
+            border-radius: 4px;
+            border: none;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+        .demo-video-wrap video:hover {
+            opacity: 1;
+        }
+        
         /* === SECTION DIVIDERS === */
         .section-divider {
             display: flex;
@@ -1129,7 +1153,7 @@
         .clearance-badge.c { background: rgba(139, 233, 253, 0.2); color: #8be9fd; border: 1px solid #8be9fd; }
         
         .document-layout {
-            display: grid; grid-template-columns: 1fr 220px; gap: 0.4rem; align-items: start;
+            display: block;
         }
         .main-content-area { min-width: 0; }
         .intel-sidebar {
@@ -1268,15 +1292,13 @@
             grid-template-columns: 1fr 1fr;
             gap: 0.3rem;
             margin-bottom: 0.25rem;
-            align-items: stretch;
-            min-height: 240px;
+            align-items: start;
         }
         .panel-image-cell {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             background: transparent;
-            min-height: 240px;
             position: relative;
             z-index: 1;
         }
@@ -1292,6 +1314,12 @@
             flex-direction: column;
             gap: 0.15rem;
         }
+        .sidebar-panels-inline {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.15rem;
+            margin-top: 0.15rem;
+        }
         .mini-stats-compact {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1304,10 +1332,6 @@
             border: 1px solid rgba(139, 233, 253, 0.2);
             padding: 0.2rem 0.35rem;
             background: rgba(0, 0, 0, 0.15);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
         }
         .doc-row {
             display: flex;
@@ -1342,8 +1366,6 @@
         /* Responsive */
         @media (max-width: 1100px) {
             .project-writeup { margin-left: 60px; margin-right: 60px; }
-            .document-layout { grid-template-columns: 1fr; }
-            .intel-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); }
         }
         
         @media (max-width: 900px) {
@@ -1352,7 +1374,6 @@
             .document-bar { grid-template-columns: repeat(2, 1fr); }
             .document-info { grid-template-columns: 1fr; }
             .status-grid { grid-template-columns: repeat(3, 1fr); }
-            .intel-sidebar { grid-template-columns: 1fr; }
             .sprite-grid { grid-template-columns: repeat(4, 1fr); }
         }
         
@@ -1426,8 +1447,8 @@
             .code-block { padding: 0.2rem; font-size: 0.45rem; margin: 0.2rem 0; }
             .project-writeup code { font-size: 0.48rem; padding: 0.05rem 0.15rem; }
             
-            .document-layout { grid-template-columns: 1fr !important; gap: 0.75rem; }
-            .intel-sidebar { position: static !important; grid-template-columns: 1fr !important; gap: 0.4rem; order: 2; }
+            .document-layout { gap: 0.75rem; }
+            .sidebar-panels-inline { grid-template-columns: 1fr; }
             .sidebar-panel { padding: 0.4rem; }
             .sidebar-panel-header { font-size: 0.5rem; margin-bottom: 0.3rem; }
             
@@ -1755,9 +1776,12 @@
         <!-- Combined Panel + Stats Layout -->
         <div class="section-divider" style="margin-top: 0.8rem;">Project Details</div>
         <div class="panel-stats-grid">
-            <!-- RadGotchi Panel Image (left) -->
+            <!-- RadGotchi Demo Video (left) -->
             <div class="panel-image-cell">
-                <img src="assets/radgotchi_panel.png" alt="RadGotchi Panel" style="width: 100%; height: 100%; object-fit: contain;">
+                <div class="demo-video-wrap">
+                    <div class="demo-video-label">◆ sigint terminal demo ◆</div>
+                    <video src="assets/rg/bro.mov" autoplay loop muted playsinline></video>
+                </div>
             </div>
 
             <!-- Stats + Info (right) -->
@@ -1798,6 +1822,91 @@
                     <div class="doc-row"><span class="doc-label">PLATFORM:</span><span class="doc-value cyan">Electron + Node.js</span></div>
                     <div class="doc-row"><span class="doc-label">LOCALE:</span><span class="doc-value cyan">EN / 中文</span></div>
                     <div class="doc-row"><span class="doc-label">AUTHOR:</span><span class="doc-value cyan">TylerIRL + Contributors</span></div>
+                </div>
+                <!-- Sidebar panels relocated here -->
+                <div class="sidebar-panels-inline">
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header green">Subsystems</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">main.js</span><span style="color: #50fa7b;">● RUNNING</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">SIGINT terminal</span><span style="color: #50fa7b;">● ACTIVE</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">progression</span><span style="color: #50fa7b;">● 50 LVL</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">audio engine</span><span style="color: #50fa7b;">● 14 SFX</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">mood states</span><span style="color: #50fa7b;">● 25+</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">localization</span><span style="color: #8be9fd;">● EN/中文</span></div>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header" style="color: #f1fa8c;">Clearance Ranks</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.5rem;">
+                            <span style="color: #4a7a8a;">TRAINEE → ANALYST → OPERATIVE</span>
+                            <span style="color: #8be9fd;">AGENT → SPECIALIST → HANDLER</span>
+                            <span style="color: #50fa7b;">CONTROLLER → DIRECTOR → EXECUTIVE</span>
+                            <span style="color: #ff79c6;">OVERSEER → SENTINEL → ARCHITECT</span>
+                            <span style="color: #c41e3a; font-weight: bold;">→ PHANTOM (Lv 50)</span>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header cyan">LLM Endpoints</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Ollama</span><span style="color: #50fa7b;">:11434 ✓</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LM Studio</span><span style="color: #50fa7b;">:1234 ✓</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LocalAI</span><span style="color: #8be9fd;">Custom</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">OpenAI-compat</span><span style="color: #8be9fd;">Any</span></div>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header">Movement Protocols</div>
+                        <div class="network-grid">
+                            <div class="network-node"><div class="node-id">STATIC</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">BOUNCE</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">FOLLOW</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">WANDER</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">FOCUS</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">SLEEP</div><div class="node-status up">●</div></div>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header cyan">Quick Links</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                            <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" style="color: #8be9fd; text-decoration: none; border-bottom: 1px dashed rgba(139,233,253,0.5);">📦 GitHub Repo</a>
+                            <a href="https://github.com/itsTylerIRL/radgotchi/releases" target="_blank" style="color: #50fa7b; text-decoration: none; border-bottom: 1px dashed rgba(80,250,123,0.5);">⬇️ Releases</a>
+                            <a href="https://github.com/itsTylerIRL/radgotchi/issues" target="_blank" style="color: #f1fa8c; text-decoration: none; border-bottom: 1px dashed rgba(241,250,140,0.5);">🐛 Issues</a>
+                            <a href="https://github.com/itsTylerIRL/radgotchi/blob/main/CONTRIBUTING.md" target="_blank" style="color: #ff79c6; text-decoration: none; border-bottom: 1px dashed rgba(255,121,198,0.5);">🤝 Contributing</a>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header" style="color: #50fa7b;">XP Sources</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.5rem;">
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Passive</span><span style="color: #50fa7b;">+1 /30s</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Click</span><span style="color: #50fa7b;">+2 XP</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Send Msg</span><span style="color: #50fa7b;">+5 XP</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Receive Msg</span><span style="color: #50fa7b;">+3 XP</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Pomodoro</span><span style="color: #50fa7b;">+25 XP</span></div>
+                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Alert</span><span style="color: #50fa7b;">+15 XP</span></div>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header cyan">Contributors</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.55rem;">
+                            <a href="https://github.com/itsTylerIRL" target="_blank" style="color: #8be9fd; text-decoration: none;">@itsTylerIRL</a>
+                            <a href="https://github.com/0x19e02" target="_blank" style="color: #8be9fd; text-decoration: none;">@0x19e02</a>
+                            <a href="https://github.com/claude" target="_blank" style="color: #8be9fd; text-decoration: none;">@claude</a>
+                            <a href="https://github.com/yurikoeth" target="_blank" style="color: #8be9fd; text-decoration: none;">@yurikoeth</a>
+                            <a href="https://x.com/giverrod" target="_blank" style="color: #ff79c6; text-decoration: none;">@giverrod (faces)</a>
+                        </div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <div class="sidebar-panel-header">System Monitors</div>
+                        <div class="network-grid">
+                            <div class="network-node"><div class="node-id">CPU</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">MEM</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">NET</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">PROC</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">IDLE</div><div class="node-status up">●</div></div>
+                            <div class="network-node"><div class="node-id">XP</div><div class="node-status up">●</div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2303,109 +2412,6 @@ SoundSystem.setVolume(<span class="keyword">0.5</span>);  <span class="comment">
                 </div>
 
             </div><!-- /main-content-area -->
-
-            <!-- INTEL SIDEBAR -->
-            <div class="intel-sidebar">
-
-                <!-- App Status -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header green">Subsystems</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">main.js</span><span style="color: #50fa7b;">● RUNNING</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">SIGINT terminal</span><span style="color: #50fa7b;">● ACTIVE</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">progression</span><span style="color: #50fa7b;">● 50 LVL</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">audio engine</span><span style="color: #50fa7b;">● 14 SFX</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">mood states</span><span style="color: #50fa7b;">● 25+</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">localization</span><span style="color: #8be9fd;">● EN/中文</span></div>
-                    </div>
-                </div>
-
-                <!-- Clearance Ranks -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header" style="color: #f1fa8c;">Clearance Ranks</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.5rem;">
-                        <span style="color: #4a7a8a;">TRAINEE → ANALYST → OPERATIVE</span>
-                        <span style="color: #8be9fd;">AGENT → SPECIALIST → HANDLER</span>
-                        <span style="color: #50fa7b;">CONTROLLER → DIRECTOR → EXECUTIVE</span>
-                        <span style="color: #ff79c6;">OVERSEER → SENTINEL → ARCHITECT</span>
-                        <span style="color: #c41e3a; font-weight: bold;">→ PHANTOM (Lv 50)</span>
-                    </div>
-                </div>
-
-                <!-- LLM Endpoints -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header cyan">LLM Endpoints</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Ollama</span><span style="color: #50fa7b;">:11434 ✓</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LM Studio</span><span style="color: #50fa7b;">:1234 ✓</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LocalAI</span><span style="color: #8be9fd;">Custom</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">OpenAI-compat</span><span style="color: #8be9fd;">Any</span></div>
-                    </div>
-                </div>
-
-                <!-- Movement Protocols -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header">Movement Protocols</div>
-                    <div class="network-grid">
-                        <div class="network-node"><div class="node-id">STATIC</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">BOUNCE</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">FOLLOW</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">WANDER</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">FOCUS</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">SLEEP</div><div class="node-status up">●</div></div>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header cyan">Quick Links</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                        <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" style="color: #8be9fd; text-decoration: none; border-bottom: 1px dashed rgba(139,233,253,0.5);">📦 GitHub Repo</a>
-                        <a href="https://github.com/itsTylerIRL/radgotchi/releases" target="_blank" style="color: #50fa7b; text-decoration: none; border-bottom: 1px dashed rgba(80,250,123,0.5);">⬇️ Releases</a>
-                        <a href="https://github.com/itsTylerIRL/radgotchi/issues" target="_blank" style="color: #f1fa8c; text-decoration: none; border-bottom: 1px dashed rgba(241,250,140,0.5);">🐛 Issues</a>
-                        <a href="https://github.com/itsTylerIRL/radgotchi/blob/main/CONTRIBUTING.md" target="_blank" style="color: #ff79c6; text-decoration: none; border-bottom: 1px dashed rgba(255,121,198,0.5);">🤝 Contributing</a>
-                    </div>
-                </div>
-
-                <!-- XP Sources -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header" style="color: #50fa7b;">XP Sources</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.5rem;">
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Passive</span><span style="color: #50fa7b;">+1 /30s</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Click</span><span style="color: #50fa7b;">+2 XP</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Send Msg</span><span style="color: #50fa7b;">+5 XP</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Receive Msg</span><span style="color: #50fa7b;">+3 XP</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Pomodoro</span><span style="color: #50fa7b;">+25 XP</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Alert</span><span style="color: #50fa7b;">+15 XP</span></div>
-                    </div>
-                </div>
-
-                <!-- Contributors -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header cyan">Contributors</div>
-                    <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.55rem;">
-                        <a href="https://github.com/itsTylerIRL" target="_blank" style="color: #8be9fd; text-decoration: none;">@itsTylerIRL</a>
-                        <a href="https://github.com/0x19e02" target="_blank" style="color: #8be9fd; text-decoration: none;">@0x19e02</a>
-                        <a href="https://github.com/claude" target="_blank" style="color: #8be9fd; text-decoration: none;">@claude</a>
-                        <a href="https://github.com/yurikoeth" target="_blank" style="color: #8be9fd; text-decoration: none;">@yurikoeth</a>
-                        <a href="https://x.com/giverrod" target="_blank" style="color: #ff79c6; text-decoration: none;">@giverrod (faces)</a>
-                    </div>
-                </div>
-
-                <!-- System Monitors -->
-                <div class="sidebar-panel">
-                    <div class="sidebar-panel-header">System Monitors</div>
-                    <div class="network-grid">
-                        <div class="network-node"><div class="node-id">CPU</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">MEM</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">NET</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">PROC</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">IDLE</div><div class="node-status up">●</div></div>
-                        <div class="network-node"><div class="node-id">XP</div><div class="node-status up">●</div></div>
-                    </div>
-                </div>
-
-            </div><!-- /intel-sidebar -->
         </div><!-- /document-layout -->
     </section>
     </main>

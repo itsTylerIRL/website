@@ -148,21 +148,23 @@
         
         .spotlight-container {
             display: grid;
-            grid-template-columns: auto 1fr auto;
+            grid-template-columns: auto minmax(0, 500px) auto;
+            justify-content: center;
             gap: 0.75rem;
             padding: 0.6rem 1rem;
             background: linear-gradient(145deg, rgba(15, 15, 20, 0.5) 0%, rgba(5, 5, 10, 0.7) 100%);
             border: 1px solid rgba(139, 233, 253, 0.1);
             border-radius: 16px;
             align-items: center;
-            width: 100%;
+            width: fit-content;
+            margin: 0 auto;
         }
         
         .spotlight-filters {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
-            min-width: 120px;
+            width: 140px;
         }
         
         .spotlight-filters .filter-pill {
@@ -182,6 +184,8 @@
             display: flex;
             justify-content: center;
             min-height: 70px;
+            width: 100%;
+            max-width: 500px;
         }
         
         .spotlight-item {
@@ -238,7 +242,8 @@
         
         .spotlight-info {
             flex: 0 1 auto;
-            min-width: 0;
+            min-width: 200px;
+            max-width: 300px;
             overflow: hidden;
         }
         
@@ -281,7 +286,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
-            min-width: 90px;
+            width: 140px;
         }
         
         .spotlight-action-btn {
@@ -724,6 +729,208 @@
         .icon-tooltip .tooltip-desc {
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.7rem;
+        }
+        
+        /* ===== SEARCH INPUT ===== */
+        .spotlight-search {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .spotlight-search:focus-within {
+            border-color: #8be9fd;
+            box-shadow: 0 0 12px rgba(139, 233, 253, 0.15);
+        }
+        
+        .spotlight-search-icon {
+            color: #555;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+            transition: color 0.3s;
+        }
+        
+        .spotlight-search:focus-within .spotlight-search-icon {
+            color: #8be9fd;
+        }
+        
+        .spotlight-search input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ccc;
+            font-size: 0.65rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            width: 100%;
+            letter-spacing: 0.05em;
+        }
+        
+        .spotlight-search input::placeholder {
+            color: #444;
+        }
+        
+        /* ===== PREVIEW PANEL ===== */
+        .preview-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .preview-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .preview-panel {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 233, 253, 0.25);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 380px;
+            width: 90%;
+            position: relative;
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.3),
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(139, 233, 253, 0.03);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .preview-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 28px;
+            height: 28px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            background: transparent;
+            color: #666;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .preview-close:hover {
+            border-color: #8be9fd;
+            color: #8be9fd;
+        }
+        
+        .preview-category {
+            display: inline-block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-category[data-cat="crypto"] { color: #8be9fd; border: 1px solid rgba(139, 233, 253, 0.3); }
+        .preview-category[data-cat="tech"] { color: #50fa7b; border: 1px solid rgba(80, 250, 123, 0.3); }
+        .preview-category[data-cat="fun"] { color: #ffb86c; border: 1px solid rgba(255, 184, 108, 0.3); }
+        .preview-category[data-cat="personal"] { color: #ff79c6; border: 1px solid rgba(255, 121, 198, 0.3); }
+        .preview-category[data-cat="art"] { color: #bd93f9; border: 1px solid rgba(189, 147, 249, 0.3); }
+        
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            background: rgba(139, 233, 253, 0.03);
+            border: 1px solid rgba(139, 233, 253, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .preview-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 16px rgba(139, 233, 253, 0.3));
+        }
+        
+        .preview-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: lowercase;
+            margin-bottom: 0.3rem;
+        }
+        
+        .preview-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: lowercase;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-visit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.8rem;
+            border: 1px solid rgba(139, 233, 253, 0.4);
+            border-radius: 25px;
+            background: rgba(139, 233, 253, 0.08);
+            color: #8be9fd;
+            font-size: 0.8rem;
+            text-decoration: none;
+            text-transform: lowercase;
+            letter-spacing: 0.08em;
+            transition: all 0.3s;
+        }
+        
+        .preview-visit:hover {
+            background: rgba(139, 233, 253, 0.18);
+            border-color: #8be9fd;
+            box-shadow: 0 0 25px rgba(139, 233, 253, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .preview-visit .arrow {
+            transition: transform 0.3s;
+        }
+        
+        .preview-visit:hover .arrow {
+            transform: translateX(4px);
         }
         
         .view-toggle-container {
@@ -1203,8 +1410,12 @@
                         <!-- Spotlight items will be populated by JS -->
                     </div>
                     
-                    <!-- Right: Actions -->
+                    <!-- Right: Actions + Search -->
                     <div class="spotlight-actions">
+                        <div class="spotlight-search">
+                            <span class="spotlight-search-icon">⌕</span>
+                            <input type="text" id="searchInput" placeholder="search..." autocomplete="off">
+                        </div>
                         <button class="spotlight-action-btn shuffle" id="shuffleBtn">⟳ shuffle</button>
                         <button class="spotlight-action-btn view-toggle active" data-view="cloud">✧ 3d cloud</button>
                         <button class="spotlight-action-btn view-toggle" data-view="grid">▤ grid</button>
@@ -1222,6 +1433,18 @@
             <div class="icon-tooltip" id="iconTooltip">
                 <div class="tooltip-title"></div>
                 <div class="tooltip-desc"></div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div class="preview-overlay" id="previewOverlay">
+                <div class="preview-panel">
+                    <button class="preview-close" id="previewClose">✕</button>
+                    <div class="preview-category" id="previewCategory"></div>
+                    <div class="preview-image" id="previewImage"></div>
+                    <div class="preview-title" id="previewTitle"></div>
+                    <div class="preview-desc" id="previewDesc"></div>
+                    <a class="preview-visit" id="previewVisit" href="#" target="_blank">visit <span class="arrow">→</span></a>
+                </div>
             </div>
             
             <div class="bento-grid hidden-view" id="bentoGrid">
@@ -2384,7 +2607,7 @@
                 <a href="https://warhammer40000.com" target="_blank" class="bento-item visible" data-category="fun">
                     <span class="bento-category">fun</span>
                     <div class="bento-image">
-                        <img src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2622%2FPNG%2F512%2Fbrand_warhammer_icon_158628.png&id=158628&pack_or_individual=pack" alt="Warhammer 40,000">
+                        <img src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2622%2FPNG%2F512%2Fbrand_warhammer_icon_158628.png&id=158628&pack_or_individual=pack" alt="Warhammer 40,000" style="filter: invert(1);">
                     </div>
                     <div class="bento-content">
                         <h3>warhammer 40k</h3>
@@ -2775,6 +2998,15 @@
                     filterPills.forEach(p => p.classList.remove('active'));
                     this.classList.add('active');
                     isExpanded = false;
+                    // Clear search on category change
+                    const searchEl = document.getElementById('searchInput');
+                    if (searchEl) {
+                        searchEl.value = '';
+                        bentoItems.forEach(item => {
+                            item.style.opacity = '';
+                            item.style.pointerEvents = '';
+                        });
+                    }
                     filterItems(this.dataset.filter);
                     // Also filter the icon cloud
                     if (window.filterIconCloud) {
@@ -2859,6 +3091,59 @@
             
             // Initialize
             filterItems('all');
+            
+            // ===== PREVIEW PANEL =====
+            const previewOverlay = document.getElementById('previewOverlay');
+            const previewClose = document.getElementById('previewClose');
+            
+            window.openPreviewPanel = function(icon) {
+                document.getElementById('previewCategory').textContent = icon.category;
+                document.getElementById('previewCategory').setAttribute('data-cat', icon.category);
+                document.getElementById('previewImage').innerHTML = `<img src="${icon.src}" alt="${icon.title}" style="${icon.imgStyle || ''}">`;
+                document.getElementById('previewTitle').textContent = icon.title;
+                document.getElementById('previewDesc').textContent = icon.desc;
+                const visitLink = document.getElementById('previewVisit');
+                visitLink.href = icon.href;
+                visitLink.target = icon.target || '_blank';
+                previewOverlay.classList.add('active');
+            };
+            
+            function closePreview() {
+                previewOverlay.classList.remove('active');
+            }
+            
+            previewClose.addEventListener('click', closePreview);
+            previewOverlay.addEventListener('click', function(e) {
+                if (e.target === previewOverlay) closePreview();
+            });
+            
+            // ===== SEARCH =====
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const q = this.value.toLowerCase().trim();
+                
+                // Filter bento grid
+                bentoItems.forEach(item => {
+                    const title = item.querySelector('.bento-content h3')?.textContent.toLowerCase() || '';
+                    const desc = item.querySelector('.bento-content p')?.textContent.toLowerCase() || '';
+                    const cat = item.dataset.category.toLowerCase();
+                    const matches = !q || title.includes(q) || desc.includes(q) || cat.includes(q);
+                    
+                    if (matches) {
+                        item.style.opacity = '';
+                        item.style.pointerEvents = '';
+                    } else {
+                        item.style.opacity = '0.1';
+                        item.style.pointerEvents = 'none';
+                    }
+                });
+                
+                // Filter icon cloud
+                if (window.searchIconCloud) {
+                    window.searchIconCloud(q);
+                }
+            });
             
             // ===== VIEW TOGGLE =====
             const viewToggleBtns = document.querySelectorAll('.view-toggle');
@@ -3128,8 +3413,19 @@
                     
                     if (dist < maxDist) {
                         const alpha = (1 - dist / maxDist) * 0.15 * Math.min(a.opacity, b.opacity);
+                        // Use category color if both icons share a category, otherwise neutral
+                        let lineColor;
+                        if (a.category === b.category) {
+                            const c = categoryColors[a.category] || '#8be9fd';
+                            const lr = parseInt(c.slice(1,3), 16);
+                            const lg = parseInt(c.slice(3,5), 16);
+                            const lb = parseInt(c.slice(5,7), 16);
+                            lineColor = `rgba(${lr}, ${lg}, ${lb}, ${alpha})`;
+                        } else {
+                            lineColor = `rgba(139, 233, 253, ${alpha * 0.5})`;
+                        }
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(139, 233, 253, ${alpha})`;
+                        ctx.strokeStyle = lineColor;
                         ctx.lineWidth = 1;
                         ctx.moveTo(a.projX, a.projY);
                         ctx.lineTo(b.projX, b.projY);
@@ -3146,10 +3442,10 @@
             const y = icon.projY;
             
             ctx.save();
-            ctx.globalAlpha = icon.opacity;
+            ctx.globalAlpha = icon.searchDimmed ? icon.opacity * 0.12 : icon.opacity;
             
             // Glow effect for hovered
-            if (icon.hovered) {
+            if (icon.hovered && !icon.searchDimmed) {
                 const color = categoryColors[icon.category] || '#8be9fd';
                 ctx.shadowColor = color;
                 ctx.shadowBlur = 25;
@@ -3175,11 +3471,15 @@
                 : 'rgba(10, 10, 15, 0.6)';
             ctx.fill();
             
-            // Stroke
+            // Stroke - always use category color
             const color = categoryColors[icon.category] || '#8be9fd';
+            // Parse hex to RGB for alpha support
+            const r = parseInt(color.slice(1,3), 16);
+            const g = parseInt(color.slice(3,5), 16);
+            const b = parseInt(color.slice(5,7), 16);
             ctx.strokeStyle = icon.hovered 
                 ? color 
-                : `rgba(139, 233, 253, ${0.3 * icon.opacity})`;
+                : `rgba(${r}, ${g}, ${b}, ${0.4 * icon.opacity})`;
             ctx.lineWidth = icon.hovered ? 2 : 1;
             ctx.stroke();
             
@@ -3357,9 +3657,9 @@
         
         function onClick(e) {
             if (hoveredIcon) {
-                // Select the icon and show in spotlight (don't navigate)
-                if (window.showIconInSpotlight) {
-                    window.showIconInSpotlight(hoveredIcon);
+                // Open preview panel instead of navigating
+                if (window.openPreviewPanel) {
+                    window.openPreviewPanel(hoveredIcon);
                 }
             }
         }
@@ -3386,9 +3686,9 @@
                     const dist = Math.sqrt(Math.pow(icon.projX - touchStartPos.x, 2) + Math.pow(icon.projY - touchStartPos.y, 2));
                     
                     if (dist < size * 0.7 && icon.opacity > 0.5) {
-                        // Tapped on icon - select and show in spotlight
-                        if (window.showIconInSpotlight) {
-                            window.showIconInSpotlight(icon);
+                        // Tapped on icon - open preview panel
+                        if (window.openPreviewPanel) {
+                            window.openPreviewPanel(icon);
                         }
                         break;
                     }
@@ -3416,6 +3716,24 @@
         window.filterIconCloud = function(category) {
             icons.forEach(icon => {
                 icon.visible = category === 'all' || icon.category === category;
+            });
+        };
+        
+        // Search handler - filter by title/desc matching query
+        window.searchIconCloud = function(query) {
+            const q = query.toLowerCase().trim();
+            icons.forEach(icon => {
+                if (!q) {
+                    // Reset to current category filter
+                    const activeFilter = document.querySelector('.filter-pill.active');
+                    const cat = activeFilter ? activeFilter.dataset.filter : 'all';
+                    icon.visible = cat === 'all' || icon.category === cat;
+                    icon.searchDimmed = false;
+                } else {
+                    const matches = icon.title.toLowerCase().includes(q) || icon.desc.toLowerCase().includes(q) || icon.category.toLowerCase().includes(q);
+                    icon.visible = true; // Keep all visible but dim non-matches
+                    icon.searchDimmed = !matches;
+                }
             });
         };
         
