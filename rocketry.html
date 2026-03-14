@@ -455,9 +455,107 @@
             0%, 100% { opacity: 0.1; background: rgba(139, 233, 253, 0.05); } 25% { opacity: 0.2; background: rgba(255, 100, 100, 0.05); }
             50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
         }
+        
+        /* Rocket Navigation Arrows */
+        .rocket-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            cursor: pointer;
+            padding: 1rem 0.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            color: #4a7a8a;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .rocket-nav:hover {
+            background: rgba(139, 233, 253, 0.1);
+            border-color: rgba(139, 233, 253, 0.4);
+            color: #8be9fd;
+            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+        }
+        
+        .rocket-nav.prev {
+            left: 0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .rocket-nav.next {
+            right: 0;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .rocket-nav .nav-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.55rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+        
+        .rocket-nav.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        /* Rocket indicator dots */
+        .rocket-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rocket-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(139, 233, 253, 0.2);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .rocket-dot:hover {
+            background: rgba(139, 233, 253, 0.4);
+        }
+        
+        .rocket-dot.active {
+            background: #8be9fd;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
+        }
+        
+        /* Rocket sections */
+        .rocket-section {
+            display: none;
+        }
+        
+        .rocket-section.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- Rocket Navigation Arrows -->
+    <div class="rocket-nav prev disabled" onclick="switchRocket(-1)">
+        <span>◀</span>
+        <div class="nav-label">PREV</div>
+    </div>
+    <div class="rocket-nav next" onclick="switchRocket(1)">
+        <span>▶</span>
+        <div class="nav-label">NEXT</div>
+    </div>
+    
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
@@ -476,7 +574,13 @@
     </section>
 
     <!-- Classified Briefing -->
-    <section class="project-writeup">
+    <div class="rocket-indicators">
+        <div class="rocket-dot active" onclick="goToRocket(0)" title="PATRIOT"></div>
+        <div class="rocket-dot" onclick="goToRocket(1)" title="BULLPUP"></div>
+    </div>
+    
+    <!-- ROCKET 1: PATRIOT -->
+    <section class="project-writeup rocket-section active" data-rocket="0">
         
         <div class="classified-header">
             <span class="classification-stamp">UNCLASSIFIED // FOUO</span>
@@ -617,6 +721,148 @@
         
     </section>
     
+    <!-- ROCKET 2: BULLPUP -->
+    <section class="project-writeup rocket-section" data-rocket="1">
+        
+        <div class="classified-header">
+            <span class="classification-stamp">UNCLASSIFIED // FOUO</span>
+            <h1>Project Bullpup</h1>
+        </div>
+        
+        <div class="doc-meta">
+            <span>DOC ID: RCKT-2026-0308</span>
+            <span>ORIGINATOR: TYLER</span>
+            <span id="doc-date-2"></span>
+        </div>
+        <script>
+            (function() {
+                const d = new Date();
+                const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+                document.getElementById('doc-date-2').textContent = 'DATE: ' + String(d.getDate()).padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            })();
+        </script>
+        
+        <div class="section-header">Mission Brief</div>
+        <p class="briefing-text">
+            Construction and deployment of a high-power rocket system designated <span style="color: #8be9fd;">BULLPUP</span>. 
+            Program initiated March 2026. Vehicle is currently in early construction phase.
+        </p>
+        
+        <div class="rocket-img-container" style="height: 100px; display: flex; align-items: center; justify-content: center;">
+            <img src="assets/rocketry/bullpup.png" alt="BULLPUP Vehicle" style="transform: rotate(-90deg); height: 500px; width: auto;">
+            <div class="img-label" style="position: absolute; bottom: 0.3rem;">FIG 1. — BULLPUP VEHICLE ASSEMBLY</div>
+        </div>
+        
+        <div class="section-header">Vehicle Specifications</div>
+        <div class="specs-grid">
+            <div class="spec-item">
+                <span class="spec-label">Designation</span>
+                <span class="spec-value">BULLPUP</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Class</span>
+                <span class="spec-value">HIGH POWER</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Propulsion</span>
+                <span class="spec-value">SOLID MOTOR</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Recovery</span>
+                <span class="spec-value">PARACHUTE</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Program Start</span>
+                <span class="spec-value">08 MAR 2026</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Status</span>
+                <span class="spec-value" style="color: #ffb86c;">IN PROGRESS</span>
+            </div>
+        </div>
+        
+        <div class="section-header">Build Milestones</div>
+        
+        <div class="status-bar">
+            <div class="status-bar-label">Overall Progress</div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 12.5%;"></div>
+            </div>
+            <div class="progress-text">1 / 8 MILESTONES COMPLETE</div>
+        </div>
+        
+        <table class="milestone-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Phase</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ms-id">MS-01</td>
+                    <td>Kit Received</td>
+                    <td class="ms-date">08 MAR 2026</td>
+                    <td><span class="ms-status complete">Complete</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-02</td>
+                    <td>Parts Inventory & Planning</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status active">Active</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-03</td>
+                    <td>Body Tube Assembly</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-04</td>
+                    <td>Fin Installation</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-05</td>
+                    <td>Recovery System</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-06</td>
+                    <td>Paint & Finishing</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-07</td>
+                    <td>Pre-Flight Checks</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td class="ms-id">MS-08</td>
+                    <td>Launch</td>
+                    <td class="ms-date">—</td>
+                    <td><span class="ms-status pending">Pending</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="warning-box">
+            <span class="warn-label">⚠ NOTICE:</span> Build in early stages. Timeline estimates pending completion of initial assembly phases.
+        </div>
+        
+        <div class="doc-footer-line">
+            <span class="red">UNCLASSIFIED // FOR OFFICIAL USE ONLY</span><br>
+            DISTRIBUTION: PUBLIC RELEASE AUTHORIZED
+        </div>
+        
+    </section>
+    
     <!-- Floating Return Home Button -->
     <a href="index.html" class="floating-home">
         <div class="floating-home-content">
@@ -694,6 +940,43 @@
     <script src="router.js?v=1.1"></script>
     <script src="sounds.js?v=1.0"></script>
     <script src="radgotchi.js"></script>
+    
+    <!-- Rocket Navigation Script -->
+    <script>
+        let currentRocket = 0;
+        const totalRockets = 2;
+        
+        function switchRocket(direction) {
+            const newIndex = currentRocket + direction;
+            if (newIndex >= 0 && newIndex < totalRockets) {
+                goToRocket(newIndex);
+            }
+        }
+        
+        function goToRocket(index) {
+            currentRocket = index;
+            
+            // Update sections
+            document.querySelectorAll('.rocket-section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            
+            // Update dots
+            document.querySelectorAll('.rocket-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Update nav arrows
+            document.querySelector('.rocket-nav.prev').classList.toggle('disabled', index === 0);
+            document.querySelector('.rocket-nav.next').classList.toggle('disabled', index === totalRockets - 1);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') switchRocket(-1);
+            if (e.key === 'ArrowRight') switchRocket(1);
+        });
+    </script>
     
 </body>
 </html>
