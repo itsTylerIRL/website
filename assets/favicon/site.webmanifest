@@ -26,5 +26,33 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gallery",
+      "short_name": "Gallery",
+      "description": "View the gallery",
+      "url": "/gallery.html",
+      "icons": [{ "src": "/assets/favicon/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Likes",
+      "short_name": "Likes",
+      "description": "View likes",
+      "url": "/likes.html",
+      "icons": [{ "src": "/assets/favicon/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "~raddem-tidwyt",
+      "short_name": "~raddem",
+      "description": "Urbit planet",
+      "url": "http://urbit.tylerirl.com"
+    },
+    {
+      "name": "~nosfyl",
+      "short_name": "~nosfyl",
+      "description": "Urbit star",
+      "url": "https://nosfyl.startram.io/apps/landscape/"
+    }
   ]
 }
