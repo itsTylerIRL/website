@@ -3,3 +3,9 @@ contracts/FundNFT.sol
 metadata/contract.json
 metadata/1.json
 metadata/README.md
+
+# OS generated files
+.DS_Store
+._*
+Thumbs.db
+
