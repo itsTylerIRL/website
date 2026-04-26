@@ -138,6 +138,13 @@ function createScanline() {
             const scanlineY = scanlineRect.top + (scanlineRect.height / 2);
             
             elements.forEach(element => {
+                // Skip the element currently being hovered so its hover styling
+                // (per-card accent glow) isn't overwritten by the scanline classes.
+                if (element.matches(':hover')) {
+                    element.classList.remove('scanline-hit', 'scanline-linger');
+                    return;
+                }
+                
                 const rect = element.getBoundingClientRect();
                 const elementTop = rect.top;
                 const elementBottom = rect.bottom;
@@ -227,9 +234,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (scanlineEnabled) {
                 if (scanline) scanline.style.display = '';
                 bodyBefore.classList.remove('scanline-disabled');
+                if (typeof window.setPacketsEnabled === 'function') {
+                    window.setPacketsEnabled(true);
+                }
             } else {
                 if (scanline) scanline.style.display = 'none';
                 bodyBefore.classList.add('scanline-disabled');
+                if (typeof window.setPacketsEnabled === 'function') {
+                    window.setPacketsEnabled(false);
+                }
             }
         });
     }

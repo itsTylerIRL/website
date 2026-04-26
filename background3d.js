@@ -19,6 +19,20 @@ let linesMesh, linesGeometry, linesPositions;
 let glitchIntensity = 0;
 let nextGlitchTime = 0;
 
+// Nebula backdrop
+let nebulaMesh, nebulaScene, nebulaCamera;
+let nebulaEnabled = true;
+let nebulaIntensity = 0.55;
+
+// Data packets traveling along connection lines
+let packetsMesh, packetsGeometry;
+let packets = []; // { lineIndex, t, speed, color }
+let packetsEnabled = true;
+const MAX_PACKETS = 80;
+
+// Track active line endpoints so packets know where to travel
+let activeLineEndpoints = []; // [{x1,y1,z1,x2,y2,z2,brightness}]
+
 // Volumetric light (god rays) settings
 let godRaysEnabled = true;
 let godRaysIntensity = 0.75;
@@ -69,6 +83,8 @@ function initBackground3D() {
     createParticles();
     createConnectionLines();
     createVolumetricLightSource();
+    createNebulaBackdrop();
+    createDataPackets();
     
     // Setup post-processing (bloom + glitch + god rays + chromatic aberration)
     setupPostProcessing();
@@ -332,9 +348,50 @@ function updateParticlePositions() {
     
     const positions = particlePositions.array;
     const tempVec = new THREE.Vector3();
+    const t = performance.now() * 0.001;
     
     for (let i = 0; i < positions.length / 3; i++) {
         const idx = i * 3;
+        
+        // Curl-noise flow field steers the particle's velocity.
+        // We treat curl as a target *direction* and gently steer the velocity
+        // toward it at a capped speed, so particles never accelerate unbounded.
+        if (curlFlowEnabled) {
+            curlNoise(positions[idx], positions[idx + 1], positions[idx + 2], t, _curlOut);
+            const vel = particleVelocities[i];
+            
+            // Normalize curl output to a unit-ish direction
+            const cMag = Math.sqrt(
+                _curlOut.x * _curlOut.x +
+                _curlOut.y * _curlOut.y +
+                _curlOut.z * _curlOut.z
+            ) || 1;
+            const cx = _curlOut.x / cMag;
+            const cy = _curlOut.y / cMag;
+            const cz = _curlOut.z / cMag;
+            
+            // Per-particle target speed (kept low so motion is slow drift)
+            const targetSpeed = 0.012 * curlFlowStrength;
+            const tx = cx * targetSpeed;
+            const ty = cy * targetSpeed;
+            const tz = cz * targetSpeed * 0.3; // less Z motion
+            
+            // Lerp velocity toward the target (low blend = smooth)
+            const blend = 0.04;
+            vel.x += (tx - vel.x) * blend;
+            vel.y += (ty - vel.y) * blend;
+            vel.z += (tz - vel.z) * blend;
+            
+            // Hard cap on speed magnitude as a safety net
+            const sp = Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
+            const maxSp = 0.025;
+            if (sp > maxSp) {
+                const k = maxSp / sp;
+                vel.x *= k;
+                vel.y *= k;
+                vel.z *= k;
+            }
+        }
         
         // Move particle by velocity
         positions[idx] += particleVelocities[i].x;
@@ -349,7 +406,9 @@ function updateParticlePositions() {
         if (positions[idx + 2] > 30) positions[idx + 2] = -70;
         if (positions[idx + 2] < -70) positions[idx + 2] = 30;
         
-        // Check exclusion zones (in screen space)
+        // Check exclusion zones (in screen space).
+        // Only resolve the single deepest overlap per frame so multiple zones
+        // can't stack pushes and fling the particle.
         if (exclusionZones.length > 0) {
             // Get particle screen position
             tempVec.set(positions[idx], positions[idx + 1], positions[idx + 2]);
@@ -362,38 +421,362 @@ function updateParticlePositions() {
             const screenX = (tempVec.x + 1) * 0.5 * window.innerWidth;
             const screenY = (1 - tempVec.y) * 0.5 * window.innerHeight;
             
-            // Check each exclusion zone
+            // Find deepest-overlap zone
+            let bestZone = null;
+            let bestPenetration = 0;
+            let bestDx = 0, bestDy = 0, bestDist = 1;
             for (const zone of exclusionZones) {
                 const dx = screenX - zone.x;
                 const dy = screenY - zone.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < zone.radius) {
-                    // Particle is inside exclusion zone - bounce it away
-                    // Calculate bounce direction (away from center of zone)
-                    const angle = Math.atan2(dy, dx);
-                    
-                    // Get current speed
-                    const vel = particleVelocities[i];
-                    const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
-                    
-                    // Set new velocity direction away from zone center (keep same speed)
-                    vel.x = Math.cos(angle) * speed;
-                    vel.y = Math.sin(angle) * speed;
-                    // Add tiny z variation
-                    vel.z = (Math.random() - 0.5) * speed * 0.3;
-                    
-                    // Gently push particle outside zone
-                    const pushFactor = (zone.radius - dist + 2) / 200;
-                    positions[idx] += Math.cos(angle) * pushFactor;
-                    positions[idx + 1] += Math.sin(angle) * pushFactor;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+                const penetration = zone.radius - dist;
+                if (penetration > bestPenetration) {
+                    bestPenetration = penetration;
+                    bestZone = zone;
+                    bestDx = dx;
+                    bestDy = dy;
+                    bestDist = dist;
                 }
+            }
+            
+            if (bestZone) {
+                // Outward direction in *screen* space
+                const nxScreen = bestDx / bestDist;
+                const nyScreen = bestDy / bestDist;
+                // Convert to world space: world Y is inverted vs screen Y
+                const nxWorld = nxScreen;
+                const nyWorld = -nyScreen;
+                
+                const vel = particleVelocities[i];
+                
+                // Reflect inward velocity component, keep tangential motion intact
+                // dot of velocity with inward normal = how much it's moving INTO the zone
+                const inwardDot = vel.x * (-nxWorld) + vel.y * (-nyWorld);
+                if (inwardDot > 0) {
+                    vel.x += 2 * inwardDot * nxWorld;
+                    vel.y += 2 * inwardDot * nyWorld;
+                }
+                
+                // Cap speed so reflections can't accumulate energy
+                const sp = Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
+                const maxSp = 0.04;
+                if (sp > maxSp) {
+                    const k = maxSp / sp;
+                    vel.x *= k; vel.y *= k; vel.z *= k;
+                }
+                
+                // Gentle position correction proportional to penetration (clamped)
+                const correct = Math.min(bestPenetration, 8) * 0.01;
+                positions[idx] += nxWorld * correct;
+                positions[idx + 1] += nyWorld * correct;
             }
         }
     }
     
     particlePositions.needsUpdate = true;
 }
+
+// ============== NEBULA BACKDROP ==============
+// Procedural nebula rendered behind everything: deep cyan/purple clouds with subtle motion.
+// Implemented as a large plane parented to the camera so it always fills the view.
+function createNebulaBackdrop() {
+    const mat = new THREE.ShaderMaterial({
+        uniforms: {
+            uTime: { value: 0 },
+            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uScroll: { value: 0 },
+            uIntensity: { value: nebulaIntensity },
+            uColorA: { value: new THREE.Color(0x05121a) }, // deep teal
+            uColorB: { value: new THREE.Color(0x1a0a2e) }, // deep purple
+            uColorC: { value: new THREE.Color(0x8be9fd) }  // cyan highlight
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            precision highp float;
+            varying vec2 vUv;
+            uniform float uTime;
+            uniform vec2 uResolution;
+            uniform float uScroll;
+            uniform float uIntensity;
+            uniform vec3 uColorA;
+            uniform vec3 uColorB;
+            uniform vec3 uColorC;
+
+            vec2 hash2(vec2 p) {
+                p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+                return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+            }
+            float noise(vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                vec2 u = f * f * (3.0 - 2.0 * f);
+                return mix(mix(dot(hash2(i + vec2(0.0,0.0)), f - vec2(0.0,0.0)),
+                               dot(hash2(i + vec2(1.0,0.0)), f - vec2(1.0,0.0)), u.x),
+                           mix(dot(hash2(i + vec2(0.0,1.0)), f - vec2(0.0,1.0)),
+                               dot(hash2(i + vec2(1.0,1.0)), f - vec2(1.0,1.0)), u.x), u.y);
+            }
+            float fbm(vec2 p) {
+                float v = 0.0;
+                float a = 0.5;
+                for (int i = 0; i < 5; i++) {
+                    v += a * noise(p);
+                    p *= 2.02;
+                    a *= 0.5;
+                }
+                return v;
+            }
+
+            void main() {
+                vec2 uv = vUv;
+                float aspect = uResolution.x / uResolution.y;
+                vec2 p = (uv - 0.5) * vec2(aspect, 1.0) * 2.0;
+
+                vec2 q = p + vec2(uTime * 0.015, uTime * 0.008 + uScroll * 0.0008);
+
+                vec2 warp = vec2(fbm(q + vec2(0.0, 0.0)), fbm(q + vec2(5.2, 1.3)));
+                float n = fbm(q + warp * 1.8);
+                n = smoothstep(-0.2, 0.8, n);
+
+                float n2 = fbm(q * 2.5 + warp * 0.7 - uTime * 0.02);
+                n2 = pow(smoothstep(0.3, 0.95, n2), 2.0);
+
+                float vign = smoothstep(1.6, 0.2, length(p));
+
+                vec3 col = mix(uColorA, uColorB, n);
+                col += uColorC * n2 * 0.35;
+
+                vec2 sg = floor(uv * uResolution / 3.0);
+                float spark = step(0.9985, fract(sin(dot(sg, vec2(12.9898, 78.233))) * 43758.5453));
+                col += vec3(0.6, 0.85, 1.0) * spark * 0.4;
+
+                col *= vign * uIntensity;
+
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `,
+        depthTest: false,
+        depthWrite: false
+    });
+
+    // Plane sized large enough to fill the camera frustum at its placement distance.
+    // We'll attach it to the camera and update its scale on resize.
+    const geo = new THREE.PlaneGeometry(2, 2);
+    nebulaMesh = new THREE.Mesh(geo, mat);
+    nebulaMesh.frustumCulled = false;
+    nebulaMesh.renderOrder = -1000; // draw first
+    sizeNebulaToCamera();
+
+    // Attach to camera so it always faces and fills the view
+    camera.add(nebulaMesh);
+    if (!scene.children.includes(camera)) scene.add(camera);
+}
+
+function sizeNebulaToCamera() {
+    if (!nebulaMesh || !camera) return;
+    // Place near the far end of the frustum but inside it
+    const dist = 800;
+    const vFov = camera.fov * Math.PI / 180;
+    const height = 2 * Math.tan(vFov / 2) * dist;
+    const width = height * camera.aspect;
+    nebulaMesh.position.set(0, 0, -dist);
+    nebulaMesh.scale.set(width / 2, height / 2, 1);
+}
+
+// ============== DATA PACKETS ==============
+// Bright dots that travel along active connection lines like network traffic.
+function createDataPackets() {
+    packetsGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(MAX_PACKETS * 3);
+    const colors = new Float32Array(MAX_PACKETS * 3);
+    const sizes = new Float32Array(MAX_PACKETS);
+
+    packetsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    packetsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    packetsGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    packetsGeometry.setDrawRange(0, 0);
+
+    const mat = new THREE.ShaderMaterial({
+        uniforms: {
+            uTime: { value: 0 }
+        },
+        vertexShader: `
+            attribute vec3 color;
+            attribute float size;
+            varying vec3 vColor;
+            void main() {
+                vColor = color;
+                vec4 mv = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * (300.0 / -mv.z);
+                gl_Position = projectionMatrix * mv;
+            }
+        `,
+        fragmentShader: `
+            varying vec3 vColor;
+            void main() {
+                vec2 c = gl_PointCoord - vec2(0.5);
+                float d = length(c);
+                if (d > 0.5) discard;
+                float core = smoothstep(0.5, 0.0, d);
+                float glow = pow(core, 2.0);
+                gl_FragColor = vec4(vColor * (0.7 + glow * 1.3), glow);
+            }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+
+    packetsMesh = new THREE.Points(packetsGeometry, mat);
+    packetsMesh.frustumCulled = false;
+    packetsMesh.renderOrder = 2;
+    scene.add(packetsMesh);
+}
+
+function updateDataPackets(dt) {
+    if (!packetsEnabled || !packetsMesh) {
+        if (packetsGeometry) packetsGeometry.setDrawRange(0, 0);
+        return;
+    }
+
+    // Spawn new packets occasionally on bright lines
+    if (activeLineEndpoints.length > 0) {
+        const spawnChance = Math.min(0.6, activeLineEndpoints.length * 0.02);
+        if (packets.length < MAX_PACKETS && Math.random() < spawnChance) {
+            // Prefer brighter (cursor-adjacent) lines: pick from first portion
+            const pickRange = Math.min(activeLineEndpoints.length, Math.max(8, activeLineEndpoints.length / 3));
+            const lineIdx = Math.floor(Math.random() * pickRange);
+            packets.push({
+                lineIndex: lineIdx,
+                t: 0,
+                speed: 0.6 + Math.random() * 1.2, // units of t per second
+                color: Math.random() < 0.2
+                    ? new THREE.Color(0xff79c6)  // pink accent
+                    : new THREE.Color(0x8be9fd), // cyan
+                size: 2.0 + Math.random() * 2.5
+            });
+        }
+    }
+
+    const posArr = packetsGeometry.attributes.position.array;
+    const colArr = packetsGeometry.attributes.color.array;
+    const sizeArr = packetsGeometry.attributes.size.array;
+
+    let live = 0;
+    for (let i = 0; i < packets.length; i++) {
+        const pk = packets[i];
+        pk.t += pk.speed * dt;
+        if (pk.t >= 1) continue;
+
+        // Resolve endpoints: inline (burst packets) or via line index
+        let x1, y1, z1, x2, y2, z2;
+        if (pk.inline) {
+            x1 = pk.x1; y1 = pk.y1; z1 = pk.z1;
+            x2 = pk.x2; y2 = pk.y2; z2 = pk.z2;
+        } else {
+            if (pk.lineIndex >= activeLineEndpoints.length) continue;
+            const ep = activeLineEndpoints[pk.lineIndex];
+            x1 = ep.x1; y1 = ep.y1; z1 = ep.z1;
+            x2 = ep.x2; y2 = ep.y2; z2 = ep.z2;
+        }
+        const t = pk.t;
+        const x = x1 + (x2 - x1) * t;
+        const y = y1 + (y2 - y1) * t;
+        const z = z1 + (z2 - z1) * t;
+
+        const idx = live * 3;
+        if (idx + 2 >= posArr.length) break; // safety
+        posArr[idx] = x;
+        posArr[idx + 1] = y;
+        posArr[idx + 2] = z;
+
+        // Fade in/out at endpoints
+        const fade = Math.sin(t * Math.PI); // 0 -> 1 -> 0
+        colArr[idx] = pk.color.r * fade;
+        colArr[idx + 1] = pk.color.g * fade;
+        colArr[idx + 2] = pk.color.b * fade;
+        sizeArr[live] = pk.size * (0.5 + fade * 0.5);
+
+        live++;
+    }
+
+    // Cull dead packets
+    packets = packets.filter(p => p.t < 1 && (p.inline || p.lineIndex < activeLineEndpoints.length));
+
+    packetsGeometry.setDrawRange(0, live);
+    packetsGeometry.attributes.position.needsUpdate = true;
+    packetsGeometry.attributes.color.needsUpdate = true;
+    packetsGeometry.attributes.size.needsUpdate = true;
+}
+
+// ============== CURL NOISE FLOW FIELD ==============
+// 3D curl noise produces divergence-free swirling currents - very organic motion.
+function _hash3(x, y, z) {
+    let n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453;
+    return n - Math.floor(n);
+}
+function _vnoise(x, y, z) {
+    const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
+    const xf = x - xi, yf = y - yi, zf = z - zi;
+    const u = xf * xf * (3 - 2 * xf);
+    const v = yf * yf * (3 - 2 * yf);
+    const w = zf * zf * (3 - 2 * zf);
+    const c000 = _hash3(xi, yi, zi);
+    const c100 = _hash3(xi + 1, yi, zi);
+    const c010 = _hash3(xi, yi + 1, zi);
+    const c110 = _hash3(xi + 1, yi + 1, zi);
+    const c001 = _hash3(xi, yi, zi + 1);
+    const c101 = _hash3(xi + 1, yi, zi + 1);
+    const c011 = _hash3(xi, yi + 1, zi + 1);
+    const c111 = _hash3(xi + 1, yi + 1, zi + 1);
+    const x00 = c000 * (1 - u) + c100 * u;
+    const x10 = c010 * (1 - u) + c110 * u;
+    const x01 = c001 * (1 - u) + c101 * u;
+    const x11 = c011 * (1 - u) + c111 * u;
+    const y0 = x00 * (1 - v) + x10 * v;
+    const y1 = x01 * (1 - v) + x11 * v;
+    return y0 * (1 - w) + y1 * w;
+}
+function _potential(x, y, z, t) {
+    // Three independent scalar fields, animated over time
+    const s = 0.04;
+    return [
+        _vnoise(x * s, y * s, z * s + t * 0.05),
+        _vnoise(x * s + 31.4, y * s + 17.8, z * s + 5.2 + t * 0.05),
+        _vnoise(x * s + 7.1, y * s + 91.3, z * s + 22.6 + t * 0.05)
+    ];
+}
+const _curlEps = 1.0;
+function curlNoise(x, y, z, t, out) {
+    const e = _curlEps;
+    const p_x1 = _potential(x + e, y, z, t);
+    const p_x0 = _potential(x - e, y, z, t);
+    const p_y1 = _potential(x, y + e, z, t);
+    const p_y0 = _potential(x, y - e, z, t);
+    const p_z1 = _potential(x, y, z + e, t);
+    const p_z0 = _potential(x, y, z - e, t);
+
+    // curl = ( dPz/dy - dPy/dz, dPx/dz - dPz/dx, dPy/dx - dPx/dy )
+    const dPz_dy = (p_y1[2] - p_y0[2]) / (2 * e);
+    const dPy_dz = (p_z1[1] - p_z0[1]) / (2 * e);
+    const dPx_dz = (p_z1[0] - p_z0[0]) / (2 * e);
+    const dPz_dx = (p_x1[2] - p_x0[2]) / (2 * e);
+    const dPy_dx = (p_x1[1] - p_x0[1]) / (2 * e);
+    const dPx_dy = (p_y1[0] - p_y0[0]) / (2 * e);
+
+    out.x = dPz_dy - dPy_dz;
+    out.y = dPx_dz - dPz_dx;
+    out.z = dPy_dx - dPx_dy;
+}
+
+let curlFlowEnabled = true;
+let curlFlowStrength = 0.03;
+const _curlOut = { x: 0, y: 0, z: 0 };
 
 // ============== VOLUMETRIC LIGHT SOURCE ==============
 function createVolumetricLightSource() {
@@ -717,10 +1100,14 @@ function renderOcclusionTexture() {
     // Store current visibility states
     const particlesVisible = particles ? particles.visible : false;
     const linesVisible = linesMesh ? linesMesh.visible : false;
+    const nebulaVisible = nebulaMesh ? nebulaMesh.visible : false;
+    const packetsVisible = packetsMesh ? packetsMesh.visible : false;
     
     // Hide everything except light source for occlusion render
     if (particles) particles.visible = false;
     if (linesMesh) linesMesh.visible = false;
+    if (nebulaMesh) nebulaMesh.visible = false;
+    if (packetsMesh) packetsMesh.visible = false;
     
     // Make light source extra bright for occlusion
     const originalColor = renderer.getClearColor(new THREE.Color());
@@ -734,6 +1121,8 @@ function renderOcclusionTexture() {
     // Restore visibility
     if (particles) particles.visible = particlesVisible;
     if (linesMesh) linesMesh.visible = linesVisible;
+    if (nebulaMesh) nebulaMesh.visible = nebulaVisible;
+    if (packetsMesh) packetsMesh.visible = packetsVisible;
 }
 
 // ============== CONNECTION LINES ==============
@@ -764,6 +1153,9 @@ function createConnectionLines() {
 
 function updateConnectionLines() {
     if (!linesEnabled || !particlePositions || !linesMesh) return;
+    
+    // Reset packet line list each frame; we rebuild it as we draw lines.
+    activeLineEndpoints.length = 0;
     
     const positions = particlePositions.array;
     const linesPos = linesGeometry.attributes.position.array;
@@ -858,6 +1250,11 @@ function updateConnectionLines() {
         
         usedParticles.add(i);
         connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
+        activeLineEndpoints.push({
+            x1: p1.x, y1: p1.y, z1: p1.z,
+            x2: mouseWorldX, y2: mouseWorldY, z2: mouseWorldZ,
+            brightness: alpha
+        });
         lineIndex++;
     }
     
@@ -935,6 +1332,11 @@ function updateConnectionLines() {
             usedParticles.add(bestJ);
             connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
             connectionCount.set(bestJ, (connectionCount.get(bestJ) || 0) + 1);
+            activeLineEndpoints.push({
+                x1: p1.x, y1: p1.y, z1: p1.z,
+                x2: p2.x, y2: p2.y, z2: p2.z,
+                brightness: brightness
+            });
             lineIndex++;
         }
     }
@@ -1136,6 +1538,9 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     
+    // Resize nebula backdrop to match new aspect
+    sizeNebulaToCamera();
+    
     // Update composer size
     if (composer) {
         composer.setSize(window.innerWidth, window.innerHeight);
@@ -1156,6 +1561,9 @@ function animate() {
     requestAnimationFrame(animate);
     
     const time = Date.now() * 0.001;
+    if (!animate._lastTime) animate._lastTime = time;
+    const dt = Math.min(0.05, time - animate._lastTime);
+    animate._lastTime = time;
     
     // Update particle positions with velocities and exclusion zones
     updateParticlePositions();
@@ -1201,6 +1609,9 @@ function animate() {
     // Update connection lines
     updateConnectionLines();
     
+    // Update data packets traveling on lines
+    updateDataPackets(dt);
+    
     // Update glitch effect
     updateGlitch(time);
     applyGlitchToRenderer();
@@ -1235,6 +1646,14 @@ function animate() {
     if (chromaticAberrationPass) {
         chromaticAberrationPass.uniforms.uTime.value = time;
         chromaticAberrationPass.uniforms.uIntensity.value = chromaticAberrationIntensity;
+    }
+    
+    // Update nebula uniforms
+    if (nebulaMesh && nebulaMesh.material.uniforms) {
+        nebulaMesh.material.uniforms.uTime.value = time;
+        nebulaMesh.material.uniforms.uScroll.value = scrollY;
+        nebulaMesh.material.uniforms.uIntensity.value = nebulaEnabled ? nebulaIntensity : 0;
+        nebulaMesh.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     }
     
     // Render with bloom if available, otherwise standard render
@@ -1539,6 +1958,32 @@ window.getVignetteSettings = () => ({
     intensity: vignettePass ? vignettePass.uniforms.uIntensity.value : 0.4 
 });
 
+// Nebula backdrop controls
+window.setNebulaEnabled = function(enabled) {
+    nebulaEnabled = enabled;
+    if (nebulaMesh) nebulaMesh.visible = enabled;
+};
+window.setNebulaIntensity = function(intensity) {
+    nebulaIntensity = intensity;
+    if (nebulaMesh && nebulaMesh.material.uniforms) {
+        nebulaMesh.material.uniforms.uIntensity.value = intensity;
+    }
+};
+window.getNebulaSettings = () => ({ enabled: nebulaEnabled, intensity: nebulaIntensity });
+
+// Curl noise flow field controls
+window.setCurlFlowEnabled = function(enabled) { curlFlowEnabled = enabled; };
+window.setCurlFlowStrength = function(strength) { curlFlowStrength = strength; };
+window.getCurlFlowSettings = () => ({ enabled: curlFlowEnabled, strength: curlFlowStrength });
+
+// Data packets controls
+window.setPacketsEnabled = function(enabled) {
+    packetsEnabled = enabled;
+    if (packetsMesh) packetsMesh.visible = enabled;
+    if (!enabled) packets.length = 0;
+};
+window.getPacketsSettings = () => ({ enabled: packetsEnabled, count: packets.length });
+
 // Reduce particles on mobile
 if (isMobile()) {
     console.log('Mobile detected - using reduced particle count');
@@ -1547,4 +1992,180 @@ if (isMobile()) {
     glitchEnabled = false;
     godRaysEnabled = false;
     chromaticAberrationEnabled = false;
+    nebulaEnabled = false;
+    packetsEnabled = false;
+    curlFlowEnabled = false;
+}
+
+// ============== CARD-AWARE EXTRAS ==============
+// Helpers that other parts of the page (cards, profile, etc.) can call.
+
+// Convert a screen-space pixel position to world coordinates at the particle plane.
+function screenToWorld(px, py) {
+    if (!camera) return { x: 0, y: 0, z: 0 };
+    const nx = (px / window.innerWidth) * 2 - 1;
+    const ny = -(py / window.innerHeight) * 2 + 1;
+    const v = new THREE.Vector3(nx, ny, 0.5);
+    v.unproject(camera);
+    const dir = v.sub(camera.position).normalize();
+    const distance = -camera.position.z / (dir.z || -1);
+    return camera.position.clone().add(dir.multiplyScalar(distance));
+}
+
+// ----- Auto exclusion zones around DOM elements -----
+// Continuously updates exclusion zones to match the bounding rects of registered elements,
+// so background particles flow around cards instead of through them.
+const _trackedElements = new Map(); // element -> { id, padding }
+let _exclusionTickerStarted = false;
+
+function _updateTrackedExclusionZones() {
+    _trackedElements.forEach((cfg, el) => {
+        if (!el.isConnected) {
+            window.removeExclusionZone(cfg.id);
+            _trackedElements.delete(el);
+            return;
+        }
+        const rect = el.getBoundingClientRect();
+        // Only track if at least partially in the viewport
+        if (rect.bottom < -100 || rect.top > window.innerHeight + 100) {
+            window.removeExclusionZone(cfg.id);
+            return;
+        }
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const r = Math.max(rect.width, rect.height) / 2 + (cfg.padding || 0);
+        window.setExclusionZone(cfg.id, cx, cy, r);
+    });
+}
+
+function _startExclusionTicker() {
+    if (_exclusionTickerStarted) return;
+    _exclusionTickerStarted = true;
+    function tick() {
+        _updateTrackedExclusionZones();
+        requestAnimationFrame(tick);
+    }
+    tick();
+}
+
+window.trackExclusionElement = function(el, padding = 8) {
+    if (!el || _trackedElements.has(el)) return;
+    const id = 'track_' + Math.random().toString(36).slice(2, 9);
+    _trackedElements.set(el, { id, padding });
+    _startExclusionTicker();
+    return id;
+};
+
+window.trackExclusionSelector = function(selector, padding = 8) {
+    document.querySelectorAll(selector).forEach(el => window.trackExclusionElement(el, padding));
+};
+
+// ----- Packet burst from a screen-space origin -----
+// Emits a radial spray of data packets from the given screen position.
+window.spawnCardPacketBurst = function(screenX, screenY, accentRgb = '139,233,253', count = 14) {
+    if (!packetsMesh || !packetsEnabled) return;
+    const origin = screenToWorld(screenX, screenY);
+    const parts = accentRgb.split(',').map(s => parseInt(s.trim(), 10) / 255);
+    const color = new THREE.Color(
+        isFinite(parts[0]) ? parts[0] : 0.55,
+        isFinite(parts[1]) ? parts[1] : 0.91,
+        isFinite(parts[2]) ? parts[2] : 0.99
+    );
+
+    const slots = Math.max(0, MAX_PACKETS - packets.length);
+    const n = Math.min(count, slots);
+    for (let i = 0; i < n; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * 0.6; // mostly in-plane
+        const dist = 25 + Math.random() * 25;
+        const dx = Math.cos(theta) * Math.cos(phi) * dist;
+        const dy = Math.sin(theta) * Math.cos(phi) * dist;
+        const dz = Math.sin(phi) * dist * 0.4;
+        packets.push({
+            inline: true,
+            x1: origin.x, y1: origin.y, z1: origin.z,
+            x2: origin.x + dx, y2: origin.y + dy, z2: origin.z + dz,
+            t: 0,
+            speed: 0.9 + Math.random() * 0.9,
+            color: color.clone(),
+            size: 2.5 + Math.random() * 2.5
+        });
+    }
+};
+
+// ----- Cursor trail -----
+// Lightweight DOM-based trail: a series of fading dots that follow the cursor.
+let cursorTrailEnabled = !isMobile();
+const _trailDots = [];
+const _trailLength = 14;
+
+function _initCursorTrail() {
+    if (!cursorTrailEnabled) return;
+    const container = document.createElement('div');
+    container.id = 'cursor-trail-container';
+    container.style.cssText = `
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: screen;
+    `;
+    document.body.appendChild(container);
+
+    for (let i = 0; i < _trailLength; i++) {
+        const dot = document.createElement('div');
+        const t = i / _trailLength;
+        const size = 8 - t * 6; // bigger near head
+        dot.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,233,253,${0.85 * (1 - t)}) 0%, rgba(139,233,253,0) 70%);
+            transform: translate(-50%, -50%);
+            left: -100px; top: -100px;
+            transition: none;
+            will-change: transform, left, top;
+        `;
+        container.appendChild(dot);
+        _trailDots.push({ el: dot, x: -100, y: -100 });
+    }
+
+    let mx = -100, my = -100;
+    document.addEventListener('mousemove', (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+    });
+    document.addEventListener('mouseleave', () => { mx = -200; my = -200; });
+
+    function animateTrail() {
+        if (cursorTrailEnabled) {
+            // Each dot lerps toward the previous dot (or mouse for head)
+            let tx = mx, ty = my;
+            for (let i = 0; i < _trailDots.length; i++) {
+                const d = _trailDots[i];
+                d.x += (tx - d.x) * 0.35;
+                d.y += (ty - d.y) * 0.35;
+                d.el.style.left = d.x + 'px';
+                d.el.style.top = d.y + 'px';
+                tx = d.x;
+                ty = d.y;
+            }
+        }
+        requestAnimationFrame(animateTrail);
+    }
+    animateTrail();
+}
+
+window.setCursorTrailEnabled = function(enabled) {
+    cursorTrailEnabled = enabled;
+    const container = document.getElementById('cursor-trail-container');
+    if (container) container.style.display = enabled ? '' : 'none';
+};
+window.getCursorTrailSettings = () => ({ enabled: cursorTrailEnabled });
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _initCursorTrail);
+} else {
+    _initCursorTrail();
 }
