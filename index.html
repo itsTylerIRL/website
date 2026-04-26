@@ -980,6 +980,10 @@
             <!-- Contact Methods -->
             <div class="contact-methods" style="margin: 0.1rem 0 0.2rem 0;">
                 <div class="contact-grid">
+                    <a href="https://remilia.net/~tyler" target="_blank" class="contact-icon-link" title="RemiliaNET">
+                        <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                    </a>
+
                     <a href="https://x.com/itsTylerIRL" target="_blank" class="contact-icon-link" title="Twitter / X">
                         <svg viewBox="0 0 24 24" width="32" height="32" style="pointer-events: none;">
                             <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -1064,7 +1068,7 @@
                 <div class="bento-grid">
                     <!-- Row 1 -->
                     <!-- NFT Gallery -->
-                    <a href="gallery.html" class="bento-item">
+                    <a href="gallery.html" class="bento-item" data-accent="139,233,253">
                         <div class="bento-image">
                             <img src="assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
@@ -1075,7 +1079,7 @@
                     </a>
                     
                     <!-- DeepDish OCS -->
-                    <a href="deepdish.html" class="bento-item">
+                    <a href="deepdish.html" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
                             <div class="ocs-circle" style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid #8be9fd; position: relative;">
                                 <img src="assets/OCS.gif" alt="DeepDish OCS" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.13); max-width: none; max-height: none; filter: brightness(1.6);">
@@ -1088,7 +1092,7 @@
                     </a>
                     
                     <!-- Missile Program -->
-                    <a href="rocketry.html" class="bento-item">
+                    <a href="rocketry.html" class="bento-item" data-accent="255,184,108">
                         <div class="bento-image">
                             <img src="assets/missile.png" alt="Missile Program">
                         </div>
@@ -1100,7 +1104,7 @@
                     
                     <!-- Row 2 -->
                     <!-- Things I Like -->
-                    <a href="likes.html" class="bento-item">
+                    <a href="likes.html" class="bento-item" data-accent="241,250,140">
                         <div class="bento-image">
                             <img src="assets/retart.png" alt="Things I Like" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
@@ -1111,7 +1115,7 @@
                     </a>
                     
                     <!-- ~tyler RemiliaNET -->
-                    <a href="https://remilia.net/~tyler" target="_blank" class="bento-item">
+                    <a href="https://remilia.net/~tyler" target="_blank" class="bento-item" data-accent="189,147,249">
                         <div class="bento-image">
                             <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" style="width: 80%; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                         </div>
@@ -1122,7 +1126,7 @@
                     </a>
                     
                     <!-- Cult Markets -->
-                    <a href="markets.html" class="bento-item">
+                    <a href="markets.html" class="bento-item" data-accent="255,121,198">
                         <div class="bento-image">
                             <img src="assets/cult.png" alt="Cult Markets">
                         </div>
@@ -1134,7 +1138,7 @@
                     
                     <!-- Row 3 -->
                     <!-- ~nosfyl -->
-                    <a href="https://nosfyl.tylerirl.com" target="_blank" class="bento-item">
+                    <a href="https://nosfyl.tylerirl.com" target="_blank" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
                             <img src="assets/nosfyl_icon.png" alt="~nosfyl" style="border-radius: 50%; border: 2px solid #22d0f7;">
                         </div>
@@ -1145,7 +1149,7 @@
                     </a>
                     
                     <!-- ~raddem-tidwyt -->
-                    <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item">
+                    <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item" data-accent="187,250,191">
                         <div class="bento-image">
                             <img src="assets/raddem_icon.png" alt="~raddem-tidwyt" style="border-radius: 50%; border: 2px solid #bbfabf;">
                         </div>
@@ -1156,7 +1160,7 @@
                     </a>
                     
                     <!-- Guest Book -->
-                    <a href="https://tylerirl.com/guest-book.html" class="bento-item">
+                    <a href="https://tylerirl.com/guest-book.html" class="bento-item" data-accent="80,250,123">
                         <div class="bento-image">
                             <img src="assets/newurbit.png" alt="Guest Book" style="border-radius: 50%; border: 2px solid #8be9fd;">
                         </div>
@@ -1254,6 +1258,9 @@
             glow.className = 'tilt-glow';
             card.appendChild(glow);
             
+            // Per-card accent color (RGB triplet, defaults to cyan)
+            const accent = card.dataset.accent || '139,233,253';
+            
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -1268,7 +1275,16 @@
                 
                 const glowX = (x / rect.width) * 100;
                 const glowY = (y / rect.height) * 100;
-                glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(139, 233, 253, 0.12) 0%, transparent 60%)`;
+                glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(${accent}, 0.22) 0%, rgba(${accent}, 0.05) 35%, transparent 70%)`;
+                
+                // Tinted outer glow on the card itself
+                card.style.boxShadow = `
+                    0 20px 50px rgba(0, 0, 0, 0.4),
+                    0 0 40px rgba(${accent}, 0.25),
+                    0 0 80px rgba(${accent}, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                    inset 0 0 30px rgba(${accent}, 0.08)`;
+                card.style.borderColor = `rgba(${accent}, 0.55)`;
                 
                 // Float the image towards the mouse
                 const image = card.querySelector('.bento-image');
@@ -1282,6 +1298,8 @@
             card.addEventListener('mouseleave', () => {
                 card.style.transform = '';
                 card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                card.style.boxShadow = '';
+                card.style.borderColor = '';
                 glow.style.background = 'transparent';
                 
                 const image = card.querySelector('.bento-image');
@@ -1296,6 +1314,18 @@
                 const image = card.querySelector('.bento-image');
                 if (image) {
                     image.style.transition = 'transform 0.1s ease-out';
+                }
+            });
+            
+            // Trigger a packet burst from this card on click (uses background3d.js)
+            card.addEventListener('click', () => {
+                if (typeof window.spawnCardPacketBurst === 'function') {
+                    const rect = card.getBoundingClientRect();
+                    window.spawnCardPacketBurst(
+                        rect.left + rect.width / 2,
+                        rect.top + rect.height / 2,
+                        accent
+                    );
                 }
             });
         });
@@ -1316,6 +1346,7 @@
         });
     })();
     </script>
+    
     
     <!-- Radgotchi Virtual Pet Module -->
     <script src="radgotchi.js"></script>
