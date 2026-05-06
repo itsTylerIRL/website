@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyler (in real life)</title>
     
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Three.js for 3D background (deferred to unblock render) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -970,7 +970,7 @@
         <div class="container">
             <div style="text-align: center; margin: 0.2rem 0;">
                 <div class="hologram-container">
-                    <img src="assets/remilio2.png" alt="Remilio" class="hologram-image">
+                    <img src="assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
                     <div class="hologram-scanlines"></div>
                     <div class="hologram-flicker"></div>
                     <div class="hologram-noise"></div>
@@ -981,7 +981,7 @@
             <div class="contact-methods" style="margin: 0.1rem 0 0.2rem 0;">
                 <div class="contact-grid">
                     <a href="https://remilia.net/~tyler" target="_blank" class="contact-icon-link" title="RemiliaNET">
-                        <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                        <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" loading="lazy" decoding="async" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                     </a>
 
                     <a href="https://x.com/itsTylerIRL" target="_blank" class="contact-icon-link" title="Twitter / X">
@@ -1026,7 +1026,7 @@
             </svg>
             <div style="text-align: center; margin: 1rem 0;">
                 <a href="http://www.kingdomofloathing.com" target="_blank">
-                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);">
+                    <img src="http://sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="KoL Player Badge" loading="lazy" decoding="async" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);">
                 </a>
             </div>
             
@@ -1036,7 +1036,7 @@
                     <div id="install-title" style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #8be9fd; letter-spacing: 0.25em; text-transform: uppercase; text-shadow: 0 0 12px rgba(139, 233, 253, 0.9), 0 0 25px rgba(139, 233, 253, 0.5); font-weight: bold;">RADGOTCHI INSTALLER</div>
                 </div>
                 <div id="radgotchi-container" style="flex-shrink: 0; text-align: center;">
-                    <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+                    <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face" loading="lazy" decoding="async">
                     <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
                 </div>
                 <div class="install-commands-area">
@@ -1070,7 +1070,7 @@
                     <!-- NFT Gallery -->
                     <a href="gallery.html" class="bento-item" data-accent="139,233,253">
                         <div class="bento-image">
-                            <img src="assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
+                            <img src="assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" loading="lazy" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
                         <div class="bento-content">
                             <h3>nft gallery</h3>
@@ -1082,7 +1082,7 @@
                     <a href="deepdish.html" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
                             <div class="ocs-circle" style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid #8be9fd; position: relative;">
-                                <img src="assets/OCS.gif" alt="DeepDish OCS" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.13); max-width: none; max-height: none; filter: brightness(1.6);">
+                                <img src="assets/OCS.gif" alt="DeepDish OCS" loading="lazy" decoding="async" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.13); max-width: none; max-height: none; filter: brightness(1.6);">
                             </div>
                         </div>
                         <div class="bento-content">
@@ -1094,7 +1094,7 @@
                     <!-- Missile Program -->
                     <a href="rocketry.html" class="bento-item" data-accent="255,184,108">
                         <div class="bento-image">
-                            <img src="assets/missile.png" alt="Missile Program">
+                            <img src="assets/missile.png" alt="Missile Program" loading="lazy" decoding="async">
                         </div>
                         <div class="bento-content">
                             <h3>missile program</h3>
@@ -1106,7 +1106,7 @@
                     <!-- Things I Like -->
                     <a href="likes.html" class="bento-item" data-accent="241,250,140">
                         <div class="bento-image">
-                            <img src="assets/retart.png" alt="Things I Like" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
+                            <img src="assets/retart.png" alt="Things I Like" loading="lazy" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
                         <div class="bento-content">
                             <h3>things I like</h3>
@@ -1117,7 +1117,7 @@
                     <!-- ~tyler RemiliaNET -->
                     <a href="https://remilia.net/~tyler" target="_blank" class="bento-item" data-accent="189,147,249">
                         <div class="bento-image">
-                            <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" style="width: 80%; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                            <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" loading="lazy" decoding="async" style="width: 80%; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                         </div>
                         <div class="bento-content">
                             <h3>~tyler</h3>
@@ -1128,7 +1128,7 @@
                     <!-- Cult Markets -->
                     <a href="markets.html" class="bento-item" data-accent="255,121,198">
                         <div class="bento-image">
-                            <img src="assets/cult.png" alt="Cult Markets">
+                            <img src="assets/cult.png" alt="Cult Markets" loading="lazy" decoding="async">
                         </div>
                         <div class="bento-content">
                             <h3>cult markets</h3>
@@ -1140,7 +1140,7 @@
                     <!-- ~nosfyl -->
                     <a href="https://nosfyl.tylerirl.com" target="_blank" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
-                            <img src="assets/nosfyl_icon.png" alt="~nosfyl" style="border-radius: 50%; border: 2px solid #22d0f7;">
+                            <img src="assets/nosfyl_icon.png" alt="~nosfyl" loading="lazy" decoding="async" style="border-radius: 50%; border: 2px solid #22d0f7;">
                         </div>
                         <div class="bento-content">
                             <h3>~nosfyl</h3>
@@ -1151,7 +1151,7 @@
                     <!-- ~raddem-tidwyt -->
                     <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item" data-accent="187,250,191">
                         <div class="bento-image">
-                            <img src="assets/raddem_icon.png" alt="~raddem-tidwyt" style="border-radius: 50%; border: 2px solid #bbfabf;">
+                            <img src="assets/raddem_icon.png" alt="~raddem-tidwyt" loading="lazy" decoding="async" style="border-radius: 50%; border: 2px solid #bbfabf;">
                         </div>
                         <div class="bento-content">
                             <h3>~raddem-tidwyt</h3>
@@ -1162,7 +1162,7 @@
                     <!-- Guest Book -->
                     <a href="https://tylerirl.com/guest-book.html" class="bento-item" data-accent="80,250,123">
                         <div class="bento-image">
-                            <img src="assets/newurbit.png" alt="Guest Book" style="border-radius: 50%; border: 2px solid #8be9fd;">
+                            <img src="assets/newurbit.png" alt="Guest Book" loading="lazy" decoding="async" style="border-radius: 50%; border: 2px solid #8be9fd;">
                         </div>
                         <div class="bento-content">
                             <h3>guest book</h3>
@@ -1229,14 +1229,14 @@
         </div>
     </footer>
     
-    <!-- External JavaScript -->
-    <script src="background3d.js?v=1.0"></script>
-    <script src="script.js?v=1.1"></script>
-    <script src="performance.js?v=1.1"></script>
-    <script src="interactions.js?v=1.1"></script>
-    <script src="effects.js?v=1.2"></script>
-    <script src="router.js?v=1.1"></script>
-    <script src="sounds.js?v=1.0"></script>
+    <!-- External JavaScript (deferred to unblock first paint) -->
+    <script defer src="background3d.js?v=1.0"></script>
+    <script defer src="script.js?v=1.1"></script>
+    <script defer src="performance.js?v=1.1"></script>
+    <script defer src="interactions.js?v=1.1"></script>
+    <script defer src="effects.js?v=1.2"></script>
+    <script defer src="router.js?v=1.1"></script>
+    <script defer src="sounds.js?v=1.0"></script>
     
     <!-- 3D Tilt Card Effect -->
     <script>

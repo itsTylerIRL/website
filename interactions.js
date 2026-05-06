@@ -16,11 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Also handle touch events for mobile
         document.addEventListener('touchstart', function() {
             cornerBrackets.classList.add('active');
-        });
+        }, { passive: true });
         
         document.addEventListener('touchend', function() {
             cornerBrackets.classList.remove('active');
-        });
+        }, { passive: true });
     }
 
     const pfpGrid = document.querySelector('.pfp-grid');
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (!cursor.classList.contains('clicked')) {
             cursor.classList.remove('hover');
         }
-    });
+    }, { passive: true });
 
     // Smooth cursor animation
     function updateCursor() {
