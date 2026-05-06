@@ -91,13 +91,13 @@ function initBackground3D() {
     
     camera.position.z = 50;
 
-    // Event listeners
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseout', onMouseOut);
-    document.documentElement.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; });
+    // Event listeners (passive where possible to avoid blocking scroll/input)
+    document.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseleave', onMouseLeave, { passive: true });
+    document.addEventListener('mouseout', onMouseOut, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; }, { passive: true });
     window.addEventListener('resize', onWindowResize);
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('blur', () => { mouseX = 0; mouseY = 0; }); // Recenter when window loses focus
     
     // Track scanline position - now reads from shared state in effects.js
@@ -242,7 +242,7 @@ function createParticles() {
         new THREE.Color(0xf8f8f2), // White - rare accent
     ];
 
-    for (let i = 0; i < 3000; i++) {
+    for (let i = 0; i < 1500; i++) {
         // Flat plane distribution covering entire scrollable page
         const x = (Math.random() - 0.5) * 200;
         const y = (Math.random() - 0.5) * 800; // Very tall to cover full scroll
@@ -1773,7 +1773,7 @@ function isMobile() {
 }
 
 // Particle count control
-let currentParticleCount = 3000;
+let currentParticleCount = 1500;
 
 function setParticleCount(count) {
     currentParticleCount = count;
@@ -2093,79 +2093,6 @@ window.spawnCardPacketBurst = function(screenX, screenY, accentRgb = '139,233,25
     }
 };
 
-// ----- Cursor trail -----
-// Lightweight DOM-based trail: a series of fading dots that follow the cursor.
-let cursorTrailEnabled = !isMobile();
-const _trailDots = [];
-const _trailLength = 14;
-
-function _initCursorTrail() {
-    if (!cursorTrailEnabled) return;
-    const container = document.createElement('div');
-    container.id = 'cursor-trail-container';
-    container.style.cssText = `
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 9999;
-        mix-blend-mode: screen;
-    `;
-    document.body.appendChild(container);
-
-    for (let i = 0; i < _trailLength; i++) {
-        const dot = document.createElement('div');
-        const t = i / _trailLength;
-        const size = 8 - t * 6; // bigger near head
-        dot.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(139,233,253,${0.85 * (1 - t)}) 0%, rgba(139,233,253,0) 70%);
-            transform: translate(-50%, -50%);
-            left: -100px; top: -100px;
-            transition: none;
-            will-change: transform, left, top;
-        `;
-        container.appendChild(dot);
-        _trailDots.push({ el: dot, x: -100, y: -100 });
-    }
-
-    let mx = -100, my = -100;
-    document.addEventListener('mousemove', (e) => {
-        mx = e.clientX;
-        my = e.clientY;
-    });
-    document.addEventListener('mouseleave', () => { mx = -200; my = -200; });
-
-    function animateTrail() {
-        if (cursorTrailEnabled) {
-            // Each dot lerps toward the previous dot (or mouse for head)
-            let tx = mx, ty = my;
-            for (let i = 0; i < _trailDots.length; i++) {
-                const d = _trailDots[i];
-                d.x += (tx - d.x) * 0.35;
-                d.y += (ty - d.y) * 0.35;
-                d.el.style.left = d.x + 'px';
-                d.el.style.top = d.y + 'px';
-                tx = d.x;
-                ty = d.y;
-            }
-        }
-        requestAnimationFrame(animateTrail);
-    }
-    animateTrail();
-}
-
-window.setCursorTrailEnabled = function(enabled) {
-    cursorTrailEnabled = enabled;
-    const container = document.getElementById('cursor-trail-container');
-    if (container) container.style.display = enabled ? '' : 'none';
-};
-window.getCursorTrailSettings = () => ({ enabled: cursorTrailEnabled });
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', _initCursorTrail);
-} else {
-    _initCursorTrail();
-}
+// ----- Cursor trail removed (was causing performance issues) -----
+window.setCursorTrailEnabled = function() {};
+window.getCursorTrailSettings = () => ({ enabled: false });
