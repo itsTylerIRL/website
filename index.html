@@ -955,15 +955,310 @@
                 border-color: rgba(139, 233, 253, 0.5);
             }
         }
+
+        /* ---------- #5 Glass refraction layer ----------
+           A dedicated layer with backdrop-filter that gets an SVG
+           displacement map on hover. Falls back gracefully if the
+           browser doesn't support backdrop-filter: url(). */
+        .bento-refract {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            pointer-events: none;
+            z-index: 2;
+            backdrop-filter: blur(0px) saturate(110%);
+            -webkit-backdrop-filter: blur(0px) saturate(110%);
+            transition: backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+        }
+        @supports (backdrop-filter: url(#bento-refract)) or (-webkit-backdrop-filter: url(#bento-refract)) {
+            .bento-item:hover .bento-refract {
+                opacity: 1;
+                backdrop-filter: blur(2px) saturate(140%) url(#bento-refract);
+                -webkit-backdrop-filter: blur(2px) saturate(140%) url(#bento-refract);
+            }
+        }
+
+        /* ---------- #6 Parallax depth layers ----------
+           The image, content, and a specular highlight move
+           independently for a real-feeling 3D effect. */
+        .bento-item .bento-image,
+        .bento-item .bento-content {
+            will-change: transform;
+        }
+        .bento-item .spec-highlight {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            mix-blend-mode: screen;
+        }
+        .bento-item:hover .spec-highlight {
+            opacity: 1;
+        }
+
+        /* ---------- #11 Idle shuffle glitch ---------- */
+        .bento-grid.idle-pulse::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px dashed rgba(139, 233, 253, 0.15);
+            border-radius: 20px;
+            pointer-events: none;
+            animation: idleFrame 2s ease-in-out infinite;
+            z-index: -1;
+        }
+        @keyframes idleFrame {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.005); }
+        }
+        .bento-item.shuffle-out {
+            animation: shuffleGlitchOut 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .bento-item.shuffle-in {
+            animation: shuffleGlitchIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes shuffleGlitchOut {
+            0%   { clip-path: inset(0 0 0 0); filter: none; transform: translate(0,0); }
+            20%  { clip-path: inset(10% 0 40% 0); filter: hue-rotate(40deg) saturate(1.5); transform: translate(-4px, 2px); }
+            40%  { clip-path: inset(45% 0 5% 0); filter: hue-rotate(-30deg) saturate(2); transform: translate(5px, -3px); }
+            60%  { clip-path: inset(20% 0 60% 0); filter: hue-rotate(80deg) brightness(1.3); transform: translate(-3px, 4px); }
+            80%  { clip-path: inset(0 0 80% 0); filter: brightness(1.6); transform: translate(2px, 0); opacity: 0.6; }
+            100% { clip-path: inset(0 0 100% 0); opacity: 0; transform: translate(0, 0); }
+        }
+        @keyframes shuffleGlitchIn {
+            0%   { clip-path: inset(100% 0 0 0); opacity: 0; transform: translate(0, 0); filter: brightness(1.6); }
+            25%  { clip-path: inset(60% 0 0 0); opacity: 0.8; transform: translate(-4px, 2px); filter: hue-rotate(-60deg) saturate(1.8); }
+            50%  { clip-path: inset(20% 0 30% 0); opacity: 1; transform: translate(5px, -2px); filter: hue-rotate(40deg) saturate(1.4); }
+            75%  { clip-path: inset(5% 0 60% 0); transform: translate(-2px, 3px); filter: hue-rotate(-20deg); }
+            100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); filter: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bento-item.shuffle-out,
+            .bento-item.shuffle-in { animation: none !important; }
+            .bento-grid.idle-pulse::before { animation: none; }
+        }
+
+        /* ---------- CRT boot sequence ----------
+           Black overlay covers the page on first load, runs a CRT
+           power-on (horizontal scanline + boot log), then fades out.
+           Skipped on revisit via sessionStorage. */
+        #boot-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            color: #8be9fd;
+            cursor: pointer;
+        }
+        #boot-overlay.gone {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        /* CRT horizontal scanline: thin bar expands, then collapses to a dot */
+        #boot-overlay .crt-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(139, 233, 253, 0.2) 10%,
+                #8be9fd 50%,
+                rgba(139, 233, 253, 0.2) 90%,
+                transparent 100%);
+            box-shadow: 0 0 20px #8be9fd, 0 0 40px rgba(139, 233, 253, 0.6);
+            transform: translateY(-50%) scaleX(0);
+            transform-origin: center;
+            animation: bootBar 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        @keyframes bootBar {
+            0%   { transform: translateY(-50%) scaleX(0); height: 2px; opacity: 1; }
+            30%  { transform: translateY(-50%) scaleX(1); height: 2px; opacity: 1; }
+            55%  { transform: translateY(-50%) scaleX(1); height: 100vh; opacity: 0.85; }
+            75%  { transform: translateY(-50%) scaleX(1); height: 100vh; opacity: 0.6; }
+            90%  { transform: translateY(-50%) scaleX(0.4); height: 2px; opacity: 0.9; }
+            100% { transform: translateY(-50%) scaleX(0); height: 2px; opacity: 0; }
+        }
+        /* Final pinpoint dot collapse */
+        #boot-overlay .crt-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #fff;
+            transform: translate(-50%, -50%) scale(0);
+            box-shadow: 0 0 12px #8be9fd, 0 0 24px #8be9fd;
+            animation: bootDot 0.5s ease-out 1.4s forwards;
+        }
+        @keyframes bootDot {
+            0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            40%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+        /* Boot log lines (typed in via JS) */
+        #boot-overlay .crt-log {
+            position: absolute;
+            left: 50%;
+            top: calc(50% + 40px);
+            transform: translateX(-50%);
+            text-align: left;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            line-height: 1.6;
+            text-shadow: 0 0 8px rgba(139, 233, 253, 0.7);
+            white-space: pre;
+            min-width: min(80vw, 360px);
+            opacity: 0;
+            animation: bootLogFade 0.3s ease 0.35s forwards;
+        }
+        @keyframes bootLogFade { to { opacity: 1; } }
+        #boot-overlay .crt-log .line { display: block; }
+        #boot-overlay .crt-log .ok { color: #50fa7b; text-shadow: 0 0 8px rgba(80, 250, 123, 0.7); margin-left: 0.4em; }
+        #boot-overlay .crt-cursor {
+            display: inline-block;
+            width: 0.55em;
+            background: #8be9fd;
+            color: #000;
+            animation: bootCaret 0.6s steps(2) infinite;
+        }
+        @keyframes bootCaret {
+            0%, 50% { opacity: 1; }
+            50.01%, 100% { opacity: 0; }
+        }
+        /* CRT scanlines over the whole boot overlay */
+        #boot-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 2px,
+                rgba(139, 233, 253, 0.05) 2px,
+                rgba(139, 233, 253, 0.05) 3px
+            );
+            pointer-events: none;
+        }
+        /* Subtle vignette so the bar feels like a tube */
+        #boot-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+            pointer-events: none;
+        }
+        #boot-skip {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            font-size: 0.6rem;
+            color: rgba(139, 233, 253, 0.5);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            pointer-events: none;
+            opacity: 0;
+            animation: bootLogFade 0.3s ease 1.2s forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #boot-overlay { display: none !important; }
+        }
     </style>
 </head>
 <body>
+    <!-- CRT Boot Sequence (first visit per session) -->
+    <div id="boot-overlay" role="presentation" aria-hidden="true">
+        <div class="crt-bar"></div>
+        <div class="crt-dot"></div>
+        <div class="crt-log" id="boot-log"></div>
+        <div id="boot-skip">[ click to skip ]</div>
+    </div>
+    <script>
+    (function() {
+        const overlay = document.getElementById('boot-overlay');
+        if (!overlay) return;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let seen = false;
+        try { seen = sessionStorage.getItem('tirl_boot_seen') === '1'; } catch (_) {}
+
+        function kill() {
+            overlay.classList.add('gone');
+            document.documentElement.style.overflow = prevOverflow;
+            try { sessionStorage.setItem('tirl_boot_seen', '1'); } catch (_) {}
+            setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 600);
+        }
+
+        const prevOverflow = document.documentElement.style.overflow;
+        if (seen || reduced) { kill(); return; }
+
+        // Lock scroll during boot
+        document.documentElement.style.overflow = 'hidden';
+        overlay.addEventListener('click', kill);
+
+        // Type boot log
+        const log = document.getElementById('boot-log');
+        const cursorEl = document.createElement('span');
+        cursorEl.className = 'crt-cursor';
+        cursorEl.textContent = ' ';
+        log.appendChild(cursorEl);
+
+        const lines = [
+            { t: '> tirl.sys init',         d: 250 },
+            { t: '> deepdish link ...',     d: 450, ok: 'ONLINE' },
+            { t: '> radgotchi.daemon ..',   d: 700, ok: 'LOADED' },
+            { t: '> remilio enjoyer ....',  d: 1000, ok: 'OK' }
+        ];
+        lines.forEach((line) => {
+            setTimeout(() => {
+                const div = document.createElement('span');
+                div.className = 'line';
+                div.textContent = line.t;
+                if (line.ok) {
+                    const ok = document.createElement('span');
+                    ok.className = 'ok';
+                    ok.textContent = '[ ' + line.ok + ' ]';
+                    div.appendChild(ok);
+                }
+                log.insertBefore(div, cursorEl);
+            }, line.d);
+        });
+
+        // Auto-dismiss right after the CRT collapse animation finishes
+        setTimeout(kill, 2100);
+    })();
+    </script>
+
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     
     <!-- Invisible scanline toggle button for screenshots -->
     <button id="scanlineToggle" title="Toggle scanline"></button>
     
+    <!-- SVG filters: brightnessToAlpha (KoL badge) + bento-refract (glass distortion on hover) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <filter id="bento-refract" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise">
+                    <animate attributeName="baseFrequency" dur="22s" values="0.012 0.018;0.018 0.012;0.012 0.018" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
     <main class="main-content">
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -1238,45 +1533,63 @@
     <script defer src="router.js?v=1.1"></script>
     <script defer src="sounds.js?v=1.0"></script>
     
-    <!-- 3D Tilt Card Effect -->
+    <!-- 3D Tilt Card Effect (with parallax depth + glass refraction + spec highlight) -->
     <script>
     (function() {
         const cards = document.querySelectorAll('.bento-item');
-        
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         cards.forEach(card => {
             // Add CRT scanline overlay to entire card
             const crtOverlay = document.createElement('div');
             crtOverlay.className = 'crt-overlay';
             card.appendChild(crtOverlay);
-            
+
             // Add CRT vignette overlay to entire card
             const crtVignette = document.createElement('div');
             crtVignette.className = 'crt-vignette';
             card.appendChild(crtVignette);
-            
+
             const glow = document.createElement('div');
             glow.className = 'tilt-glow';
             card.appendChild(glow);
-            
+
+            // #5 Glass refraction layer (SVG displacement on hover via CSS)
+            const refract = document.createElement('div');
+            refract.className = 'bento-refract';
+            card.appendChild(refract);
+
+            // #6 Specular highlight layer (cursor-tracking white glint)
+            const spec = document.createElement('div');
+            spec.className = 'spec-highlight';
+            card.appendChild(spec);
+
             // Per-card accent color (RGB triplet, defaults to cyan)
             const accent = card.dataset.accent || '139,233,253';
-            
+            const image = card.querySelector('.bento-image');
+            const content = card.querySelector('.bento-content');
+
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -10;
-                const rotateY = ((x - centerX) / centerX) * 10;
-                
+                const nx = (x - centerX) / centerX; // -1..1
+                const ny = (y - centerY) / centerY;
+
+                const rotateX = ny * -10;
+                const rotateY = nx * 10;
+
                 card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
-                
+
                 const glowX = (x / rect.width) * 100;
                 const glowY = (y / rect.height) * 100;
                 glow.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(${accent}, 0.22) 0%, rgba(${accent}, 0.05) 35%, transparent 70%)`;
-                
+
+                // #6 Specular cursor-tracking highlight (tight white spot)
+                spec.style.background = `radial-gradient(circle 80px at ${glowX}% ${glowY}%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 25%, transparent 55%)`;
+
                 // Tinted outer glow on the card itself
                 card.style.boxShadow = `
                     0 20px 50px rgba(0, 0, 0, 0.4),
@@ -1285,38 +1598,42 @@
                     inset 0 1px 0 rgba(255, 255, 255, 0.15),
                     inset 0 0 30px rgba(${accent}, 0.08)`;
                 card.style.borderColor = `rgba(${accent}, 0.55)`;
-                
-                // Float the image towards the mouse
-                const image = card.querySelector('.bento-image');
+
+                // #6 Parallax: image floats out, content drifts opposite (depth)
                 if (image) {
-                    const moveX = ((x - centerX) / centerX) * 8;
-                    const moveY = ((y - centerY) / centerY) * 8;
-                    image.style.transform = `translateX(${moveX}px) translateY(${moveY - 5}px) scale(1.08)`;
+                    const moveX = nx * 10;
+                    const moveY = ny * 10;
+                    image.style.transform = `translate3d(${moveX}px, ${moveY - 5}px, 40px) scale(1.08)`;
+                }
+                if (content) {
+                    content.style.transform = `translate3d(${nx * -4}px, ${ny * -3}px, 18px)`;
                 }
             });
-            
+
             card.addEventListener('mouseleave', () => {
                 card.style.transform = '';
                 card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 card.style.boxShadow = '';
                 card.style.borderColor = '';
                 glow.style.background = 'transparent';
-                
-                const image = card.querySelector('.bento-image');
+                spec.style.background = '';
+
                 if (image) {
                     image.style.transform = '';
                     image.style.transition = 'transform 0.5s ease-out';
                 }
-            });
-            
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'all 0.1s ease-out';
-                const image = card.querySelector('.bento-image');
-                if (image) {
-                    image.style.transition = 'transform 0.1s ease-out';
+                if (content) {
+                    content.style.transform = '';
+                    content.style.transition = 'transform 0.5s ease-out';
                 }
             });
-            
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.1s ease-out';
+                if (image) image.style.transition = 'transform 0.1s ease-out';
+                if (content) content.style.transition = 'transform 0.1s ease-out';
+            });
+
             // Trigger a packet burst from this card on click (uses background3d.js)
             card.addEventListener('click', () => {
                 if (typeof window.spawnCardPacketBurst === 'function') {
@@ -1344,6 +1661,90 @@
             card.style.setProperty('--reveal-delay', `${i * 0.08}s`);
             revealObserver.observe(card);
         });
+
+        // ---------- #11 Idle bento shuffle ----------
+        // After IDLE_MS of no interaction, swap two random cards with a
+        // glitch-slice transition. Repeats every SHUFFLE_INTERVAL while idle.
+        const grid = document.querySelector('.bento-grid');
+        if (grid && !prefersReducedMotion) {
+            const IDLE_MS = 30000;
+            const SHUFFLE_INTERVAL = 12000;
+            let idleTimer = null;
+            let shuffleTimer = null;
+            let isIdle = false;
+            let hoveringCard = false;
+
+            cards.forEach(c => {
+                c.addEventListener('mouseenter', () => { hoveringCard = true; });
+                c.addEventListener('mouseleave', () => { hoveringCard = false; });
+            });
+
+            function shuffleOnce() {
+                if (hoveringCard || document.hidden) return;
+                const items = Array.from(grid.querySelectorAll('.bento-item'));
+                if (items.length < 2) return;
+                const i = Math.floor(Math.random() * items.length);
+                let j = Math.floor(Math.random() * items.length);
+                while (j === i) j = Math.floor(Math.random() * items.length);
+                const a = items[i], b = items[j];
+
+                a.classList.add('shuffle-out');
+                b.classList.add('shuffle-out');
+
+                setTimeout(() => {
+                    // Swap DOM positions (use a placeholder to swap safely)
+                    const aNext = a.nextSibling;
+                    const bNext = b.nextSibling;
+                    const parent = a.parentNode;
+                    if (bNext === a) {
+                        parent.insertBefore(a, b);
+                    } else if (aNext === b) {
+                        parent.insertBefore(b, a);
+                    } else {
+                        parent.insertBefore(a, bNext);
+                        parent.insertBefore(b, aNext);
+                    }
+                    a.classList.remove('shuffle-out');
+                    b.classList.remove('shuffle-out');
+                    a.classList.add('shuffle-in');
+                    b.classList.add('shuffle-in');
+                    setTimeout(() => {
+                        a.classList.remove('shuffle-in');
+                        b.classList.remove('shuffle-in');
+                    }, 600);
+                }, 450);
+            }
+
+            function enterIdle() {
+                if (isIdle) return;
+                isIdle = true;
+                grid.classList.add('idle-pulse');
+                shuffleTimer = setInterval(shuffleOnce, SHUFFLE_INTERVAL);
+                // First shuffle shortly after entering idle
+                setTimeout(shuffleOnce, 800);
+            }
+
+            function exitIdle() {
+                if (!isIdle) return;
+                isIdle = false;
+                grid.classList.remove('idle-pulse');
+                if (shuffleTimer) { clearInterval(shuffleTimer); shuffleTimer = null; }
+            }
+
+            function resetIdle() {
+                exitIdle();
+                if (idleTimer) clearTimeout(idleTimer);
+                idleTimer = setTimeout(enterIdle, IDLE_MS);
+            }
+
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(ev => {
+                window.addEventListener(ev, resetIdle, { passive: true });
+            });
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) exitIdle(); else resetIdle();
+            });
+            resetIdle();
+        }
     })();
     </script>
     
