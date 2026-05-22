@@ -978,6 +978,15 @@
                 -webkit-backdrop-filter: blur(2px) saturate(140%) url(#bento-refract);
             }
         }
+        /* Mobile / touch devices: hover never fires, and the always-on
+           backdrop-filter on this layer can paint over card images on
+           iOS Safari (preserve-3d + backdrop-filter stacking bug).
+           Disable the layer entirely on hover-less devices. */
+        @media (hover: none), (max-width: 768px) {
+            .bento-refract {
+                display: none !important;
+            }
+        }
 
         /* ---------- #6 Parallax depth layers ----------
            The image, content, and a specular highlight move
