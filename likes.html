@@ -1257,6 +1257,243 @@
             }
         }
         
+        /* ===== MOBILE-EXCLUSIVE LAYOUT =====
+           The 3D cloud cramps mobile screens, so on mobile we:
+           - Allow normal page scrolling (kill the viewport-fit lock)
+           - Hide the 3D cloud entirely and force grid view
+           - Stack & simplify the spotlight controls into a clean column
+           - Render a scrollable, single-column-friendly bento grid */
+        @media (max-width: 768px) {
+            html, body {
+                height: auto;
+                min-height: 100vh;
+                overflow: auto;
+            }
+            body {
+                display: block;
+            }
+            .main-content {
+                display: block;
+                overflow: visible;
+                padding: 8px 10px 16px;
+            }
+            #likes {
+                display: block;
+                overflow: visible;
+                padding: 0 !important;
+            }
+            .bento-container {
+                display: block;
+                overflow: visible;
+                padding: 0 0.5rem;
+            }
+            
+            /* Hide hologram on small screens to save vertical space */
+            .hero {
+                padding: 0;
+            }
+            .hologram-container {
+                max-width: 110px;
+            }
+            .hologram-image {
+                max-width: 110px;
+            }
+            
+            /* Force-hide the 3D cloud on mobile — it's unusable at this size */
+            .icon-cloud-container,
+            .icon-cloud-container.hidden-view {
+                display: none !important;
+            }
+            
+            /* Hide the cloud toggle button on mobile */
+            .view-toggle[data-view="cloud"] {
+                display: none !important;
+            }
+            
+            /* Header */
+            .bento-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
+                margin: 0.25rem 0 0.5rem;
+            }
+            .bento-title {
+                font-size: 1.1rem;
+            }
+            
+            /* Spotlight: stack everything in a tidy column */
+            .spotlight-section {
+                margin-bottom: 0.5rem;
+            }
+            .spotlight-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.6rem 0.7rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                border-radius: 14px;
+            }
+            
+            /* Spotlight item: horizontal row, full width */
+            .spotlight-main {
+                width: 100%;
+                max-width: 100%;
+                min-height: 56px;
+                order: 1;
+            }
+            .spotlight-item {
+                flex-direction: row;
+                text-align: left;
+                gap: 0.6rem;
+                padding: 0.25rem 0;
+                white-space: normal;
+            }
+            .spotlight-image {
+                width: 48px;
+                height: 48px;
+                padding: 0.35rem;
+                border-radius: 10px;
+            }
+            .spotlight-info {
+                flex: 1 1 auto;
+                min-width: 0;
+                max-width: none;
+            }
+            .spotlight-category {
+                font-size: 0.5rem;
+                margin-bottom: 0.15rem;
+            }
+            .spotlight-title {
+                font-size: 0.95rem;
+                margin-bottom: 0.1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .spotlight-desc {
+                font-size: 0.65rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            /* Filters: horizontal scroll strip */
+            .spotlight-filters {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                width: 100%;
+                gap: 0.35rem;
+                order: 2;
+                padding-bottom: 2px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            .spotlight-filters::-webkit-scrollbar { display: none; }
+            .spotlight-filters .filter-pill {
+                flex: 0 0 auto;
+                padding: 0.35rem 0.7rem;
+                font-size: 0.65rem;
+                text-align: center;
+                justify-content: center;
+                border-radius: 16px;
+            }
+            
+            /* Actions: search full width, buttons side-by-side */
+            .spotlight-actions {
+                flex-direction: row;
+                flex-wrap: wrap;
+                width: 100%;
+                gap: 0.4rem;
+                order: 3;
+            }
+            .spotlight-search {
+                flex: 1 1 100%;
+                min-width: 0;
+                padding: 0.45rem 0.7rem;
+            }
+            .spotlight-search input {
+                font-size: 0.8rem;
+            }
+            .spotlight-action-btn {
+                flex: 1 1 0;
+                justify-content: center;
+                padding: 0.45rem 0.6rem;
+                font-size: 0.7rem;
+            }
+            
+            /* Bento grid: 2 columns, taller cards, native scroll */
+            .bento-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 120px;
+                gap: 0.6rem;
+                overflow: visible;
+                flex: none;
+                padding-bottom: 0.5rem;
+            }
+            .bento-grid.hidden-view {
+                /* keep grid visible on mobile even if JS hasn't toggled it yet */
+                display: grid !important;
+            }
+            /* Force every bento item to a uniform 1x1 footprint on mobile so
+               desktop spans don't make some items huge */
+            .bento-item {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+                animation: none;
+            }
+            .bento-image {
+                padding: 0.5rem;
+            }
+            .bento-image img {
+                max-width: 55%;
+                max-height: 55%;
+            }
+            .bento-content {
+                padding: 0.4rem 0.5rem;
+            }
+            .bento-content h3 {
+                font-size: 0.72rem;
+            }
+            .bento-content p {
+                display: none;
+            }
+            .bento-category {
+                font-size: 0.4rem;
+                top: 0.3rem;
+                right: 0.3rem;
+            }
+            
+            /* Show-more button always visible on mobile (no cloud toggle) */
+            .show-more-container {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .show-more-btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Compact footer */
+            footer {
+                padding: 0.3rem 0 !important;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: 110px;
+            }
+            .spotlight-action-btn {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.5rem;
+            }
+        }
+        
         /* Hologram Hero Image Effects */
         .hologram-container {
             position: relative;
@@ -3148,6 +3385,7 @@
             // ===== VIEW TOGGLE =====
             const viewToggleBtns = document.querySelectorAll('.view-toggle');
             const iconCloudContainer = document.getElementById('iconCloudContainer');
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
             
             viewToggleBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -3171,8 +3409,14 @@
                 });
             });
             
-            // Hide show more container initially (cloud view is default)
-            document.querySelector('.show-more-container').style.display = 'none';
+            // On mobile, force grid view as default — the 3D cloud doesn't fit
+            if (isMobile) {
+                const gridBtn = document.querySelector('.view-toggle[data-view="grid"]');
+                if (gridBtn) gridBtn.click();
+            } else {
+                // Hide show more container initially (cloud view is default on desktop)
+                document.querySelector('.show-more-container').style.display = 'none';
+            }
         });
     </script>
     
