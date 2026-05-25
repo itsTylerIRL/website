@@ -2,6 +2,7 @@
   "name": "Tyler (in real life)",
   "short_name": "TylerIRL",
   "description": "Remilio Enjoyer",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
