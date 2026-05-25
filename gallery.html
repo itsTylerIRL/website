@@ -76,12 +76,10 @@
             flex-direction: column;
             gap: 1rem;
             padding: 1.25rem 0.85rem;
-            background-color: rgba(8, 14, 18, 0.55);
+            background-color: transparent;
             border: none;
             border-radius: 0;
             z-index: 100;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
             /* Cyan corner brackets to match site theme */
             background-image:
                 linear-gradient(rgba(139,233,253,0.9), rgba(139,233,253,0.9)),
@@ -103,6 +101,25 @@
                 20px 2px, 2px 20px,
                 20px 2px, 2px 20px,
                 20px 2px, 2px 20px;
+            transition: background-size 0.15s ease-out, filter 0.15s ease-out;
+        }
+
+        /* Active/held press effect for all bracket containers (matches main page) */
+        .pfp-filter-sidebar.brackets-active {
+            background-size:
+                32px 2px, 2px 32px,
+                32px 2px, 2px 32px,
+                32px 2px, 2px 32px,
+                32px 2px, 2px 32px;
+            filter: drop-shadow(0 0 8px rgba(139, 233, 253, 0.8));
+        }
+        .pfp-popup-content.brackets-active {
+            background-size:
+                48px 2px, 2px 48px,
+                48px 2px, 2px 48px,
+                48px 2px, 2px 48px,
+                48px 2px, 2px 48px;
+            filter: drop-shadow(0 0 8px rgba(139, 233, 253, 0.8));
         }
         
         .pfp-filter-sidebar .filter-btn {
@@ -264,27 +281,91 @@
             50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
         }
 
+        /* ===== Idle ambient animations (match index bento aesthetic) ===== */
+        @keyframes pfpIdleFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-3px); }
+        }
+        @keyframes pfpIdleGlow {
+            0%, 100% {
+                border-color: #232323;
+                box-shadow: 0 0 0 rgba(139, 233, 253, 0);
+            }
+            50% {
+                border-color: rgba(139, 233, 253, 0.35);
+                box-shadow: 0 0 14px rgba(139, 233, 253, 0.12);
+            }
+        }
+        @keyframes pfpCrtFlicker {
+            0%, 100% { opacity: 0.18; }
+            50%      { opacity: 0.14; }
+            92%      { opacity: 0.18; }
+            93%      { opacity: 0.08; }
+            94%      { opacity: 0.20; }
+        }
+
+        .pfp-card {
+            animation:
+                pfpIdleFloat 6s ease-in-out infinite,
+                pfpIdleGlow  7s ease-in-out infinite;
+            will-change: transform;
+        }
+        /* Stagger so the grid breathes asynchronously */
+        .pfp-card:nth-child(5n+1) { animation-delay: 0s,     0s; }
+        .pfp-card:nth-child(5n+2) { animation-delay: -1.2s, -0.8s; }
+        .pfp-card:nth-child(5n+3) { animation-delay: -2.4s, -1.6s; }
+        .pfp-card:nth-child(5n+4) { animation-delay: -3.6s, -2.4s; }
+        .pfp-card:nth-child(5n+5) { animation-delay: -4.8s, -3.2s; }
+
+        /* Hover overrides the idle motion so it doesn't fight the user */
+        .pfp-card:hover { animation-play-state: paused; }
+
+        /* CRT scanline overlay (purely decorative, injected via ::after) */
+        .pfp-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.18) 2px,
+                rgba(0, 0, 0, 0.18) 4px
+            );
+            mix-blend-mode: multiply;
+            border-radius: 8px;
+            opacity: 0.18;
+            z-index: 2;
+            animation: pfpCrtFlicker 4s ease-in-out infinite;
+        }
+        .pfp-card:hover::after { opacity: 0.08; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pfp-card,
+            .pfp-card::after { animation: none !important; }
+        }
+
         /* PFP Popup - cyan corner brackets theme override */
         .pfp-popup {
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(10px) saturate(140%);
-            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            background: rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(6px) saturate(130%);
+            -webkit-backdrop-filter: blur(6px) saturate(130%);
         }
 
         .pfp-popup-content {
-            background-color: rgba(10, 14, 18, 0.45);
-            backdrop-filter: blur(22px) saturate(160%);
-            -webkit-backdrop-filter: blur(22px) saturate(160%);
-            border: 1px solid rgba(139, 233, 253, 0.18) !important;
+            background-color: rgba(10, 16, 22, 0.28);
+            backdrop-filter: blur(28px) saturate(180%) brightness(0.85);
+            -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.85);
+            border: none !important;
             border-radius: 0 !important;
             padding: 1.25rem 1.25rem 1.1rem;
             max-width: none;
             width: auto;
             overflow: visible !important;
             box-shadow:
-                0 10px 40px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                inset 0 0 30px rgba(139, 233, 253, 0.04);
+                0 10px 40px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(139, 233, 253, 0.08);
             background-image:
                 linear-gradient(#8be9fd, #8be9fd),
                 linear-gradient(#8be9fd, #8be9fd),
@@ -293,29 +374,32 @@
                 linear-gradient(#8be9fd, #8be9fd),
                 linear-gradient(#8be9fd, #8be9fd),
                 linear-gradient(#8be9fd, #8be9fd),
-                linear-gradient(#8be9fd, #8be9fd),
-                linear-gradient(135deg, rgba(139, 233, 253, 0.06) 0%, rgba(10, 14, 18, 0) 45%, rgba(10, 14, 18, 0) 55%, rgba(139, 233, 253, 0.04) 100%);
+                linear-gradient(#8be9fd, #8be9fd);
             background-repeat: no-repeat;
             background-position:
                 top left, top left,
                 top right, top right,
                 bottom left, bottom left,
-                bottom right, bottom right,
-                center;
+                bottom right, bottom right;
             background-size:
                 32px 2px, 2px 32px,
                 32px 2px, 2px 32px,
                 32px 2px, 2px 32px,
-                32px 2px, 2px 32px,
-                100% 100%;
+                32px 2px, 2px 32px;
+            transition: background-size 0.15s ease-out, filter 0.15s ease-out;
+        }
+
+        /* Suppress the injected popup scanline (sits as a static top line) */
+        .pfp-popup-content > .scanline-popup {
+            display: none !important;
         }
 
         .pfp-popup img,
         .pfp-popup video {
             border-radius: 0 !important;
             margin-bottom: 0.85rem;
-            border: 1px solid rgba(139, 233, 253, 0.22);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: none !important;
+            box-shadow: none !important;
         }
 
         /* Zoomable media wrap */
@@ -325,8 +409,8 @@
             max-width: 70vw;
             max-height: 60vh;
             margin: 0 auto 0.85rem;
-            border: 1px solid rgba(139, 233, 253, 0.22);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: none;
+            box-shadow: none;
             cursor: zoom-in;
             display: inline-block;
             line-height: 0;
@@ -780,6 +864,19 @@
             if (!popup.classList.contains('active')) reset();
         });
         observer.observe(popup, { attributes: true, attributeFilter: ['class'] });
+    })();
+
+    // Sync bracket "press" effect on sidebar + popup with main corner brackets
+    (function() {
+        const targets = () => document.querySelectorAll('.pfp-filter-sidebar, .pfp-popup-content');
+        const on = () => targets().forEach(el => el.classList.add('brackets-active'));
+        const off = () => targets().forEach(el => el.classList.remove('brackets-active'));
+        document.addEventListener('mousedown', on);
+        document.addEventListener('mouseup', off);
+        document.addEventListener('mouseleave', off);
+        document.addEventListener('touchstart', on, { passive: true });
+        document.addEventListener('touchend', off, { passive: true });
+        document.addEventListener('touchcancel', off, { passive: true });
     })();
     </script>
 </body>
