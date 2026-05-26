@@ -81,6 +81,13 @@ function initBackground3D() {
 
     // Create particle systems
     createParticles();
+    // Apply persisted particle count from previous session (if any)
+    try {
+        const saved = parseInt(localStorage.getItem('particleCount'), 10);
+        if (!isNaN(saved) && saved >= 100 && saved <= 20000 && saved !== currentParticleCount) {
+            setParticleCount(saved);
+        }
+    } catch (e) { /* localStorage unavailable */ }
     createConnectionLines();
     createVolumetricLightSource();
     createNebulaBackdrop();
@@ -1777,7 +1784,10 @@ let currentParticleCount = 1500;
 
 function setParticleCount(count) {
     currentParticleCount = count;
-    
+
+    // Persist across pages / refreshes
+    try { localStorage.setItem('particleCount', String(count)); } catch (e) { /* ignore */ }
+
     // Remove old particles
     if (particles) {
         scene.remove(particles);
@@ -1861,6 +1871,28 @@ function createParticlesWithCount(count) {
 // Expose to window for slider control
 window.setParticleCount = setParticleCount;
 window.getParticleCount = () => currentParticleCount;
+
+// Sync any particle-count slider on the page to the persisted value, so the
+// thumb position reflects the saved setting across pages / refreshes.
+(function syncParticleSliders() {
+    function apply() {
+        let saved;
+        try { saved = parseInt(localStorage.getItem('particleCount'), 10); } catch (e) { return; }
+        if (isNaN(saved)) return;
+        const sliders = document.querySelectorAll('#particleSlider, #particle-slider');
+        sliders.forEach(s => {
+            s.value = saved;
+            // Update any sibling label that mirrors the value
+            const label = document.getElementById('particleCount') || document.getElementById('particle-count');
+            if (label) label.textContent = saved;
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', apply, { once: true });
+    } else {
+        apply();
+    }
+})();
 
 // ============== EFFECT CONTROLS ==============
 
