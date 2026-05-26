@@ -1,5 +1,5 @@
 // Service Worker for Tyler IRL PWA
-const CACHE_NAME = 'tylerirl-v2';
+const CACHE_NAME = 'tylerirl-v3';
 const urlsToCache = [
   '/',
   '/index.html',
