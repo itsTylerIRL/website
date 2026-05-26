@@ -8,6 +8,7 @@ let scrollY = 0;
 let scanlineY = 0;
 let particlePositions, particleColors, originalColors;
 let particleVelocities = []; // Velocity for each particle
+let currentParticleCount = 1500; // Hoisted: referenced by createParticles() and init before its later definition site
 
 // Exclusion zones - circles defined in screen space {x, y, radius}
 let exclusionZones = [];
@@ -79,15 +80,18 @@ function initBackground3D() {
     renderer.domElement.style.pointerEvents = 'none';
     document.body.prepend(renderer.domElement);
 
-    // Create particle systems
-    createParticles();
-    // Apply persisted particle count from previous session (if any)
+    // Apply persisted particle count BEFORE creating particles so the initial
+    // creation already uses the user's saved preference (avoids any race with
+    // downstream systems that bind to particle geometry).
     try {
         const saved = parseInt(localStorage.getItem('particleCount'), 10);
-        if (!isNaN(saved) && saved >= 100 && saved <= 20000 && saved !== currentParticleCount) {
-            setParticleCount(saved);
+        if (!isNaN(saved) && saved >= 100 && saved <= 20000) {
+            currentParticleCount = saved;
         }
     } catch (e) { /* localStorage unavailable */ }
+
+    // Create particle systems
+    createParticles();
     createConnectionLines();
     createVolumetricLightSource();
     createNebulaBackdrop();
@@ -249,7 +253,7 @@ function createParticles() {
         new THREE.Color(0xf8f8f2), // White - rare accent
     ];
 
-    for (let i = 0; i < 1500; i++) {
+    for (let i = 0; i < currentParticleCount; i++) {
         // Flat plane distribution covering entire scrollable page
         const x = (Math.random() - 0.5) * 200;
         const y = (Math.random() - 0.5) * 800; // Very tall to cover full scroll
@@ -1780,7 +1784,6 @@ function isMobile() {
 }
 
 // Particle count control
-let currentParticleCount = 1500;
 
 function setParticleCount(count) {
     currentParticleCount = count;
