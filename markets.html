@@ -33,8 +33,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="styles.css?v=1.1">
-    <link rel="stylesheet" href="radgotchi.css">
+    <link rel="stylesheet" href="css/styles.css?v=1.5">
+    <link rel="stylesheet" href="css/radgotchi.css">
     
     <!-- Three.js for 3D background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -46,441 +46,7 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <style>
-        /* Compact Bento Grid Styles for Markets */
-        .bento-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        .bento-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .bento-title {
-            font-size: 1.2rem;
-            color: #8be9fd;
-            text-transform: lowercase;
-            letter-spacing: 0.1em;
-            position: relative;
-        }
-        
-        .bento-title::after {
-            content: '_';
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        /* Bento Grid - 3 columns */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: auto;
-            gap: 0.75rem;
-            position: relative;
-        }
-        
-        /* Scanline overlay */
-        .bento-grid::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.1) 2px,
-                rgba(0, 0, 0, 0.1) 4px
-            );
-            pointer-events: none;
-            z-index: 10;
-            opacity: 0.5;
-        }
-        
-        /* Market Bento Items - Dark Glass Style (compact) */
-        .market-bento {
-            background: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(139, 233, 253, 0.1);
-            border-top-color: rgba(255, 255, 255, 0.05);
-            border-left-color: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-            padding: 0.85rem;
-            box-shadow: 
-                0 6px 24px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.02);
-        }
-        
-        /* Top reflection/shine - subtle */
-        .market-bento::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-            background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.02) 0%, 
-                transparent 100%);
-            pointer-events: none;
-            z-index: 1;
-            transition: opacity 0.3s;
-        }
-        
-        /* Moving reflection effect */
-        .market-bento::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 60%;
-            height: 200%;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(139, 233, 253, 0.02) 45%,
-                rgba(139, 233, 253, 0.05) 50%,
-                rgba(139, 233, 253, 0.02) 55%,
-                transparent 100%
-            );
-            transform: rotate(25deg);
-            transition: all 0.6s ease;
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        .market-bento:hover::after {
-            left: 150%;
-            top: -50%;
-        }
-        
-        .market-bento:hover {
-            background: rgba(0, 0, 0, 0.18);
-            border-color: rgba(139, 233, 253, 0.25);
-            border-top-color: rgba(139, 233, 253, 0.3);
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(139, 233, 253, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.03);
-        }
-        
-        .market-bento:hover::before {
-            opacity: 0.8;
-        }
-        
-
-        
-        /* Market Header */
-        .market-header {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            margin-bottom: 0.6rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .market-logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            object-fit: cover;
-            filter: grayscale(30%) brightness(0.9);
-            transition: all 0.4s ease;
-        }
-        
-        .market-bento:hover .market-logo {
-            filter: grayscale(0%) brightness(1.1);
-            transform: scale(1.05);
-        }
-        
-        .market-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            text-transform: lowercase;
-            margin: 0;
-            line-height: 1.2;
-        }
-        
-        /* Glitch effect on hover */
-        .market-bento:hover .market-name {
-            animation: glitch 0.3s ease;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        
-        /* Stats Grid */
-        .market-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .market-stat {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            padding: 0.5rem;
-            border-radius: 6px;
-            border: 1px solid rgba(139, 233, 253, 0.08);
-            transition: all 0.3s;
-        }
-        
-        .market-bento:hover .market-stat {
-            border-color: rgba(139, 233, 253, 0.2);
-            background: rgba(139, 233, 253, 0.05);
-        }
-        
-        .market-stat-label {
-            font-size: 0.55rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.15rem;
-        }
-        
-        .market-stat-value {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #8be9fd;
-        }
-        
-        /* Description */
-        .market-desc {
-            font-size: 0.7rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-            flex-grow: 1;
-            position: relative;
-            z-index: 2;
-            line-height: 1.4;
-        }
-        
-        .market-bento:hover .market-desc {
-            color: #999;
-        }
-        
-        /* Links */
-        .market-links {
-            display: flex;
-            gap: 0.4rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .market-link {
-            flex: 1;
-            padding: 0.4rem 0.6rem;
-            background: transparent;
-            border: 1px solid #333;
-            border-radius: 6px;
-            color: #666;
-            text-decoration: none;
-            font-size: 0.65rem;
-            text-transform: lowercase;
-            letter-spacing: 0.03em;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .market-link:hover {
-            border-color: #8be9fd;
-            color: #8be9fd;
-            background: rgba(139, 233, 253, 0.1);
-            box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
-        }
-        
-        /* Chart container - Glass Style */
-        .chart-container {
-            background: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(139, 233, 253, 0.1);
-            border-radius: 16px;
-            padding: 1rem;
-            margin-top: 1rem;
-            transition: all 0.4s ease;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.02);
-        }
-        
-        .chart-container:hover {
-            border-color: rgba(139, 233, 253, 0.25);
-            background: rgba(0, 0, 0, 0.18);
-        }
-        
-        .chart-title {
-            font-size: 0.8rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .chart-title::before {
-            content: '📈';
-        }
-        
-        /* Responsive */
-        @media (max-width: 900px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .bento-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Hologram Hero Image Effects */
-        .hologram-container {
-            position: relative;
-            display: inline-block;
-            max-width: 200px;
-            overflow: visible;
-            -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
-            mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
-        }
-        .hologram-image {
-            max-width: 200px;
-            height: auto;
-            filter: contrast(1.1) saturate(1.2);
-            animation: hologramPhase 4s ease-in-out infinite, hologramGlitch 8s step-end infinite;
-            image-rendering: pixelated;
-        }
-        .hologram-container::before, .hologram-container::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: inherit;
-            pointer-events: none;
-        }
-        .hologram-container::before {
-            background: url('assets/remilio2.png') center/contain no-repeat;
-            mix-blend-mode: screen;
-            opacity: 0.4;
-            filter: hue-rotate(-30deg) saturate(1.5);
-            animation: chromaShiftRed 3s ease-in-out infinite;
-        }
-        .hologram-container::after {
-            background: url('assets/remilio2.png') center/contain no-repeat;
-            mix-blend-mode: screen;
-            opacity: 0.4;
-            filter: hue-rotate(30deg) saturate(1.5);
-            animation: chromaShiftBlue 3s ease-in-out infinite reverse;
-        }
-        .hologram-scanlines {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
-            pointer-events: none;
-            z-index: 10;
-            animation: scanlineMove 0.1s linear infinite;
-        }
-        .hologram-flicker {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(139, 233, 253, 0.03);
-            pointer-events: none;
-            z-index: 11;
-            animation: hologramFlicker 0.15s infinite;
-            mix-blend-mode: overlay;
-        }
-        .hologram-noise {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: 12;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.15;
-            mix-blend-mode: overlay;
-            animation: noiseShift 0.5s steps(10) infinite;
-        }
-        @keyframes hologramPhase {
-            0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); filter: contrast(1.1) saturate(1.2) brightness(1); }
-            25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); filter: contrast(1.2) saturate(1.4) brightness(1.1); }
-            50% { opacity: 0.9; transform: scale(0.99) translateY(1px); filter: contrast(1.15) saturate(1.3) brightness(0.95); }
-            75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); filter: contrast(1.25) saturate(1.5) brightness(1.15); }
-        }
-        @keyframes hologramGlitch {
-            0%, 95%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-            96% { clip-path: inset(20% 0 30% 0); transform: translate(-3px, 0); }
-            97% { clip-path: inset(50% 0 10% 0); transform: translate(3px, 0); }
-            98% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
-            99% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
-        }
-        @keyframes chromaShiftRed { 0%, 100% { transform: translate(-1px, 0); } 50% { transform: translate(-2px, 1px); } }
-        @keyframes chromaShiftBlue { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(2px, -1px); } }
-        @keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
-        @keyframes hologramFlicker {
-            0%, 100% { opacity: 0.03; } 10% { opacity: 0.08; } 20% { opacity: 0.02; } 30% { opacity: 0.1; }
-            40% { opacity: 0.04; } 50% { opacity: 0.15; } 60% { opacity: 0.05; } 70% { opacity: 0.12; }
-            80% { opacity: 0.03; } 90% { opacity: 0.08; }
-        }
-        @keyframes noiseShift {
-            0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -5%); } 20% { transform: translate(5%, 5%); }
-            30% { transform: translate(-5%, 5%); } 40% { transform: translate(5%, -5%); } 50% { transform: translate(-2%, 2%); }
-            60% { transform: translate(2%, -2%); } 70% { transform: translate(-3%, -3%); } 80% { transform: translate(3%, 3%); }
-            90% { transform: translate(-1%, 1%); } 100% { transform: translate(0, 0); }
-        }
-        .hologram-container:hover .hologram-image { animation: hologramPhaseIntense 2s ease-in-out infinite, hologramGlitchIntense 3s step-end infinite; filter: contrast(1.3) saturate(1.6) brightness(1.2); }
-        .hologram-container:hover .hologram-noise { opacity: 0.25; }
-        .hologram-container:hover .hologram-flicker { animation: hologramFlickerIntense 0.08s infinite; }
-        @keyframes hologramPhaseIntense {
-            0%, 100% { opacity: 1; transform: scale(1); } 25% { opacity: 0.7; transform: scale(1.02) translateX(-2px); }
-            50% { opacity: 0.9; transform: scale(0.98) translateX(2px); } 75% { opacity: 0.8; transform: scale(1.01) translateY(-2px); }
-        }
-        @keyframes hologramGlitchIntense {
-            0%, 90%, 100% { clip-path: inset(0 0 0 0); }
-            91% { clip-path: inset(30% 0 20% 0); transform: translate(-4px, 0); } 92% { clip-path: inset(10% 0 50% 0); transform: translate(4px, 0); }
-            93% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 0); } 94% { clip-path: inset(20% 0 40% 0); transform: translate(3px, 0); }
-            95% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); } 96% { clip-path: inset(15% 0 55% 0); transform: translate(2px, 0); }
-            97% { clip-path: inset(50% 0 20% 0); transform: translate(-3px, 0); } 98% { clip-path: inset(25% 0 45% 0); transform: translate(3px, 0); }
-            99% { clip-path: inset(35% 0 35% 0); transform: translate(-1px, 0); }
-        }
-        @keyframes hologramFlickerIntense {
-            0%, 100% { opacity: 0.1; background: rgba(139, 233, 253, 0.05); } 25% { opacity: 0.2; background: rgba(255, 100, 100, 0.05); }
-            50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
-        }
-    </style>
+    <link rel="stylesheet" href="css/markets.css?v=1.2">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -505,6 +71,14 @@
         <div class="bento-container">
             <div class="bento-header">
                 <h2 class="bento-title">neochibi markets</h2>
+                <div class="bento-header-right">
+                    <div class="market-range-toggle" id="market-range-toggle">
+                        <button class="range-btn active" data-range="one_day">24h</button>
+                        <button class="range-btn" data-range="seven_day">1w</button>
+                        <button class="range-btn" data-range="thirty_day">1m</button>
+                    </div>
+                    <span class="markets-updated" id="markets-updated">syncing feed...</span>
+                </div>
             </div>
             
             <div class="bento-grid">
@@ -516,14 +90,23 @@
                     </div>
                     <div class="market-stats">
                         <div class="market-stat">
-                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-label">floor <span class="market-change" id="milady-change"></span></div>
                             <div class="market-stat-value" id="milady-floor">Loading...</div>
                         </div>
                         <div class="market-stat">
-                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
                             <div class="market-stat-value" id="milady-volume">Loading...</div>
                         </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">owners</div>
+                            <div class="market-stat-value" id="milady-owners">Loading...</div>
+                        </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
+                            <div class="market-stat-value" id="milady-avg">Loading...</div>
+                        </div>
                     </div>
+                    <div class="market-spark" id="milady-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
                     <div class="market-desc">
                         10,000 generative pfps. neochibi street style.
                     </div>
@@ -541,14 +124,23 @@
                     </div>
                     <div class="market-stats">
                         <div class="market-stat">
-                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-label">floor <span class="market-change" id="remilio-change"></span></div>
                             <div class="market-stat-value" id="remilio-floor">Loading...</div>
                         </div>
                         <div class="market-stat">
-                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
                             <div class="market-stat-value" id="remilio-volume">Loading...</div>
                         </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">owners</div>
+                            <div class="market-stat-value" id="remilio-owners">Loading...</div>
+                        </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
+                            <div class="market-stat-value" id="remilio-avg">Loading...</div>
+                        </div>
                     </div>
+                    <div class="market-spark" id="remilio-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
                     <div class="market-desc">
                         10,000 male milady variants. underground culture.
                     </div>
@@ -566,14 +158,23 @@
                     </div>
                     <div class="market-stats">
                         <div class="market-stat">
-                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-label">floor <span class="market-change" id="schizo-change"></span></div>
                             <div class="market-stat-value" id="schizo-floor">Loading...</div>
                         </div>
                         <div class="market-stat">
-                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
                             <div class="market-stat-value" id="schizo-volume">Loading...</div>
                         </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">owners</div>
+                            <div class="market-stat-value" id="schizo-owners">Loading...</div>
+                        </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
+                            <div class="market-stat-value" id="schizo-avg">Loading...</div>
+                        </div>
                     </div>
+                    <div class="market-spark" id="schizo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
                     <div class="market-desc">
                         I HATE THE ANTICHRIST.
                     </div>
@@ -591,14 +192,23 @@
                     </div>
                     <div class="market-stats">
                         <div class="market-stat">
-                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-label">floor <span class="market-change" id="radbro-change"></span></div>
                             <div class="market-stat-value" id="radbro-floor">Loading...</div>
                         </div>
                         <div class="market-stat">
-                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
                             <div class="market-stat-value" id="radbro-volume">Loading...</div>
                         </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">owners</div>
+                            <div class="market-stat-value" id="radbro-owners">Loading...</div>
+                        </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
+                            <div class="market-stat-value" id="radbro-avg">Loading...</div>
+                        </div>
                     </div>
+                    <div class="market-spark" id="radbro-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
                     <div class="market-desc">
                         Check the Chain.
                     </div>
@@ -616,14 +226,23 @@
                     </div>
                     <div class="market-stats">
                         <div class="market-stat">
-                            <div class="market-stat-label">floor</div>
+                            <div class="market-stat-label">floor <span class="market-change" id="fumo-change"></span></div>
                             <div class="market-stat-value" id="fumo-floor">Loading...</div>
                         </div>
                         <div class="market-stat">
-                            <div class="market-stat-label">volume</div>
+                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
                             <div class="market-stat-value" id="fumo-volume">Loading...</div>
                         </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label">owners</div>
+                            <div class="market-stat-value" id="fumo-owners">Loading...</div>
+                        </div>
+                        <div class="market-stat">
+                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
+                            <div class="market-stat-value" id="fumo-avg">Loading...</div>
+                        </div>
                     </div>
+                    <div class="market-spark" id="fumo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
                     <div class="market-desc">
                         Hardforked 404 collection.
                     </div>
@@ -671,79 +290,21 @@
                 <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
                     style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
             </div>
-            <style>
-                #particleSlider::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    width: 12px;
-                    height: 12px;
-                    background: #8be9fd;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
-                    transition: all 0.2s ease;
-                }
-                #particleSlider::-webkit-slider-thumb:hover {
-                    transform: scale(1.2);
-                    box-shadow: 0 0 15px rgba(139, 233, 253, 0.8);
-                }
-                #particleSlider::-moz-range-thumb {
-                    width: 12px;
-                    height: 12px;
-                    background: #8be9fd;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    border: none;
-                    box-shadow: 0 0 10px rgba(139, 233, 253, 0.5);
-                }
-            </style>
-            <script>
-                document.getElementById('particleSlider').addEventListener('input', function(e) {
-                    const count = parseInt(e.target.value);
-                    if (window.setParticleCount) {
-                        window.setParticleCount(count);
-                    }
-                });
-            </script>
             
             <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
         </div>
     </footer>
 
     <!-- External JavaScript -->
-    <script src="background3d.js?v=1.0"></script>
-    <script src="script.js?v=1.1"></script>
-    <script src="performance.js?v=1.1"></script>
-    <script src="interactions.js?v=1.1"></script>
-    <script src="effects.js?v=1.1"></script>
-    <script src="sounds.js?v=1.0"></script>
-    <script src="radgotchi.js"></script>
+    <script src="js/background3d.js?v=1.4"></script>
+    <script src="js/script.js?v=1.6"></script>
+    <script src="js/performance.js?v=1.1"></script>
+    <script src="js/interactions.js?v=1.1"></script>
+    <script src="js/effects.js?v=1.3"></script>
+    <script src="js/sounds.js?v=1.0"></script>
+    <script src="js/radgotchi.js"></script>
     
     <!-- Parallax tilt effect -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const bentoItems = document.querySelectorAll('.market-bento');
-            
-            bentoItems.forEach(item => {
-                item.addEventListener('mousemove', function(e) {
-                    const rect = this.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    const rotateX = (y - centerY) / 20;
-                    const rotateY = (centerX - x) / 20;
-                    
-                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.02)`;
-                });
-                
-                item.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                });
-            });
-        });
-    </script>
+    <script src="js/markets.js?v=1.0"></script>
 </body>
 </html>

@@ -1,0 +1,265 @@
+/* Page styles for 404.html (extracted from inline <style>) */
+html, body {
+    background: #000;
+    color: #eaeaea;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* Corner brackets that converge inward, "consuming" the viewport */
+.corner-brackets {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+.corner-brackets::before,
+.corner-brackets::after,
+.corner-brackets .bottom::before,
+.corner-brackets .bottom::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: rgba(139, 233, 253, 0.65);
+    border-style: solid;
+    border-width: 0;
+    transition: top 1.6s cubic-bezier(0.65, 0, 0.35, 1),
+                bottom 1.6s cubic-bezier(0.65, 0, 0.35, 1),
+                left 1.6s cubic-bezier(0.65, 0, 0.35, 1),
+                right 1.6s cubic-bezier(0.65, 0, 0.35, 1),
+                border-color 0.6s ease;
+}
+.corner-brackets::before { top: 15px; left: 15px; border-top-width: 2px; border-left-width: 2px; }
+.corner-brackets::after { top: 15px; right: 15px; border-top-width: 2px; border-right-width: 2px; }
+.corner-brackets .bottom::before { bottom: 15px; left: 15px; border-bottom-width: 2px; border-left-width: 2px; }
+.corner-brackets .bottom::after { bottom: 15px; right: 15px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Collapsed state — drives brackets toward center */
+body.collapsed .corner-brackets::before { top: 50vh; left: 50vw; }
+body.collapsed .corner-brackets::after { top: 50vh; right: 50vw; }
+body.collapsed .corner-brackets .bottom::before { bottom: 50vh; left: 50vw; }
+body.collapsed .corner-brackets .bottom::after { bottom: 50vh; right: 50vw; }
+
+/* After collapse completes, fade brackets out so they don't form a "+" */
+body.revealed .corner-brackets::before,
+body.revealed .corner-brackets::after,
+body.revealed .corner-brackets .bottom::before,
+body.revealed .corner-brackets .bottom::after {
+    border-color: transparent;
+    transition: border-color 0.6s ease;
+}
+
+body.collapsed::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(139, 233, 253, 0.25) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 9998;
+    animation: collapsePulse 1.6s ease-in-out;
+}
+@keyframes collapsePulse {
+    0% { opacity: 0; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Main panel */
+.panel-404 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.6s ease 1.6s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 1.6s;
+    padding: 2rem 1.5rem;
+    max-width: min(92vw, 600px);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 16px;
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.55),
+        0 0 40px rgba(139, 233, 253, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+body.revealed .panel-404 {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.code-404 {
+    font-size: clamp(4rem, 18vw, 9rem);
+    font-weight: bold;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(180deg, #8be9fd, #22d0f7 55%, #bd93f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+        0 0 30px rgba(139, 233, 253, 0.4),
+        0 0 60px rgba(189, 147, 249, 0.25);
+    position: relative;
+    display: inline-block;
+    animation: glitch404 4s steps(1) infinite;
+    letter-spacing: 0.02em;
+}
+.code-404::before,
+.code-404::after {
+    content: '404';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    pointer-events: none;
+    opacity: 0.8;
+}
+.code-404::before {
+    animation: chromaR 3.2s infinite;
+    text-shadow: -2px 0 #ff79c6;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+.code-404::after {
+    animation: chromaB 3.2s infinite reverse;
+    text-shadow: 2px 0 #8be9fd;
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+}
+@keyframes glitch404 {
+    0%, 88%, 100% { transform: translate(0, 0); }
+    89% { transform: translate(-3px, 1px); }
+    90% { transform: translate(3px, -2px); }
+    91% { transform: translate(-2px, 2px); }
+    92% { transform: translate(0, 0); }
+}
+@keyframes chromaR {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-3px, 1px); }
+}
+@keyframes chromaB {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(3px, -1px); }
+}
+
+.signal-lost {
+    font-size: 0.85rem;
+    color: #8be9fd;
+    letter-spacing: 0.4em;
+    margin: 1rem 0 0.4rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(139, 233, 253, 0.7);
+    animation: signalFlicker 1.8s ease-in-out infinite;
+}
+@keyframes signalFlicker {
+    0%, 100% { opacity: 1; }
+    48% { opacity: 1; }
+    50% { opacity: 0.4; }
+    52% { opacity: 1; }
+}
+
+.packet-info {
+    font-size: 0.7rem;
+    color: rgba(139, 233, 253, 0.7);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0.2rem 0 1.4rem;
+}
+.packet-info code {
+    color: #8be9fd;
+    background: rgba(139, 233, 253, 0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+    word-break: break-all;
+}
+
+.return-portal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border: 1px solid rgba(139, 233, 253, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    color: #8be9fd;
+    font-family: inherit;
+    font-size: 0.75rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+}
+.return-portal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 233, 253, 0.25), transparent);
+    animation: portalShimmer 2.6s infinite;
+    pointer-events: none;
+}
+@keyframes portalShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+.return-portal:hover {
+    background: rgba(139, 233, 253, 0.15);
+    color: #b4f8c3;
+    border-color: #8be9fd;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(139, 233, 253, 0.35);
+}
+
+/* CRT scanlines over everything */
+.scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.18) 2px,
+        rgba(0, 0, 0, 0.18) 4px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    animation: scanFlicker 4s ease-in-out infinite;
+}
+@keyframes scanFlicker {
+    0%, 100% { opacity: 0.5; }
+    93% { opacity: 0.5; }
+    94% { opacity: 0.25; }
+    95% { opacity: 0.5; }
+}
+
+/* Vignette */
+.vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 201;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .corner-brackets::before,
+    .corner-brackets::after,
+    .corner-brackets .bottom::before,
+    .corner-brackets .bottom::after { transition: none; }
+    .panel-404 { transition: opacity 0.2s ease; transform: translate(-50%, -50%); }
+    .code-404, .code-404::before, .code-404::after,
+    .signal-lost, .scanlines, .return-portal::before { animation: none; }
+}
