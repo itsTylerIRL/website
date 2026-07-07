@@ -388,6 +388,98 @@
     height: 100%;
 }
 
+/* Spreadsheet-style market table */
+.market-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.market-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.market-table th {
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-align: right;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(139, 233, 253, 0.25);
+    background: rgba(139, 233, 253, 0.04);
+}
+
+.market-table th.col-name { text-align: left; }
+.market-table th.col-spark,
+.market-table th.col-links { text-align: center; }
+
+.market-table td {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8be9fd;
+    text-align: right;
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid rgba(139, 233, 253, 0.08);
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+}
+
+.market-table tbody tr:last-child td { border-bottom: none; }
+.market-table tbody tr { transition: background 0.15s ease; }
+.market-table tbody tr:nth-child(even) { background: rgba(139, 233, 253, 0.02); }
+.market-table tbody tr:hover { background: rgba(139, 233, 253, 0.07); }
+
+.market-table td.col-name { text-align: left; }
+
+.market-table .market-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    object-fit: cover;
+    filter: grayscale(50%);
+    transition: filter 0.2s ease;
+}
+
+.market-table tbody tr:hover .market-logo { filter: none; }
+
+.market-table .market-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ccc;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+}
+
+.market-table tbody tr:hover .market-name { color: #8be9fd; }
+
+.market-table td.col-links { text-align: center; }
+
+.market-table .market-link {
+    font-size: 0.5rem;
+    padding: 0.15rem 0.5rem;
+}
+
+.market-table .market-spark {
+    width: 90px;
+    height: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.market-table .market-spark.has-data {
+    height: 20px;
+    margin: 0 auto;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .bento-grid {

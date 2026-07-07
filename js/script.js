@@ -124,13 +124,31 @@ function renderMarketSparkline(prefix, points) {
     host.classList.add('has-data');
 }
 
+// Time range toggle: one_day | seven_day | thirty_day
+const MARKET_RANGE_LABELS = { one_day: '24h', seven_day: '1w', thirty_day: '1m' };
+let marketRange = localStorage.getItem('marketRange');
+if (!MARKET_RANGE_LABELS[marketRange]) marketRange = 'one_day';
+const marketCache = { ethPriceUSD: 2500, stats: {} };
+
+function getMarketAvg(ivl) {
+    if (!ivl) return 0;
+    return ivl.average_price || (ivl.sales ? ivl.volume / ivl.sales : 0);
+}
+
 function updateMarketCard(prefix, stats, ethPriceUSD) {
+    marketCache.ethPriceUSD = ethPriceUSD;
+    marketCache.stats[prefix] = stats;
+    renderMarketCard(prefix);
+}
+
+function renderMarketCard(prefix) {
+    const stats = marketCache.stats[prefix];
+    if (!stats) return;
+    const ethPriceUSD = marketCache.ethPriceUSD;
     const total = stats.total || {};
     const intervals = {};
     (stats.intervals || []).forEach(i => { intervals[i.interval] = i; });
-    const d1 = intervals.one_day || {};
-    const d7 = intervals.seven_day || {};
-    const d30 = intervals.thirty_day || {};
+    const ivl = intervals[marketRange] || {};
 
     // Floor price
     const floor = total.floor_price || 0;
@@ -139,35 +157,63 @@ function updateMarketCard(prefix, stats, ethPriceUSD) {
     });
     setMarketText(prefix + '-floor', `${formatEth(floor)} (${floorUSD})`);
 
-    // 24h volume + sales count
-    const vol1d = d1.volume || 0;
-    const sales1d = d1.sales || 0;
-    setMarketText(prefix + '-volume', `${vol1d.toFixed(1)} ETH · ${sales1d} sale${sales1d === 1 ? '' : 's'}`);
+    // Volume + sales count for the selected range
+    const vol = ivl.volume || 0;
+    const sales = ivl.sales || 0;
+    setMarketText(prefix + '-volume', `${vol.toFixed(1)} ETH \u00b7 ${sales} sale${sales === 1 ? '' : 's'}`);
 
     // Unique owners
-    if (total.num_owners) {
-        setMarketText(prefix + '-owners', total.num_owners.toLocaleString('en-US'));
-    }
+    setMarketText(prefix + '-owners', total.num_owners ? total.num_owners.toLocaleString('en-US') : '\u2014');
 
-    // 24h average sale price
-    const avg1d = d1.average_price || 0;
-    if (avg1d) {
-        setMarketText(prefix + '-avg', formatEth(avg1d));
-    }
+    // Average sale price for the selected range
+    const avg = getMarketAvg(ivl);
+    setMarketText(prefix + '-avg', avg ? formatEth(avg) : '\u2014');
 
-    // Price change badge: 24h avg sale price vs 7d avg
+    // Change badge: selected range avg vs the next-longer window
+    let baseAvg = 0, baseTitle = '';
+    if (marketRange === 'one_day') {
+        baseAvg = getMarketAvg(intervals.seven_day);
+        baseTitle = '24h avg sale price vs 7d avg';
+    } else if (marketRange === 'seven_day') {
+        baseAvg = getMarketAvg(intervals.thirty_day);
+        baseTitle = '1w avg sale price vs 1m avg';
+    } else {
+        baseAvg = total.average_price || 0;
+        baseTitle = '1m avg sale price vs all-time avg';
+    }
     const changeEl = document.getElementById(prefix + '-change');
-    if (changeEl && avg1d && d7.average_price) {
-        const pct = ((avg1d - d7.average_price) / d7.average_price) * 100;
-        const up = pct >= 0;
-        changeEl.textContent = `${up ? '\u25b2' : '\u25bc'} ${Math.abs(pct).toFixed(1)}%`;
-        changeEl.classList.remove('up', 'down');
-        changeEl.classList.add(up ? 'up' : 'down');
-        changeEl.title = '24h avg sale price vs 7d avg';
+    if (changeEl) {
+        if (avg && baseAvg) {
+            const pct = ((avg - baseAvg) / baseAvg) * 100;
+            const up = pct >= 0;
+            changeEl.textContent = `${up ? '\u25b2' : '\u25bc'} ${Math.abs(pct).toFixed(1)}%`;
+            changeEl.classList.remove('up', 'down');
+            changeEl.classList.add(up ? 'up' : 'down');
+            changeEl.title = baseTitle;
+        } else {
+            changeEl.textContent = '';
+        }
     }
 
     // Price history sparkline: 30d avg -> 7d avg -> 24h avg -> current floor
-    renderMarketSparkline(prefix, [d30.average_price, d7.average_price, avg1d, floor]);
+    renderMarketSparkline(prefix, [
+        getMarketAvg(intervals.thirty_day),
+        getMarketAvg(intervals.seven_day),
+        getMarketAvg(intervals.one_day),
+        floor
+    ]);
+}
+
+function applyMarketRange(range) {
+    marketRange = range;
+    try { localStorage.setItem('marketRange', range); } catch (e) { /* private mode */ }
+    const label = MARKET_RANGE_LABELS[range];
+    document.querySelectorAll('[data-dyn-label="vol"]').forEach(el => { el.textContent = label + ' vol'; });
+    document.querySelectorAll('[data-dyn-label="avg"]').forEach(el => { el.textContent = label + ' avg px'; });
+    document.querySelectorAll('#market-range-toggle .range-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.range === range);
+    });
+    Object.keys(marketCache.stats).forEach(renderMarketCard);
 }
 
 function markMarketCardOffline(prefix) {
