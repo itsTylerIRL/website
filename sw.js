@@ -1,10 +1,11 @@
 // Service Worker for Tyler IRL PWA
-const CACHE_NAME = 'tylerirl-v3';
+const CACHE_NAME = 'tylerirl-v6';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/styles.css',
-  '/script.js',
+  '/css/styles.css',
+  '/css/index.css',
+  '/js/script.js',
   '/assets/favicon/android-chrome-192x192.png',
   '/assets/favicon/android-chrome-512x512.png'
 ];

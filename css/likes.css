@@ -1,0 +1,1584 @@
+/* Page styles for likes.html (extracted from inline <style>) */
+/* ===== VIEWPORT-FIT LAYOUT ===== */
+html, body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Compact footer for viewport-fit */
+footer {
+    flex-shrink: 0;
+    padding: 0.1rem 0 !important;
+}
+
+footer .container {
+    padding: 0;
+}
+
+.main-content {
+    padding: 6px 15px 0 15px;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.hero {
+    flex-shrink: 0;
+    padding: 2px 0;
+}
+
+.hero .container {
+    padding: 0 16px;
+}
+
+#likes {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+/* Bento Grid Styles */
+.bento-container {
+    margin: 0 auto;
+    padding: 0 1rem;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+}
+
+.bento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.bento-title {
+    font-size: 1.3rem;
+    color: #8be9fd;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    position: relative;
+}
+
+.bento-title::after {
+    content: '_';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* ===== UNIFIED CONTROL BAR - Spotlight + Filters ===== */
+.spotlight-section {
+    margin-bottom: 0.15rem;
+    position: relative;
+    padding: 0;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.spotlight-container {
+    display: grid;
+    grid-template-columns: auto minmax(0, 500px) auto;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(145deg, rgba(15, 15, 20, 0.5) 0%, rgba(5, 5, 10, 0.7) 100%);
+    border: 1px solid rgba(139, 233, 253, 0.1);
+    border-radius: 16px;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.spotlight-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 140px;
+}
+
+.spotlight-filters .filter-pill {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.65rem;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.spotlight-filters .filter-pill .count {
+    margin-left: auto;
+}
+
+.spotlight-main {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    min-height: 70px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.spotlight-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.3rem 0;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateX(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    white-space: nowrap;
+}
+
+.spotlight-item.active {
+    opacity: 1;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: translate(0, 0);
+    width: 100%;
+}
+
+.spotlight-image {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(139, 233, 253, 0.05);
+    border-radius: 12px;
+    padding: 0.6rem;
+    border: 1px solid rgba(139, 233, 253, 0.1);
+}
+
+.spotlight-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(139, 233, 253, 0.3));
+    transition: transform 0.3s;
+}
+
+.spotlight-item:hover .spotlight-image img {
+    transform: scale(1.1) rotate(-3deg);
+}
+
+.spotlight-info {
+    flex: 0 1 auto;
+    min-width: 200px;
+    max-width: 300px;
+    overflow: hidden;
+}
+
+.spotlight-category {
+    font-size: 0.6rem;
+    color: #8be9fd;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spotlight-category::before {
+    content: '★';
+    font-size: 0.5rem;
+}
+
+.spotlight-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: lowercase;
+    margin-bottom: 0.15rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spotlight-desc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: lowercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spotlight-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 140px;
+}
+
+.spotlight-action-btn {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: transparent;
+    color: #666;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: lowercase;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.spotlight-action-btn:hover {
+    border-color: #8be9fd;
+    color: #8be9fd;
+    background: rgba(139, 233, 253, 0.1);
+}
+
+.spotlight-action-btn.shuffle:hover {
+    border-color: #ff79c6;
+    color: #ff79c6;
+    background: rgba(255, 121, 198, 0.1);
+}
+
+.spotlight-action-btn.active {
+    border-color: #8be9fd;
+    color: #8be9fd;
+    background: rgba(139, 233, 253, 0.15);
+}
+
+/* ===== FILTER PILLS ===== */
+.filter-pill {
+    padding: 0.5rem 1rem;
+    border: 1px solid #333;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
+
+.filter-pill:hover {
+    border-color: #8be9fd;
+    color: #8be9fd;
+    background: rgba(139, 233, 253, 0.1);
+}
+
+.filter-pill.active {
+    border-color: #8be9fd;
+    background: rgba(139, 233, 253, 0.15);
+    color: #8be9fd;
+    box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+}
+
+.filter-pill .count {
+    margin-left: 0.3rem;
+    opacity: 0.6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: lowercase;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.action-btn:hover {
+    border-color: #ff79c6;
+    color: #ff79c6;
+    background: rgba(255, 121, 198, 0.1);
+}
+
+.action-btn.shuffle:hover {
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+/* ===== BENTO GRID ===== */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 90px;
+    gap: 0.75rem;
+    position: relative;
+    grid-auto-flow: dense;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    padding-bottom: 0.5rem;
+}
+
+/* Scanline overlay */
+.bento-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+/* Bento Items - Dark Glass (matching index.html) */
+.bento-item {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(139, 233, 253, 0.1);
+    border-top-color: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    animation: subtleFloat var(--float-duration, 4s) ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+}
+
+@keyframes subtleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Top reflection/shine - subtle */
+.bento-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.02) 0%, 
+        transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s;
+}
+
+/* Moving reflection effect */
+.bento-item::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(139, 233, 253, 0.02) 45%,
+        rgba(139, 233, 253, 0.05) 50%,
+        rgba(139, 233, 253, 0.02) 55%,
+        transparent 100%
+    );
+    transform: rotate(25deg);
+    transition: all 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bento-item:hover::after {
+    left: 150%;
+    top: -50%;
+}
+
+.bento-item:hover {
+    background: rgba(0, 0, 0, 0.18);
+    border-color: rgba(139, 233, 253, 0.25);
+    border-top-color: rgba(139, 233, 253, 0.3);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(139, 233, 253, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    animation: none;
+    z-index: 5;
+}
+
+.bento-item:hover::before {
+    opacity: 0.8;
+}
+
+/* Glitch effect on hover */
+.bento-item:hover .bento-content h3 {
+    animation: glitch 0.3s ease;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Bento Image */
+.bento-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    z-index: 0;
+    background: transparent;
+}
+
+.bento-image img {
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: contain;
+    filter: grayscale(30%) brightness(0.9) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    transition: all 0.4s ease;
+}
+
+.bento-item:hover .bento-image img {
+    filter: grayscale(0%) brightness(1.1) drop-shadow(0 8px 20px rgba(139, 233, 253, 0.3));
+    transform: scale(1.1);
+}
+
+/* Bento Content */
+.bento-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    z-index: 3;
+    text-align: center;
+}
+
+.bento-content h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0;
+    text-transform: lowercase;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.bento-content p {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.bento-item:hover .bento-content p {
+    color: #8be9fd;
+    opacity: 1;
+    max-height: 2em;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Category badge */
+.bento-category {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    font-size: 0.45rem;
+    padding: 0.15rem 0.3rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 4;
+    backdrop-filter: blur(4px);
+}
+
+.bento-item:hover .bento-category {
+    border-color: #8be9fd;
+    color: #8be9fd;
+}
+
+/* Filter animation */
+.bento-item.hidden {
+    opacity: 0;
+    transform: scale(0.6) rotateY(90deg);
+    pointer-events: none;
+    position: absolute !important;
+    visibility: hidden;
+}
+
+.bento-item.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.bento-item.shuffle-out {
+    animation: shuffleOut 0.3s ease forwards;
+}
+
+.bento-item.shuffle-in {
+    animation: shuffleIn 0.4s ease forwards;
+}
+
+@keyframes shuffleOut {
+    to {
+        opacity: 0;
+        transform: scale(0.8) rotate(10deg);
+    }
+}
+
+@keyframes shuffleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) rotate(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+/* ===== 3D ICON CLOUD ===== */
+.icon-cloud-container {
+    width: 100%;
+    flex: 1;
+    min-height: 100px;
+    position: relative;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, rgba(139, 233, 253, 0.03) 0%, transparent 70%);
+}
+
+.icon-cloud-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    /* Drags rotate the cloud instead of scrolling the page */
+    touch-action: none;
+}
+
+.icon-cloud-canvas:active {
+    cursor: grabbing;
+}
+
+.icon-cloud-hint {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: rgba(139, 233, 253, 0.5);
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    animation: fadeInOut 3s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}
+
+.icon-tooltip {
+    position: fixed;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(139, 233, 253, 0.4);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.8rem;
+    text-transform: lowercase;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
+}
+
+.icon-tooltip.visible {
+    opacity: 1;
+}
+
+.icon-tooltip .tooltip-title {
+    color: #8be9fd;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.icon-tooltip .tooltip-desc {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+}
+
+/* ===== SEARCH INPUT ===== */
+.spotlight-search {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #333;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+    min-width: 120px;
+}
+
+.spotlight-search:focus-within {
+    border-color: #8be9fd;
+    box-shadow: 0 0 12px rgba(139, 233, 253, 0.15);
+}
+
+.spotlight-search-icon {
+    color: #555;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+    transition: color 0.3s;
+}
+
+.spotlight-search:focus-within .spotlight-search-icon {
+    color: #8be9fd;
+}
+
+.spotlight-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ccc;
+    font-size: 0.65rem;
+    font-family: inherit;
+    text-transform: lowercase;
+    width: 100%;
+    letter-spacing: 0.05em;
+}
+
+.spotlight-search input::placeholder {
+    color: #444;
+}
+
+/* ===== PREVIEW PANEL ===== */
+.preview-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.preview-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.preview-panel {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 233, 253, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 380px;
+    width: 90%;
+    position: relative;
+    box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 20px rgba(139, 233, 253, 0.03);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.preview-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #333;
+    border-radius: 50%;
+    background: transparent;
+    color: #666;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.preview-close:hover {
+    border-color: #8be9fd;
+    color: #8be9fd;
+}
+
+.preview-category {
+    display: inline-block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.2rem 0.8rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.preview-category[data-cat="crypto"] { color: #8be9fd; border: 1px solid rgba(139, 233, 253, 0.3); }
+.preview-category[data-cat="tech"] { color: #50fa7b; border: 1px solid rgba(80, 250, 123, 0.3); }
+.preview-category[data-cat="fun"] { color: #ffb86c; border: 1px solid rgba(255, 184, 108, 0.3); }
+.preview-category[data-cat="personal"] { color: #ff79c6; border: 1px solid rgba(255, 121, 198, 0.3); }
+.preview-category[data-cat="art"] { color: #bd93f9; border: 1px solid rgba(189, 147, 249, 0.3); }
+
+.preview-image {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    background: rgba(139, 233, 253, 0.03);
+    border: 1px solid rgba(139, 233, 253, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.preview-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 16px rgba(139, 233, 253, 0.3));
+}
+
+.preview-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: lowercase;
+    margin-bottom: 0.3rem;
+}
+
+.preview-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: lowercase;
+    margin-bottom: 1.5rem;
+}
+
+.preview-visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.8rem;
+    border: 1px solid rgba(139, 233, 253, 0.4);
+    border-radius: 25px;
+    background: rgba(139, 233, 253, 0.08);
+    color: #8be9fd;
+    font-size: 0.8rem;
+    text-decoration: none;
+    text-transform: lowercase;
+    letter-spacing: 0.08em;
+    transition: all 0.3s;
+}
+
+.preview-visit:hover {
+    background: rgba(139, 233, 253, 0.18);
+    border-color: #8be9fd;
+    box-shadow: 0 0 25px rgba(139, 233, 253, 0.2);
+    transform: translateY(-2px);
+}
+
+.preview-visit .arrow {
+    transition: transform 0.3s;
+}
+
+.preview-visit:hover .arrow {
+    transform: translateX(4px);
+}
+
+.view-toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+
+.view-toggle-btn {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid #333;
+    border-radius: 20px;
+    background: transparent;
+    color: #666;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
+
+.view-toggle-btn:hover {
+    border-color: #8be9fd;
+    color: #8be9fd;
+}
+
+.view-toggle-btn.active {
+    border-color: #8be9fd;
+    background: rgba(139, 233, 253, 0.15);
+    color: #8be9fd;
+    box-shadow: 0 0 15px rgba(139, 233, 253, 0.2);
+}
+
+.bento-grid.hidden-view {
+    display: none;
+}
+
+.icon-cloud-container.hidden-view {
+    display: none;
+}
+
+/* ===== SHOW MORE SECTION ===== */
+.show-more-container {
+    text-align: center;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.show-more-btn {
+    padding: 0.75rem 2rem;
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 25px;
+    background: linear-gradient(145deg, rgba(20, 20, 25, 0.6) 0%, rgba(10, 10, 15, 0.8) 100%);
+    color: #8be9fd;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+}
+
+.show-more-btn:hover {
+    border-color: #8be9fd;
+    background: rgba(139, 233, 253, 0.1);
+    box-shadow: 0 0 25px rgba(139, 233, 253, 0.3);
+    transform: translateY(-2px);
+}
+
+.show-more-btn .arrow {
+    display: inline-block;
+    margin-left: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.show-more-btn:hover .arrow {
+    transform: translateY(3px);
+}
+
+.show-more-btn.expanded .arrow {
+    transform: rotate(180deg);
+}
+
+.items-counter {
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: lowercase;
+}
+
+.items-counter span {
+    color: #8be9fd;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .bento-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 85px;
+    }
+    
+    .spotlight-container {
+        grid-template-columns: auto 1fr auto;
+        padding: 0.5rem 0.75rem;
+        gap: 0.5rem;
+    }
+    
+    .spotlight-actions {
+        min-width: 65px;
+        gap: 0.15rem;
+    }
+    
+    .spotlight-action-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.55rem;
+    }
+    
+    .spotlight-filters {
+        min-width: 90px;
+    }
+    
+    .spotlight-filters .filter-pill {
+        padding: 0.2rem 0.45rem;
+        font-size: 0.55rem;
+    }
+    
+    .spotlight-main {
+        min-height: 60px;
+    }
+    
+    .spotlight-image {
+        width: 55px;
+        height: 55px;
+        padding: 0.4rem;
+    }
+    
+    .spotlight-title {
+        font-size: 1.1rem;
+    }
+    
+    .spotlight-desc {
+        font-size: 0.7rem;
+    }
+    
+    .spotlight-section {
+        padding: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 80px;
+    }
+    
+    .main-content {
+        padding: 4px 10px 0 10px;
+    }
+    
+    .bento-container {
+        padding: 0 0.75rem;
+    }
+    
+    .hero {
+        padding: 0;
+    }
+    
+    .bento-header {
+        margin-bottom: 0.25rem;
+    }
+    
+    .bento-title {
+        font-size: 1rem;
+    }
+    
+    /* Keep spotlight as compact horizontal row on mobile */
+    .spotlight-container {
+        grid-template-columns: auto 1fr auto;
+        gap: 0.4rem;
+        padding: 0.4rem 0.6rem;
+        min-height: auto;
+    }
+    
+    /* Filters become a row above */
+    .spotlight-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        min-width: auto;
+        grid-column: 1 / -1;
+        order: -1;
+        gap: 0.2rem;
+    }
+    
+    .spotlight-filters .filter-pill {
+        padding: 0.15rem 0.4rem;
+        font-size: 0.5rem;
+    }
+    
+    .spotlight-main {
+        min-height: auto;
+    }
+    
+    /* Keep spotlight item horizontal - icon left, info right */
+    .spotlight-item {
+        flex-direction: row;
+        text-align: left;
+        gap: 0.5rem;
+    }
+    
+    .spotlight-info {
+        margin-left: 0;
+    }
+    
+    .spotlight-image {
+        width: 40px;
+        height: 40px;
+        padding: 0.3rem;
+        border-radius: 8px;
+    }
+    
+    .spotlight-category {
+        font-size: 0.45rem;
+        margin-bottom: 0.1rem;
+    }
+    
+    .spotlight-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.1rem;
+    }
+    
+    .spotlight-desc {
+        font-size: 0.55rem;
+    }
+    
+    /* Actions inline with spotlight */
+    .spotlight-actions {
+        flex-direction: column;
+        min-width: auto;
+        gap: 0.15rem;
+        justify-content: center;
+    }
+    
+    .spotlight-action-btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.5rem;
+    }
+    
+    .spotlight-section {
+        margin-bottom: 0.1rem;
+    }
+    
+    .icon-cloud-hint {
+        font-size: 0.55rem;
+        bottom: 0.25rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 100px;
+    }
+    
+    .bento-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .spotlight-filters .filter-pill {
+        padding: 0.12rem 0.35rem;
+        font-size: 0.45rem;
+    }
+    
+    .spotlight-image {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .spotlight-title {
+        font-size: 0.75rem;
+    }
+    
+    .spotlight-desc {
+        font-size: 0.5rem;
+    }
+    
+    .spotlight-action-btn {
+        padding: 0.15rem 0.35rem;
+        font-size: 0.45rem;
+    }
+}
+
+/* Extra small - very compact */
+@media (max-width: 400px) {
+    .main-content {
+        padding: 2px 6px 0 6px;
+    }
+    
+    .bento-container {
+        padding: 0 0.4rem;
+    }
+    
+    .bento-title {
+        font-size: 0.85rem;
+    }
+    
+    .spotlight-container {
+        padding: 0.3rem 0.4rem;
+        border-radius: 10px;
+    }
+    
+    .spotlight-image {
+        width: 30px;
+        height: 30px;
+        padding: 0.2rem;
+    }
+    
+    .spotlight-title {
+        font-size: 0.7rem;
+    }
+}
+
+/* ===== MOBILE-EXCLUSIVE LAYOUT =====
+   The 3D cloud cramps mobile screens, so on mobile we:
+   - Allow normal page scrolling (kill the viewport-fit lock)
+   - Hide the 3D cloud entirely and force grid view
+   - Stack & simplify the spotlight controls into a clean column
+   - Render a scrollable, single-column-friendly bento grid */
+@media (max-width: 768px) {
+    html, body {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+    body {
+        display: block;
+    }
+    /* Perf: ~100 grid items — infinite float animations and per-item
+       backdrop-filter are the main sources of scroll jank on mobile GPUs */
+    .bento-item {
+        animation: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(0, 0, 0, 0.55);
+    }
+    .bento-category {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(0, 0, 0, 0.7);
+    }
+    .main-content {
+        display: block;
+        overflow: visible;
+        padding: 8px 10px 16px;
+    }
+    #likes {
+        display: block;
+        overflow: visible;
+        padding: 0 !important;
+    }
+    .bento-container {
+        display: block;
+        overflow: visible;
+        padding: 0 0.5rem;
+    }
+    
+    /* Hide hologram on small screens to save vertical space */
+    .hero {
+        padding: 0;
+    }
+    .hologram-container {
+        max-width: 110px;
+    }
+    .hologram-image {
+        max-width: 110px;
+    }
+    
+    /* Force-hide the 3D cloud on mobile — it's unusable at this size */
+    .icon-cloud-container,
+    .icon-cloud-container.hidden-view {
+        display: none !important;
+    }
+    
+    /* Hide the cloud toggle button on mobile */
+    .view-toggle[data-view="cloud"] {
+        display: none !important;
+    }
+    
+    /* Header */
+    .bento-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        margin: 0.25rem 0 0.5rem;
+    }
+    .bento-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Spotlight: stack everything in a tidy column */
+    .spotlight-section {
+        margin-bottom: 0.5rem;
+    }
+    .spotlight-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.6rem 0.7rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 14px;
+    }
+    
+    /* Spotlight item: horizontal row, full width */
+    .spotlight-main {
+        width: 100%;
+        max-width: 100%;
+        min-height: 56px;
+        order: 1;
+    }
+    .spotlight-item {
+        flex-direction: row;
+        text-align: left;
+        gap: 0.6rem;
+        padding: 0.25rem 0;
+        white-space: normal;
+    }
+    .spotlight-image {
+        width: 48px;
+        height: 48px;
+        padding: 0.35rem;
+        border-radius: 10px;
+    }
+    .spotlight-info {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: none;
+    }
+    .spotlight-category {
+        font-size: 0.5rem;
+        margin-bottom: 0.15rem;
+    }
+    .spotlight-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .spotlight-desc {
+        font-size: 0.65rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Filters: horizontal scroll strip */
+    .spotlight-filters {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 100%;
+        gap: 0.35rem;
+        order: 2;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .spotlight-filters::-webkit-scrollbar { display: none; }
+    .spotlight-filters .filter-pill {
+        flex: 0 0 auto;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.65rem;
+        text-align: center;
+        justify-content: center;
+        border-radius: 16px;
+    }
+    
+    /* Actions: search full width, buttons side-by-side */
+    .spotlight-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 0.4rem;
+        order: 3;
+    }
+    .spotlight-search {
+        flex: 1 1 100%;
+        min-width: 0;
+        padding: 0.45rem 0.7rem;
+    }
+    .spotlight-search input {
+        font-size: 0.8rem;
+    }
+    .spotlight-action-btn {
+        flex: 1 1 0;
+        justify-content: center;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    /* Bento grid: 2 columns, taller cards, native scroll */
+    .bento-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 120px;
+        gap: 0.6rem;
+        overflow: visible;
+        flex: none;
+        padding-bottom: 0.5rem;
+    }
+    .bento-grid.hidden-view {
+        /* keep grid visible on mobile even if JS hasn't toggled it yet */
+        display: grid !important;
+    }
+    /* Force every bento item to a uniform 1x1 footprint on mobile so
+       desktop spans don't make some items huge */
+    .bento-item {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+        animation: none;
+    }
+    .bento-image {
+        padding: 0.5rem;
+    }
+    .bento-image img {
+        max-width: 55%;
+        max-height: 55%;
+    }
+    .bento-content {
+        padding: 0.4rem 0.5rem;
+    }
+    .bento-content h3 {
+        font-size: 0.72rem;
+    }
+    .bento-content p {
+        display: none;
+    }
+    .bento-category {
+        font-size: 0.4rem;
+        top: 0.3rem;
+        right: 0.3rem;
+    }
+    
+    /* Show-more button always visible on mobile (no cloud toggle) */
+    .show-more-container {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .show-more-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Compact footer */
+    footer {
+        padding: 0.3rem 0 !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 110px;
+    }
+    .spotlight-action-btn {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.5rem;
+    }
+}
+
+/* Hologram Hero Image Effects */
+.hologram-container {
+    position: relative;
+    display: inline-block;
+    max-width: 200px;
+    overflow: visible;
+    -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+    mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+}
+.hologram-image {
+    max-width: 200px;
+    height: auto;
+    filter: contrast(1.1) saturate(1.2);
+    animation: hologramPhase 4s ease-in-out infinite, hologramGlitch 8s step-end infinite;
+    image-rendering: pixelated;
+}
+.hologram-container::before, .hologram-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: inherit;
+    pointer-events: none;
+}
+.hologram-container::before {
+    background: url('../assets/remilio2.png') center/contain no-repeat;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    filter: hue-rotate(-30deg) saturate(1.5);
+    animation: chromaShiftRed 3s ease-in-out infinite;
+}
+.hologram-container::after {
+    background: url('../assets/remilio2.png') center/contain no-repeat;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    filter: hue-rotate(30deg) saturate(1.5);
+    animation: chromaShiftBlue 3s ease-in-out infinite reverse;
+}
+.hologram-scanlines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
+    pointer-events: none;
+    z-index: 10;
+    animation: scanlineMove 0.1s linear infinite;
+}
+.hologram-flicker {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(139, 233, 253, 0.03);
+    pointer-events: none;
+    z-index: 11;
+    animation: hologramFlicker 0.15s infinite;
+    mix-blend-mode: overlay;
+}
+.hologram-noise {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    animation: noiseShift 0.5s steps(10) infinite;
+}
+@keyframes hologramPhase {
+    0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); filter: contrast(1.1) saturate(1.2) brightness(1); }
+    25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); filter: contrast(1.2) saturate(1.4) brightness(1.1); }
+    50% { opacity: 0.9; transform: scale(0.99) translateY(1px); filter: contrast(1.15) saturate(1.3) brightness(0.95); }
+    75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); filter: contrast(1.25) saturate(1.5) brightness(1.15); }
+}
+@keyframes hologramGlitch {
+    0%, 95%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    96% { clip-path: inset(20% 0 30% 0); transform: translate(-3px, 0); }
+    97% { clip-path: inset(50% 0 10% 0); transform: translate(3px, 0); }
+    98% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
+    99% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
+}
+@keyframes chromaShiftRed { 0%, 100% { transform: translate(-1px, 0); } 50% { transform: translate(-2px, 1px); } }
+@keyframes chromaShiftBlue { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(2px, -1px); } }
+@keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+@keyframes hologramFlicker {
+    0%, 100% { opacity: 0.03; } 10% { opacity: 0.08; } 20% { opacity: 0.02; } 30% { opacity: 0.1; }
+    40% { opacity: 0.04; } 50% { opacity: 0.15; } 60% { opacity: 0.05; } 70% { opacity: 0.12; }
+    80% { opacity: 0.03; } 90% { opacity: 0.08; }
+}
+@keyframes noiseShift {
+    0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -5%); } 20% { transform: translate(5%, 5%); }
+    30% { transform: translate(-5%, 5%); } 40% { transform: translate(5%, -5%); } 50% { transform: translate(-2%, 2%); }
+    60% { transform: translate(2%, -2%); } 70% { transform: translate(-3%, -3%); } 80% { transform: translate(3%, 3%); }
+    90% { transform: translate(-1%, 1%); } 100% { transform: translate(0, 0); }
+}
+.hologram-container:hover .hologram-image { animation: hologramPhaseIntense 2s ease-in-out infinite, hologramGlitchIntense 3s step-end infinite; filter: contrast(1.3) saturate(1.6) brightness(1.2); }
+.hologram-container:hover .hologram-noise { opacity: 0.25; }
+.hologram-container:hover .hologram-flicker { animation: hologramFlickerIntense 0.08s infinite; }
+@keyframes hologramPhaseIntense {
+    0%, 100% { opacity: 1; transform: scale(1); } 25% { opacity: 0.7; transform: scale(1.02) translateX(-2px); }
+    50% { opacity: 0.9; transform: scale(0.98) translateX(2px); } 75% { opacity: 0.8; transform: scale(1.01) translateY(-2px); }
+}
+@keyframes hologramGlitchIntense {
+    0%, 90%, 100% { clip-path: inset(0 0 0 0); }
+    91% { clip-path: inset(30% 0 20% 0); transform: translate(-4px, 0); } 92% { clip-path: inset(10% 0 50% 0); transform: translate(4px, 0); }
+    93% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 0); } 94% { clip-path: inset(20% 0 40% 0); transform: translate(3px, 0); }
+    95% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); } 96% { clip-path: inset(15% 0 55% 0); transform: translate(2px, 0); }
+    97% { clip-path: inset(50% 0 20% 0); transform: translate(-3px, 0); } 98% { clip-path: inset(25% 0 45% 0); transform: translate(3px, 0); }
+    99% { clip-path: inset(35% 0 35% 0); transform: translate(-1px, 0); }
+}
+@keyframes hologramFlickerIntense {
+    0%, 100% { opacity: 0.1; background: rgba(139, 233, 253, 0.05); } 25% { opacity: 0.2; background: rgba(255, 100, 100, 0.05); }
+    50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
+}
+
+/* Respect reduced-motion: stop the per-item float and spotlight motion */
+@media (prefers-reduced-motion: reduce) {
+    .bento-item,
+    .spotlight-item,
+    .hologram-image,
+    .hologram-container::before,
+    .hologram-container::after {
+        animation: none !important;
+    }
+}

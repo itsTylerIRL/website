@@ -1,0 +1,512 @@
+/* Page styles for deepdish.html (extracted from inline <style>) */
+.deepdish-hero {
+    text-align: center;
+    margin: 0.5rem auto 1rem;
+    max-width: 600px;
+}
+
+.deepdish-hero img {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.deepdish-hero h1 {
+    font-size: 1.6rem;
+    color: #8be9fd;
+    margin: 0.6rem 0 0.15rem;
+    letter-spacing: 0.05em;
+}
+
+.deepdish-hero p {
+    color: #aaa;
+    font-size: 0.85rem;
+}
+
+.deepdish-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 850px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+}
+
+/* Animated gradient border wrapper */
+.deepdish-card {
+    --border-angle: 0deg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(139, 233, 253, 0.12);
+    border-radius: 16px;
+    padding: 2rem 1.5rem 1.8rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 800px;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Holographic shimmer overlay */
+.deepdish-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from var(--border-angle),
+        transparent 0%,
+        rgba(139, 233, 253, 0.03) 10%,
+        transparent 20%,
+        rgba(189, 147, 249, 0.03) 30%,
+        transparent 40%,
+        rgba(80, 250, 123, 0.03) 50%,
+        transparent 60%
+    );
+    animation: rotateBorder 8s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Sweep light effect */
+.deepdish-card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -75%;
+    width: 50%;
+    height: 300%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(139, 233, 253, 0.04) 45%,
+        rgba(139, 233, 253, 0.08) 50%,
+        rgba(139, 233, 253, 0.04) 55%,
+        transparent 100%
+    );
+    transform: rotate(25deg);
+    transition: left 0.7s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.deepdish-card:hover::after {
+    left: 125%;
+}
+
+.deepdish-card:hover::before {
+    opacity: 1;
+}
+
+@keyframes rotateBorder {
+    to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.deepdish-card:hover {
+    border-color: rgba(139, 233, 253, 0.5);
+    background: rgba(5, 15, 25, 0.8);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(139, 233, 253, 0.08),
+        0 0 80px rgba(139, 233, 253, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.deepdish-card img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    filter: brightness(0.95) drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.deepdish-card:hover img {
+    filter: brightness(1.15) drop-shadow(0 4px 16px rgba(139, 233, 253, 0.25));
+    transform: scale(1.08) translateY(-2px);
+}
+
+.deepdish-card h3 {
+    font-size: 1.15rem;
+    color: #eaeaea;
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.04em;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.deepdish-card:hover h3 {
+    color: #fff;
+    text-shadow: 0 0 20px rgba(139, 233, 253, 0.4);
+}
+
+.deepdish-card p {
+    font-size: 0.82rem;
+    color: #888;
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+    flex: 1;
+}
+
+.deepdish-card:hover p {
+    color: #aaa;
+}
+
+/* Pulsing LIVE badge */
+.deepdish-card .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.7rem;
+    color: #8be9fd;
+    border: 1px solid rgba(139, 233, 253, 0.25);
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+    background: rgba(139, 233, 253, 0.05);
+}
+
+.deepdish-card .card-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #50fa7b;
+    box-shadow: 0 0 6px #50fa7b, 0 0 12px rgba(80, 250, 123, 0.4);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.75); }
+}
+
+.deepdish-card:hover .card-tag {
+    border-color: rgba(139, 233, 253, 0.5);
+    background: rgba(139, 233, 253, 0.1);
+    box-shadow: 0 0 15px rgba(139, 233, 253, 0.1);
+}
+
+/* Tilt glow layer */
+.deepdish-card .tilt-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.deepdish-card:hover .tilt-glow {
+    opacity: 1;
+}
+
+.deepdish-card.coming-soon {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.deepdish-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(139, 233, 253, 0.15);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.deepdish-card.coming-soon:hover::before,
+.deepdish-card.coming-soon:hover::after {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .deepdish-hero h1 {
+        font-size: 1.4rem;
+    }
+
+    .deepdish-hero img {
+        max-width: 180px;
+    }
+
+    .deepdish-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+        gap: 0.8rem;
+        padding: 0 50px;
+    }
+
+    .deepdish-card {
+        padding: 1rem 0.6rem;
+    }
+
+    /* Push card-tag to bottom so it aligns across cards */
+    .deepdish-card .card-tag {
+        margin-top: auto;
+        font-size: 0.55rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .deepdish-card img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .deepdish-card h3 {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .deepdish-card p {
+        font-size: 0.7rem;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .deepdish-grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin: 0 auto 2rem;
+        padding: 0;
+    }
+
+    /* Switch to CSS grid for aligned row layout */
+    .deepdish-card {
+        display: grid;
+        grid-template-columns: 50px 1fr auto;
+        grid-template-rows: auto 1fr;
+        gap: 0 0.8rem;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        text-align: left;
+    }
+
+    .deepdish-card img {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 0;
+        align-self: center;
+    }
+
+    .deepdish-card h3 {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 0.9rem;
+        margin: 0;
+        align-self: end;
+    }
+
+    .deepdish-card p {
+        grid-column: 2;
+        grid-row: 2;
+        font-size: 0.75rem;
+        text-align: left;
+        margin: 0;
+        align-self: start;
+    }
+
+    .deepdish-card .card-tag {
+        grid-column: 3;
+        grid-row: 1 / -1;
+        margin-top: 0;
+        align-self: center;
+    }
+
+    /* Tilt glow needs to span full card in grid mode */
+    .deepdish-card .tilt-glow {
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+    }
+}
+
+@media (max-width: 400px) {
+    .deepdish-grid {
+        padding: 0;
+        max-width: 260px;
+    }
+
+    .deepdish-hero h1 {
+        font-size: 1.2rem;
+    }
+
+    .deepdish-hero p {
+        font-size: 0.75rem;
+    }
+
+    .deepdish-card {
+        grid-template-columns: 40px 1fr auto;
+        padding: 0.6rem 0.8rem;
+        gap: 0 0.6rem;
+    }
+
+    .deepdish-card img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .deepdish-card h3 {
+        font-size: 0.8rem;
+    }
+
+    .deepdish-card p {
+        font-size: 0.65rem;
+    }
+
+    .deepdish-card .card-tag {
+        font-size: 0.5rem;
+        padding: 0.15rem 0.4rem;
+    }
+}
+
+/* Hologram Hero Image Effects */
+.hologram-container {
+    position: relative;
+    display: inline-block;
+    max-width: 200px;
+    overflow: visible;
+    -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+    mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+}
+.hologram-image {
+    max-width: 200px;
+    height: auto;
+    filter: contrast(1.1) saturate(1.2);
+    animation: hologramPhase 4s ease-in-out infinite, hologramGlitch 8s step-end infinite;
+    image-rendering: pixelated;
+}
+.hologram-container::before, .hologram-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: inherit;
+    pointer-events: none;
+}
+.hologram-container::before {
+    background: url('../assets/remilio2.png') center/contain no-repeat;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    filter: hue-rotate(-30deg) saturate(1.5);
+    animation: chromaShiftRed 3s ease-in-out infinite;
+}
+.hologram-container::after {
+    background: url('../assets/remilio2.png') center/contain no-repeat;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    filter: hue-rotate(30deg) saturate(1.5);
+    animation: chromaShiftBlue 3s ease-in-out infinite reverse;
+}
+.hologram-scanlines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
+    pointer-events: none;
+    z-index: 10;
+    animation: scanlineMove 0.1s linear infinite;
+}
+.hologram-flicker {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(139, 233, 253, 0.03);
+    pointer-events: none;
+    z-index: 11;
+    animation: hologramFlicker 0.15s infinite;
+    mix-blend-mode: overlay;
+}
+.hologram-noise {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    animation: noiseShift 0.5s steps(10) infinite;
+}
+@keyframes hologramPhase {
+    0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); filter: contrast(1.1) saturate(1.2) brightness(1); }
+    25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); filter: contrast(1.2) saturate(1.4) brightness(1.1); }
+    50% { opacity: 0.9; transform: scale(0.99) translateY(1px); filter: contrast(1.15) saturate(1.3) brightness(0.95); }
+    75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); filter: contrast(1.25) saturate(1.5) brightness(1.15); }
+}
+@keyframes hologramGlitch {
+    0%, 95%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    96% { clip-path: inset(20% 0 30% 0); transform: translate(-3px, 0); }
+    97% { clip-path: inset(50% 0 10% 0); transform: translate(3px, 0); }
+    98% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
+    99% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
+}
+@keyframes chromaShiftRed { 0%, 100% { transform: translate(-1px, 0); } 50% { transform: translate(-2px, 1px); } }
+@keyframes chromaShiftBlue { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(2px, -1px); } }
+@keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+@keyframes hologramFlicker {
+    0%, 100% { opacity: 0.03; } 10% { opacity: 0.08; } 20% { opacity: 0.02; } 30% { opacity: 0.1; }
+    40% { opacity: 0.04; } 50% { opacity: 0.15; } 60% { opacity: 0.05; } 70% { opacity: 0.12; }
+    80% { opacity: 0.03; } 90% { opacity: 0.08; }
+}
+@keyframes noiseShift {
+    0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -5%); } 20% { transform: translate(5%, 5%); }
+    30% { transform: translate(-5%, 5%); } 40% { transform: translate(5%, -5%); } 50% { transform: translate(-2%, 2%); }
+    60% { transform: translate(2%, -2%); } 70% { transform: translate(-3%, -3%); } 80% { transform: translate(3%, 3%); }
+    90% { transform: translate(-1%, 1%); } 100% { transform: translate(0, 0); }
+}
+.hologram-container:hover .hologram-image { animation: hologramPhaseIntense 2s ease-in-out infinite, hologramGlitchIntense 3s step-end infinite; filter: contrast(1.3) saturate(1.6) brightness(1.2); }
+.hologram-container:hover .hologram-noise { opacity: 0.25; }
+.hologram-container:hover .hologram-flicker { animation: hologramFlickerIntense 0.08s infinite; }
+@keyframes hologramPhaseIntense {
+    0%, 100% { opacity: 1; transform: scale(1); } 25% { opacity: 0.7; transform: scale(1.02) translateX(-2px); }
+    50% { opacity: 0.9; transform: scale(0.98) translateX(2px); } 75% { opacity: 0.8; transform: scale(1.01) translateY(-2px); }
+}
+@keyframes hologramGlitchIntense {
+    0%, 90%, 100% { clip-path: inset(0 0 0 0); }
+    91% { clip-path: inset(30% 0 20% 0); transform: translate(-4px, 0); } 92% { clip-path: inset(10% 0 50% 0); transform: translate(4px, 0); }
+    93% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 0); } 94% { clip-path: inset(20% 0 40% 0); transform: translate(3px, 0); }
+    95% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); } 96% { clip-path: inset(15% 0 55% 0); transform: translate(2px, 0); }
+    97% { clip-path: inset(50% 0 20% 0); transform: translate(-3px, 0); } 98% { clip-path: inset(25% 0 45% 0); transform: translate(3px, 0); }
+    99% { clip-path: inset(35% 0 35% 0); transform: translate(-1px, 0); }
+}
+@keyframes hologramFlickerIntense {
+    0%, 100% { opacity: 0.1; background: rgba(139, 233, 253, 0.05); } 25% { opacity: 0.2; background: rgba(255, 100, 100, 0.05); }
+    50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
+}
