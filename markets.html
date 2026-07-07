@@ -46,7 +46,7 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="css/markets.css?v=1.2">
+    <link rel="stylesheet" href="css/markets.css?v=1.3">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -81,176 +81,112 @@
                 </div>
             </div>
             
-            <div class="bento-grid">
-                <!-- Milady Maker -->
-                <div class="market-bento">
-                    <div class="market-header">
-                        <img src="assets/milady.png" alt="Milady Maker" class="market-logo">
-                        <h3 class="market-name">milady maker</h3>
-                    </div>
-                    <div class="market-stats">
-                        <div class="market-stat">
-                            <div class="market-stat-label">floor <span class="market-change" id="milady-change"></span></div>
-                            <div class="market-stat-value" id="milady-floor">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
-                            <div class="market-stat-value" id="milady-volume">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label">owners</div>
-                            <div class="market-stat-value" id="milady-owners">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
-                            <div class="market-stat-value" id="milady-avg">Loading...</div>
-                        </div>
-                    </div>
-                    <div class="market-spark" id="milady-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
-                    <div class="market-desc">
-                        10,000 generative pfps. neochibi street style.
-                    </div>
-                    <div class="market-links">
-                        <a href="https://opensea.io/collection/milady" target="_blank" class="market-link">opensea</a>
-                        <a href="https://miladymaker.net" target="_blank" class="market-link">milady</a>
-                    </div>
-                </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th class="col-name">collection</th>
+                            <th>floor</th>
+                            <th>Δ</th>
+                            <th data-dyn-label="vol">24h vol</th>
+                            <th>owners</th>
+                            <th data-dyn-label="avg">24h avg px</th>
+                            <th class="col-spark">trend</th>
+                            <th class="col-links">links</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Milady Maker -->
+                        <tr>
+                            <td class="col-name">
+                                <img src="assets/milady.png" alt="Milady Maker" class="market-logo">
+                                <span class="market-name" title="10,000 generative pfps. neochibi street style.">milady maker</span>
+                            </td>
+                            <td id="milady-floor">Loading...</td>
+                            <td><span class="market-change" id="milady-change"></span></td>
+                            <td id="milady-volume">Loading...</td>
+                            <td id="milady-owners">Loading...</td>
+                            <td id="milady-avg">Loading...</td>
+                            <td class="col-spark"><div class="market-spark" id="milady-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
+                            <td class="col-links">
+                                <a href="https://opensea.io/collection/milady" target="_blank" class="market-link">opensea</a>
+                                <a href="https://miladymaker.net" target="_blank" class="market-link">site</a>
+                            </td>
+                        </tr>
                 
-                <!-- Remilio Babies -->
-                <div class="market-bento">
-                    <div class="market-header">
-                        <img src="assets/remilio.jpg" alt="Redacted Remilio Babies" class="market-logo">
-                        <h3 class="market-name">remilio babies</h3>
-                    </div>
-                    <div class="market-stats">
-                        <div class="market-stat">
-                            <div class="market-stat-label">floor <span class="market-change" id="remilio-change"></span></div>
-                            <div class="market-stat-value" id="remilio-floor">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
-                            <div class="market-stat-value" id="remilio-volume">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label">owners</div>
-                            <div class="market-stat-value" id="remilio-owners">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
-                            <div class="market-stat-value" id="remilio-avg">Loading...</div>
-                        </div>
-                    </div>
-                    <div class="market-spark" id="remilio-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
-                    <div class="market-desc">
-                        10,000 male milady variants. underground culture.
-                    </div>
-                    <div class="market-links">
-                        <a href="https://opensea.io/collection/remilio-babies" target="_blank" class="market-link">opensea</a>
-                        <a href="https://remilio.org" target="_blank" class="market-link">remilio</a>
-                    </div>
-                </div>
+                        <!-- Remilio Babies -->
+                        <tr>
+                            <td class="col-name">
+                                <img src="assets/remilio.jpg" alt="Redacted Remilio Babies" class="market-logo">
+                                <span class="market-name" title="10,000 male milady variants. underground culture.">remilio babies</span>
+                            </td>
+                            <td id="remilio-floor">Loading...</td>
+                            <td><span class="market-change" id="remilio-change"></span></td>
+                            <td id="remilio-volume">Loading...</td>
+                            <td id="remilio-owners">Loading...</td>
+                            <td id="remilio-avg">Loading...</td>
+                            <td class="col-spark"><div class="market-spark" id="remilio-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
+                            <td class="col-links">
+                                <a href="https://opensea.io/collection/remilio-babies" target="_blank" class="market-link">opensea</a>
+                                <a href="https://remilio.org" target="_blank" class="market-link">site</a>
+                            </td>
+                        </tr>
                 
-                <!-- Schizoposters -->
-                <div class="market-bento">
-                    <div class="market-header">
-                        <img src="assets/schizo.png" alt="Schizoposters" class="market-logo">
-                        <h3 class="market-name">schizoposters</h3>
-                    </div>
-                    <div class="market-stats">
-                        <div class="market-stat">
-                            <div class="market-stat-label">floor <span class="market-change" id="schizo-change"></span></div>
-                            <div class="market-stat-value" id="schizo-floor">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
-                            <div class="market-stat-value" id="schizo-volume">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label">owners</div>
-                            <div class="market-stat-value" id="schizo-owners">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
-                            <div class="market-stat-value" id="schizo-avg">Loading...</div>
-                        </div>
-                    </div>
-                    <div class="market-spark" id="schizo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
-                    <div class="market-desc">
-                        I HATE THE ANTICHRIST.
-                    </div>
-                    <div class="market-links">
-                        <a href="https://opensea.io/collection/schizoposters" target="_blank" class="market-link">opensea</a>
-                        <a href="https://schizoposters.xyz" target="_blank" class="market-link">site</a>
-                    </div>
-                </div>
+                        <!-- Schizoposters -->
+                        <tr>
+                            <td class="col-name">
+                                <img src="assets/schizo.png" alt="Schizoposters" class="market-logo">
+                                <span class="market-name" title="I HATE THE ANTICHRIST.">schizoposters</span>
+                            </td>
+                            <td id="schizo-floor">Loading...</td>
+                            <td><span class="market-change" id="schizo-change"></span></td>
+                            <td id="schizo-volume">Loading...</td>
+                            <td id="schizo-owners">Loading...</td>
+                            <td id="schizo-avg">Loading...</td>
+                            <td class="col-spark"><div class="market-spark" id="schizo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
+                            <td class="col-links">
+                                <a href="https://opensea.io/collection/schizoposters" target="_blank" class="market-link">opensea</a>
+                                <a href="https://schizoposters.xyz" target="_blank" class="market-link">site</a>
+                            </td>
+                        </tr>
                 
-                <!-- Radbro Webring -->
-                <div class="market-bento">
-                    <div class="market-header">
-                        <img src="assets/radbro.png" alt="Radbro Webring" class="market-logo">
-                        <h3 class="market-name">radbro webring</h3>
-                    </div>
-                    <div class="market-stats">
-                        <div class="market-stat">
-                            <div class="market-stat-label">floor <span class="market-change" id="radbro-change"></span></div>
-                            <div class="market-stat-value" id="radbro-floor">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
-                            <div class="market-stat-value" id="radbro-volume">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label">owners</div>
-                            <div class="market-stat-value" id="radbro-owners">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
-                            <div class="market-stat-value" id="radbro-avg">Loading...</div>
-                        </div>
-                    </div>
-                    <div class="market-spark" id="radbro-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
-                    <div class="market-desc">
-                        Check the Chain.
-                    </div>
-                    <div class="market-links">
-                        <a href="https://opensea.io/collection/radbro-webring" target="_blank" class="market-link">opensea</a>
-                        <a href="http://radbro.xyz" target="_blank" class="market-link">radbro</a>
-                    </div>
-                </div>
+                        <!-- Radbro Webring -->
+                        <tr>
+                            <td class="col-name">
+                                <img src="assets/radbro.png" alt="Radbro Webring" class="market-logo">
+                                <span class="market-name" title="Check the Chain.">radbro webring</span>
+                            </td>
+                            <td id="radbro-floor">Loading...</td>
+                            <td><span class="market-change" id="radbro-change"></span></td>
+                            <td id="radbro-volume">Loading...</td>
+                            <td id="radbro-owners">Loading...</td>
+                            <td id="radbro-avg">Loading...</td>
+                            <td class="col-spark"><div class="market-spark" id="radbro-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
+                            <td class="col-links">
+                                <a href="https://opensea.io/collection/radbro-webring" target="_blank" class="market-link">opensea</a>
+                                <a href="http://radbro.xyz" target="_blank" class="market-link">site</a>
+                            </td>
+                        </tr>
                 
-                <!-- Fumo Baby 404 -->
-                <div class="market-bento">
-                    <div class="market-header">
-                        <video src="https://blog.remilia.org/content/media/2024/04/fumo_01-1.mp4" alt="Fumo Baby 404" class="market-logo" autoplay muted loop playsinline></video>
-                        <h3 class="market-name">fumo baby 404</h3>
-                    </div>
-                    <div class="market-stats">
-                        <div class="market-stat">
-                            <div class="market-stat-label">floor <span class="market-change" id="fumo-change"></span></div>
-                            <div class="market-stat-value" id="fumo-floor">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="vol">24h vol</div>
-                            <div class="market-stat-value" id="fumo-volume">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label">owners</div>
-                            <div class="market-stat-value" id="fumo-owners">Loading...</div>
-                        </div>
-                        <div class="market-stat">
-                            <div class="market-stat-label" data-dyn-label="avg">24h avg px</div>
-                            <div class="market-stat-value" id="fumo-avg">Loading...</div>
-                        </div>
-                    </div>
-                    <div class="market-spark" id="fumo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div>
-                    <div class="market-desc">
-                        Hardforked 404 collection.
-                    </div>
-                    <div class="market-links">
-                        <a href="https://opensea.io/collection/milady-fumo-baby-404" target="_blank" class="market-link">opensea</a>
-                        <a href="https://blog.remilia.org/fumo-404" target="_blank" class="market-link">blog</a>
-                    </div>
-                </div>
+                        <!-- Fumo Baby 404 -->
+                        <tr>
+                            <td class="col-name">
+                                <video src="https://blog.remilia.org/content/media/2024/04/fumo_01-1.mp4" class="market-logo" autoplay muted loop playsinline></video>
+                                <span class="market-name" title="Hardforked 404 collection.">fumo baby 404</span>
+                            </td>
+                            <td id="fumo-floor">Loading...</td>
+                            <td><span class="market-change" id="fumo-change"></span></td>
+                            <td id="fumo-volume">Loading...</td>
+                            <td id="fumo-owners">Loading...</td>
+                            <td id="fumo-avg">Loading...</td>
+                            <td class="col-spark"><div class="market-spark" id="fumo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
+                            <td class="col-links">
+                                <a href="https://opensea.io/collection/milady-fumo-baby-404" target="_blank" class="market-link">opensea</a>
+                                <a href="https://blog.remilia.org/fumo-404" target="_blank" class="market-link">blog</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             
             <!-- CULT Chart -->
@@ -297,7 +233,7 @@
 
     <!-- External JavaScript -->
     <script src="js/background3d.js?v=1.4"></script>
-    <script src="js/script.js?v=1.6"></script>
+    <script src="js/script.js?v=1.7"></script>
     <script src="js/performance.js?v=1.1"></script>
     <script src="js/interactions.js?v=1.1"></script>
     <script src="js/effects.js?v=1.3"></script>
