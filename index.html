@@ -6,7 +6,7 @@
     <title>Tyler (in real life)</title>
     
     <!-- Preload LCP hero image -->
-    <link rel="preload" as="image" href="assets/remilio2.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/remilio2.png" fetchpriority="high">
     
     <!-- Three.js for 3D background (deferred to unblock render) -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -17,12 +17,12 @@
     <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
     <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="css/radgotchi.css">
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+    <link rel="stylesheet" href="/css/radgotchi.css">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -53,9 +53,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=1.5">
+    <link rel="stylesheet" href="/css/styles.css?v=1.5">
     
-    <link rel="stylesheet" href="css/index.css?v=1.0">
+    <link rel="stylesheet" href="/css/index.css?v=1.0">
 </head>
 <body>
     <!-- CRT Boot Sequence (first visit per session) -->
@@ -153,7 +153,7 @@
         <div class="container">
             <div style="text-align: center; margin: 0.2rem 0;">
                 <div class="hologram-container">
-                    <img src="assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
+                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
                     <div class="hologram-scanlines"></div>
                     <div class="hologram-flicker"></div>
                     <div class="hologram-noise"></div>
@@ -164,7 +164,7 @@
             <div class="contact-methods" style="margin: 0.1rem 0 0.2rem 0;">
                 <div class="contact-grid">
                     <a href="https://remilia.net/~tyler" target="_blank" class="contact-icon-link" title="RemiliaNET">
-                        <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" loading="lazy" decoding="async" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                        <img src="/assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" loading="lazy" decoding="async" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                     </a>
 
                     <a href="https://x.com/itsTylerIRL" target="_blank" class="contact-icon-link" title="Twitter / X">
@@ -220,7 +220,7 @@
                     <div id="install-title" style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #8be9fd; letter-spacing: 0.25em; text-transform: uppercase; text-shadow: 0 0 12px rgba(139, 233, 253, 0.9), 0 0 25px rgba(139, 233, 253, 0.5); font-weight: bold;">RADGOTCHI INSTALLER</div>
                 </div>
                 <div id="radgotchi-container" style="flex-shrink: 0; text-align: center;">
-                    <img src="assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face" loading="lazy" decoding="async">
+                    <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face" loading="lazy" decoding="async">
                     <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
                 </div>
                 <div class="install-commands-area">
@@ -239,7 +239,7 @@
                             <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                             GitHub
                         </a>
-                        <a href="deepdish_rg.html" class="install-link">
+                        <a href="/pages/deepdish_rg.html" class="install-link">
                             <svg viewBox="0 0 16 16"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 000 2.5v11a.5.5 0 00.707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 00.78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0016 13.5v-11a.5.5 0 00-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/></svg>
                             Docs
                         </a>
@@ -252,9 +252,9 @@
                 <div class="bento-grid">
                     <!-- Row 1 -->
                     <!-- NFT Gallery -->
-                    <a href="gallery.html" class="bento-item" data-accent="139,233,253">
+                    <a href="/pages/gallery.html" class="bento-item" data-accent="139,233,253">
                         <div class="bento-image">
-                            <img src="assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
+                            <img src="/assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
                         <div class="bento-content">
                             <h3>nft gallery</h3>
@@ -263,10 +263,10 @@
                     </a>
                     
                     <!-- DeepDish OCS -->
-                    <a href="deepdish.html" class="bento-item" data-accent="34,208,247">
+                    <a href="/pages/deepdish.html" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
                             <div class="ocs-circle" style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid #8be9fd; position: relative;">
-                                <img src="assets/OCS.gif" alt="DeepDish OCS" decoding="async" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.13); max-width: none; max-height: none; filter: brightness(1.6);">
+                                <img src="/assets/OCS.gif" alt="DeepDish OCS" decoding="async" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.13); max-width: none; max-height: none; filter: brightness(1.6);">
                             </div>
                         </div>
                         <div class="bento-content">
@@ -276,9 +276,9 @@
                     </a>
                     
                     <!-- Missile Program -->
-                    <a href="rocketry.html" class="bento-item" data-accent="255,184,108">
+                    <a href="/pages/rocketry.html" class="bento-item" data-accent="255,184,108">
                         <div class="bento-image">
-                            <img src="assets/missile.png" alt="Missile Program" decoding="async">
+                            <img src="/assets/missile.png" alt="Missile Program" decoding="async">
                         </div>
                         <div class="bento-content">
                             <h3>missile program</h3>
@@ -288,9 +288,9 @@
                     
                     <!-- Row 2 -->
                     <!-- Things I Like -->
-                    <a href="likes.html" class="bento-item" data-accent="241,250,140">
+                    <a href="/pages/likes.html" class="bento-item" data-accent="241,250,140">
                         <div class="bento-image">
-                            <img src="assets/retart.png" alt="Things I Like" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
+                            <img src="/assets/retart.png" alt="Things I Like" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
                         </div>
                         <div class="bento-content">
                             <h3>things I like</h3>
@@ -301,7 +301,7 @@
                     <!-- ~tyler RemiliaNET -->
                     <a href="https://remilia.net/~tyler" target="_blank" class="bento-item" data-accent="189,147,249">
                         <div class="bento-image">
-                            <img src="assets/remilianet-symbol.svg" alt="RemiliaNET" decoding="async" style="width: 80%; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
+                            <img src="/assets/remilianet-symbol.svg" alt="RemiliaNET" decoding="async" style="width: 80%; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
                         </div>
                         <div class="bento-content">
                             <h3>~tyler</h3>
@@ -310,9 +310,9 @@
                     </a>
                     
                     <!-- Cult Markets -->
-                    <a href="markets.html" class="bento-item" data-accent="255,121,198">
+                    <a href="/pages/markets.html" class="bento-item" data-accent="255,121,198">
                         <div class="bento-image">
-                            <img src="assets/cult.png" alt="Cult Markets" decoding="async">
+                            <img src="/assets/cult.png" alt="Cult Markets" decoding="async">
                         </div>
                         <div class="bento-content">
                             <h3>cult markets</h3>
@@ -324,7 +324,7 @@
                     <!-- ~nosfyl -->
                     <a href="https://nosfyl.tylerirl.com" target="_blank" class="bento-item" data-accent="34,208,247">
                         <div class="bento-image">
-                            <img src="assets/nosfyl_icon.png" alt="~nosfyl" decoding="async" style="border-radius: 50%; border: 2px solid #22d0f7;">
+                            <img src="/assets/nosfyl_icon.png" alt="~nosfyl" decoding="async" style="border-radius: 50%; border: 2px solid #22d0f7;">
                         </div>
                         <div class="bento-content">
                             <h3>~nosfyl</h3>
@@ -335,7 +335,7 @@
                     <!-- ~raddem-tidwyt -->
                     <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item" data-accent="187,250,191">
                         <div class="bento-image">
-                            <img src="assets/raddem_icon.png" alt="~raddem-tidwyt" decoding="async" style="border-radius: 50%; border: 2px solid #bbfabf;">
+                            <img src="/assets/raddem_icon.png" alt="~raddem-tidwyt" decoding="async" style="border-radius: 50%; border: 2px solid #bbfabf;">
                         </div>
                         <div class="bento-content">
                             <h3>~raddem-tidwyt</h3>
@@ -344,9 +344,9 @@
                     </a>
                     
                     <!-- Guest Book -->
-                    <a href="https://tylerirl.com/guest-book.html" class="bento-item" data-accent="80,250,123">
+                    <a href="/pages/guest-book.html" class="bento-item" data-accent="80,250,123">
                         <div class="bento-image">
-                            <img src="assets/newurbit.png" alt="Guest Book" decoding="async" style="border-radius: 50%; border: 2px solid #8be9fd;">
+                            <img src="/assets/newurbit.png" alt="Guest Book" decoding="async" style="border-radius: 50%; border: 2px solid #8be9fd;">
                         </div>
                         <div class="bento-content">
                             <h3>guest book</h3>
@@ -380,24 +380,24 @@
     </footer>
     
     <!-- External JavaScript (deferred to unblock first paint) -->
-    <script defer src="js/background3d.js?v=1.4"></script>
-    <script defer src="js/script.js?v=1.7"></script>
-    <script defer src="js/performance.js?v=1.1"></script>
-    <script defer src="js/interactions.js?v=1.1"></script>
-    <script defer src="js/effects.js?v=1.3"></script>
-    <script defer src="js/router.js?v=1.1"></script>
-    <script defer src="js/sounds.js?v=1.0"></script>
+    <script defer src="/js/background3d.js?v=1.4"></script>
+    <script defer src="/js/script.js?v=1.7"></script>
+    <script defer src="/js/performance.js?v=1.1"></script>
+    <script defer src="/js/interactions.js?v=1.1"></script>
+    <script defer src="/js/effects.js?v=1.3"></script>
+    <script defer src="/js/router.js?v=1.1"></script>
+    <script defer src="/js/sounds.js?v=1.0"></script>
     
     <!-- 3D Tilt Card Effect (with parallax depth + glass refraction + spec highlight) -->
     
     
     <!-- Radgotchi Virtual Pet Module -->
-    <script src="js/radgotchi.js"></script>
+    <script src="/js/radgotchi.js"></script>
     
     <!-- Install Banner Scripts -->
 
     <!-- Service Worker Registration for PWA -->
-    <script src="js/index.js?v=1.0"></script>
+    <script src="/js/index.js?v=1.0"></script>
     
 </body>
 </html>

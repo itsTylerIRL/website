@@ -1,6 +1,6 @@
 /* Radgotchi Virtual Pet Module */
 const RG = (function() {
-    const basePath = 'assets/radbros/';
+    const basePath = '/assets/radbros/';
     const faces = {
         cool: basePath + 'COOL.png',
         excited: basePath + 'EXCITED.png',

@@ -545,21 +545,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Radbro image states
     const radbros = {
-        lookLeft: 'assets/radbros/LOOK_L.png',
-        lookLeftHappy: 'assets/radbros/LOOK_L_HAPPY.png',
-        lookRight: 'assets/radbros/LOOK_R.png',
-        lookRightHappy: 'assets/radbros/LOOK_R_HAPPY.png',
-        happy: 'assets/radbros/HAPPY.png',
-        grateful: 'assets/radbros/GRATEFUL.png',
-        intense: 'assets/radbros/INTENSE.png',
-        lonely: 'assets/radbros/LONELY.png',
-        sad: 'assets/radbros/SAD.png',
-        sleep: 'assets/radbros/SLEEP.png',
-        sleep2: 'assets/radbros/SLEEP2.png',
-        cool: 'assets/radbros/COOL.png',
-        smart: 'assets/radbros/SMART.png',
-        upload: 'assets/radbros/UPLOAD.png',
-        excited: 'assets/radbros/EXCITED.png'
+        lookLeft: '/assets/radbros/LOOK_L.png',
+        lookLeftHappy: '/assets/radbros/LOOK_L_HAPPY.png',
+        lookRight: '/assets/radbros/LOOK_R.png',
+        lookRightHappy: '/assets/radbros/LOOK_R_HAPPY.png',
+        happy: '/assets/radbros/HAPPY.png',
+        grateful: '/assets/radbros/GRATEFUL.png',
+        intense: '/assets/radbros/INTENSE.png',
+        lonely: '/assets/radbros/LONELY.png',
+        sad: '/assets/radbros/SAD.png',
+        sleep: '/assets/radbros/SLEEP.png',
+        sleep2: '/assets/radbros/SLEEP2.png',
+        cool: '/assets/radbros/COOL.png',
+        smart: '/assets/radbros/SMART.png',
+        upload: '/assets/radbros/UPLOAD.png',
+        excited: '/assets/radbros/EXCITED.png'
     };
     
     // Preload all images
@@ -631,9 +631,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const kolBadge = e.target.closest('a[href*="kingdomofloathing"]');
         const urbitTile = e.target.closest('a[href*="nosfyl"], a[href*="urbit.tylerirl"]');
         const guestBook = e.target.closest('a[href*="guest-book"]');
-        const galleryTile = e.target.closest('a[href="gallery.html"]');
-        const likesTile = e.target.closest('a[href="likes.html"]');
-        const marketsTile = e.target.closest('a[href="markets.html"]');
+        const galleryTile = e.target.closest('a[href="/pages/gallery.html"]');
+        const likesTile = e.target.closest('a[href="/pages/likes.html"]');
+        const marketsTile = e.target.closest('a[href="/pages/markets.html"]');
         const isHovering = e.target.closest('a, button, .bento-item, .contact-icon-link');
         
         // Priority hover reactions
