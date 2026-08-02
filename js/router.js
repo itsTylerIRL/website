@@ -27,7 +27,7 @@ class SimpleNavigation {
             // Handle floating home button
             if (e.target.closest('.floating-home')) {
                 e.preventDefault();
-                this.loadPage('index.html');
+                this.loadPage('/index.html');
             }
         });
     }

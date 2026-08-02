@@ -5,8 +5,8 @@
 (function() {
     // Sound effect configuration
     const sounds = {
-        hover: new Audio('assets/sfx/hover_soft.wav'),
-        click: new Audio('assets/sfx/click_confirm.wav')
+        hover: new Audio('/assets/sfx/hover_soft.wav'),
+        click: new Audio('/assets/sfx/click_confirm.wav')
     };
     
     // Preload and configure sounds

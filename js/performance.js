@@ -4,10 +4,10 @@
 // Preload critical assets for better performance
 document.addEventListener('DOMContentLoaded', function() {
     const criticalAssets = [
-        'assets/5031.png',
-        'assets/schizo.png', 
-        'assets/remilia_logo.png',
-        'assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3'
+        '/assets/5031.png',
+        '/assets/schizo.png', 
+        '/assets/remilia_logo.png',
+        '/assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3'
     ];
     
     criticalAssets.forEach(asset => {

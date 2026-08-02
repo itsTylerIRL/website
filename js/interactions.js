@@ -30,19 +30,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Sound effects for drag and drop
     const soundEffects = [
-        'assets/sfx/alien-computer-program-blip-03.mp3',
-        'assets/sfx/button-press-synthetic-short-hi-tech-button-beep-zvinbergsa.mp3',
-        'assets/sfx/hi-tech-beepsbuzz-com.mp3',
-        'assets/sfx/killswitch.mp3',
-        'assets/sfx/multimedia-page-turn-blip-beep-high-tech-02.mp3',
-        'assets/sfx/poe-laugh.mp3',
-        'assets/sfx/sound-design-multimedia-accent-error-message-negative-chime-beep-high-tech.mp3',
-        'assets/sfx/tech-rollover-5.mp3',
-        'assets/sfx/the-undertaker-bell-meme-sound-effect-soundboard-link.mp3'
+        '/assets/sfx/alien-computer-program-blip-03.mp3',
+        '/assets/sfx/button-press-synthetic-short-hi-tech-button-beep-zvinbergsa.mp3',
+        '/assets/sfx/hi-tech-beepsbuzz-com.mp3',
+        '/assets/sfx/killswitch.mp3',
+        '/assets/sfx/multimedia-page-turn-blip-beep-high-tech-02.mp3',
+        '/assets/sfx/poe-laugh.mp3',
+        '/assets/sfx/sound-design-multimedia-accent-error-message-negative-chime-beep-high-tech.mp3',
+        '/assets/sfx/tech-rollover-5.mp3',
+        '/assets/sfx/the-undertaker-bell-meme-sound-effect-soundboard-link.mp3'
     ];
 
     // Hover sound effect for PFPs - DISABLED (now using sounds.js)
-    // const hoverSound = new Audio('assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3');
+    // const hoverSound = new Audio('/assets/sfx/high-tech-interface-sounds-lv-htis-beeps-simple-03.mp3');
     // hoverSound.volume = 0.3;
     // let isPlayingHoverSound = false;
     let isPlayingHoverSound = false; // Keep for drag/drop compatibility
