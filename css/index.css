@@ -471,9 +471,13 @@
     }
 }
 
-@media (max-width: 500px) {
+/* On phones: single column, but compact (flat, banner-height) cards to match the installer */
+@media (max-width: 600px) {
     .bento-grid {
         grid-template-columns: 1fr;
+    }
+    .bento-item {
+        aspect-ratio: 2.8 / 1;
     }
 }
 
