@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>speedcube timer - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/timer">
+    <meta property="og:title" content="speedcube timer">
+    <meta property="og:description" content="A minimal speedcube timer with session stats saved in your browser.">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/timer">
+    <meta property="twitter:title" content="speedcube timer">
+    <meta property="twitter:description" content="A minimal speedcube timer with session stats saved in your browser.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.5">
+    <link rel="stylesheet" href="/css/radgotchi.css">
+
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <link rel="stylesheet" href="/css/timer.css?v=1.0">
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <div class="cursor-bracket tl"></div>
+        <div class="cursor-bracket tr"></div>
+        <div class="cursor-bracket bl"></div>
+        <div class="cursor-bracket br"></div>
+    </div>
+    <div class="corner-brackets"><div class="bottom"></div></div>
+
+    <!-- Floating Return Home Button -->
+    <a href="/" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="/assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+
+    <main class="main-content">
+        <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+            <div class="container" style="text-align: center; padding-top: 0.5rem;">
+                <div class="hologram-container">
+                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
+                    <div class="hologram-scanlines"></div>
+                    <div class="hologram-flicker"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="timer-container">
+            <header class="timer-header">
+                <h1><span>speedcube</span> timer ⏱️</h1>
+                <p class="subtitle">hold space, release to solve, tap to stop</p>
+            </header>
+
+            <!-- Session Controls -->
+            <div class="session-bar">
+                <label class="session-label" for="session-select">session</label>
+                <select id="session-select" class="session-select"></select>
+                <button class="session-btn" id="new-session-btn" title="New session">+ new</button>
+                <button class="session-btn" id="rename-session-btn" title="Rename session">rename</button>
+                <button class="session-btn danger" id="clear-session-btn" title="Clear all times in this session">clear</button>
+                <button class="session-btn danger" id="delete-session-btn" title="Delete this session">delete</button>
+            </div>
+
+            <!-- Options -->
+            <div class="options-bar">
+                <label class="toggle">
+                    <input type="checkbox" id="inspection-toggle">
+                    <span>15s inspection</span>
+                </label>
+                <label class="toggle">
+                    <input type="checkbox" id="hide-ui-toggle">
+                    <span>hide UI while timing</span>
+                </label>
+            </div>
+
+            <!-- Timer + Stats layout -->
+            <div class="timer-layout">
+                <!-- Solve list / stats sidebar -->
+                <aside class="stats-panel">
+                    <div class="stats-grid">
+                        <div class="stat-box accent-cyan">
+                            <div class="stat-label">solves</div>
+                            <div class="stat-value" id="stat-count">0</div>
+                        </div>
+                        <div class="stat-box accent-green">
+                            <div class="stat-label">best</div>
+                            <div class="stat-value" id="stat-best">—</div>
+                        </div>
+                        <div class="stat-box accent-purple">
+                            <div class="stat-label">ao5</div>
+                            <div class="stat-value" id="stat-ao5">—</div>
+                        </div>
+                        <div class="stat-box accent-orange">
+                            <div class="stat-label">ao12</div>
+                            <div class="stat-value" id="stat-ao12">—</div>
+                        </div>
+                        <div class="stat-box accent-cyan">
+                            <div class="stat-label">mean</div>
+                            <div class="stat-value" id="stat-mean">—</div>
+                        </div>
+                        <div class="stat-box accent-green">
+                            <div class="stat-label">best ao5</div>
+                            <div class="stat-value" id="stat-best-ao5">—</div>
+                        </div>
+                    </div>
+
+                    <div class="solve-list-header">
+                        <span>times</span>
+                        <span class="solve-list-hint">click a time to edit</span>
+                    </div>
+                    <div class="solve-list" id="solve-list">
+                        <div class="solve-empty">no solves yet — press space to begin</div>
+                    </div>
+                </aside>
+
+                <!-- Big timer -->
+                <div class="timer-stage" id="timer-stage" tabindex="0">
+                    <div class="timer-display" id="timer-display">0.00</div>
+                    <div class="timer-hint" id="timer-hint">press &amp; hold <kbd>space</kbd></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <center>
+            <div id="radgotchi-container">
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+            </div>
+
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100"
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+
+            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+        </div>
+    </footer>
+
+    <!-- Solve edit popover -->
+    <div class="solve-modal" id="solve-modal">
+        <div class="solve-modal-content">
+            <div class="solve-modal-time" id="solve-modal-time">0.00</div>
+            <div class="solve-modal-buttons">
+                <button class="solve-modal-btn" data-action="ok">OK</button>
+                <button class="solve-modal-btn" data-action="plus2">+2</button>
+                <button class="solve-modal-btn" data-action="dnf">DNF</button>
+                <button class="solve-modal-btn danger" data-action="delete">delete</button>
+            </div>
+            <button class="solve-modal-close" id="solve-modal-close">close</button>
+        </div>
+    </div>
+
+    <script src="/js/timer.js?v=1.0"></script>
+    <!-- Bootstrap for SPA navigation (body.innerHTML swap does not run external scripts) -->
+    <script>
+        (function () {
+            if (typeof window.initCubeTimer === 'function') {
+                window.initCubeTimer();
+            } else if (!document.getElementById('cube-timer-loader')) {
+                var s = document.createElement('script');
+                s.id = 'cube-timer-loader';
+                s.src = '/js/timer.js?v=1.0';
+                document.body.appendChild(s);
+            }
+        })();
+    </script>
+
+    <!-- 3D Background Script -->
+    <script src="/js/background3d.js?v=1.4"></script>
+    <script src="/js/script.js?v=1.7"></script>
+    <script src="/js/interactions.js"></script>
+    <script src="/js/radgotchi.js"></script>
+</body>
+</html>
