@@ -318,6 +318,91 @@
     color: #aaa;
 }
 
+/* RemiliaNET live stats — full-card panel revealed on hover */
+.reminet-stats {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.75rem;
+    background: linear-gradient(160deg, rgba(10, 4, 20, 0.82), rgba(0, 0, 0, 0.88));
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Reveal only once data has loaded and the card is hovered/focused */
+.bento-item:hover .reminet-stats.ready,
+.bento-item:focus-within .reminet-stats.ready {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Emphasized social credit badge */
+.reminet-credit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid rgba(189, 147, 249, 0.45);
+    border-radius: 8px;
+    background: radial-gradient(circle at 50% 0%, rgba(189, 147, 249, 0.22), rgba(189, 147, 249, 0.05));
+    box-shadow: 0 0 18px rgba(189, 147, 249, 0.3), inset 0 0 10px rgba(189, 147, 249, 0.12);
+}
+
+.reminet-credit-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 12px rgba(189, 147, 249, 0.95), 0 0 26px rgba(189, 147, 249, 0.55);
+}
+
+.reminet-credit-label {
+    font-size: 0.52rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgb(189, 147, 249);
+    margin-top: 0.15rem;
+}
+
+.reminet-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.3rem 1.1rem;
+    justify-content: center;
+}
+
+.reminet-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.reminet-stat-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgb(189, 147, 249);
+    text-shadow: 0 0 8px rgba(139, 233, 253, 0.3);
+}
+
+.reminet-stat-label {
+    font-size: 0.52rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #999;
+}
+
 /* External link indicator */
 .bento-item[target="_blank"] .bento-content::before {
     content: '↗';

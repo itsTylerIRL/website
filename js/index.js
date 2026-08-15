@@ -325,3 +325,32 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
+// Live RemiliaNET profile stats on the ~tyler bento card
+(function() {
+    const box = document.getElementById('reminet-stats');
+    if (!box) return;
+
+    const fmt = (n) => {
+        if (typeof n !== 'number' || !isFinite(n)) return '—';
+        if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k';
+        return String(n);
+    };
+
+    fetch('https://www.remilia.net/api/v1/users/tyler')
+        .then((r) => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+        .then((data) => {
+            const u = data && data.user;
+            if (!u) throw new Error('no user');
+            let any = false;
+            box.querySelectorAll('[data-stat]').forEach((el) => {
+                const v = u[el.dataset.stat];
+                if (typeof v === 'number') { el.textContent = fmt(v); any = true; }
+            });
+            if (any) {
+                box.hidden = false;
+                requestAnimationFrame(() => box.classList.add('ready'));
+            }
+        })
+        .catch((e) => console.log('RemiliaNET stats unavailable:', e.message));
+})();
