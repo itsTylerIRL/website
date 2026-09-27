@@ -566,6 +566,142 @@
     }
 }
 
+/* ---------- Bento card polish ----------
+   Cards are size containers so each one picks its own layout from its shape:
+   stacked (icon over text) when roomy, horizontal row when short and wide.
+   --accent is an "r,g,b" triplet set per card from data-accent (js/index.js). */
+.bento-item {
+    --accent: 139, 233, 253;
+    container-type: size;
+    background:
+        linear-gradient(160deg, rgba(var(--accent), 0.08) 0%, rgba(var(--accent), 0.015) 40%, transparent 70%),
+        rgba(0, 0, 0, 0.35);
+    border-color: rgba(var(--accent), 0.22);
+    border-top-color: rgba(255, 255, 255, 0.14);
+    border-left-color: rgba(255, 255, 255, 0.08);
+}
+
+.bento-item:focus-visible {
+    outline: 2px solid rgba(var(--accent), 0.85);
+    outline-offset: 3px;
+}
+
+/* Icon area: in normal flow, fills the space above the text */
+.bento-image {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: clamp(0.5rem, 9cqh, 1.4rem) 1rem 0;
+}
+
+/* Soft accent halo behind the icon */
+.bento-image::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: min(70cqh, 70%);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--accent), 0.16) 0%, rgba(var(--accent), 0.05) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 0.8;
+}
+
+.bento-item:hover .bento-image::before {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.bento-content {
+    position: relative;
+    flex: none;
+    min-height: 0;
+    padding: 0.6rem 1rem clamp(0.75rem, 8cqh, 1.1rem);
+    background: none;
+}
+
+.bento-content h3 {
+    font-size: clamp(0.9rem, 0.5rem + 3.2cqw, 1.05rem);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.2rem;
+}
+
+.bento-item:hover .bento-content h3 {
+    color: rgb(var(--accent));
+    text-shadow: 0 0 18px rgba(var(--accent), 0.45);
+}
+
+.bento-content p {
+    color: #8a8f98;
+}
+
+.bento-item:hover .bento-content p {
+    color: #b4b9c2;
+}
+
+/* Replaced by .bento-ext (the old pseudo-element sat outside the card) */
+.bento-item[target="_blank"] .bento-content::before {
+    content: none;
+}
+
+.bento-ext {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.7rem;
+    z-index: 22;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: rgba(var(--accent), 0.6);
+    pointer-events: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.bento-item:hover .bento-ext {
+    color: rgb(var(--accent));
+    transform: translate(2px, -2px);
+}
+
+/* Short, wide cards (desktop grid filling the viewport, phones): icon left, text right.
+   Absolute positioning (not transforms) because js/index.js writes inline transforms
+   on .bento-image / .bento-content for the hover parallax. */
+@container (min-aspect-ratio: 21 / 10) {
+    .bento-item > .bento-image {
+        --icon: min(64cqh, 92px);
+        position: absolute;
+        left: clamp(0.9rem, 6cqw, 1.5rem);
+        top: calc((100cqh - var(--icon)) / 2);
+        width: var(--icon);
+        height: var(--icon);
+        padding: 0;
+    }
+    .bento-image img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    .bento-image::before {
+        top: 50%;
+        width: 150%;
+    }
+    .deepdish-img {
+        max-width: 100%;
+    }
+    .bento-item > .bento-content {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(clamp(0.9rem, 6cqw, 1.5rem) + min(64cqh, 92px));
+        justify-content: center;
+        text-align: left;
+        padding: 0 1.75rem 0 clamp(0.8rem, 4cqw, 1.25rem);
+    }
+}
+
 /* Hologram Hero Image Effects */
 .hologram-container {
     position: relative;
@@ -1131,9 +1267,10 @@
 }
 
 /* ---------- CRT boot sequence ----------
-   Black overlay covers the page on first load, runs a CRT
-   power-on (horizontal scanline + boot log), then fades out.
-   Skipped on revisit via sessionStorage. */
+   First visit per session (skipped on revisit via sessionStorage):
+   the tube snaps on from a line, "tyler" decodes, the boot log types in,
+   then the screen collapses into a scanline and releases the page.
+   Driven by the inline script at the top of index.html. */
 #boot-overlay {
     position: fixed;
     inset: 0;
@@ -1143,90 +1280,19 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
     color: #8be9fd;
     cursor: pointer;
 }
-#boot-overlay.gone {
-    opacity: 0;
+/* Faint phosphor glow behind the text */
+#boot-overlay .boot-screen::before {
+    content: '';
+    position: absolute;
+    inset: -40% -30%;
+    background: radial-gradient(ellipse at center, rgba(139, 233, 253, 0.07) 0%, transparent 60%);
     pointer-events: none;
-    transition: opacity 0.5s ease;
+    z-index: -1;
 }
-/* CRT horizontal scanline: thin bar expands, then collapses to a dot */
-#boot-overlay .crt-bar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    height: 2px;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(139, 233, 253, 0.2) 10%,
-        #8be9fd 50%,
-        rgba(139, 233, 253, 0.2) 90%,
-        transparent 100%);
-    box-shadow: 0 0 20px #8be9fd, 0 0 40px rgba(139, 233, 253, 0.6);
-    transform: translateY(-50%) scaleX(0);
-    transform-origin: center;
-    animation: bootBar 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-}
-@keyframes bootBar {
-    0%   { transform: translateY(-50%) scaleX(0); height: 2px; opacity: 1; }
-    30%  { transform: translateY(-50%) scaleX(1); height: 2px; opacity: 1; }
-    55%  { transform: translateY(-50%) scaleX(1); height: 100vh; opacity: 0.85; }
-    75%  { transform: translateY(-50%) scaleX(1); height: 100vh; opacity: 0.6; }
-    90%  { transform: translateY(-50%) scaleX(0.4); height: 2px; opacity: 0.9; }
-    100% { transform: translateY(-50%) scaleX(0); height: 2px; opacity: 0; }
-}
-/* Final pinpoint dot collapse */
-#boot-overlay .crt-dot {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #fff;
-    transform: translate(-50%, -50%) scale(0);
-    box-shadow: 0 0 12px #8be9fd, 0 0 24px #8be9fd;
-    animation: bootDot 0.5s ease-out 1.4s forwards;
-}
-@keyframes bootDot {
-    0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-    40%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-}
-/* Boot log lines (typed in via JS) */
-#boot-overlay .crt-log {
-    position: absolute;
-    left: 50%;
-    top: calc(50% + 40px);
-    transform: translateX(-50%);
-    text-align: left;
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    line-height: 1.6;
-    text-shadow: 0 0 8px rgba(139, 233, 253, 0.7);
-    white-space: pre;
-    min-width: min(80vw, 360px);
-    opacity: 0;
-    animation: bootLogFade 0.3s ease 0.35s forwards;
-}
-@keyframes bootLogFade { to { opacity: 1; } }
-#boot-overlay .crt-log .line { display: block; }
-#boot-overlay .crt-log .ok { color: #50fa7b; text-shadow: 0 0 8px rgba(80, 250, 123, 0.7); margin-left: 0.4em; }
-#boot-overlay .crt-cursor {
-    display: inline-block;
-    width: 0.55em;
-    background: #8be9fd;
-    color: #000;
-    animation: bootCaret 0.6s steps(2) infinite;
-}
-@keyframes bootCaret {
-    0%, 50% { opacity: 1; }
-    50.01%, 100% { opacity: 0; }
-}
-/* CRT scanlines over the whole boot overlay */
+/* CRT scanlines over the whole overlay */
 #boot-overlay::before {
     content: '';
     position: absolute;
@@ -1235,31 +1301,187 @@
         0deg,
         transparent 0px,
         transparent 2px,
-        rgba(139, 233, 253, 0.05) 2px,
-        rgba(139, 233, 253, 0.05) 3px
+        rgba(139, 233, 253, 0.04) 2px,
+        rgba(139, 233, 253, 0.04) 3px
     );
     pointer-events: none;
+    z-index: 2;
 }
-/* Subtle vignette so the bar feels like a tube */
+/* Tube vignette */
 #boot-overlay::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.85) 100%);
     pointer-events: none;
+    z-index: 2;
 }
+
+/* The "screen": powers on from a thin horizontal line */
+#boot-overlay .boot-screen {
+    position: relative;
+    width: min(34em, 88vw);
+    font-size: clamp(0.7rem, 2.6vw, 0.8rem);
+    animation: bootPowerOn 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes bootPowerOn {
+    0%   { transform: scale(0, 0.006); filter: brightness(4); }
+    45%  { transform: scale(1, 0.006); filter: brightness(4); }
+    100% { transform: scale(1, 1); filter: brightness(1); }
+}
+
+#boot-overlay .boot-brand {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.2em 0.8em;
+    margin-bottom: 1.1em;
+}
+#boot-overlay .boot-name {
+    font-size: clamp(2.2rem, 9vw, 3.1rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: #eafbff;
+    text-shadow: 0 0 14px rgba(139, 233, 253, 0.85), 0 0 34px rgba(139, 233, 253, 0.4);
+    white-space: pre;
+}
+#boot-overlay .boot-tag {
+    font-size: 0.9em;
+    letter-spacing: 0.22em;
+    color: rgba(139, 233, 253, 0.6);
+}
+
+#boot-overlay .boot-log {
+    min-height: 6.4em; /* reserve 4 rows so nothing shifts as lines arrive */
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    white-space: pre;
+    text-shadow: 0 0 8px rgba(139, 233, 253, 0.55);
+}
+#boot-overlay .boot-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+}
+#boot-overlay .boot-stat {
+    color: rgba(139, 233, 253, 0.7);
+}
+#boot-overlay .boot-stat.ok {
+    color: #50fa7b;
+    text-shadow: 0 0 8px rgba(80, 250, 123, 0.7);
+}
+
+#boot-overlay .boot-progress {
+    height: 2px;
+    margin-top: 1.1em;
+    background: rgba(139, 233, 253, 0.14);
+    overflow: hidden;
+}
+#boot-overlay .boot-progress-fill {
+    height: 100%;
+    background: #8be9fd;
+    box-shadow: 0 0 10px #8be9fd;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 60ms linear, background-color 0.2s ease;
+}
+#boot-overlay .boot-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.6em;
+    font-size: 0.78em;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(139, 233, 253, 0.5);
+    transition: color 0.2s ease;
+}
+/* Boot complete: bar and counter flip to green */
+#boot-overlay.ready .boot-progress-fill {
+    background: #50fa7b;
+    box-shadow: 0 0 10px #50fa7b;
+}
+#boot-overlay.ready #boot-pct {
+    color: #50fa7b;
+}
+
 #boot-skip {
     position: absolute;
     bottom: 24px;
-    right: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
     font-size: 0.6rem;
-    color: rgba(139, 233, 253, 0.5);
+    color: rgba(139, 233, 253, 0.45);
     letter-spacing: 0.25em;
     text-transform: uppercase;
     pointer-events: none;
     opacity: 0;
-    animation: bootLogFade 0.3s ease 1.2s forwards;
+    animation: bootFadeIn 0.4s ease 0.6s forwards;
+    z-index: 3;
 }
+@keyframes bootFadeIn { to { opacity: 1; } }
+
+/* Exit: the screen squeezes into a glowing scanline, which then shrinks to nothing,
+   revealing the page from the top and bottom edges */
+#boot-overlay .boot-collapse {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: linear-gradient(90deg, transparent, #8be9fd 20%, #fff 50%, #8be9fd 80%, transparent);
+    box-shadow: 0 0 16px #8be9fd, 0 0 36px rgba(139, 233, 253, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+#boot-overlay.exit,
+#boot-overlay.exit-fast {
+    pointer-events: none;
+    animation: bootCollapse 0.62s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+#boot-overlay.exit .boot-screen,
+#boot-overlay.exit-fast .boot-screen {
+    animation: bootScreenOff 0.62s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+#boot-overlay.exit .boot-collapse,
+#boot-overlay.exit-fast .boot-collapse {
+    animation: bootLineOff 0.62s ease forwards;
+}
+#boot-overlay.exit-fast,
+#boot-overlay.exit-fast .boot-screen,
+#boot-overlay.exit-fast .boot-collapse {
+    animation-duration: 0.32s;
+}
+#boot-overlay.exit #boot-skip,
+#boot-overlay.exit-fast #boot-skip {
+    display: none;
+}
+@keyframes bootCollapse {
+    0%   { clip-path: inset(0 0 0 0); }
+    55%  { clip-path: inset(calc(50% - 1px) 0 calc(50% - 1px) 0); }
+    100% { clip-path: inset(calc(50% - 1px) 0 calc(50% - 1px) 0); }
+}
+@keyframes bootScreenOff {
+    0%   { transform: scale(1, 1); filter: brightness(1); opacity: 1; }
+    50%  { transform: scale(1, 0.02); filter: brightness(3); opacity: 1; }
+    60%  { opacity: 0; }
+    100% { transform: scale(1, 0.02); opacity: 0; }
+}
+@keyframes bootLineOff {
+    0%   { opacity: 0; transform: scaleX(1); }
+    40%  { opacity: 1; transform: scaleX(1); }
+    60%  { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(0); }
+}
+
+/* Hold the bento entrance until the boot screen releases the page */
+html.booting .bento-item.visible {
+    animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
     #boot-overlay { display: none !important; }
 }

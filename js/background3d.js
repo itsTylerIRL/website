@@ -21,7 +21,7 @@ let glitchIntensity = 0;
 let nextGlitchTime = 0;
 
 // Nebula backdrop
-let nebulaMesh, nebulaScene, nebulaCamera;
+let nebulaMesh, nebulaScene, nebulaCamera, nebulaRT;
 let nebulaEnabled = true;
 let nebulaIntensity = 0.55;
 
@@ -61,6 +61,12 @@ let glitchEnabled = false;
 let linesAttraction = 0.7; // How strongly lines are attracted to cursor (0-1)
 
 function initBackground3D() {
+    // three.js comes from a CDN; if it failed to load, skip the background instead of throwing
+    if (typeof THREE === 'undefined') {
+        console.warn('three.js unavailable - 3D background disabled');
+        return;
+    }
+
     // Scene setup
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -354,13 +360,34 @@ window.clearExclusionZones = function() {
     exclusionZones.length = 0;
 };
 
+// Combined projection * view * particles-world matrix, so a particle can be taken to
+// clip space in one multiply instead of three Vector3.applyMatrix4 passes.
+const _particleClipMatrix = new THREE.Matrix4();
+function _updateParticleClipMatrix() {
+    return _particleClipMatrix
+        .multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
+        .multiply(particles.matrixWorld)
+        .elements;
+}
+
+// Curl steering is spread across frames: each frame steers 1/CURL_STRIDE of the
+// particles, with the blend compounded so the motion matches per-frame steering.
+// The field changes slowly, so this is visually identical at a fraction of the cost.
+const CURL_STRIDE = 3;
+const CURL_BLEND = 1 - Math.pow(1 - 0.04, CURL_STRIDE);
+let _curlPhase = 0;
+
 // Update particle positions with velocity and exclusion zone bouncing
 function updateParticlePositions() {
     if (!particlePositions || particleVelocities.length === 0) return;
     
     const positions = particlePositions.array;
-    const tempVec = new THREE.Vector3();
     const t = performance.now() * 0.001;
+    const hasZones = exclusionZones.length > 0;
+    const m = hasZones ? _updateParticleClipMatrix() : null;
+    const halfW = window.innerWidth * 0.5;
+    const halfH = window.innerHeight * 0.5;
+    _curlPhase = (_curlPhase + 1) % CURL_STRIDE;
     
     for (let i = 0; i < positions.length / 3; i++) {
         const idx = i * 3;
@@ -368,7 +395,7 @@ function updateParticlePositions() {
         // Curl-noise flow field steers the particle's velocity.
         // We treat curl as a target *direction* and gently steer the velocity
         // toward it at a capped speed, so particles never accelerate unbounded.
-        if (curlFlowEnabled) {
+        if (curlFlowEnabled && i % CURL_STRIDE === _curlPhase) {
             curlNoise(positions[idx], positions[idx + 1], positions[idx + 2], t, _curlOut);
             const vel = particleVelocities[i];
             
@@ -389,7 +416,7 @@ function updateParticlePositions() {
             const tz = cz * targetSpeed * 0.3; // less Z motion
             
             // Lerp velocity toward the target (low blend = smooth)
-            const blend = 0.04;
+            const blend = CURL_BLEND;
             vel.x += (tx - vel.x) * blend;
             vel.y += (ty - vel.y) * blend;
             vel.z += (tz - vel.z) * blend;
@@ -421,17 +448,12 @@ function updateParticlePositions() {
         // Check exclusion zones (in screen space).
         // Only resolve the single deepest overlap per frame so multiple zones
         // can't stack pushes and fling the particle.
-        if (exclusionZones.length > 0) {
-            // Get particle screen position
-            tempVec.set(positions[idx], positions[idx + 1], positions[idx + 2]);
-            if (particles.matrixWorld) {
-                tempVec.applyMatrix4(particles.matrixWorld);
-            }
-            tempVec.project(camera);
-            
-            // Convert to pixel coordinates
-            const screenX = (tempVec.x + 1) * 0.5 * window.innerWidth;
-            const screenY = (1 - tempVec.y) * 0.5 * window.innerHeight;
+        if (hasZones) {
+            // Get particle screen position (clip space -> NDC -> pixels)
+            const px = positions[idx], py = positions[idx + 1], pz = positions[idx + 2];
+            const iw = 1 / (m[3] * px + m[7] * py + m[11] * pz + m[15]);
+            const screenX = ((m[0] * px + m[4] * py + m[8] * pz + m[12]) * iw + 1) * halfW;
+            const screenY = (1 - (m[1] * px + m[5] * py + m[9] * pz + m[13]) * iw) * halfH;
             
             // Find deepest-overlap zone
             let bestZone = null;
@@ -576,28 +598,57 @@ function createNebulaBackdrop() {
         depthWrite: false
     });
 
-    // Plane sized large enough to fill the camera frustum at its placement distance.
-    // We'll attach it to the camera and update its scale on resize.
+    // Full-screen quad rendered into its own target (see renderNebula) and shown as
+    // scene.background. The clouds drift far less than a pixel per frame, so the target
+    // is refreshed every NEBULA_STRIDE frames instead of re-running the fbm every frame.
     const geo = new THREE.PlaneGeometry(2, 2);
     nebulaMesh = new THREE.Mesh(geo, mat);
     nebulaMesh.frustumCulled = false;
-    nebulaMesh.renderOrder = -1000; // draw first
+    nebulaScene = new THREE.Scene();
+    nebulaScene.add(nebulaMesh);
+    nebulaCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 2);
+    nebulaCamera.position.z = 1;
+    nebulaRT = new THREE.WebGLRenderTarget(1, 1, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        depthBuffer: false,
+        stencilBuffer: false
+    });
     sizeNebulaToCamera();
-
-    // Attach to camera so it always faces and fills the view
-    camera.add(nebulaMesh);
-    if (!scene.children.includes(camera)) scene.add(camera);
 }
 
+// Match the nebula target to the drawing buffer (1:1 texels, so the copy is exact)
+const _nebulaSize = new THREE.Vector2();
 function sizeNebulaToCamera() {
-    if (!nebulaMesh || !camera) return;
-    // Place near the far end of the frustum but inside it
-    const dist = 800;
-    const vFov = camera.fov * Math.PI / 180;
-    const height = 2 * Math.tan(vFov / 2) * dist;
-    const width = height * camera.aspect;
-    nebulaMesh.position.set(0, 0, -dist);
-    nebulaMesh.scale.set(width / 2, height / 2, 1);
+    if (!nebulaRT || !renderer) return;
+    renderer.getDrawingBufferSize(_nebulaSize);
+    nebulaRT.setSize(_nebulaSize.x, _nebulaSize.y);
+    _nebulaDirty = true;
+}
+
+const NEBULA_STRIDE = 2;
+let _nebulaDirty = true;
+let _nebulaFrame = 0;
+let _nebulaLastScroll = null;
+function renderNebula() {
+    if (!nebulaRT) return;
+    // Disabled/zero intensity renders solid black, which is just the clear color
+    if (!nebulaMesh.visible || !(nebulaMesh.material.uniforms.uIntensity.value > 0)) {
+        scene.background = null;
+        _nebulaDirty = true;
+        return;
+    }
+    scene.background = nebulaRT.texture;
+    _nebulaFrame++;
+    // Refresh immediately on scroll/resize (uScroll moves it visibly), else every Nth frame
+    if (!_nebulaDirty && scrollY === _nebulaLastScroll && _nebulaFrame % NEBULA_STRIDE !== 0) return;
+    _nebulaDirty = false;
+    _nebulaLastScroll = scrollY;
+    const prevTarget = renderer.getRenderTarget();
+    renderer.setRenderTarget(nebulaRT);
+    renderer.render(nebulaScene, nebulaCamera);
+    renderer.setRenderTarget(prevTarget);
 }
 
 // ============== DATA PACKETS ==============
@@ -754,32 +805,25 @@ function _vnoise(x, y, z) {
     const y1 = x01 * (1 - v) + x11 * v;
     return y0 * (1 - w) + y1 * w;
 }
-function _potential(x, y, z, t) {
-    // Three independent scalar fields, animated over time
-    const s = 0.04;
-    return [
-        _vnoise(x * s, y * s, z * s + t * 0.05),
-        _vnoise(x * s + 31.4, y * s + 17.8, z * s + 5.2 + t * 0.05),
-        _vnoise(x * s + 7.1, y * s + 91.3, z * s + 22.6 + t * 0.05)
-    ];
-}
+// Three independent scalar potential fields, animated over time
+const _potS = 0.04;
+function _potX(x, y, z, t) { return _vnoise(x * _potS, y * _potS, z * _potS + t * 0.05); }
+function _potY(x, y, z, t) { return _vnoise(x * _potS + 31.4, y * _potS + 17.8, z * _potS + 5.2 + t * 0.05); }
+function _potZ(x, y, z, t) { return _vnoise(x * _potS + 7.1, y * _potS + 91.3, z * _potS + 22.6 + t * 0.05); }
 const _curlEps = 1.0;
 function curlNoise(x, y, z, t, out) {
     const e = _curlEps;
-    const p_x1 = _potential(x + e, y, z, t);
-    const p_x0 = _potential(x - e, y, z, t);
-    const p_y1 = _potential(x, y + e, z, t);
-    const p_y0 = _potential(x, y - e, z, t);
-    const p_z1 = _potential(x, y, z + e, t);
-    const p_z0 = _potential(x, y, z - e, t);
+    const inv2e = 1 / (2 * e);
 
     // curl = ( dPz/dy - dPy/dz, dPx/dz - dPz/dx, dPy/dx - dPx/dy )
-    const dPz_dy = (p_y1[2] - p_y0[2]) / (2 * e);
-    const dPy_dz = (p_z1[1] - p_z0[1]) / (2 * e);
-    const dPx_dz = (p_z1[0] - p_z0[0]) / (2 * e);
-    const dPz_dx = (p_x1[2] - p_x0[2]) / (2 * e);
-    const dPy_dx = (p_x1[1] - p_x0[1]) / (2 * e);
-    const dPx_dy = (p_y1[0] - p_y0[0]) / (2 * e);
+    // Each axis offset only needs the two fields differentiated along it,
+    // so this is 12 noise lookups instead of 18, with no temporary arrays.
+    const dPz_dy = (_potZ(x, y + e, z, t) - _potZ(x, y - e, z, t)) * inv2e;
+    const dPy_dz = (_potY(x, y, z + e, t) - _potY(x, y, z - e, t)) * inv2e;
+    const dPx_dz = (_potX(x, y, z + e, t) - _potX(x, y, z - e, t)) * inv2e;
+    const dPz_dx = (_potZ(x + e, y, z, t) - _potZ(x - e, y, z, t)) * inv2e;
+    const dPy_dx = (_potY(x + e, y, z, t) - _potY(x - e, y, z, t)) * inv2e;
+    const dPx_dy = (_potX(x, y + e, z, t) - _potX(x, y - e, z, t)) * inv2e;
 
     out.x = dPz_dy - dPy_dz;
     out.y = dPx_dz - dPz_dx;
@@ -939,7 +983,9 @@ const godRaysShader = {
         uDensity: { value: 0.5 },
         uWeight: { value: 0.4 },
         uExposure: { value: 0.3 },
-        uSamples: { value: 60 }
+        uSamples: { value: 60 },
+        uAspect: { value: 1.0 },
+        uCutoff: { value: 1e6 } // aspect-corrected UV distance beyond which rays are exactly zero
     },
     vertexShader: `
         varying vec2 vUv;
@@ -958,11 +1004,21 @@ const godRaysShader = {
         uniform float uWeight;
         uniform float uExposure;
         uniform float uSamples;
+        uniform float uAspect;
+        uniform float uCutoff;
         varying vec2 vUv;
         
         void main() {
             // Original scene color
             vec4 color = texture2D(tDiffuse, vUv);
+            
+            // Only pixels near the light can reach its glow in the occlusion
+            // texture; everywhere else all 60 samples would read black.
+            vec2 toLight = (vUv - uLightPosition) * vec2(uAspect, 1.0);
+            if (dot(toLight, toLight) > uCutoff * uCutoff) {
+                gl_FragColor = color;
+                return;
+            }
             
             // Calculate god rays from light position
             vec2 deltaTexCoord = vUv - uLightPosition;
@@ -1090,9 +1146,11 @@ function setupPostProcessing() {
     }
 }
 
-// Update god rays light position in screen space
+// Update god rays light position in screen space.
+// Returns false when the light's glow is entirely off-screen (rays would be all zero).
+const _godRayEdge = new THREE.Vector3();
 function updateGodRaysLightPosition() {
-    if (!lightSourceMesh || !godRaysPass) return;
+    if (!lightSourceMesh || !godRaysPass) return false;
     
     // Project light source position to screen space
     const lightPos = lightSourceMesh.position.clone();
@@ -1103,6 +1161,29 @@ function updateGodRaysLightPosition() {
     const screenY = (lightPos.y + 1) / 2;
     
     godRaysPass.uniforms.uLightPosition.value.set(screenX, screenY);
+    
+    // Screen-space radius of the glow (halo sphere), in aspect-corrected UV units.
+    // Doubled as a safety margin for perspective stretch and texture filtering.
+    const aspect = camera.aspect;
+    const haloRadius = 5 * lightSourceMesh.scale.x;
+    _godRayEdge.set(0, 1, 0).applyQuaternion(camera.quaternion)
+        .multiplyScalar(haloRadius).add(lightSourceMesh.position).project(camera);
+    const r = 2 * Math.hypot((_godRayEdge.x - lightPos.x) * 0.5 * aspect, (_godRayEdge.y - lightPos.y) * 0.5);
+    
+    // Glow fully off-screen (or behind the camera): the occlusion texture is black
+    const rx = r / aspect;
+    if (lightPos.z > 1 || screenX < -rx || screenX > 1 + rx || screenY < -r || screenY > 1 + r) {
+        return false;
+    }
+    
+    // Samples march from the pixel toward the light, covering uDensity of the way,
+    // so a pixel can only pick up glow if (1 - density) * distance <= r.
+    // When the light is partly off-screen, edge clamping breaks that bound: no cutoff.
+    const density = godRaysPass.uniforms.uDensity.value;
+    const onScreen = screenX >= 0 && screenX <= 1 && screenY >= 0 && screenY <= 1;
+    godRaysPass.uniforms.uAspect.value = aspect;
+    godRaysPass.uniforms.uCutoff.value = (onScreen && density < 0.95) ? r / (1 - density) : 1e6;
+    return true;
 }
 
 // Render occlusion texture for god rays
@@ -1124,11 +1205,14 @@ function renderOcclusionTexture() {
     // Make light source extra bright for occlusion
     const originalColor = renderer.getClearColor(new THREE.Color());
     renderer.setClearColor(0x000000, 1);
+    const background = scene.background;
+    scene.background = null; // nebula texture must not leak into the occlusion mask
     
     // Render to occlusion target
     renderer.setRenderTarget(occlusionRenderTarget);
     renderer.render(scene, camera);
     renderer.setRenderTarget(null);
+    scene.background = background;
     
     // Restore visibility
     if (particles) particles.visible = particlesVisible;
@@ -1163,6 +1247,7 @@ function createConnectionLines() {
     scene.add(linesMesh);
 }
 
+let _lineConn = null, _lineUsed = null;
 function updateConnectionLines() {
     if (!linesEnabled || !particlePositions || !linesMesh) return;
     
@@ -1174,41 +1259,38 @@ function updateConnectionLines() {
     const linesCol = linesGeometry.attributes.color.array;
     const particleCount = positions.length / 3;
     
-    // Get the particle system's world matrix to transform positions
-    const matrix = particles.matrixWorld;
-    const tempVec = new THREE.Vector3();
+    // Get the particle system's world matrix to transform positions.
+    // It's a rotation (affine, w = 1), so the transform is inlined.
+    const e = particles.matrixWorld.elements;
     
     // Only check particles near the camera for performance
-    const visibleParticles = [];
     const transformedPositions = []; // Store transformed positions
     const cameraY = camera.position.y;
     const viewRange = 80; // Only check particles within this Y range of camera
     
     for (let i = 0; i < particleCount; i++) {
         // Transform particle position by the particles mesh rotation/position
-        tempVec.set(
-            positions[i * 3],
-            positions[i * 3 + 1],
-            positions[i * 3 + 2]
-        );
-        tempVec.applyMatrix4(matrix);
+        const px = positions[i * 3], py = positions[i * 3 + 1], pz = positions[i * 3 + 2];
+        const ty = e[1] * px + e[5] * py + e[9] * pz + e[13];
         
-        if (Math.abs(tempVec.y - cameraY) < viewRange) {
+        if (Math.abs(ty - cameraY) < viewRange) {
+            const tx = e[0] * px + e[4] * py + e[8] * pz + e[12];
+            const tz = e[2] * px + e[6] * py + e[10] * pz + e[14];
             // Calculate distance to mouse for scoring
-            const dx = tempVec.x - mouseWorldX;
-            const dy = tempVec.y - mouseWorldY;
-            const dz = tempVec.z - mouseWorldZ;
+            const dx = tx - mouseWorldX;
+            const dy = ty - mouseWorldY;
+            const dz = tz - mouseWorldZ;
             const distToMouse = Math.sqrt(dx * dx + dy * dy + dz * dz);
             
-            visibleParticles.push(i);
             transformedPositions.push({ 
-                x: tempVec.x, 
-                y: tempVec.y, 
-                z: tempVec.z,
+                x: tx, 
+                y: ty, 
+                z: tz,
                 distToMouse: distToMouse
             });
         }
     }
+    const visibleCount = transformedPositions.length;
     
     // Sort particles by distance to mouse (closest first)
     const sortedIndices = transformedPositions
@@ -1224,12 +1306,18 @@ function updateConnectionLines() {
     const cursorConnectRange = 35; // Range where particles connect directly to cursor
     const maxCursorLines = 6; // Lines connecting to cursor
     
-    // Track connections per particle to avoid over-connecting
-    const connectionCount = new Map();
+    // Track connections per particle to avoid over-connecting.
+    // Flat typed arrays indexed by visible-particle index (much cheaper than Map/Set
+    // in the O(n^2) neighbor loops below); reused across frames.
+    if (!_lineConn || _lineConn.length < visibleCount) {
+        _lineConn = new Uint8Array(particleCount);
+        _lineUsed = new Uint8Array(particleCount);
+    }
+    const connectionCount = _lineConn;
+    const usedParticles = _lineUsed;
+    connectionCount.fill(0, 0, visibleCount);
+    usedParticles.fill(0, 0, visibleCount);
     const maxConnectionsPerParticle = 4;
-    
-    // Create lines prioritizing paths toward cursor
-    const usedParticles = new Set();
     
     // FIRST: Draw lines from closest particles directly to cursor (subtle)
     for (let si = 0; si < Math.min(sortedIndices.length, maxCursorLines) && lineIndex < maxLines; si++) {
@@ -1260,8 +1348,8 @@ function updateConnectionLines() {
         linesCol[li + 4] = 0.91 * alpha;
         linesCol[li + 5] = 0.99 * alpha;
         
-        usedParticles.add(i);
-        connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
+        usedParticles[i] = 1;
+        connectionCount[i]++;
         activeLineEndpoints.push({
             x1: p1.x, y1: p1.y, z1: p1.z,
             x2: mouseWorldX, y2: mouseWorldY, z2: mouseWorldZ,
@@ -1276,7 +1364,7 @@ function updateConnectionLines() {
         const p1 = transformedPositions[i];
         
         if (p1.distToMouse > attractionRange) continue;
-        if ((connectionCount.get(i) || 0) >= maxConnectionsPerParticle) continue;
+        if (connectionCount[i] >= maxConnectionsPerParticle) continue;
         
         // Find the best neighbor - prefer ones further from mouse (outward flow)
         let bestJ = -1;
@@ -1284,7 +1372,7 @@ function updateConnectionLines() {
         
         for (let j = 0; j < transformedPositions.length; j++) {
             if (i === j) continue;
-            if ((connectionCount.get(j) || 0) >= maxConnectionsPerParticle) continue;
+            if (connectionCount[j] >= maxConnectionsPerParticle) continue;
             
             const p2 = transformedPositions[j];
             const dx = p2.x - p1.x;
@@ -1299,7 +1387,7 @@ function updateConnectionLines() {
             // Score: prefer outward direction, moderate distance, unused particles
             const directionScore = (p2.distToMouse - p1.distToMouse) / dist;
             const proximityScore = 1 - (dist / maxDist);
-            const noveltyScore = usedParticles.has(j) ? 0.4 : 1;
+            const noveltyScore = usedParticles[j] ? 0.4 : 1;
             
             const score = (directionScore * linesAttraction * 0.8 + proximityScore * 0.6) * noveltyScore;
             
@@ -1340,10 +1428,10 @@ function updateConnectionLines() {
             linesCol[li + 4] = 0.91 * brightness * 0.8;
             linesCol[li + 5] = 0.99 * brightness * 0.8;
             
-            usedParticles.add(i);
-            usedParticles.add(bestJ);
-            connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
-            connectionCount.set(bestJ, (connectionCount.get(bestJ) || 0) + 1);
+            usedParticles[i] = 1;
+            usedParticles[bestJ] = 1;
+            connectionCount[i]++;
+            connectionCount[bestJ]++;
             activeLineEndpoints.push({
                 x1: p1.x, y1: p1.y, z1: p1.z,
                 x2: p2.x, y2: p2.y, z2: p2.z,
@@ -1354,12 +1442,12 @@ function updateConnectionLines() {
     }
     
     // Third pass: Ambient background connections (very subtle)
-    for (let i = 0; i < visibleParticles.length && lineIndex < maxLines; i++) {
+    for (let i = 0; i < visibleCount && lineIndex < maxLines; i++) {
         const p1 = transformedPositions[i];
-        if ((connectionCount.get(i) || 0) >= maxConnectionsPerParticle) continue;
+        if (connectionCount[i] >= maxConnectionsPerParticle) continue;
         
         for (let j = i + 1; j < transformedPositions.length && lineIndex < maxLines; j++) {
-            if ((connectionCount.get(j) || 0) >= maxConnectionsPerParticle) continue;
+            if (connectionCount[j] >= maxConnectionsPerParticle) continue;
             
             const p2 = transformedPositions[j];
             
@@ -1390,8 +1478,8 @@ function updateConnectionLines() {
                 linesCol[li + 4] = 0.85 * alpha + 0.05;
                 linesCol[li + 5] = 0.95 * alpha + 0.05;
                 
-                connectionCount.set(i, (connectionCount.get(i) || 0) + 1);
-                connectionCount.set(j, (connectionCount.get(j) || 0) + 1);
+                connectionCount[i]++;
+                connectionCount[j]++;
                 lineIndex++;
             }
         }
@@ -1653,11 +1741,13 @@ function animate() {
     
     // Update god rays
     if (godRaysEnabled && godRaysPass) {
-        renderOcclusionTexture();
-        updateGodRaysLightPosition();
         godRaysPass.uniforms.uIntensity.value = godRaysIntensity;
         godRaysPass.uniforms.uDecay.value = godRaysDecay;
         godRaysPass.uniforms.uDensity.value = godRaysDensity;
+        // Skip the occlusion render and the pass entirely while the light is off-screen
+        const raysVisible = updateGodRaysLightPosition();
+        godRaysPass.enabled = raysVisible;
+        if (raysVisible) renderOcclusionTexture();
     }
     
     // Update chromatic aberration
@@ -1673,6 +1763,8 @@ function animate() {
         nebulaMesh.material.uniforms.uIntensity.value = nebulaEnabled ? nebulaIntensity : 0;
         nebulaMesh.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     }
+    
+    renderNebula();
     
     // Render with bloom if available, otherwise standard render
     if (composer) {
@@ -1698,23 +1790,16 @@ function updateParticlesWithScanline(time) {
     const maxBrightness = 2.5;   // Peak brightness multiplier
     const afterglowColor = 0.15; // Slight warm tint in afterglow
     
-    // Temp vector for projection
-    const tempVec = new THREE.Vector3();
+    // Only screen Y is needed: one row of the combined clip matrix + perspective divide
+    const m = _updateParticleClipMatrix();
+    const halfH = window.innerHeight * 0.5;
     
     for (let i = 0; i < positions.length; i += 3) {
-        // Get particle position
-        tempVec.set(positions[i], positions[i + 1], positions[i + 2]);
-        
-        // Apply the particles group transform if it exists
-        if (particles.matrixWorld) {
-            tempVec.applyMatrix4(particles.matrixWorld);
-        }
-        
-        // Project to screen space
-        tempVec.project(camera);
+        const px = positions[i], py = positions[i + 1], pz = positions[i + 2];
+        const ndcY = (m[1] * px + m[5] * py + m[9] * pz + m[13]) / (m[3] * px + m[7] * py + m[11] * pz + m[15]);
         
         // Convert to pixel coordinates (0 = top, windowHeight = bottom)
-        const screenY = (1 - tempVec.y) * 0.5 * window.innerHeight;
+        const screenY = (1 - ndcY) * halfH;
         
         // Distance to scanline in pixels (positive = scanline hasn't reached yet)
         const distToScanline = screenY - currentScanlineY;
@@ -1797,6 +1882,9 @@ function setParticleCount(count) {
 
     // Persist across pages / refreshes
     try { localStorage.setItem('particleCount', String(count)); } catch (e) { /* ignore */ }
+
+    // Background never initialized (e.g. three.js failed to load)
+    if (!scene) return;
 
     // Remove old particles
     if (particles) {

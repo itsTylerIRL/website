@@ -126,7 +126,8 @@ function renderMarketSparkline(prefix, points) {
 
 // Time range toggle: one_day | seven_day | thirty_day
 const MARKET_RANGE_LABELS = { one_day: '24h', seven_day: '1w', thirty_day: '1m' };
-let marketRange = localStorage.getItem('marketRange');
+let marketRange = null;
+try { marketRange = localStorage.getItem('marketRange'); } catch (e) { /* storage unavailable */ }
 if (!MARKET_RANGE_LABELS[marketRange]) marketRange = 'one_day';
 const marketCache = { ethPriceUSD: 2500, stats: {} };
 
@@ -224,8 +225,8 @@ function markMarketCardOffline(prefix) {
 }
 
 async function fetchNFTData() {
-    // Only relevant on the markets page
-    if (!document.getElementById('milady-floor')) return;
+    // Only relevant on the markets page; skip background refreshes while the tab is hidden
+    if (!document.getElementById('milady-floor') || document.hidden) return;
 
     const apiKey = '5a79fc7192de4ababec6b822f0ca4635';
     const headers = {
@@ -337,6 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const pfpCards = document.querySelectorAll('.pfp-card');
     const popup = document.getElementById('pfpPopup');
+    // Popup only exists on the gallery page
+    if (!popup) return;
     
     pfpCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -424,6 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function closePfpPopup() {
     const popup = document.getElementById('pfpPopup');
+    if (!popup) return;
     popup.classList.remove('active');
     
     // Hide popup scanline and show main scanline
@@ -462,31 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pfpCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
                 
-                if (filterCategory === 'tyler' && cardCategory === 'tyler') {
-                    card.style.display = 'block';
-                    // Apply loading animation if image hasn't been processed
-                    const img = card.querySelector('img, video');
-                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
-                        img.classList.add('lazy');
-                        // Simulate loading delay for animation effect
-                        setTimeout(() => {
-                            img.classList.remove('lazy');
-                            img.classList.add('loaded');
-                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
-                    }
-                } else if (filterCategory === 'schizo' && cardCategory === 'schizo') {
-                    card.style.display = 'block';
-                    // Apply loading animation if image hasn't been processed
-                    const img = card.querySelector('img, video');
-                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
-                        img.classList.add('lazy');
-                        // Simulate loading delay for animation effect
-                        setTimeout(() => {
-                            img.classList.remove('lazy');
-                            img.classList.add('loaded');
-                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
-                    }
-                } else if (filterCategory === 'remilia' && cardCategory === 'remilia') {
+                if (['tyler', 'schizo', 'remilia'].includes(filterCategory) && cardCategory === filterCategory) {
                     card.style.display = 'block';
                     // Apply loading animation if image hasn't been processed
                     const img = card.querySelector('img, video');

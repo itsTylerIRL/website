@@ -28,8 +28,18 @@
         spec.className = 'spec-highlight';
         card.appendChild(spec);
 
-        // Per-card accent color (RGB triplet, defaults to cyan)
+        // Per-card accent color (RGB triplet, defaults to cyan); also exposed to CSS
         const accent = card.dataset.accent || '139,233,253';
+        card.style.setProperty('--accent', accent);
+
+        // External link indicator
+        if (card.target === '_blank') {
+            const ext = document.createElement('span');
+            ext.className = 'bento-ext';
+            ext.setAttribute('aria-hidden', 'true');
+            ext.textContent = '\u2197';
+            card.appendChild(ext);
+        }
         const image = card.querySelector('.bento-image');
         const content = card.querySelector('.bento-content');
 

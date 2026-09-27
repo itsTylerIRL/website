@@ -19,8 +19,9 @@
     let lastHoverTime = 0;
     const hoverThrottle = 100; // ms between hover sounds
     
-    // Play sound helper
-    function playSound(sound) {
+    // Play sound helper (volume is reset each play so one caller can't leave it changed)
+    function playSound(sound, volume = 0.05) {
+        sound.volume = volume;
         sound.currentTime = 0;
         sound.play().catch(() => {}); // Ignore autoplay errors
     }
@@ -41,14 +42,16 @@
         element.addEventListener('click', (e) => {
             playSound(sounds.click);
             
-            // For links, delay navigation slightly to let sound play
-            if (element.tagName === 'A' && element.href) {
+            // For links, delay navigation slightly to let sound play.
+            // Leave modified clicks (ctrl/cmd/shift/alt = new tab/window) to the browser.
+            if (element.tagName === 'A' && element.href && !e.defaultPrevented &&
+                !(e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) && e.button === 0) {
                 e.preventDefault();
                 const href = element.href;
                 const target = element.target;
                 setTimeout(() => {
                     if (target === '_blank') {
-                        window.open(href, '_blank');
+                        window.open(href, '_blank', 'noopener');
                     } else {
                         window.location.href = href;
                     }
@@ -100,9 +103,7 @@
             slider.addEventListener('input', () => {
                 const now = Date.now();
                 if (now - lastHoverTime > 50) {
-                    sounds.hover.currentTime = 0;
-                    sounds.hover.volume = 0.15;
-                    sounds.hover.play().catch(() => {});
+                    playSound(sounds.hover, 0.15);
                     lastHoverTime = now;
                 }
             });

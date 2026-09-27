@@ -1,5 +1,5 @@
 // Service Worker for Tyler IRL PWA
-const CACHE_NAME = 'tylerirl-v7';
+const CACHE_NAME = 'tylerirl-v8';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -45,6 +45,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - network first, fallback to cache
 self.addEventListener('fetch', (event) => {
+  // Only handle same-origin GETs: the Cache API rejects non-GET requests, and
+  // third-party APIs (OpenSea, CoinGecko, RemiliaNET) shouldn't be served stale.
+  const url = new URL(event.request.url);
+  if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {

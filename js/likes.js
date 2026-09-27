@@ -467,34 +467,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
             icons.push(icon);
             
-            // Load image - try without CORS first for local images, then with CORS
-            const loadImage = (src, useCors) => {
-                const img = new Image();
-                if (useCors) img.crossOrigin = 'anonymous';
-                
-                img.onload = () => {
-                    icon.image = img;
-                    icon.loaded = true;
-                };
-                img.onerror = () => {
-                    if (useCors) {
-                        // If CORS failed, try without
-                        loadImage(src, false);
-                    } else if (!useCors && src.startsWith('http')) {
-                        // External image without CORS - try with CORS
-                        loadImage(src, true);
-                    } else {
-                        // Final fallback - mark as loaded but no image
-                        icon.loaded = true;
-                        icon.fallbackLetter = data.title ? data.title.charAt(0).toUpperCase() : '?';
-                    }
-                };
-                img.src = src;
+            // Load image. No crossOrigin needed: the canvas only draws icons and never
+            // reads pixels back, so a tainted canvas is fine (and most hosts lack CORS headers).
+            const img = new Image();
+            img.onload = () => {
+                icon.image = img;
+                icon.loaded = true;
             };
-            
-            // Start loading - local images without CORS, external with CORS
-            const isExternal = data.src.startsWith('http');
-            loadImage(data.src, isExternal);
+            img.onerror = () => {
+                // Fallback - mark as loaded but no image
+                icon.loaded = true;
+                icon.fallbackLetter = data.title ? data.title.charAt(0).toUpperCase() : '?';
+            };
+            img.src = data.src;
         });
     }
     

@@ -45,7 +45,7 @@ function createScanline() {
                 0 0 30px rgba(139, 233, 253, 0.1);
             z-index: 9999;
             pointer-events: none;
-            will-change: top, opacity;
+            will-change: transform, opacity;
         }
         
         /* Hide scanline on body when popup is active */
@@ -131,11 +131,11 @@ function createScanline() {
         const elements = document.querySelectorAll('.skill-card, .nft-card, .card-container, .nav-card, .contact-card, .bento-item');
         
         function updateScanlineEffects() {
-            const scanline = document.querySelector('.scanline');
-            if (!scanline) return;
+            if (!document.querySelector('.scanline')) return;
             
-            const scanlineRect = scanline.getBoundingClientRect();
-            const scanlineY = scanlineRect.top + (scanlineRect.height / 2);
+            // Read the position from shared state instead of measuring the element,
+            // which would force a synchronous layout every frame
+            const scanlineY = window.scanlineState.y - 1;
             
             elements.forEach(element => {
                 // Skip the element currently being hovered so its hover styling
@@ -210,7 +210,8 @@ function animateScanlineJS(scanlineElement) {
         
         // Update DOM element position
         if (scanlineElement) {
-            scanlineElement.style.top = y + 'px';
+            // transform (not top) keeps this on the compositor - no layout per frame
+            scanlineElement.style.transform = 'translateY(' + y + 'px)';
             
             // Fade in/out at edges
             let opacity = 1;
