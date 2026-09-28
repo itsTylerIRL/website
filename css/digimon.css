@@ -1,0 +1,313 @@
+/* Hologram Hero Image Effects (shared pattern) */
+.hologram-container {
+    position: relative;
+    display: inline-block;
+    max-width: 200px;
+    overflow: visible;
+    -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+    mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+}
+.hologram-image {
+    max-width: 160px;
+    height: auto;
+    filter: contrast(1.1) saturate(1.2);
+    animation: hologramPhase 4s ease-in-out infinite;
+    image-rendering: pixelated;
+}
+.hologram-scanlines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
+    pointer-events: none;
+    z-index: 10;
+    animation: scanlineMove 0.1s linear infinite;
+}
+.hologram-flicker {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(139, 233, 253, 0.03);
+    pointer-events: none;
+    z-index: 11;
+    animation: hologramFlicker 0.15s infinite;
+    mix-blend-mode: overlay;
+}
+@keyframes hologramPhase {
+    0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); }
+    25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); }
+    50% { opacity: 0.9; transform: scale(0.99) translateY(1px); }
+    75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); }
+}
+@keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+@keyframes hologramFlicker {
+    0%, 100% { opacity: 0.03; } 50% { opacity: 0.15; } 80% { opacity: 0.03; }
+}
+
+/* Container */
+.digimon-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem 4rem;
+}
+
+.digimon-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.digimon-header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #eaeaea;
+}
+.digimon-header h1 span {
+    color: #8be9fd;
+    text-shadow: 0 0 18px rgba(139, 233, 253, 0.4);
+}
+.digimon-header .subtitle {
+    color: #6272a4;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+.digimon-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+/* The device: a Flipper-ish shell around the 128x64 screen */
+.flipper {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(139, 233, 253, 0.22);
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 40px rgba(139, 233, 253, 0.06);
+}
+
+.flipper-screen-wrap {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px;
+    background: #05080b;
+    border: 1px solid rgba(139, 233, 253, 0.18);
+    border-radius: 10px;
+    box-shadow: inset 0 0 30px rgba(139, 233, 253, 0.05);
+}
+/* Faint scanlines over the screen, like the site's hologram */
+.flipper-screen-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 4px;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.28) 2px, rgba(0, 0, 0, 0.28) 3px);
+    pointer-events: none;
+}
+.flipper-screen {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border-radius: 4px;
+    background: #05080b;
+    filter: drop-shadow(0 0 3px rgba(139, 233, 253, 0.55));
+    outline: none;
+    cursor: pointer;
+}
+.flipper-screen:focus-visible {
+    box-shadow: 0 0 0 2px rgba(139, 233, 253, 0.6);
+}
+.flipper-status {
+    position: absolute;
+    inset: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    color: #8be9fd;
+    z-index: 1;
+    font-size: 0.85rem;
+    font-weight: 700;
+    pointer-events: none;
+}
+.flipper-status.hidden { display: none; }
+.flipper-status.error { color: #fff; background: rgba(120, 20, 20, 0.85); border-radius: 4px; }
+
+.flipper-controls {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.flipper-led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2a1414;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    align-self: flex-end;
+}
+.flipper-led.on {
+    animation: ledBlink 1s steps(1) infinite;
+}
+@keyframes ledBlink {
+    0%, 49% { background: #ff5555; box-shadow: 0 0 10px #ff5555; }
+    50%, 100% { background: #2a1414; box-shadow: none; }
+}
+
+.dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 3px;
+    padding: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.dpad-btn,
+.back-btn {
+    font-family: inherit;
+    border: 1px solid rgba(139, 233, 253, 0.25);
+    background: rgba(0, 0, 0, 0.6);
+    color: #8be9fd;
+    border-radius: 8px;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.1s, border-color 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.dpad-btn.up    { grid-column: 2; grid-row: 1; }
+.dpad-btn.left  { grid-column: 1; grid-row: 2; }
+.dpad-btn.ok    { grid-column: 2; grid-row: 2; border-radius: 50%; }
+.dpad-btn.right { grid-column: 3; grid-row: 2; }
+.dpad-btn.down  { grid-column: 2; grid-row: 3; }
+.dpad-btn::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+}
+.dpad-btn.up::before    { border-bottom-color: currentColor; transform: translateY(-3px); }
+.dpad-btn.down::before  { border-top-color: currentColor; transform: translateY(3px); }
+.dpad-btn.left::before  { border-right-color: currentColor; transform: translateX(-3px); }
+.dpad-btn.right::before { border-left-color: currentColor; transform: translateX(3px); }
+.dpad-btn.ok::before    { border: 0; width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+.back-btn {
+    width: 44px;
+    height: 34px;
+    font-size: 1.1rem;
+    align-self: flex-end;
+}
+.dpad-btn.pressed,
+.back-btn.pressed,
+.dpad-btn:active,
+.back-btn:active {
+    background: rgba(139, 233, 253, 0.2);
+    border-color: #8be9fd;
+}
+
+/* Side panel */
+.digimon-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.panel-block {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    font-size: 0.8rem;
+    color: #b8b8c8;
+    line-height: 1.55;
+}
+.panel-block p + p { margin-top: 0.5rem; }
+.panel-title {
+    color: #8be9fd;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.55rem;
+}
+.panel-note {
+    margin-top: 0.6rem;
+    color: #6272a4;
+}
+.keys {
+    width: 100%;
+    border-collapse: collapse;
+}
+.keys td {
+    padding: 0.2rem 0;
+    vertical-align: top;
+}
+.keys td:first-child {
+    white-space: nowrap;
+    padding-right: 0.75rem;
+}
+kbd {
+    display: inline-block;
+    padding: 0 0.35rem;
+    border: 1px solid rgba(139, 233, 253, 0.3);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    color: #8be9fd;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.panel-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.session-btn {
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: #eaeaea;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(139, 233, 253, 0.25);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+.session-btn:hover {
+    color: #8be9fd;
+    border-color: rgba(139, 233, 253, 0.6);
+    background: rgba(139, 233, 253, 0.12);
+}
+
+@media (max-width: 760px) {
+    .digimon-panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+    .digimon-container { padding: 0.5rem 1rem 3rem; }
+    .flipper { flex-direction: column; padding: 0.9rem; }
+    .flipper-screen-wrap { width: 100%; }
+    .flipper-controls { flex-direction: row; align-items: center; gap: 1.25rem; }
+    .flipper-led { align-self: center; }
+    .back-btn { align-self: center; }
+    .dpad { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); }
+}

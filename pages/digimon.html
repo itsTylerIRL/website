@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>digimon - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/digimon">
+    <meta property="og:title" content="digimon">
+    <meta property="og:description" content="DigiFlip, a Digimon Ver.20th virtual pet for the Flipper Zero, running in your browser.">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/digimon">
+    <meta property="twitter:title" content="digimon">
+    <meta property="twitter:description" content="DigiFlip, a Digimon Ver.20th virtual pet for the Flipper Zero, running in your browser.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.5">
+    <link rel="stylesheet" href="/css/radgotchi.css">
+
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <link rel="stylesheet" href="/css/digimon.css?v=1.1">
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <div class="cursor-bracket tl"></div>
+        <div class="cursor-bracket tr"></div>
+        <div class="cursor-bracket bl"></div>
+        <div class="cursor-bracket br"></div>
+    </div>
+    <div class="corner-brackets"><div class="bottom"></div></div>
+
+    <!-- Floating Return Home Button -->
+    <a href="/" class="floating-home">
+        <div class="floating-home-content">
+            <div class="floating-home-icon">
+                <img src="/assets/wee.gif" alt="Return home">
+            </div>
+            <div class="floating-home-text">
+                <h4>Return Home</h4>
+                <p>Back to main page</p>
+            </div>
+        </div>
+    </a>
+
+    <main class="main-content">
+        <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+            <div class="container" style="text-align: center; padding-top: 0.5rem;">
+                <div class="hologram-container">
+                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
+                    <div class="hologram-scanlines"></div>
+                    <div class="hologram-flicker"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="digimon-container">
+            <header class="digimon-header">
+                <h1><span>digi</span>flip 🥚</h1>
+                <p class="subtitle">a Digimon Ver.20th virtual pet for the Flipper Zero, compiled to WebAssembly</p>
+            </header>
+
+            <div class="digimon-layout">
+                <!-- The device -->
+                <div class="flipper" id="flipper">
+                    <div class="flipper-screen-wrap">
+                        <canvas class="flipper-screen" id="digimon-screen" width="128" height="64" tabindex="0" aria-label="DigiFlip screen"></canvas>
+                        <div class="flipper-status" id="digimon-status">loading…</div>
+                    </div>
+                    <div class="flipper-controls">
+                        <div class="flipper-led" id="digimon-led" title="call light"></div>
+                        <div class="dpad">
+                            <button class="dpad-btn up" data-key="0" aria-label="Up"></button>
+                            <button class="dpad-btn left" data-key="3" aria-label="Left"></button>
+                            <button class="dpad-btn ok" data-key="4" aria-label="OK"></button>
+                            <button class="dpad-btn right" data-key="2" aria-label="Right"></button>
+                            <button class="dpad-btn down" data-key="1" aria-label="Down"></button>
+                        </div>
+                        <button class="back-btn" data-key="5" aria-label="Back">↩</button>
+                    </div>
+                </div>
+
+                <!-- Help / info -->
+                <aside class="digimon-panel">
+                    <div class="panel-block">
+                        <div class="panel-title">controls</div>
+                        <table class="keys">
+                            <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>step through the icons</td></tr>
+                            <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>jump between icon rows</td></tr>
+                            <tr><td><kbd>enter</kbd> / <kbd>space</kbd></td><td>OK (mash it in training &amp; battle)</td></tr>
+                            <tr><td>hold <kbd>enter</kbd></td><td>switch view: pet 1, both, pet 2</td></tr>
+                            <tr><td><kbd>esc</kbd> / <kbd>backspace</kbd></td><td>back; on home, open the menu</td></tr>
+                        </table>
+                        <p class="panel-note">WASD, Z (OK) and X (back) work too. On a phone, use the buttons.</p>
+                    </div>
+                    <div class="panel-block">
+                        <div class="panel-title">how it works</div>
+                        <p>Raise a Digimon from an egg in real time: feed it, train it, clean up after it, put it to bed and battle through the 100-round Colosseum. The pet lives on your clock, so time keeps passing while this tab is closed.</p>
+                        <p>Your save stays in this browser (IndexedDB). It's the same C code as the Flipper app, running on a small shim of the Flipper SDK.</p>
+                    </div>
+                    <div class="panel-actions">
+                        <button class="session-btn" id="digimon-sound">sound: on</button>
+                        <a class="session-btn" href="https://github.com/itsTylerIRL/Digiflip" target="_blank" rel="noopener">get it for your flipper</a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <center>
+            <div id="radgotchi-container">
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+            </div>
+
+            <!-- Particle Count Slider -->
+            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
+                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100"
+                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
+            </div>
+
+            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+        </div>
+    </footer>
+
+    <script src="/js/digimon.js?v=1.1"></script>
+    <!-- Bootstrap for SPA navigation (body.innerHTML swap does not run external scripts) -->
+    <script>
+        (function () {
+            if (typeof window.initDigimon === 'function') {
+                window.initDigimon();
+            } else if (!document.getElementById('digimon-loader')) {
+                var s = document.createElement('script');
+                s.id = 'digimon-loader';
+                s.src = '/js/digimon.js?v=1.1';
+                document.body.appendChild(s);
+            }
+        })();
+    </script>
+
+    <!-- 3D Background Script -->
+    <script src="/js/background3d.js?v=1.6"></script>
+    <script src="/js/script.js?v=1.8"></script>
+    <script src="/js/interactions.js"></script>
+    <script src="/js/radgotchi.js"></script>
+</body>
+</html>
