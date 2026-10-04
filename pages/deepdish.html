@@ -46,11 +46,24 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/deepdish.css?v=1.0">
+    <link rel="stylesheet" href="/css/bento.css?v=1.0">
+    <link rel="stylesheet" href="/css/deepdish.css?v=1.1">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
+    <!-- SVG filter for bento-refract (glass distortion on hover) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <filter id="bento-refract" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise">
+                    <animate attributeName="baseFrequency" dur="22s" values="0.012 0.018;0.018 0.012;0.012 0.018" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
     <main class="main-content">
 
     <!-- Hero Section -->
@@ -80,53 +93,71 @@
     <!-- Project Cards -->
     <section>
         <div class="container">
-            <div class="deepdish-grid">
-                <!-- OCS Card -->
-                <a href="/pages/deepdish_ocs.html" class="deepdish-card">
-                    <img src="/assets/OCS/webui2.png" alt="OCS">
-                    <h3>OCS</h3>
-                    <p>Ocular Control System — custom monitoring HMI</p>
-                    <span class="card-tag">Live</span>
+            <div class="bento-grid deepdish-grid">
+                <!-- OCS -->
+                <a href="/pages/deepdish_ocs.html" class="bento-item" data-accent="139,233,253">
+                    <div class="bento-image">
+                        <img src="/assets/OCS/webui2.png" alt="OCS" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>OCS</h3>
+                        <p>ocular control system — custom monitoring hmi</p>
+                    </div>
                 </a>
 
-                <!-- TOP Card -->
-                <a href="/pages/deepdish_top.html" class="deepdish-card">
-                    <img src="/assets/TOP/top.png" alt="TOP">
-                    <h3>TOP</h3>
-                    <p>Terminal Operations Panel — real-time infrastructure monitoring</p>
-                    <span class="card-tag">Live</span>
+                <!-- TOP -->
+                <a href="/pages/deepdish_top.html" class="bento-item" data-accent="80,250,123">
+                    <div class="bento-image">
+                        <img src="/assets/TOP/top.png" alt="TOP" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>TOP</h3>
+                        <p>terminal operations panel — real-time infrastructure monitoring</p>
+                    </div>
                 </a>
 
-                <!-- SIN Card -->
-                <a href="/pages/deepdish_sin.html" class="deepdish-card">
-                    <img src="/assets/redacted/chat.png" alt="SIN">
-                    <h3>SIN</h3>
-                    <p>Social Interaction Network — Discord gamble bot system</p>
-                    <span class="card-tag">Live</span>
+                <!-- SIN -->
+                <a href="/pages/deepdish_sin.html" class="bento-item" data-accent="255,121,198">
+                    <div class="bento-image">
+                        <img src="/assets/redacted/chat.png" alt="SIN" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>SIN</h3>
+                        <p>social interaction network — discord gamble bot system</p>
+                    </div>
                 </a>
 
-                <!-- RadGotchi Card -->
-                <a href="/pages/deepdish_rg.html" class="deepdish-card">
-                    <img src="/assets/radgotchi_panel.png" alt="RadGotchi">
-                    <h3>RG</h3>
-                    <p>Autonomous digital pet — adaptive radgotchi companion</p>
-                    <span class="card-tag">Live</span>
+                <!-- RadGotchi -->
+                <a href="/pages/deepdish_rg.html" class="bento-item" data-accent="189,147,249">
+                    <div class="bento-image">
+                        <img src="/assets/radgotchi_panel.png" alt="RadGotchi" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>RG</h3>
+                        <p>autonomous digital pet — adaptive radgotchi companion</p>
+                    </div>
                 </a>
 
-                <!-- Grep Dojo Card -->
-                <a href="/pages/grep.html" class="deepdish-card">
-                    <img src="/assets/grep_dojo.png" alt="Grep Dojo">
-                    <h3>GREP</h3>
-                    <p>grep dojo — interactive terminal training game</p>
-                    <span class="card-tag">Live</span>
+                <!-- Grep Dojo -->
+                <a href="/pages/grep.html" class="bento-item" data-accent="255,184,108">
+                    <div class="bento-image">
+                        <img src="/assets/grep_dojo.png" alt="Grep Dojo" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>GREP</h3>
+                        <p>grep dojo — interactive terminal training game</p>
+                    </div>
                 </a>
 
-                <!-- DigiFlip Card -->
-                <a href="/pages/digimon.html" class="deepdish-card">
-                    <img src="/assets/digiflip.png" alt="DigiFlip">
-                    <h3>DIGI</h3>
-                    <p>DigiFlip — Digimon Ver.20th virtual pet for Flipper Zero, in your browser</p>
-                    <span class="card-tag">Live</span>
+                <!-- DigiFlip -->
+                <a href="/pages/digimon.html" class="bento-item" data-accent="255,85,85">
+                    <div class="bento-image">
+                        <img src="/assets/digiflip.png" alt="DigiFlip" decoding="async">
+                    </div>
+                    <div class="bento-content">
+                        <h3>DIGI</h3>
+                        <p>digiflip — digimon ver.20th virtual pet for flipper zero, in your browser</p>
+                    </div>
                 </a>
             </div>
         </div>
@@ -175,8 +206,8 @@
     <script src="/js/sounds.js?v=1.1"></script>
     <script src="/js/radgotchi.js"></script>
     
-    <!-- 3D Tilt Effect for Cards -->
-    <script src="/js/deepdish.js?v=1.0"></script>
+    <!-- Bento card effects (tilt, glow, reveal) -->
+    <script src="/js/bento.js?v=1.0"></script>
     
 </body>
 </html>
