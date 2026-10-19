@@ -9,7 +9,7 @@
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
 const OBJECTS = [
     { key: 'home', name: 'tylerirl.com', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/home.webp', desc: 'home base: remilio enjoyer, contact links and this index of every page on the site' },
-    { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/gallery.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
+    { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
     { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud' },
     { key: 'kol', name: 'Kingdom of Loathing', url: '/pages/kol.html', type: 'collection', workspace: true, icon: '/assets/object-icons/kol.webp', desc: 'TylerIRL in the Kingdom: live moons and calendar, display case with mall prices and what\'s new in KoLmafia' },
