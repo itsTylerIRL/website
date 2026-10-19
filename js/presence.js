@@ -66,17 +66,35 @@
             sub: word === 'offline' ? 'comms still open, send a dm' : where.length ? `on ${where.join(' + ')}` : 'on discord', href: PROFILE, label: 'DISCORD' };
     }
 
+    // Right-hand stats, for cards wide enough to show them (css/objects.css hides them on narrow ones):
+    // the track's progress or the session's length, then status, where Tyler is active and the handle
+    function side(p, d, word) {
+        const cell = (value, label, cls = '') => `<span class="g-soc-stat${cls}"><b>${esc(value)}</b><small>${esc(label)}</small></span>`;
+        const where = ['desktop', 'mobile', 'web'].filter(k => p['active_on_discord_' + k]);
+        return [
+            d.kind === 'spotify' && d.end ? cell('', 'of ' + clock(d.end - d.start), ' g-presence-clock') :
+                d.start ? cell('', 'session', ' g-presence-clock') : '',
+            d.kind === 'spotify' && p.spotify?.album ? cell(p.spotify.album, 'album', ' is-text') : '',
+            cell(word, 'status'),
+            word !== 'offline' ? cell(where.join(' + ') || 'discord', 'active on') : '',
+            cell('@' + (p.discord_user?.username || 'tylerirl'), 'discord')
+        ].join('');
+    }
+
     function tick() {
         const d = presence && describe(presence);
         if (!d) return;
         const bar = card.querySelector('.g-presence-bar i');
         const time = card.querySelector('.g-presence-time');
+        const big = card.querySelector('.g-presence-clock b');
         if (d.end && d.start && bar) {
             const span = d.end - d.start, done = Math.min(span, Date.now() - d.start);
             bar.style.transform = `scaleX(${(done / span).toFixed(4)})`;
             if (time) time.textContent = `${clock(done)} / ${clock(span)}`;
-        } else if (d.start && time) {
-            time.textContent = `for ${elapsed(d.start)}`;
+            if (big) big.textContent = clock(done);
+        } else if (d.start) {
+            if (time) time.textContent = `for ${elapsed(d.start)}`;
+            if (big) big.textContent = elapsed(d.start);
         }
     }
 
@@ -98,6 +116,7 @@
                 <b>${d.emoji ? `${esc(d.emoji)} ` : ''}${esc(d.title)}</b>
                 ${d.sub ? `<em>${esc(d.sub)}</em>` : ''}
             </span>
+            <span class="g-presence-side">${side(p, d, word)}</span>
             ${d.kind === 'spotify' && d.end ? '<span class="g-presence-bar" aria-hidden="true"><i></i></span>' : ''}`;
         // Art that won't load (expired media links, apps without icons) falls back to the avatar, then to nothing
         const img = card.querySelector('.g-presence-art img');

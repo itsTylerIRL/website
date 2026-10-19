@@ -44,7 +44,8 @@ if ('serviceWorker' in navigator) {
 })();
 
 // GitHub card in the Host dossier: a contributions heatmap (a column per week, Sunday on top, newest on the
-// right; as many weeks as the card has room for) beside the past year, the last 12 weeks and the current streak.
+// right; as many weeks as the card has room for) beside the past year, the last 12 weeks, the current and best
+// streaks and active days (css/objects.css drops the later stats as the card narrows).
 // github-contributions-api.jogruber.de reads the public profile and allows CORS.
 (function() {
     const box = document.getElementById('g-gh');
@@ -62,9 +63,12 @@ if ('serviceWorker' in navigator) {
             // Today isn't over: a streak still counts if it ran through yesterday
             let streak = 0;
             for (let i = days[last].count ? last : last - 1; i >= 0 && days[i].count; i--) streak++;
+            let best = 0;
+            days.reduce((run, d) => { run = d.count ? run + 1 : 0; best = Math.max(best, run); return run; }, 0);
+            const active = days.filter((d) => d.count).length;
             const stat = (n, label) => `<span class="g-gh-stat"><b>${n.toLocaleString('en-US')}</b><small>${label}</small></span>`;
             box.innerHTML = `<span class="g-gh-map"><span class="g-gh-grid">${cells.map((d) => `<i class="l${d.level}"></i>`).join('')}</span></span>`
-                + `<span class="g-gh-stats">${stat(sum(days), 'past year')}${stat(sum(days.slice(-84)), '12 weeks')}${stat(streak, 'day streak')}</span>`;
+                + `<span class="g-gh-stats">${stat(sum(days), 'past year')}${stat(sum(days.slice(-84)), '12 weeks')}${stat(streak, 'day streak')}${stat(best, 'best streak')}${stat(active, 'active days')}</span>`;
             box.title = `${sum(days)} GitHub contributions in the past year`;
             box.setAttribute('aria-label', box.title);
             box.hidden = false;

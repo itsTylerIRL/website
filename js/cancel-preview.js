@@ -22,11 +22,41 @@
         } catch (_) {}
         return '';
     };
+    // Older weekly kings have no share card, only their character's recipe ("look": trait layers). Rebuild it
+    // from the game's own art the way the server's card.py does, minus relics and eye tint (too small to matter
+    // here). Slots, draw order and the Remilio fit are copied from the game's server/card_spec.json.
+    const ART = 'https://cancel.tylerirl.com/assets/img/';
+    const SLOTS = {
+        Milady: { Skin: 'skin', Face: 'face', Eyes: 'eyes', Mouth: 'mouth', Neck: 'necktat', Necklaces: 'neck', Shirt: 'shirt', Hair: 'hair', Brows: 'brows', Earrings: 'ear', 'Face Decoration': 'deco', Glasses: 'glasses', Hat: 'hat' },
+        Remilio: { Race: 'skin', Brows: 'brows', Eyes: 'eyes', Hair: 'hair', Face: 'face', Shirt: 'shirt', Mouth: 'mouth', Costume: 'costume', Earrings: 'ear', Glasses: 'glasses', Hat: 'hat', Weapon: 'weapon', Friend: 'friend' }
+    };
+    const ORDER = {
+        Milady: ['skin', 'face', 'eyes', 'mouth', 'necktat', 'neck', 'shirt', 'hair', 'costume', 'brows', 'smoke', 'ear', 'deco', 'glasses', 'hat', 'weapon', 'friend'],
+        Remilio: ['skin', 'brows', 'eyes', 'hair', 'face', 'deco', 'shirt', 'neck', 'mouth', 'smoke', 'costume', 'ear', 'glasses', 'hat', 'weapon', 'friend']
+    };
+    // On the 600x750 character canvas, as percentages: Remilio art is square with a smaller head, fitted at
+    // (-70, -32) 762x762; Remilio friends are 600x600 in the bottom-right corner, side by side
+    const pct = (x, y, w, h) => `left:${(x / 6).toFixed(3)}%;top:${(y / 7.5).toFixed(3)}%;width:${(w / 6).toFixed(3)}%;height:${(h / 7.5).toFixed(3)}%`;
+    function lookHtml(look) {
+        const body = look && SLOTS[look.cfg] ? look.cfg : null;
+        if (!body || !look.layers) return '';
+        const slots = {};
+        Object.entries(look.layers).forEach(([name, file]) => {
+            const slot = SLOTS[body][name];
+            if (slot && typeof file === 'string' && !file.includes('/')) slots[slot] = [name, file];
+        });
+        if (slots.costume) (body === 'Remilio' ? ['shirt', 'hat', 'glasses', 'hair', 'face'] : ['shirt']).forEach(k => delete slots[k]);
+        const layers = ORDER[body].filter(slot => slots[slot]).map(slot => {
+            const [name, file] = slots[slot];
+            const box = slot === 'friend' ? pct(0, 150, 600, 600) : body === 'Remilio' ? pct(-70, -32, 762, 762) : pct(0, 0, 600, 750);
+            return `<img src="${ART}${encodeURIComponent(body)}/${encodeURIComponent(name)}/${encodeURIComponent(file)}" alt="" style="${box}" loading="lazy" decoding="async">`;
+        }).join('');
+        return layers ? `<span class="g-cancel-look" aria-hidden="true">${layers}</span>` : '';
+    }
     function portrait(e) {
         const fallback = `<span class="g-cancel-initial" aria-hidden="true">${esc(who(e).replace(/^~/, '').slice(0, 2).toUpperCase())}</span>`;
         const card = cardURL(e);
-        // Older weekly kings have no share-card image.
-        return card ? `${fallback}<img src="${esc(card)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : fallback;
+        return card ? `${fallback}<img src="${esc(card)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : fallback + lookHtml(e.look);
     }
     // "3d 4h" / "5h 12m" / "40m" between now and a unix time (either direction)
     const span = unix => {

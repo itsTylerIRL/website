@@ -89,6 +89,10 @@
 .g-cancel-cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.65)); pointer-events: none; }
 .g-cancel-cell img { position: absolute; width: 375%; max-width: none; height: auto; left: -28.125%; top: -36.25%; }
 .g-cancel-initial { position: absolute; inset: 0; display: grid; place-items: center; font-size: 16px; color: var(--g-blue); }
+/* A past king rebuilt from trait layers (js/cancel-preview.js): the 600x750 character, framed on the face */
+.g-cancel-look { position: absolute; left: -28%; top: -40%; width: 156%; aspect-ratio: 600 / 750; overflow: hidden; }
+.g-cancel-look img { position: absolute; max-width: none; }
+.g-cancel-cell.is-fell .g-cancel-look { filter: grayscale(0.65); opacity: 0.65; }
 .g-cancel-cell em { position: absolute; right: 4px; bottom: 2px; z-index: 1; font: 500 10px/1.2 var(--g-mono); text-shadow: 0 1px 3px #000, 0 0 4px #000; }
 .g-cancel-cell.is-king { border-color: rgba(255, 222, 23, 0.35); }
 .g-cancel-cell.is-king em { color: var(--cancel-gold); font-size: 17px; bottom: 0; }

@@ -31,21 +31,31 @@
     overflow: hidden;
 }
 .g-op-floor {
+    --cell: 56px;
     position: absolute;
     left: -50%;
     right: -50%;
     bottom: -10%;
     height: 140%;
-    background:
-        linear-gradient(rgba(var(--g-blue-rgb), 0.3) 1px, transparent 1px) 0 0 / 46px 46px,
-        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.22) 1px, transparent 1px) 0 0 / 46px 46px;
-    transform: perspective(260px) rotateX(64deg);
+    overflow: hidden;
+    /* A gentler tilt than before, so the far lines don't bunch into a shimmering band */
+    transform: perspective(420px) rotateX(58deg);
     transform-origin: 50% 100%;
-    -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 35%, transparent 75%);
-    mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 35%, transparent 75%);
-    animation: g-op-floor 2.6s linear infinite;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 80%);
+    mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 80%);
 }
-@keyframes g-op-floor { to { background-position: 0 46px, 0 46px; } }
+/* The grid itself scrolls by transform (no per-frame repaint), one cell per loop, inside the fixed mask */
+.g-op-floor::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--cell) * -1) 0 0;
+    background:
+        linear-gradient(rgba(var(--g-blue-rgb), 0.5) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
+        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.38) 1px, transparent 1px) 0 0 / var(--cell) var(--cell);
+    will-change: transform;
+    animation: g-op-floor 2.8s linear infinite;
+}
+@keyframes g-op-floor { to { transform: translateY(var(--cell)); } }
 .g-op-beam {
     position: absolute;
     top: 0;
@@ -222,11 +232,15 @@
 /* Dossier: one live card at a time (Discord, RemiNET stats, GitHub), stacked in one grid cell and
    cross-faded by js/index.js; the cell is as tall as the tallest loaded card, so switching never shifts the panel */
 .g-dossier {
+    container: dossier / inline-size;
     display: grid;
     min-width: 0;
 }
 .g-dossier > [data-slide] {
     grid-area: 1 / 1;
+    /* Frosted: the floor grid behind reads as glass, not lines through the text */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     opacity: 0;
     visibility: hidden;
     transform: translateY(6px);
@@ -337,7 +351,13 @@
     background: var(--tone, var(--g-muted));
     box-shadow: 0 0 0 3px #05080a, 0 0 8px var(--tone, transparent);
 }
-.g-presence-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.g-presence-text { flex: 1 1 200px; display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+/* Right-hand stats (js/presence.js), in the card's own colour; long values (the album) truncate */
+.g-presence-side { flex: 0 1 auto; min-width: 0; display: flex; }
+.g-presence .g-soc-stat b { color: var(--pres); }
+.g-presence .g-soc-stat.is-text { min-width: 0; max-width: 170px; }
+.g-presence .g-soc-stat.is-text b { max-width: 100%; font-family: inherit; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-presence-clock b { font-variant-numeric: tabular-nums; }
 .g-presence-text small { display: flex; gap: 8px; font-family: var(--g-mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--pres); }
 .g-presence-text small .g-presence-time { color: var(--g-dim); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
 .g-presence-text b,
@@ -365,16 +385,17 @@
 .g-gh[hidden] { display: none; }
 .g-gh:hover,
 .g-gh:focus-visible { border-color: rgba(var(--g-blue-rgb), 0.6); box-shadow: 0 0 16px rgba(var(--g-blue-rgb), 0.18); }
-/* Centered when there's room; when there isn't, rtl + safe keeps the newest week in view and clips the oldest */
-.g-gh-map { flex: 1 1 auto; min-width: 0; display: flex; direction: rtl; justify-content: safe center; overflow: hidden; }
+/* The map takes its natural width (a year of weeks); when the card is too narrow it shrinks, and rtl keeps
+   the newest week in view while the oldest clip */
+.g-gh-map { flex: 0 1 auto; min-width: 0; display: flex; direction: rtl; justify-content: flex-start; overflow: hidden; }
 .g-gh-grid { --cell: 5px; flex: none; direction: ltr; display: grid; grid-template-rows: repeat(7, var(--cell)); grid-auto-flow: column; grid-auto-columns: var(--cell); gap: 1px; }
 .g-gh-grid i { border-radius: 1px; background: rgba(var(--g-blue-rgb), 0.08); }
 .g-gh-grid i.l1 { background: rgba(var(--g-blue-rgb), 0.3); }
 .g-gh-grid i.l2 { background: rgba(var(--g-blue-rgb), 0.55); }
 .g-gh-grid i.l3 { background: rgba(var(--g-blue-rgb), 0.8); }
 .g-gh-grid i.l4 { background: var(--g-blue); box-shadow: 0 0 4px rgba(var(--g-blue-rgb), 0.8); }
-.g-gh-stats { flex: none; display: flex; }
-.g-gh-stat { display: flex; flex-direction: column; align-items: center; padding: 0 12px; line-height: 1.15; }
+.g-gh-stats { flex: 1 1 auto; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.g-gh-stat { display: flex; flex-direction: column; align-items: center; padding: 0 8px; line-height: 1.15; }
 .g-gh-stat + .g-gh-stat { border-left: 1px solid rgba(var(--g-blue-rgb), 0.08); }
 .g-gh-stat b { font-family: var(--g-mono); font-weight: 400; font-size: 15px; color: var(--g-blue); text-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.35); }
 .g-gh-stat small { font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--g-dim); white-space: nowrap; }
@@ -436,6 +457,36 @@
 .g-steam-game { position: relative; width: 92px; height: 34px; border-radius: 4px; overflow: hidden; background: rgba(var(--soc), 0.1); box-shadow: 0 0 0 1px rgba(var(--soc), 0.2); }
 .g-steam-game img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .g-steam-game small { position: absolute; right: 2px; bottom: 2px; padding: 0 4px; border-radius: 3px; background: rgba(0, 0, 0, 0.75); font-family: var(--g-mono); font-size: 9px; color: var(--g-text); }
+
+/* Dossier cards follow the dossier's own width, not the window's: wide cards fill out with more stats and games,
+   narrow ones shed them, least important first */
+/* Steam's hours sit in its stat cells on wide cards and in the label line once those cells go */
+.g-steam .g-soc-dim { display: none; }
+@container dossier (max-width: 860px) {
+    .g-gh-stat:nth-child(n + 4) { display: none; }
+    .g-presence-side > :nth-child(n + 3) { display: none; }
+    .g-steam-game:nth-child(n + 4) { display: none; }
+    .g-steam .g-soc-stats { display: none; }
+    .g-steam .g-soc-dim { display: inline; }
+}
+@container dossier (max-width: 620px) {
+    .g-presence-side > :nth-child(n + 2) { display: none; }
+    .g-steam-game:nth-child(n + 3) { display: none; }
+}
+@container dossier (max-width: 460px) {
+    .g-presence-side { display: none; }
+}
+@container dossier (max-width: 480px) {
+    .g-gh-stat:nth-child(n + 3) { display: none; }
+    .g-steam-game:nth-child(n + 2) { display: none; }
+    .g-soc-stats .g-soc-stat:last-child { display: none; }
+    .g-soc-stat,
+    .g-gh-stat { padding: 0 6px; }
+}
+@container dossier (max-width: 360px) {
+    .g-steam-games,
+    .g-soc-stats { display: none; }
+}
 
 /* Results: a live row's telemetry line, led by a pulsing dot in its source's tone */
 .g-res-desc.is-live { color: var(--g-muted); }
@@ -942,9 +993,6 @@
     .g-chan-icon { width: 26px; height: 26px; }
     .g-chan-icon svg { width: 15px; height: 15px; }
     .g-chan-icon img { width: 18px; height: 18px; }
-    .g-gh-stat { padding: 0 8px; }
-    .g-steam-game:nth-child(n + 2) { display: none; }
-    .g-soc-stats .g-soc-stat:last-child { display: none; }
     .g-results { max-height: 60vh; overflow-y: auto; }
     .g-activity { max-height: 260px; overflow-y: auto; }
 }
@@ -1108,7 +1156,7 @@
     .g-objhead.is-ambient .g-objicon { transform: none; }
     .g-obj-btn:not([aria-current="true"]):hover { padding-left: 28px; }
     .g-preview-wait,
-    .g-op-floor,
+    .g-op-floor::before,
     .g-op-beam,
     .g-op-sweep,
     .g-op-ring,

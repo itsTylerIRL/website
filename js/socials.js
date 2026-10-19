@@ -46,7 +46,8 @@
                     followers: u.followers, posts: u.tweets ?? u.statuses,
                     post: post && { url: post.url, text: post.text, at: post.created_timestamp * 1000, likes: post.likes, reposts: post.reposts, views: post.views }
                 };
-                try { sessionStorage.setItem(KEY, JSON.stringify({ at: Date.now(), data })); } catch (_) {}
+                // Only a complete answer is reused; without the latest post, the next load asks again
+                if (data.post) try { sessionStorage.setItem(KEY, JSON.stringify({ at: Date.now(), data })); } catch (_) {}
             }
             const p = data.post;
             xCard.href = p ? p.url : 'https://x.com/itsTylerIRL';
@@ -83,6 +84,7 @@
                     <b>${esc(g ? g.name : d.status || label.toLowerCase())}</b>
                     <em>${g ? 'playing now' : games[0] ? `last played ${esc(games[0].name)}` : esc(d.name)}</em>
                 </span>
+                <span class="g-soc-stats">${recent ? stat(hours(recent), 'past 2 weeks') : ''}${games.length ? stat(hours(Math.max(...games.map(x => x.hoursTotal || 0))), 'top game') : ''}</span>
                 <span class="g-steam-games">${games.slice(0, 3).map(x => `<span class="g-steam-game" title="${esc(x.name)}: ${hours(x.hours2wk || 0)} past 2 weeks, ${hours(x.hoursTotal || 0)} total">
                     <img src="${esc(x.logo)}" alt="${esc(x.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"><small>${hours(x.hoursTotal || 0)}</small></span>`).join('')}</span>`;
             steamCard.querySelectorAll('img').forEach(img => img.addEventListener('error', () => img.remove(), { once: true }));
