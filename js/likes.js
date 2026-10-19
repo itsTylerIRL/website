@@ -1,371 +1,266 @@
-/* Page scripts for likes.html (extracted from inline <script> blocks, in original order) */
-document.addEventListener('DOMContentLoaded', function() {
-    const bentoGrid = document.getElementById('bentoGrid');
-    const bentoItems = Array.from(document.querySelectorAll('.bento-item'));
-    const filterPills = document.querySelectorAll('.filter-pill');
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    const showMoreBtn = document.getElementById('showMoreBtn');
-    const visibleCountEl = document.getElementById('visibleCount');
-    const totalCountEl = document.getElementById('totalCount');
-    
-    let currentFilter = 'all';
-    let isExpanded = false;
-    const INITIAL_SHOW = 12;
-    
-    // Assign random float animations
-    bentoItems.forEach((item, index) => {
-        item.style.setProperty('--float-duration', (3 + Math.random() * 2) + 's');
-        item.style.setProperty('--float-delay', (Math.random() * 2) + 's');
-    });
-    
-    // ===== SPOTLIGHT CAROUSEL =====
-    const spotlightMain = document.getElementById('spotlightMain');
-    let spotlightItems = [];
-    let currentSpotlight = 0;
-    let spotlightInterval;
-    
-    function initSpotlight() {
-        // Get featured items for spotlight (randomly select 5)
-        const allItems = bentoItems.filter(item => {
-            const cat = item.dataset.category;
-            return currentFilter === 'all' || cat === currentFilter;
-        });
-        
-        spotlightItems = [...allItems].sort(() => Math.random() - 0.5).slice(0, 5);
-        
-        // Build spotlight HTML
-        spotlightMain.innerHTML = spotlightItems.map((item, idx) => {
-            const img = item.querySelector('.bento-image img');
-            const title = item.querySelector('.bento-content h3');
-            const desc = item.querySelector('.bento-content p');
-            const category = item.dataset.category;
-            const href = item.href || '#';
-            const imgStyle = img ? img.getAttribute('style') || '' : '';
-            
-            return `
-                <a href="${href}" target="${item.target || '_self'}" class="spotlight-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-                    <div class="spotlight-image">
-                        <img src="${img ? img.src : ''}" alt="${title ? title.textContent : ''}" style="${imgStyle}">
-                    </div>
-                    <div class="spotlight-info">
-                        <div class="spotlight-category">${category}</div>
-                        <div class="spotlight-title">${title ? title.textContent : ''}</div>
-                        <div class="spotlight-desc">${desc ? desc.textContent : ''}</div>
-                    </div>
-                </a>
-            `;
-        }).join('');
-        
-        // Auto-rotate spotlight
-        startSpotlightRotation();
-    }
-    
-    function navigateSpotlight(dir) {
-        currentSpotlight = (currentSpotlight + dir + spotlightItems.length) % spotlightItems.length;
-        updateSpotlight();
-        resetSpotlightRotation();
-    }
-    
-    function updateSpotlight() {
-        document.querySelectorAll('.spotlight-item').forEach((item, idx) => {
-            item.classList.remove('active', 'prev', 'next');
-            if (idx === currentSpotlight) item.classList.add('active');
-            else if (idx === (currentSpotlight - 1 + spotlightItems.length) % spotlightItems.length) item.classList.add('prev');
-            else if (idx === (currentSpotlight + 1) % spotlightItems.length) item.classList.add('next');
-        });
-        
-        document.querySelectorAll('.spotlight-preview').forEach((preview, idx) => {
-            preview.classList.toggle('active', idx === currentSpotlight);
-        });
-    }
-    
-    let isHoveringCloudIcon = false;
-    let savedSpotlightHTML = '';
-    
-    // Expose to window for cross-script access
-    window.isHoveringCloudIcon = false;
-    
-    function startSpotlightRotation() {
-        spotlightInterval = setInterval(() => {
-            if (!window.isHoveringCloudIcon) {
-                navigateSpotlight(1);
-            }
-        }, 5000);
-    }
-    
-    function resetSpotlightRotation() {
-        clearInterval(spotlightInterval);
-        startSpotlightRotation();
-    }
-    
-    window.showIconInSpotlight = function(icon) {
-        if (!savedSpotlightHTML) {
-            savedSpotlightHTML = spotlightMain.innerHTML;
-        }
-        window.isHoveringCloudIcon = true;
-        
-        spotlightMain.innerHTML = `
-            <a href="${icon.href}" target="${icon.target}" class="spotlight-item active" data-index="0">
-                <div class="spotlight-image">
-                    <img src="${icon.src}" alt="${icon.title}" style="${icon.imgStyle || ''}">
-                </div>
-                <div class="spotlight-info">
-                    <div class="spotlight-category">${icon.category}</div>
-                    <div class="spotlight-title">${icon.title}</div>
-                    <div class="spotlight-desc">${icon.desc}</div>
-                </div>
-            </a>
-        `;
+/* Page scripts for likes.html: the DEEPDISH "things I like" workspace (explorer, object header,
+   results, recently viewed) built from the item cards in #likes-data, then the 3D icon cloud. */
+(function() {
+    const data = document.getElementById('likes-data');
+    const header = document.getElementById('g-objhead');
+    if (!data || !header) return;
+
+    const CAT_ORDER = ['crypto', 'tech', 'fun'];
+    const CAT_TONE = { crypto: 'blue', tech: 'green', fun: 'orange' };
+    const toneOf = (cat) => CAT_TONE[cat] || 'muted';
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'item';
+
+    const els = {
+        cats: document.getElementById('g-cats'),
+        count: document.getElementById('g-count'),
+        mix: document.getElementById('g-mix'),
+        activity: document.getElementById('g-activity'),
+        results: document.getElementById('g-results'),
+        resultsMeta: document.getElementById('g-results-meta'),
+        shuffle: document.getElementById('g-shuffle'),
+        search: document.getElementById('g-search'),
+        crumb: document.getElementById('g-crumb'),
+        statusObjects: document.getElementById('g-status-objects'),
+        statusFilter: document.getElementById('g-status-filter'),
+        clock: document.getElementById('g-clock')
     };
-    
-    window.restoreSpotlight = function() {
-        if (savedSpotlightHTML) {
-            spotlightMain.innerHTML = savedSpotlightHTML;
-            savedSpotlightHTML = '';
-            updateSpotlight();
-        }
-        window.isHoveringCloudIcon = false;
-    };
-    
-    // ===== FILTERING =====
-    function filterItems(filter) {
-        currentFilter = filter;
-        let visibleItems = [];
-        let hiddenItems = [];
-        
-        bentoItems.forEach(item => {
-            const category = item.dataset.category;
-            if (filter === 'all' || category === filter) {
-                visibleItems.push(item);
-            } else {
-                hiddenItems.push(item);
-            }
-        });
-        
-        // Hide items not matching filter
-        hiddenItems.forEach(item => {
-            item.classList.remove('visible');
-            item.classList.add('hidden');
-        });
-        
-        // Show matching items with staggered animation
-        const itemsToShow = isExpanded ? visibleItems : visibleItems.slice(0, INITIAL_SHOW);
-        const itemsToHide = isExpanded ? [] : visibleItems.slice(INITIAL_SHOW);
-        
-        itemsToShow.forEach((item, idx) => {
-            item.classList.remove('hidden');
-            item.classList.add('visible');
-            item.style.animationDelay = (idx * 0.03) + 's';
-        });
-        
-        itemsToHide.forEach(item => {
-            item.classList.remove('visible');
-            item.classList.add('hidden');
-        });
-        
-        updateCounter(visibleItems.length);
-        initSpotlight();
-    }
-    
-    function updateCounter(total) {
-        const visible = Math.min(isExpanded ? total : INITIAL_SHOW, total);
-        visibleCountEl.textContent = visible;
-        totalCountEl.textContent = total;
-        
-        showMoreBtn.style.display = total <= INITIAL_SHOW ? 'none' : 'inline-block';
-        showMoreBtn.classList.toggle('expanded', isExpanded);
-        showMoreBtn.innerHTML = isExpanded ? 'show less <span class="arrow">↑</span>' : 'show more <span class="arrow">↓</span>';
-    }
-    
-    // Filter click handlers
-    filterPills.forEach(pill => {
-        pill.addEventListener('click', function() {
-            filterPills.forEach(p => p.classList.remove('active'));
-            this.classList.add('active');
-            isExpanded = false;
-            // Clear search on category change
-            const searchEl = document.getElementById('searchInput');
-            if (searchEl) {
-                searchEl.value = '';
-                bentoItems.forEach(item => {
-                    item.style.opacity = '';
-                    item.style.pointerEvents = '';
-                });
-            }
-            filterItems(this.dataset.filter);
-            // Also filter the icon cloud
-            if (window.filterIconCloud) {
-                window.filterIconCloud(this.dataset.filter);
-            }
-        });
-    });
-    
-    // ===== SHUFFLE =====
-    shuffleBtn.addEventListener('click', function() {
-        const visibleItems = bentoItems.filter(item => item.classList.contains('visible'));
-        
-        // Animate out
-        visibleItems.forEach(item => {
-            item.classList.add('shuffle-out');
-        });
-        
-        setTimeout(() => {
-            // Shuffle DOM order
-            const shuffled = [...visibleItems].sort(() => Math.random() - 0.5);
-            shuffled.forEach(item => {
-                item.classList.remove('shuffle-out');
-                item.classList.add('shuffle-in');
-                bentoGrid.appendChild(item);
-            });
-            
-            // Reassign float animations
-            shuffled.forEach((item, index) => {
-                item.style.setProperty('--float-duration', (3 + Math.random() * 2) + 's');
-                item.style.setProperty('--float-delay', (Math.random() * 2) + 's');
-            });
-            
-            setTimeout(() => {
-                shuffled.forEach(item => item.classList.remove('shuffle-in'));
-            }, 400);
-            
-            initSpotlight();
-        }, 300);
-    });
-    
-    // ===== SHOW MORE =====
-    showMoreBtn.addEventListener('click', function() {
-        isExpanded = !isExpanded;
-        filterItems(currentFilter);
-    });
-    
-    // ===== PARALLAX TILT =====
-    bentoItems.forEach(item => {
-        item.addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = (y - centerY) / 15;
-            const rotateY = (centerX - x) / 15;
-            
-            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.05)`;
-        });
-        
-        item.addEventListener('mouseleave', function() {
-            this.style.transform = '';
-        });
-    });
-    
-    // ===== INITIAL SHUFFLE ON LOAD =====
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
+
+    // ---------- Items (same order the icon cloud reads them in) ----------
+    const seen = new Set();
+    const items = Array.from(data.querySelectorAll('.bento-item')).map((a, i) => {
+        const img = a.querySelector('.bento-image img');
+        const title = (a.querySelector('.bento-content h3')?.textContent || '').trim();
+        const desc = (a.querySelector('.bento-content p')?.textContent || '').trim();
+        let host = '';
+        let external = true;
+        try {
+            const u = new URL(a.href);
+            external = u.host !== location.host;
+            host = external ? u.host.replace(/^www\./, '') : 'tylerirl.com' + u.pathname;
+        } catch (_) {}
+        let slug = slugify(title);
+        while (seen.has(slug)) slug += '-' + (i + 1);
+        seen.add(slug);
+        return {
+            id: 'OBJ-' + String(i + 1).padStart(4, '0'),
+            slug, title, desc, host, external,
+            category: a.dataset.category || 'other',
+            href: a.href,
+            target: a.target || '_self',
+            src: img ? img.getAttribute('src') : '',
+            imgStyle: img ? img.getAttribute('style') || '' : ''
+        };
+    }).filter((it) => it.title);
+
+    const categories = [...CAT_ORDER.filter((c) => items.some((it) => it.category === c)),
+        ...new Set(items.map((it) => it.category).filter((c) => !CAT_ORDER.includes(c)))];
+    const countOf = (cat) => cat === 'all' ? items.length : items.filter((it) => it.category === cat).length;
+
+    function shuffled(list) {
+        const a = list.slice();
+        for (let i = a.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+            [a[i], a[j]] = [a[j], a[i]];
         }
-        return array;
+        return a;
     }
-    
-    // Shuffle DOM order on load (no animation, instant)
-    const shuffledOnLoad = shuffleArray([...bentoItems]);
-    shuffledOnLoad.forEach(item => {
-        bentoGrid.appendChild(item);
+
+    let filter = 'all';
+    let query = '';
+    let order = shuffled(items);
+    let current = null;
+    const viewed = []; // recently viewed, newest first
+
+    const matches = (it) => !query || [it.title, it.desc, it.category, it.host].some((f) => f.toLowerCase().includes(query));
+    const visible = () => order.filter((it) => (filter === 'all' || it.category === filter) && matches(it));
+    const iconHtml = (it, cls) => it.src
+        ? `<img class="${cls}" src="${esc(it.src)}" alt="" loading="lazy" decoding="async"${it.imgStyle ? ` style="${esc(it.imgStyle)}"` : ''}>`
+        : `<span class="${cls} g-noimg">${esc(it.title.charAt(0).toUpperCase())}</span>`;
+
+    // ---------- Explorer + category mix (both filter) ----------
+    function renderFilters() {
+        els.cats.innerHTML = ['all', ...categories].map((c) => `<li><button type="button" class="g-obj-btn" data-cat="${c}" aria-current="${c === filter}">
+            <i class="g-dot tone-${c === 'all' ? 'muted' : toneOf(c)}"></i><span>${c}</span><span class="g-id">${countOf(c)}</span></button></li>`).join('');
+        els.count.textContent = items.length;
+        els.mix.innerHTML = categories.map((c) => {
+            const n = countOf(c);
+            const pct = Math.round((n / items.length) * 100);
+            return `<button type="button" class="g-mix-row tone-${toneOf(c)}" data-cat="${c}" aria-pressed="${c === filter}">
+                <span class="g-mix-label">${c}</span>
+                <span class="g-mix-bar"><span style="width:${pct}%"></span></span>
+                <span class="g-mix-n">${n} <small>${pct}%</small></span></button>`;
+        }).join('');
+    }
+    function setFilter(cat) {
+        filter = cat === filter && cat !== 'all' ? 'all' : cat; // clicking the active category clears it
+        window.likesFilter = filter;
+        renderFilters();
+        renderResults();
+        if (window.filterIconCloud) window.filterIconCloud(filter);
+        if (query && window.searchIconCloud) window.searchIconCloud(query);
+        updateStatus();
+    }
+    els.cats.addEventListener('click', (e) => { const b = e.target.closest('[data-cat]'); if (b) setFilter(b.dataset.cat); });
+    els.mix.addEventListener('click', (e) => { const b = e.target.closest('[data-cat]'); if (b) setFilter(b.dataset.cat); });
+
+    // ---------- Results ----------
+    function renderResults() {
+        const list = visible();
+        els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
+        els.results.innerHTML = list.length ? list.map((it) => `<li><button type="button" class="g-res" data-slug="${it.slug}" aria-current="${it === current}">
+                ${iconHtml(it, 'g-res-icon')}
+                <span class="g-res-text"><span class="g-res-title">${esc(it.title)}</span><span class="g-res-desc">${esc(it.desc)}</span></span>
+                <i class="g-dot tone-${toneOf(it.category)}" title="${esc(it.category)}"></i>
+            </button></li>`).join('')
+            : '<li class="g-no-results">No matching objects</li>';
+    }
+    els.results.addEventListener('click', (e) => {
+        const b = e.target.closest('.g-res');
+        if (b) select(items.find((it) => it.slug === b.dataset.slug));
     });
-    
-    // Initialize
-    filterItems('all');
-    
-    // ===== PREVIEW PANEL =====
-    const previewOverlay = document.getElementById('previewOverlay');
-    const previewClose = document.getElementById('previewClose');
-    
-    window.openPreviewPanel = function(icon) {
-        document.getElementById('previewCategory').textContent = icon.category;
-        document.getElementById('previewCategory').setAttribute('data-cat', icon.category);
-        document.getElementById('previewImage').innerHTML = `<img src="${icon.src}" alt="${icon.title}" style="${icon.imgStyle || ''}">`;
-        document.getElementById('previewTitle').textContent = icon.title;
-        document.getElementById('previewDesc').textContent = icon.desc;
-        const visitLink = document.getElementById('previewVisit');
-        visitLink.href = icon.href;
-        visitLink.target = icon.target || '_blank';
-        previewOverlay.classList.add('active');
+    // Broken remote icons fall back to the item's initial
+    els.results.addEventListener('error', (e) => {
+        const img = e.target;
+        if (img.tagName !== 'IMG') return;
+        const span = document.createElement('span');
+        span.className = 'g-res-icon g-noimg';
+        span.textContent = (img.closest('.g-res')?.querySelector('.g-res-title')?.textContent || '?').charAt(0).toUpperCase();
+        img.replaceWith(span);
+    }, true);
+    els.shuffle.addEventListener('click', () => {
+        order = shuffled(items);
+        renderResults();
+        els.results.scrollTop = 0;
+    });
+
+    // ---------- Object header ----------
+    function renderHeader(it) {
+        const list = visible();
+        const idx = list.indexOf(it);
+        const tone = toneOf(it.category);
+        header.innerHTML = `<div class="g-objrow">
+                <div class="g-objicon g-objicon-img">${iconHtml(it, 'g-objimg')}</div>
+                <div class="g-objtitle">
+                    <div class="g-objtype">INTEREST &middot; ${esc(it.category.toUpperCase())} &middot; ${it.id}</div>
+                    <h1>${esc(it.title)}</h1>
+                </div>
+                <span class="g-chip tone-${tone}"><i class="g-dot tone-${tone}"></i>${esc(it.category)}</span>
+                <div class="g-objnav">
+                    <button type="button" class="g-btn" data-step="-1" aria-label="Previous object" ${list.length < 2 ? 'disabled' : ''}>&lsaquo;</button>
+                    <span>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length}</span>
+                    <button type="button" class="g-btn" data-step="1" aria-label="Next object" ${list.length < 2 ? 'disabled' : ''}>&rsaquo;</button>
+                    <a class="g-btn g-visit" href="${esc(it.href)}"${it.external ? ' target="_blank" rel="noopener"' : ''}>VISIT &nearr;</a>
+                </div>
+            </div>
+            <p class="g-summary">${esc(it.desc || 'No description on file.')}</p>
+            <div class="g-objmeta">
+                <span>SOURCE</span><b>${esc(it.host || '—')}</b>
+                <span>LINK</span><b>${it.external ? 'EXTERNAL' : 'INTERNAL'}</b>
+                <span>CATEGORY SHARE</span><b>${countOf(it.category)} / ${items.length}</b>
+            </div>`;
+        header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
+    }
+
+    // ---------- Recently viewed ----------
+    function renderHistory() {
+        els.activity.innerHTML = viewed.map((h) => `<li><i class="g-dot tone-${toneOf(h.item.category)}"></i><div>
+            <time>${h.time}</time><button type="button" class="g-act-link" data-slug="${h.item.slug}">${esc(h.item.title)}</button>
+            <span class="g-act-cat">${esc(h.item.category)}</span></div></li>`).join('');
+    }
+    els.activity.addEventListener('click', (e) => {
+        const b = e.target.closest('.g-act-link');
+        if (b) select(items.find((it) => it.slug === b.dataset.slug));
+    });
+
+    // ---------- Selection ----------
+    function select(it, opts = {}) {
+        if (!it) return;
+        current = it;
+        renderHeader(it);
+        els.crumb.textContent = it.title;
+        els.results.querySelectorAll('.g-res').forEach((b) => {
+            const on = b.dataset.slug === it.slug;
+            b.setAttribute('aria-current', on);
+            if (on && !opts.noScroll) b.scrollIntoView({ block: 'nearest' });
+        });
+        const d = new Date();
+        const time = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, '0')).join(':');
+        const prev = viewed.findIndex((h) => h.item === it);
+        if (prev !== -1) viewed.splice(prev, 1);
+        viewed.unshift({ item: it, time });
+        viewed.length = Math.min(viewed.length, 12);
+        renderHistory();
+        if (location.hash !== '#' + it.slug) history.replaceState(null, '', '#' + it.slug);
+    }
+    function step(dir) {
+        const list = visible();
+        if (!list.length) return;
+        const i = list.indexOf(current);
+        select(list[(i + dir + list.length) % list.length]);
+    }
+    // Clicking an icon in the cloud inspects it here
+    window.inspectLike = (icon) => {
+        const it = items.find((x) => x.title === icon.title && x.href === icon.href) || items.find((x) => x.title === icon.title);
+        select(it);
     };
-    
-    function closePreview() {
-        previewOverlay.classList.remove('active');
-    }
-    
-    previewClose.addEventListener('click', closePreview);
-    previewOverlay.addEventListener('click', function(e) {
-        if (e.target === previewOverlay) closePreview();
+    window.addEventListener('hashchange', () => {
+        const it = items.find((x) => x.slug === location.hash.slice(1));
+        if (it && it !== current) select(it);
     });
-    
-    // ===== SEARCH =====
-    const searchInput = document.getElementById('searchInput');
-    
-    searchInput.addEventListener('input', function() {
-        const q = this.value.toLowerCase().trim();
-        
-        // Filter bento grid
-        bentoItems.forEach(item => {
-            const title = item.querySelector('.bento-content h3')?.textContent.toLowerCase() || '';
-            const desc = item.querySelector('.bento-content p')?.textContent.toLowerCase() || '';
-            const cat = item.dataset.category.toLowerCase();
-            const matches = !q || title.includes(q) || desc.includes(q) || cat.includes(q);
-            
-            if (matches) {
-                item.style.opacity = '';
-                item.style.pointerEvents = '';
-            } else {
-                item.style.opacity = '0.1';
-                item.style.pointerEvents = 'none';
-            }
-        });
-        
-        // Filter icon cloud
-        if (window.searchIconCloud) {
-            window.searchIconCloud(q);
+
+    // ---------- Search + keyboard ----------
+    els.search.addEventListener('input', () => {
+        query = els.search.value.trim().toLowerCase();
+        renderResults();
+        if (window.searchIconCloud) window.searchIconCloud(query);
+        updateStatus();
+    });
+    els.search.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const first = visible()[0];
+            if (first) select(first);
+        } else if (e.key === 'Escape') {
+            els.search.value = '';
+            els.search.dispatchEvent(new Event('input'));
+            els.search.blur();
         }
     });
-    
-    // ===== VIEW TOGGLE =====
-    const viewToggleBtns = document.querySelectorAll('.view-toggle');
-    const iconCloudContainer = document.getElementById('iconCloudContainer');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    
-    viewToggleBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            viewToggleBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const view = this.dataset.view;
-            if (view === 'cloud') {
-                iconCloudContainer.classList.remove('hidden-view');
-                bentoGrid.classList.add('hidden-view');
-                document.querySelector('.show-more-container').style.display = 'none';
-            } else {
-                iconCloudContainer.classList.add('hidden-view');
-                bentoGrid.classList.remove('hidden-view');
-                document.querySelector('.show-more-container').style.display = 'block';
-                // Remove exclusion zone when cloud is hidden
-                if (window.removeExclusionZone) {
-                    window.removeExclusionZone('iconCloud');
-                }
-            }
-        });
+    document.addEventListener('keydown', (e) => {
+        const el = e.target instanceof Element ? e.target : null;
+        const typing = el && el.closest('input, textarea, [contenteditable="true"]');
+        if (typing) return;
+        if (e.key === '/') {
+            e.preventDefault();
+            els.search.focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            step(e.key === 'ArrowLeft' ? -1 : 1);
+        } else if (e.key === 'Enter' && current && !(el && el.closest('button, a'))) {
+            header.querySelector('.g-visit').click();
+        }
     });
-    
-    // On mobile, force grid view as default — the 3D cloud doesn't fit
-    if (isMobile) {
-        const gridBtn = document.querySelector('.view-toggle[data-view="grid"]');
-        if (gridBtn) gridBtn.click();
-    } else {
-        // Hide show more container initially (cloud view is default on desktop)
-        document.querySelector('.show-more-container').style.display = 'none';
+
+    // ---------- Status bar ----------
+    function updateStatus() {
+        els.statusObjects.textContent = `${items.length} OBJECTS`;
+        els.statusFilter.textContent = `FILTER: ${filter.toUpperCase()}${query ? ` · "${query}"` : ''} · ${visible().length} SHOWN`;
     }
-});
+    const tick = () => {
+        const d = new Date();
+        els.clock.textContent = 'SYNC ' + [d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()].map((n) => String(n).padStart(2, '0')).join(':') + 'Z';
+    };
+    tick();
+    setInterval(tick, 1000);
+
+    // ---------- Boot ----------
+    window.likesFilter = filter;
+    renderFilters();
+    renderResults();
+    updateStatus();
+    const fromHash = items.find((x) => x.slug === location.hash.slice(1));
+    select(fromHash || order[0], { noScroll: !fromHash });
+})();
 
 (function() {
     const canvas = document.getElementById('iconCloudCanvas');
@@ -396,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
         art: '#bd93f9'
     };
     
-    // Collect items from the bento grid
+    // Collect items from the item cards (#likes-data)
     function collectItems() {
         const bentoItems = document.querySelectorAll('.bento-item');
         const items = [];
@@ -836,9 +731,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function onClick(e) {
         if (hoveredIcon) {
-            // Open preview panel instead of navigating
-            if (window.openPreviewPanel) {
-                window.openPreviewPanel(hoveredIcon);
+            // Inspect it in the workspace instead of navigating
+            if (window.inspectLike) {
+                window.inspectLike(hoveredIcon);
             }
         }
     }
@@ -865,9 +760,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dist = Math.sqrt(Math.pow(icon.projX - touchStartPos.x, 2) + Math.pow(icon.projY - touchStartPos.y, 2));
                 
                 if (dist < size * 0.7 && icon.opacity > 0.5) {
-                    // Tapped on icon - open preview panel
-                    if (window.openPreviewPanel) {
-                        window.openPreviewPanel(icon);
+                    // Tapped on icon - inspect it in the workspace
+                    if (window.inspectLike) {
+                        window.inspectLike(icon);
                     }
                     break;
                 }
@@ -904,13 +799,13 @@ document.addEventListener('DOMContentLoaded', function() {
         icons.forEach(icon => {
             if (!q) {
                 // Reset to current category filter
-                const activeFilter = document.querySelector('.filter-pill.active');
-                const cat = activeFilter ? activeFilter.dataset.filter : 'all';
+                const cat = window.likesFilter || 'all';
                 icon.visible = cat === 'all' || icon.category === cat;
                 icon.searchDimmed = false;
             } else {
+                const cat = window.likesFilter || 'all';
                 const matches = icon.title.toLowerCase().includes(q) || icon.desc.toLowerCase().includes(q) || icon.category.toLowerCase().includes(q);
-                icon.visible = true; // Keep all visible but dim non-matches
+                icon.visible = cat === 'all' || icon.category === cat; // keep the category filter, dim non-matches
                 icon.searchDimmed = !matches;
             }
         });

@@ -1,9 +1,7 @@
 // Three.js Particle Field Background
 // Cyberpunk aesthetic with cyan accents - scanline reactive
 
-let scene, camera, renderer, particles, mouseX = 0, mouseY = 0;
-let windowHalfX = window.innerWidth / 2;
-let windowHalfY = window.innerHeight / 2;
+let scene, camera, renderer, particles;
 let scrollY = 0;
 let scanlineY = 0;
 let particlePositions, particleColors, originalColors;
@@ -45,10 +43,11 @@ let lightSource, lightSourceMesh, occlusionComposer, occlusionRenderTarget;
 let chromaticAberrationEnabled = true;
 let chromaticAberrationIntensity = 0.004;
 
-// Mouse world position for line attraction
-let mouseWorldX = 0;
-let mouseWorldY = 0;
-let mouseWorldZ = 20; // Slightly in front of particles
+// Fixed world-space focal point for connection lines. Keeping this centered
+// preserves the effect without making the background follow the pointer.
+let focusWorldX = 0;
+let focusWorldY = 0;
+let focusWorldZ = 20; // Slightly in front of particles
 
 // Effect settings
 let bloomStrength = 0.8;
@@ -58,7 +57,7 @@ let linesEnabled = true;
 let linesMaxDistance = 23;
 let linesOpacity = 0.8; // Increased for visibility
 let glitchEnabled = false;
-let linesAttraction = 0.7; // How strongly lines are attracted to cursor (0-1)
+let linesAttraction = 0.7; // How strongly lines are attracted to the focal point (0-1)
 
 function initBackground3D() {
     // three.js comes from a CDN; if it failed to load, skip the background instead of throwing
@@ -110,13 +109,8 @@ function initBackground3D() {
     camera.position.z = 50;
 
     // Event listeners (passive where possible to avoid blocking scroll/input)
-    document.addEventListener('mousemove', onMouseMove, { passive: true });
-    document.addEventListener('mouseleave', onMouseLeave, { passive: true });
-    document.addEventListener('mouseout', onMouseOut, { passive: true });
-    document.documentElement.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; }, { passive: true });
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('blur', () => { mouseX = 0; mouseY = 0; }); // Recenter when window loses focus
     
     // Track scanline position - now reads from shared state in effects.js
     // trackScanline(); // Removed - using window.scanlineState instead
@@ -711,7 +705,7 @@ function updateDataPackets(dt) {
     if (activeLineEndpoints.length > 0) {
         const spawnChance = Math.min(0.6, activeLineEndpoints.length * 0.02);
         if (packets.length < MAX_PACKETS && Math.random() < spawnChance) {
-            // Prefer brighter (cursor-adjacent) lines: pick from first portion
+            // Prefer brighter focal-area lines: pick from first portion
             const pickRange = Math.min(activeLineEndpoints.length, Math.max(8, activeLineEndpoints.length / 3));
             const lineIdx = Math.floor(Math.random() * pickRange);
             packets.push({
@@ -1276,25 +1270,25 @@ function updateConnectionLines() {
         if (Math.abs(ty - cameraY) < viewRange) {
             const tx = e[0] * px + e[4] * py + e[8] * pz + e[12];
             const tz = e[2] * px + e[6] * py + e[10] * pz + e[14];
-            // Calculate distance to mouse for scoring
-            const dx = tx - mouseWorldX;
-            const dy = ty - mouseWorldY;
-            const dz = tz - mouseWorldZ;
-            const distToMouse = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            // Calculate distance to the fixed focal point for scoring
+            const dx = tx - focusWorldX;
+            const dy = ty - focusWorldY;
+            const dz = tz - focusWorldZ;
+            const distToFocus = Math.sqrt(dx * dx + dy * dy + dz * dz);
             
             transformedPositions.push({ 
                 x: tx, 
                 y: ty, 
                 z: tz,
-                distToMouse: distToMouse
+                distToFocus: distToFocus
             });
         }
     }
     const visibleCount = transformedPositions.length;
     
-    // Sort particles by distance to mouse (closest first)
+    // Sort particles by distance to the focal point (closest first)
     const sortedIndices = transformedPositions
-        .map((p, idx) => ({ idx, dist: p.distToMouse }))
+        .map((p, idx) => ({ idx, dist: p.distToFocus }))
         .sort((a, b) => a.dist - b.dist)
         .map(item => item.idx);
     
@@ -1303,8 +1297,8 @@ function updateConnectionLines() {
     const maxDist = linesMaxDistance;
     const maxDistSq = maxDist * maxDist;
     const attractionRange = 80; // Tighter range
-    const cursorConnectRange = 35; // Range where particles connect directly to cursor
-    const maxCursorLines = 6; // Lines connecting to cursor
+    const focalConnectRange = 35; // Range where particles connect directly to the focal point
+    const maxFocalLines = 6; // Lines connecting to the focal point
     
     // Track connections per particle to avoid over-connecting.
     // Flat typed arrays indexed by visible-particle index (much cheaper than Map/Set
@@ -1319,28 +1313,28 @@ function updateConnectionLines() {
     usedParticles.fill(0, 0, visibleCount);
     const maxConnectionsPerParticle = 4;
     
-    // FIRST: Draw lines from closest particles directly to cursor (subtle)
-    for (let si = 0; si < Math.min(sortedIndices.length, maxCursorLines) && lineIndex < maxLines; si++) {
+    // FIRST: Draw lines from closest particles directly to the focal point (subtle)
+    for (let si = 0; si < Math.min(sortedIndices.length, maxFocalLines) && lineIndex < maxLines; si++) {
         const i = sortedIndices[si];
         const p1 = transformedPositions[i];
         
-        if (p1.distToMouse > cursorConnectRange) continue;
+        if (p1.distToFocus > focalConnectRange) continue;
         
         // Smooth cubic falloff for cleaner fade
-        const t = p1.distToMouse / cursorConnectRange;
+        const t = p1.distToFocus / focalConnectRange;
         const alpha = Math.pow(1 - t, 2); // Quadratic falloff
         
         const li = lineIndex * 6;
         
-        // Line from particle to cursor
+        // Line from particle to the fixed focal point
         linesPos[li] = p1.x;
         linesPos[li + 1] = p1.y;
         linesPos[li + 2] = p1.z;
-        linesPos[li + 3] = mouseWorldX;
-        linesPos[li + 4] = mouseWorldY;
-        linesPos[li + 5] = mouseWorldZ;
+        linesPos[li + 3] = focusWorldX;
+        linesPos[li + 4] = focusWorldY;
+        linesPos[li + 5] = focusWorldZ;
         
-        // Soft white/cyan gradient - brighter at particle, softer at cursor
+        // Soft white/cyan gradient - brighter at particle, softer at the focal point
         linesCol[li] = 0.9 * alpha + 0.1;
         linesCol[li + 1] = 0.95 * alpha + 0.1;
         linesCol[li + 2] = 1.0 * alpha + 0.1;
@@ -1352,21 +1346,21 @@ function updateConnectionLines() {
         connectionCount[i]++;
         activeLineEndpoints.push({
             x1: p1.x, y1: p1.y, z1: p1.z,
-            x2: mouseWorldX, y2: mouseWorldY, z2: mouseWorldZ,
+            x2: focusWorldX, y2: focusWorldY, z2: focusWorldZ,
             brightness: alpha
         });
         lineIndex++;
     }
     
-    // Second pass: Create elegant path lines radiating outward from cursor area
+    // Second pass: Create elegant path lines radiating outward from the focal area
     for (let si = 0; si < Math.min(sortedIndices.length, 60) && lineIndex < maxLines * 0.6; si++) {
         const i = sortedIndices[si];
         const p1 = transformedPositions[i];
         
-        if (p1.distToMouse > attractionRange) continue;
+        if (p1.distToFocus > attractionRange) continue;
         if (connectionCount[i] >= maxConnectionsPerParticle) continue;
         
-        // Find the best neighbor - prefer ones further from mouse (outward flow)
+        // Find the best neighbor - prefer ones further from the focal point (outward flow)
         let bestJ = -1;
         let bestScore = -Infinity;
         
@@ -1385,7 +1379,7 @@ function updateConnectionLines() {
             
             const dist = Math.sqrt(distSq);
             // Score: prefer outward direction, moderate distance, unused particles
-            const directionScore = (p2.distToMouse - p1.distToMouse) / dist;
+            const directionScore = (p2.distToFocus - p1.distToFocus) / dist;
             const proximityScore = 1 - (dist / maxDist);
             const noveltyScore = usedParticles[j] ? 0.4 : 1;
             
@@ -1407,8 +1401,8 @@ function updateConnectionLines() {
             
             // Smooth falloff based on distance
             const distAlpha = Math.pow(1 - (dist / maxDist), 1.5);
-            // Proximity to cursor boosts visibility
-            const mouseProximity = Math.pow(1 - Math.min(p1.distToMouse / attractionRange, 1), 2);
+            // Proximity to the focal point boosts visibility
+            const focusProximity = Math.pow(1 - Math.min(p1.distToFocus / attractionRange, 1), 2);
             
             const li = lineIndex * 6;
             
@@ -1419,9 +1413,9 @@ function updateConnectionLines() {
             linesPos[li + 4] = p2.y;
             linesPos[li + 5] = p2.z;
             
-            // Color with alpha baked in - closer to mouse = brighter
-            const brightness = (0.5 + mouseProximity * 0.5) * distAlpha;
-            linesCol[li] = 0.55 * (1 + mouseProximity * 0.4) * brightness + 0.1;
+            // Color with alpha baked in - closer to the focal point = brighter
+            const brightness = (0.5 + focusProximity * 0.5) * distAlpha;
+            linesCol[li] = 0.55 * (1 + focusProximity * 0.4) * brightness + 0.1;
             linesCol[li + 1] = 0.91 * brightness + 0.1;
             linesCol[li + 2] = 0.99 * brightness + 0.1;
             linesCol[li + 3] = 0.55 * brightness * 0.8;
@@ -1578,62 +1572,11 @@ function updateGlitchOverlay() {
     }
 }
 
-function onMouseMove(event) {
-    // Check if mouse is actually inside the viewport
-    const x = event.clientX;
-    const y = event.clientY;
-    
-    if (x <= 0 || x >= window.innerWidth || y <= 0 || y >= window.innerHeight) {
-        // Mouse is at edge or outside - recenter
-        mouseX = 0;
-        mouseY = 0;
-        mouseWorldX = 0;
-        mouseWorldY = camera.position.y;
-    } else {
-        mouseX = (x - windowHalfX) * 0.05;
-        mouseY = (y - windowHalfY) * 0.05;
-        
-        // Convert screen position to world coordinates for line attraction
-        const normalizedX = (x / window.innerWidth) * 2 - 1;
-        const normalizedY = -(y / window.innerHeight) * 2 + 1;
-        
-        // Unproject to world space
-        const mouseVec = new THREE.Vector3(normalizedX, normalizedY, 0.5);
-        mouseVec.unproject(camera);
-        const dir = mouseVec.sub(camera.position).normalize();
-        const distance = -camera.position.z / dir.z;
-        const worldPos = camera.position.clone().add(dir.multiplyScalar(distance));
-        
-        mouseWorldX = worldPos.x;
-        mouseWorldY = worldPos.y;
-        mouseWorldZ = worldPos.z;
-    }
-}
-
-function onMouseLeave(event) {
-    // Only reset if actually leaving the document (not entering a child element)
-    if (!event.relatedTarget || event.relatedTarget.nodeName === 'HTML') {
-        mouseX = 0;
-        mouseY = 0;
-    }
-}
-
-function onMouseOut(event) {
-    // Fires when leaving document entirely
-    if (!event.relatedTarget && !event.toElement) {
-        mouseX = 0;
-        mouseY = 0;
-    }
-}
-
 function onScroll() {
     scrollY = window._contentScrollY !== undefined ? window._contentScrollY : (window.scrollY || window.pageYOffset);
 }
 
 function onWindowResize() {
-    windowHalfX = window.innerWidth / 2;
-    windowHalfY = window.innerHeight / 2;
-    
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1691,20 +1634,9 @@ function animate() {
     const targetY = -scrollY * 0.05; // Move camera down as user scrolls
     camera.position.y += (targetY - camera.position.y) * 0.1;
     
-    // 3D rotation based on mouse position
-    const targetRotationX = -mouseY * 0.015; // Vertical mouse = tilt up/down
-    const targetRotationY = mouseX * 0.02;   // Horizontal mouse = rotate left/right
-    
-    // Smooth camera orbit around center
-    const orbitRadius = 50;
-    const targetCameraX = Math.sin(targetRotationY) * orbitRadius * 0.8;
-    const targetCameraZ = 50 - (1 - Math.cos(targetRotationY)) * orbitRadius * 0.4;
-    const targetCameraYOffset = Math.sin(targetRotationX) * orbitRadius * 0.5;
-    
-    // Smooth interpolation for camera position
-    camera.position.x += (targetCameraX - camera.position.x) * 0.05;
-    camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
-    camera.position.y += (targetY + targetCameraYOffset - camera.position.y) * 0.05;
+    // Keep the camera centered; the background no longer follows the pointer.
+    camera.position.x += (0 - camera.position.x) * 0.05;
+    camera.position.z += (50 - camera.position.z) * 0.05;
     
     // Camera always looks at center (with scroll offset)
     camera.lookAt(new THREE.Vector3(0, targetY, 0));

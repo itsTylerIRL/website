@@ -14,14 +14,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/likes">
     <meta property="og:title" content="Things I Like - Tyler (in real life)">
-    <meta property="og:description" content="Services and tools I enjoy using">
+    <meta property="og:description" content="Things I like: crypto, tech and fun, catalogued in the DEEPDISH workspace">
     <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/likes">
     <meta property="twitter:title" content="Things I Like - Tyler (in real life)">
-    <meta property="twitter:description" content="Services and tools I enjoy using">
+    <meta property="twitter:description" content="Things I like: crypto, tech and fun, catalogued in the DEEPDISH workspace">
     <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
@@ -33,100 +33,111 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     
-    <!-- Three.js for 3D background -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/likes.css?v=1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/likes.css?v=2.6">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Things I like workspace (rendered by js/likes.js from the item cards in #likes-data below) -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// THINGS I LIKE</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Interest</span><span class="sep">/</span>
+                <b id="g-crumb">&mdash;</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search interests&hellip;" autocomplete="off" aria-label="Search interests">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-    <!-- Bento Grid Section -->
-    <section id="likes" style="padding: 0.5rem 0 0;">
-        <div class="bento-container">
-            <div class="bento-header">
-                <h2 class="bento-title">things i like</h2>
-            </div>
-            
-            <!-- Unified Spotlight + Controls -->
-            <div class="spotlight-section">
-                <div class="spotlight-container">
-                    <!-- Left: Filters -->
-                    <div class="spotlight-filters">
-                        <button class="filter-pill active" data-filter="all">all <span class="count">(101)</span></button>
-                        <button class="filter-pill" data-filter="crypto">crypto <span class="count">(28)</span></button>
-                        <button class="filter-pill" data-filter="tech">tech <span class="count">(42)</span></button>
-                        <button class="filter-pill" data-filter="fun">fun <span class="count">(36)</span></button>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-explorer" aria-label="Object explorer">
+                    <div class="g-panel-title">Object Explorer</div>
+                    <div class="g-tree">
+                        <div class="g-tree-group"><span class="caret">&#9662;</span>Interest<span class="g-count" id="g-count">0</span></div>
+                        <ul id="g-cats"></ul>
                     </div>
-                    
-                    <!-- Center: Spotlight -->
-                    <div class="spotlight-main" id="spotlightMain">
-                        <!-- Spotlight items will be populated by JS -->
-                    </div>
-                    
-                    <!-- Right: Actions + Search -->
-                    <div class="spotlight-actions">
-                        <div class="spotlight-search">
-                            <span class="spotlight-search-icon">⌕</span>
-                            <input type="text" id="searchInput" placeholder="search..." autocomplete="off">
-                        </div>
-                        <button class="spotlight-action-btn shuffle" id="shuffleBtn">⟳ shuffle</button>
-                        <button class="spotlight-action-btn view-toggle active" data-view="cloud">✧ 3d cloud</button>
-                        <button class="spotlight-action-btn view-toggle" data-view="grid">▤ grid</button>
-                    </div>
+                </section>
+                <section class="g-mix-pane">
+                    <div class="g-panel-title">Category Mix <span class="g-meta">filter</span></div>
+                    <div class="g-mix" id="g-mix"></div>
+                </section>
+                <section class="g-activity-pane">
+                    <div class="g-panel-title">Recently Viewed</div>
+                    <ol class="g-activity" id="g-activity"></ol>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main" aria-live="polite">
+                <div class="g-objhead" id="g-objhead">
+                    <noscript><p>This workspace needs JavaScript to load its objects.</p></noscript>
                 </div>
+                <section class="g-card g-cloud-pane">
+                    <div class="g-panel-title">Link Analysis <span class="g-meta">drag to rotate &middot; click to inspect</span></div>
+                    <div class="icon-cloud-container" id="iconCloudContainer">
+                        <canvas class="icon-cloud-canvas" id="iconCloudCanvas"></canvas>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-results-pane">
+                    <div class="g-panel-title">Results <span class="g-meta" id="g-results-meta"></span>
+                        <button type="button" class="g-btn g-shuffle" id="g-shuffle" title="Shuffle results">&#10227;</button>
+                    </div>
+                    <ol class="g-results" id="g-results"></ol>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span id="g-status-objects"></span>
+                <span id="g-status-filter"></span>
+                <span id="g-clock"></span>
+                <span class="g-hint">&larr; &rarr; switch object &middot; / search &middot; enter to visit</span>
             </div>
-            
-            <!-- 3D Icon Cloud -->
-            <div class="icon-cloud-container" id="iconCloudContainer">
-                <canvas class="icon-cloud-canvas" id="iconCloudCanvas"></canvas>
-                <div class="icon-cloud-hint">drag to rotate • click to explore</div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
             </div>
-            
-            <!-- Tooltip -->
-            <div class="icon-tooltip" id="iconTooltip">
-                <div class="tooltip-title"></div>
-                <div class="tooltip-desc"></div>
-            </div>
-            
-            <!-- Preview Panel -->
-            <div class="preview-overlay" id="previewOverlay">
-                <div class="preview-panel">
-                    <button class="preview-close" id="previewClose">✕</button>
-                    <div class="preview-category" id="previewCategory"></div>
-                    <div class="preview-image" id="previewImage"></div>
-                    <div class="preview-title" id="previewTitle"></div>
-                    <div class="preview-desc" id="previewDesc"></div>
-                    <a class="preview-visit" id="previewVisit" href="#" target="_blank">visit <span class="arrow">→</span></a>
-                </div>
-            </div>
-            
-            <div class="bento-grid hidden-view" id="bentoGrid">
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
+    </main>
+
+    <!-- Hover tooltip for the icon cloud -->
+    <div class="icon-tooltip" id="iconTooltip">
+        <div class="tooltip-title"></div>
+        <div class="tooltip-desc"></div>
+    </div>
+
+    <!-- Item data: one card per thing. Edit / add cards here; the workspace and icon cloud read them.
+         data-category is the filter group (crypto / tech / fun); an inline style on the img is kept (e.g. invert). -->
+    <div id="likes-data" hidden>
                 <!-- Personal Projects -->
                 <!-- DeepDish OCS -->
                 <a href="/pages/deepdish_ocs.html" class="bento-item visible" data-category="fun">
@@ -826,7 +837,6 @@
                     </div>
                 </a>
                 
-                <!-- Three.js -->
                 <a href="https://threejs.org" target="_blank" class="bento-item visible" data-category="tech">
                     <span class="bento-category">tech</span>
                     <div class="bento-image">
@@ -1401,60 +1411,16 @@
                         <p>shaw</p>
                     </div>
                 </a>
-            </div>
-            
-            <!-- Show More / Counter -->
-            <div class="show-more-container">
-                <button class="show-more-btn" id="showMoreBtn">
-                    show more <span class="arrow">↓</span>
-                </button>
-                <div class="items-counter">
-                    showing <span id="visibleCount">12</span> of <span id="totalCount">33</span> items
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
-    <!-- Floating Return Home Button -->
-    <a href="/" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="/assets/wee.gif" alt="Return home">
-            </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
-            </div>
-        </div>
-    </a>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
-        </div>
-    </footer>
-
-    <!-- External JavaScript -->
-    <script defer src="/js/background3d.js?v=1.6"></script>
-    <script defer src="/js/script.js?v=1.8"></script>
-    <script defer src="/js/performance.js?v=1.2"></script>
-    <script defer src="/js/interactions.js?v=1.1"></script>
-    <script defer src="/js/effects.js?v=1.4"></script>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
     <script defer src="/js/radgotchi.js"></script>
-    
-    <!-- Bento Grid JavaScript -->
-    
-    <!-- 3D Icon Cloud Script -->
-    <script defer src="/js/likes.js?v=1.2"></script>
+
+    <!-- Things I like workspace + 3D icon cloud -->
+    <script defer src="/js/likes.js?v=2.1"></script>
 </body>
 </html>

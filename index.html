@@ -4,26 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyler (in real life)</title>
-    
+
     <!-- Preload LCP hero image -->
     <link rel="preload" as="image" href="/assets/remilio2.png" fetchpriority="high">
-    
-    <!-- Three.js for 3D background (deferred to unblock render) -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
     <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="/css/radgotchi.css">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/">
@@ -32,7 +22,7 @@
     <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/">
@@ -40,7 +30,7 @@
     <meta property="twitter:description" content="Remilio Enjoyer">
     <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
-    
+
     <!-- Additional meta tags -->
     <meta name="description" content="Remilio Enjoyer">
     <meta name="author" content="Tyler">
@@ -51,24 +41,37 @@
     <!-- Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    
-    <link rel="stylesheet" href="/css/bento.css?v=1.0">
-    <link rel="stylesheet" href="/css/index.css?v=1.5">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+    <!-- Hologram hero + boot splash -->
+    <link rel="stylesheet" href="/css/index.css?v=2.1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/objects.css?v=5.4">
 </head>
 <body>
-    <!-- CRT Boot Sequence (first visit per session) -->
+    <!-- Boot splash (first visit per session): a glass handshake panel over the live background -->
     <div id="boot-overlay" role="presentation" aria-hidden="true">
-        <div class="boot-screen">
-            <div class="boot-brand"><span class="boot-name" id="boot-name">tyler</span><span class="boot-tag">(in real life)</span></div>
-            <div class="boot-log" id="boot-log"></div>
-            <div class="boot-progress"><div class="boot-progress-fill" id="boot-fill"></div></div>
-            <div class="boot-meta"><span id="boot-pct">000%</span><span>tirl.sys</span></div>
+        <div class="boot-panel">
+            <i class="boot-reticle tl"></i><i class="boot-reticle tr"></i><i class="boot-reticle bl"></i><i class="boot-reticle br"></i>
+            <div class="boot-title"><span>tirl.sys // handshake</span><span class="boot-classif">UNCLASSIFIED // FOUO</span></div>
+            <div class="boot-body">
+                <div class="boot-brand">
+                    <img src="/assets/object-icons/wee-brand.gif" alt="" width="46" height="46">
+                    <div class="boot-brand-text"><span class="boot-name" id="boot-name">TYLERIRL</span><span class="boot-tag">(in real life)</span></div>
+                </div>
+                <div class="boot-log" id="boot-log"></div>
+                <div class="boot-progress"><div class="boot-progress-fill" id="boot-fill"></div></div>
+                <div class="boot-meta"><span id="boot-pct">000%</span><span>establishing link</span></div>
+            </div>
+            <div class="boot-skip">click or press esc to skip</div>
         </div>
-        <div class="boot-collapse"></div>
-        <div id="boot-skip">[ click or press esc to skip ]</div>
     </div>
     <script>
     (function() {
@@ -86,16 +89,20 @@
             if (overlay.parentNode) overlay.remove();
         }
 
-        // Collapse the boot screen into a scanline, releasing the page underneath
+        // Dissolve the panel and hand over to the workspace, which assembles panel by panel
         function exit(fast) {
             if (done) return;
             done = true;
             window.removeEventListener('keydown', onBootKey);
             try { sessionStorage.setItem('tirl_boot_seen', '1'); } catch (_) {}
             root.style.overflow = prevOverflow;
-            root.classList.remove('booting'); // lets the bento cards play their entrance
             overlay.classList.add(fast ? 'exit-fast' : 'exit');
-            setTimeout(remove, fast ? 350 : 700);
+            setTimeout(() => {
+                root.classList.remove('booting');
+                root.classList.add('boot-reveal');
+                setTimeout(() => root.classList.remove('boot-reveal'), 1000);
+            }, fast ? 120 : 220);
+            setTimeout(remove, 500);
         }
 
         if (seen || reduced) {
@@ -115,73 +122,68 @@
         }
         window.addEventListener('keydown', onBootKey);
 
-        // Everything below is a pure function of elapsed time, drawn each animation
-        // frame. If the main thread stalls (three.js compiling shaders during load),
-        // the sequence jumps to the right state instead of queuing up timers.
+        // Everything below is a pure function of elapsed time, drawn each animation frame,
+        // so a main-thread stall during load pauses the sequence instead of queuing timers.
         const nameEl = document.getElementById('boot-name');
         const log = document.getElementById('boot-log');
         const fill = document.getElementById('boot-fill');
         const pct = document.getElementById('boot-pct');
 
-        // Brand: scramble-decode (same effect as the installer title)
+        // Wordmark: scramble-decode
         const NAME = nameEl.textContent;
         const GLYPHS = '!<>-_\\/[]{}=+*^?#01';
-        const DECODE_START = 380, DECODE_END = 860;
+        const DECODE_START = 340, DECODE_END = 880;
 
-        // Boot log: each line types in, spins, then resolves. Dot leaders pad every
-        // label to one width so the status column lines up.
-        const LABEL_W = 22, CHAR_MS = 6, SPIN_MS = 190;
-        const SPIN = ['|', '/', '-', '\\'];
+        // Log: each row slides in pending, then its tag resolves to green
+        const PEND_MS = 220;
+        const PEND = ['·', '··', '···'];
         const lines = [
-            { label: 'tirl.sys',          status: 'INIT',   at: 520 },
-            { label: 'deepdish uplink',   status: 'ONLINE', at: 720 },
-            { label: 'radgotchi.daemon',  status: 'LOADED', at: 920 },
-            { label: 'remilio enjoyer',   status: 'OK',     at: 1120 }
+            { label: 'tirl.sys',          status: 'INIT',     at: 480 },
+            { label: 'deepdish uplink',   status: 'ONLINE',   at: 680 },
+            { label: 'radgotchi.daemon',  status: 'LOADED',   at: 880 },
+            { label: 'host · tylerirl',   status: 'VERIFIED', at: 1080 }
         ].map((line) => {
             const row = document.createElement('div');
             row.className = 'boot-row';
-            const text = document.createElement('span');
+            const dot = document.createElement('i');
+            dot.className = 'boot-dot';
+            const label = document.createElement('span');
+            label.className = 'boot-label';
+            label.textContent = line.label;
             const stat = document.createElement('span');
             stat.className = 'boot-stat';
-            row.append(text, stat);
+            row.append(dot, label, stat);
             log.appendChild(row);
-            const full = '> ' + (line.label + ' ').padEnd(LABEL_W, '.') + ' ';
-            return Object.assign(line, { text, stat, full, typedAt: line.at + full.length * CHAR_MS });
+            return Object.assign(line, { row, stat });
         });
-        const LOG_DONE = lines[lines.length - 1].typedAt + SPIN_MS;
+        const LOG_DONE = lines[lines.length - 1].at + PEND_MS;
 
-        const P_START = 480, P_END = 1560;
+        const P_START = 420, P_END = 1500;
         const READY_AT = Math.max(P_END, LOG_DONE) + 40;
-        const EXIT_AT = READY_AT + 300;
+        const EXIT_AT = READY_AT + 320;
 
-        // Clock advances by at most 50ms per frame, so a main-thread stall pauses
-        // the sequence rather than skipping through it
+        // Clock advances by at most 50ms per frame
         let t = 0, last = 0;
         function frame(now) {
             if (done) return;
             if (last) t += Math.min(50, now - last);
             last = now;
 
-            // Brand
             const decoded = t < DECODE_START ? 0 : Math.min(NAME.length, Math.floor((t - DECODE_START) / (DECODE_END - DECODE_START) * NAME.length));
             nameEl.textContent = decoded >= NAME.length ? NAME : NAME.split('').map((c, i) =>
                 i < decoded ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]).join('');
 
-            // Log
             lines.forEach((line) => {
-                if (t < line.at) return;
-                const chars = Math.min(line.full.length, Math.ceil((t - line.at) / CHAR_MS));
-                line.text.textContent = line.full.slice(0, chars);
-                if (t < line.typedAt) return;
-                if (t < line.typedAt + SPIN_MS) {
-                    line.stat.textContent = '[ ' + SPIN[Math.floor((t - line.typedAt) / 45) % SPIN.length] + ' ]';
-                } else if (!line.stat.classList.contains('ok')) {
-                    line.stat.textContent = '[ ' + line.status + ' ]';
-                    line.stat.classList.add('ok');
+                if (t < line.at || line.row.classList.contains('ok')) return;
+                line.row.classList.add('on');
+                if (t < line.at + PEND_MS) {
+                    line.stat.textContent = PEND[Math.floor((t - line.at) / 70) % PEND.length];
+                } else {
+                    line.stat.textContent = line.status;
+                    line.row.classList.add('ok');
                 }
             });
 
-            // Progress bar + counter (ease-out)
             const p = Math.min(1, Math.max(0, (t - P_START) / (P_END - P_START)));
             const eased = 1 - Math.pow(1 - p, 2);
             fill.style.transform = 'scaleX(' + eased.toFixed(3) + ')';
@@ -197,267 +199,170 @@
 
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
-    
-    <!-- Invisible scanline toggle button for screenshots -->
-    <button id="scanlineToggle" title="Toggle scanline"></button>
-    
-    <!-- SVG filters: brightnessToAlpha (KoL badge) + bento-refract (glass distortion on hover) -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-        <defs>
-            <filter id="bento-refract" x="-20%" y="-20%" width="140%" height="140%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise">
-                    <animate attributeName="baseFrequency" dur="22s" values="0.012 0.018;0.018 0.012;0.012 0.018" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-        </defs>
-    </svg>
 
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.2rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-            
-            <!-- Contact Methods -->
-            <div class="contact-methods" style="margin: 0.1rem 0 0.2rem 0;">
-                <div class="contact-grid">
-                    <a href="https://remilia.net/~tyler" target="_blank" class="contact-icon-link" title="RemiliaNET">
-                        <img src="/assets/remilianet-symbol.svg" alt="RemiliaNET" width="42" height="42" loading="lazy" decoding="async" style="pointer-events: none; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg);">
-                    </a>
+    <!-- Home: the Objects index workspace (rendered by js/objects.js from its OBJECTS catalog) -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// OBJECTS</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span id="g-crumb-type">&mdash;</span><span class="sep">/</span>
+                <b id="g-crumb">&mdash;</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search objects&hellip;" autocomplete="off" aria-label="Search objects">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-                    <a href="https://x.com/itsTylerIRL" target="_blank" class="contact-icon-link" title="Twitter / X">
-                        <svg viewBox="0 0 24 24" width="32" height="32" style="pointer-events: none;">
-                            <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                    </a>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-explorer" aria-label="Object types">
+                    <div class="g-panel-title">Object Explorer</div>
+                    <div class="g-tree">
+                        <div class="g-tree-group"><span class="caret">&#9662;</span>Object<span class="g-count" id="g-count">0</span></div>
+                        <ul id="g-types"></ul>
+                    </div>
+                </section>
+                <section class="g-activity-pane">
+                    <div class="g-panel-title">Recently Viewed</div>
+                    <ol class="g-activity" id="g-activity"></ol>
+                </section>
+            </aside>
 
-                    <a href="https://discordapp.com/users/367487663990898689" target="_blank" class="contact-icon-link" title="Discord">
-                        <svg viewBox="0 0 24 24" width="32" height="32" style="pointer-events: none;">
-                            <path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.191.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                        </svg>
-                    </a>
+            <section class="g-main" id="g-main" aria-live="polite">
+                <!-- Host: always-on hero, comms and a live RemiliaNET dossier (js/index.js), above the selected object -->
+                <section class="g-card g-home-pane" id="g-home">
+                    <div class="g-panel-title">Host <span class="g-meta">TYLER (IN REAL LIFE) &middot; REMILIO ENJOYER</span></div>
+                    <div class="g-home">
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                        <div class="g-op-fx" aria-hidden="true"><i class="g-op-floor"></i><i class="g-op-beam"></i></div>
+                        <figure class="g-op-subject">
+                            <div class="g-op-scope" aria-hidden="true"><i class="g-op-sweep"></i><i class="g-op-ring r1"></i><i class="g-op-ring r2"></i><i class="g-op-ring r3"></i></div>
+                            <div class="hologram-container">
+                                <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
+                                <div class="hologram-scanlines"></div>
+                                <div class="hologram-flicker"></div>
+                                <div class="hologram-noise"></div>
+                            </div>
+                            <figcaption class="g-op-tag"><i class="g-dot tone-green"></i>SUBJECT &middot; TYLERIRL</figcaption>
+                        </figure>
+                        <div class="g-home-links">
+                            <div class="g-op-label">COMMS <span>5 CHANNELS OPEN</span></div>
+                            <nav class="g-chans" aria-label="Contact">
+                                <a class="g-chan" href="https://remilia.net/~tyler" target="_blank" rel="noopener" style="--chan: 189,147,249" title="RemiNET">
+                                    <span class="g-chan-icon"><img src="/assets/remilianet-symbol.svg" alt="" decoding="async"></span>
+                                    <span class="g-chan-text"><b>RemiNET</b><small>~tyler</small></span>
+                                </a>
+                                <a class="g-chan" href="https://x.com/itsTylerIRL" target="_blank" rel="noopener" style="--chan: 230,230,230" title="Twitter / X">
+                                    <span class="g-chan-icon"><svg viewBox="0 0 24 24"> <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/> </svg></span>
+                                    <span class="g-chan-text"><b>x</b><small>@itsTylerIRL</small></span>
+                                </a>
+                                <a class="g-chan" href="https://discordapp.com/users/367487663990898689" target="_blank" rel="noopener" style="--chan: 88,101,242" title="Discord">
+                                    <span class="g-chan-icon"><svg viewBox="0 0 24 24"> <path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.191.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/> </svg></span>
+                                    <span class="g-chan-text"><b>discord</b><small>send a dm</small></span>
+                                </a>
+                                <a class="g-chan" href="https://github.com/itstylerirl" target="_blank" rel="noopener" style="--chan: 139,233,253" title="GitHub">
+                                    <span class="g-chan-icon"><svg viewBox="0 0 24 24"> <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/> </svg></span>
+                                    <span class="g-chan-text"><b>github</b><small>itstylerirl</small></span>
+                                </a>
+                                <a class="g-chan" href="https://steamcommunity.com/id/11111x11111" target="_blank" rel="noopener" style="--chan: 102,192,244" title="Steam">
+                                    <span class="g-chan-icon"><svg viewBox="0 0 24 24"> <path fill="currentColor" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.999-5.375 11.999-12S18.603.001 11.979.001zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.454-.397.957-1.497 1.41-2.454 1.013H7.54zm9.423-8.68c0 1.66-1.353 3.011-3.009 3.011-1.665 0-3.01-1.351-3.01-3.011 0-1.665 1.345-3.01 3.01-3.01 1.656-.001 3.009 1.345 3.009 3.01zm-5.26-.007c0 1.245 1.015 2.254 2.251 2.254 1.244 0 2.249-1.009 2.249-2.254s-1.005-2.249-2.249-2.249c-1.236 0-2.251 1.004-2.251 2.249z"/> </svg></span>
+                                    <span class="g-chan-text"><b>steam</b><small>11111x11111</small></span>
+                                </a>
+                            </nav>
+                            <div class="g-op-label">DOSSIER <span id="reminet-src">REMINET &middot; ~TYLER</span></div>
+                            <div class="g-dossier">
+                                <a class="g-op-stats" id="reminet-stats" href="https://remilia.net/~tyler" target="_blank" rel="noopener" title="Live from RemiNET">
+                                    <span class="g-op-stat is-credit"><b data-stat="socialCredit">&mdash;</b><small>social credit</small></span>
+                                    <span class="g-op-stat"><b data-stat="friendCount">&mdash;</b><small>frens</small></span>
+                                    <span class="g-op-stat"><b data-stat="pageViews">&mdash;</b><small>views</small></span>
+                                    <span class="g-op-stat"><b data-stat="beetles">&mdash;</b><small>beetles</small></span>
+                                    <span class="g-op-stat"><b data-stat="pokes">&mdash;</b><small>pokes</small></span>
+                                </a>
+                                <!-- Parked for a future KoL page: retain the badge markup, SVG filter,
+                                     and .g-home-kol styles in css/objects.css (including responsive sizing). -->
+                                <template id="kol-badge-template">
+                                <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+                                        <defs>
+                                            <filter id="brightnessToAlpha" color-interpolation-filters="sRGB">
+                                                <!-- Convert luminance to alpha: dark=transparent, bright=opaque -->
+                                                <feColorMatrix type="matrix"
+                                                    values="1 0 0 0 0
+                                                            0 1 0 0 0
+                                                            0 0 1 0 0
+                                                            0.2126 0.7152 0.0722 0 0"/>
+                                            </filter>
+                                        </defs>
+                                    </svg>
+                                <a class="g-home-kol" href="https://www.kingdomofloathing.com" target="_blank" rel="noopener">
+                                    <!-- Proxied via images.weserv.nl: origin is http-only, which browsers block as mixed content on https -->
+                                    <img src="https://images.weserv.nl/?url=sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="Kingdom of Loathing player badge" loading="lazy" decoding="async" style="filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);" onerror="this.parentNode.style.display='none';">
+                                </a>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="g-objhead" id="g-objhead">
+                    <noscript><p>This workspace needs JavaScript to load its objects.</p></noscript>
+                </div>
+                <section class="g-card g-preview-pane">
+                    <div class="g-panel-title"><span id="g-preview-title">Live Preview</span> <span class="g-meta" id="g-preview-meta"></span></div>
+                    <div class="g-preview" id="g-preview">
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                        <div class="g-preview-screen" id="g-preview-screen"></div>
+                    </div>
+                    <!-- Featured pages: shown in place of the preview while tylerirl.com is selected (js/objects.js FEATURED) -->
+                    <div class="g-featured" id="g-featured" hidden></div>
+                </section>
+            </section>
 
-                    <a href="https://github.com/itstylerirl" target="_blank" class="contact-icon-link" title="GitHub">
-                        <svg viewBox="0 0 24 24" width="32" height="32" style="pointer-events: none;">
-                            <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                        </svg>
-                    </a>
-
-                    <a href="https://steamcommunity.com/id/11111x11111" target="_blank" class="contact-icon-link" title="Steam">
-                        <svg viewBox="0 0 24 24" width="32" height="32" style="pointer-events: none;">
-                            <path fill="currentColor" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.999-5.375 11.999-12S18.603.001 11.979.001zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.454-.397.957-1.497 1.41-2.454 1.013H7.54zm9.423-8.68c0 1.66-1.353 3.011-3.009 3.011-1.665 0-3.01-1.351-3.01-3.011 0-1.665 1.345-3.01 3.01-3.01 1.656-.001 3.009 1.345 3.009 3.01zm-5.26-.007c0 1.245 1.015 2.254 2.251 2.254 1.244 0 2.249-1.009 2.249-2.254s-1.005-2.249-2.249-2.249c-1.236 0-2.251 1.004-2.251 2.249z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- KoL Badge -->
-            <!-- SVG filter to convert dark pixels to transparent -->
-            <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
-                <defs>
-                    <filter id="brightnessToAlpha" color-interpolation-filters="sRGB">
-                        <!-- Convert luminance to alpha: dark=transparent, bright=opaque -->
-                        <feColorMatrix type="matrix" 
-                            values="1 0 0 0 0
-                                    0 1 0 0 0
-                                    0 0 1 0 0
-                                    0.2126 0.7152 0.0722 0 0"/>
-                    </filter>
-                </defs>
-            </svg>
-            <div style="text-align: center; margin: 1rem 0;">
-                <a href="https://www.kingdomofloathing.com" target="_blank">
-                    <!-- Proxied via images.weserv.nl: origin is http-only, which browsers block as mixed content on https -->
-                    <img src="https://images.weserv.nl/?url=sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="Kingdom of Loathing player badge" loading="lazy" decoding="async" style="max-width: 100%; width: 400px; height: auto; filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);" onerror="this.parentNode.style.display='none';">
-                </a>
-            </div>
-            
-            <!-- Install Banner -->
-            <div class="install-banner" style="flex-wrap: wrap; margin: 1rem auto;">
-                <div style="width: 100%; text-align: center; margin-bottom: 0.3rem;">
-                    <div id="install-title" style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #8be9fd; letter-spacing: 0.25em; text-transform: uppercase; text-shadow: 0 0 12px rgba(139, 233, 253, 0.9), 0 0 25px rgba(139, 233, 253, 0.5); font-weight: bold;">RADGOTCHI INSTALLER</div>
-                </div>
-                <div id="radgotchi-container" style="flex-shrink: 0; text-align: center;">
-                    <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face" loading="lazy" decoding="async">
-                    <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-                </div>
-                <div class="install-commands-area">
-                    <div class="install-tabs">
-                        <div class="install-tab active" onclick="switchInstallTab('bash', this)" tabindex="0" role="button">Linux / macOS</div>
-                        <div class="install-tab" onclick="switchInstallTab('ps', this)" tabindex="0" role="button">Windows</div>
-                    </div>
-                    <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy" tabindex="0" role="button">
-                        curl -fsSL https://tylerirl.com/install_rg.sh | bash
-                    </div>
-                    <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden tabindex="0" role="button">
-                        irm https://tylerirl.com/install_rg.ps1 | iex
-                    </div>
-                    <div style="display: flex; gap: 0.4rem; margin-top: 0.3rem;">
-                        <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link">
-                            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                            GitHub
-                        </a>
-                        <a href="/pages/deepdish_rg.html" class="install-link">
-                            <svg viewBox="0 0 16 16"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 000 2.5v11a.5.5 0 00.707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 00.78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0016 13.5v-11a.5.5 0 00-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/></svg>
-                            Docs
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Navigation Links -->
-            <div class="bento-container" style="margin-top: 1.5rem;">
-                <div class="bento-grid">
-                    <!-- Row 1 -->
-                    <!-- NFT Gallery -->
-                    <a href="/pages/gallery.html" class="bento-item" data-accent="139,233,253">
-                        <div class="bento-image">
-                            <img src="/assets/favicon/android-chrome-512x512-backup.png" alt="Gallery" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
-                        </div>
-                        <div class="bento-content">
-                            <h3>nft gallery</h3>
-                            <p>non fungible tylers</p>
-                        </div>
-                    </a>
-                    
-                    <!-- DeepDish OCS -->
-                    <a href="/pages/deepdish.html" class="bento-item" data-accent="34,208,247">
-                        <div class="bento-image">
-                            <div class="deepdish-img" role="img" aria-label="DeepDish server rack"></div>
-                        </div>
-                        <div class="bento-content">
-                            <h3>deepdish</h3>
-                            <p>computer systems</p>
-                        </div>
-                    </a>
-                    
-                    <!-- Missile Program -->
-                    <a href="/pages/rocketry.html" class="bento-item" data-accent="255,184,108">
-                        <div class="bento-image">
-                            <img src="/assets/missile.png" alt="Missile Program" decoding="async">
-                        </div>
-                        <div class="bento-content">
-                            <h3>missile program</h3>
-                            <p>high power rocketry</p>
-                        </div>
-                    </a>
-                    
-                    <!-- Row 2 -->
-                    <!-- Things I Like -->
-                    <a href="/pages/likes.html" class="bento-item" data-accent="241,250,140">
-                        <div class="bento-image">
-                            <img src="/assets/retart.png" alt="Things I Like" decoding="async" style="max-width: 100%; max-height: 100%; object-fit: cover; transform: scale(1.1);">
-                        </div>
-                        <div class="bento-content">
-                            <h3>things I like</h3>
-                            <p>random things I enjoy</p>
-                        </div>
-                    </a>
-                    
-                    <!-- the cancel is coming -->
-                    <a href="https://cancel.tylerirl.com" class="bento-item" data-accent="255,222,23">
-                        <div class="bento-image">
-                            <img src="/assets/remilia_logo.png" alt="the cancel is coming" decoding="async">
-                        </div>
-                        <div class="bento-content">
-                            <h3>the cancel is coming</h3>
-                            <p>neochibi roguelite autobattler</p>
-                        </div>
-                    </a>
-                    
-                    <!-- Cult Markets -->
-                    <a href="/pages/markets.html" class="bento-item" data-accent="255,121,198">
-                        <div class="bento-image">
-                            <img src="/assets/cult.png" alt="Cult Markets" decoding="async">
-                        </div>
-                        <div class="bento-content">
-                            <h3>cult markets</h3>
-                            <p>i think i am in a $cult</p>
-                        </div>
-                    </a>
-                    
-                    <!-- Row 3 -->
-                    <!-- ~nosfyl -->
-                    <a href="https://nosfyl.tylerirl.com" target="_blank" class="bento-item" data-accent="34,208,247">
-                        <div class="bento-image">
-                            <img src="/assets/nosfyl_icon.png" alt="~nosfyl" decoding="async" style="border-radius: 50%; border: 2px solid #22d0f7;">
-                        </div>
-                        <div class="bento-content">
-                            <h3>~nosfyl</h3>
-                            <p>urbit star</p>
-                        </div>
-                    </a>
-                    
-                    <!-- ~raddem-tidwyt -->
-                    <a href="http://urbit.tylerirl.com" target="_blank" class="bento-item" data-accent="187,250,191">
-                        <div class="bento-image">
-                            <img src="/assets/raddem_icon.png" alt="~raddem-tidwyt" decoding="async" style="border-radius: 50%; border: 2px solid #bbfabf;">
-                        </div>
-                        <div class="bento-content">
-                            <h3>~raddem-tidwyt</h3>
-                            <p>urbit planet</p>
-                        </div>
-                    </a>
-                    
-                    <!-- Guest Book -->
-                    <a href="/pages/guest-book.html" class="bento-item" data-accent="80,250,123">
-                        <div class="bento-image">
-                            <img src="/assets/newurbit.png" alt="Guest Book" decoding="async" style="border-radius: 50%; border: 2px solid #8be9fd;">
-                        </div>
-                        <div class="bento-content">
-                            <h3>guest book</h3>
-                            <p>leave a message on urbit</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            <aside class="g-side">
+                <section class="g-results-pane">
+                    <div class="g-panel-title">Results <span class="g-meta" id="g-results-meta"></span></div>
+                    <ol class="g-results" id="g-results"></ol>
+                </section>
+            </aside>
         </div>
-    </section>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; CONNECTED always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span id="g-status-objects"></span>
+                <span id="g-status-filter"></span>
+                <span id="g-clock"></span>
+                <span class="g-hint">&larr; &rarr; switch object &middot; / search &middot; enter to open</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
-
-        </div>
-    </footer>
-    
-    <!-- External JavaScript (deferred to unblock first paint) -->
-    <script defer src="/js/background3d.js?v=1.6"></script>
-    <script defer src="/js/script.js?v=1.8"></script>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/performance.js?v=1.2"></script>
-    <script defer src="/js/interactions.js?v=1.1"></script>
-    <script defer src="/js/effects.js?v=1.4"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
-    
-    <!-- 3D Tilt Card Effect (with parallax depth + glass refraction + spec highlight) -->
-    
-    
-    <!-- Radgotchi Virtual Pet Module -->
-    <script src="/js/radgotchi.js"></script>
-    
-    <!-- Install Banner Scripts -->
+    <script defer src="/js/radgotchi.js"></script>
 
-    <!-- Service Worker Registration for PWA -->
-    <script src="/js/bento.js?v=1.0"></script>
-    <script src="/js/index.js?v=1.2"></script>
-    
+    <!-- Objects index workspace -->
+    <script defer src="/js/objects.js?v=3.5"></script>
+    <!-- Service worker registration -->
+    <script defer src="/js/index.js?v=1.7"></script>
 </body>
 </html>

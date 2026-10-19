@@ -1,0 +1,119 @@
+/* Shared footer status bar, the same on every page (home, workspace pages and legacy pages).
+   Self-contained: works with or without css/workspace.css loaded.
+
+   Markup:
+   <footer class="g-statusbar">
+       <div class="g-status-main"> CONNECTED + page-specific status items </div>
+       <div class="g-pet" id="radgotchi-container"> status text + sprite </div>
+       <span class="g-copy">&copy; 2026 tyler</span>
+   </footer>
+
+   Always one line. The status group sheds items from its end as space runs out (they wrap onto a
+   clipped second line); the pet and copyright stay pinned right. Add .is-standalone on pages
+   without the workspace shell to give the bar its own width. */
+
+footer.g-statusbar {
+    --sb-text: #9aafba;
+    --sb-dim: #5f8a99;
+    --sb-green: #50fa7b;
+    --sb-blue-rgb: 139, 233, 253;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 18px;
+    padding: 5px 16px;
+    border-radius: 999px;
+    font-family: 'Share Tech Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    line-height: normal;
+    color: var(--sb-text);
+    text-align: left;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(var(--sb-blue-rgb), 0.22);
+    border-top-color: rgba(255, 255, 255, 0.14);
+    border-left-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 20px rgba(var(--sb-blue-rgb), 0.03);
+    overflow: hidden;
+}
+footer.g-statusbar.is-standalone {
+    width: min(calc(100% - 24px), 1920px);
+    margin: 8px auto 16px;
+}
+
+footer.g-statusbar span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+footer.g-statusbar .g-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex: none;
+    display: inline-block;
+    background: var(--tone, var(--sb-dim));
+}
+footer.g-statusbar .g-dot.tone-green { --tone: var(--sb-green); }
+
+/* Status group: zero basis, so it only gets the space left after the pet and copyright */
+footer.g-statusbar .g-status-main {
+    flex: 1 1 0;
+    min-width: 92px; /* room for CONNECTED, so the pet text gives way only after everything else */
+    height: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    column-gap: 18px;
+    overflow: hidden;
+}
+footer.g-statusbar .g-status-main > span { height: 20px; white-space: nowrap; }
+footer.g-statusbar .g-hint { display: inline-flex; margin-left: 0; color: var(--sb-dim); }
+
+/* Pet: a stable slot for the cycling text, followed by the sprite. The id selector outranks
+   radgotchi.css's fixed-width footer #radgotchi-container rule. */
+footer.g-statusbar .g-pet,
+footer.g-statusbar #radgotchi-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px;
+    align-items: center;
+    gap: 8px;
+    flex: 0 1 220px;
+    width: auto;
+    min-width: 66px;
+}
+footer.g-statusbar .g-pet .radgotchi-status {
+    display: block;
+    margin: 0;
+    min-width: 0;
+    font-size: 9px;
+    line-height: 20px;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+footer.g-statusbar .g-pet .radgotchi-face {
+    display: block;
+    width: 58px;
+    height: 20px;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+/* Transform only: the sprite's cyan tint is a filter (radgotchi.css), so a hover filter would wipe it */
+footer.g-statusbar .g-pet:hover .radgotchi-face { transform: translateY(-2px) scale(1.12); }
+
+footer.g-statusbar .g-copy { flex: none; white-space: nowrap; color: var(--sb-dim); }
+
+@media (max-width: 479px) {
+    footer.g-statusbar { gap: 12px; padding: 5px 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    footer.g-statusbar .g-pet:hover .radgotchi-face { transform: none; }
+}

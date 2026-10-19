@@ -14,15 +14,15 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/OCS">
     <meta property="og:title" content="DeepDish OCS - Tyler (in real life)">
-    <meta property="og:description" content="DeepDish Ocular Control System - A custom monitoring human machine interface">
-    <meta property="og:image" content="https://tylerirl.com/assets/OCS.png">
+    <meta property="og:description" content="DeepDish Optical Control System: a face-tracking animated eye for the Gakken Worldeye. Technical documentation.">
+    <meta property="og:image" content="https://tylerirl.com/assets/OCS/docs/golden-reactor.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/OCS">
     <meta property="twitter:title" content="DeepDish OCS - Tyler (in real life)">
-    <meta property="twitter:description" content="DeepDish Ocular Control System - A custom monitoring human machine interface">
-    <meta property="twitter:image" content="https://tylerirl.com/assets/OCS.png">
+    <meta property="twitter:description" content="DeepDish Optical Control System: a face-tracking animated eye for the Gakken Worldeye. Technical documentation.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/OCS/docs/golden-reactor.webp">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
     <meta name="supported-color-schemes" content="dark light">
@@ -33,967 +33,562 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/deepdish_ocs.css?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/docs.css?v=1.3">
+    <link rel="stylesheet" href="/css/deepdish_ocs.css?v=3.3">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Project Write-up Section -->
-    <section class="project-writeup">
-        <!-- Classification stamps -->
-        <div class="stamp approved">APPROVED</div>
-        <div class="stamp eyes-only">EYES ONLY</div>
-        
-        <!-- Document header -->
-        <div class="classified-header">
-            <span class="classification-stamp">TOP SECRET // NOFORN</span>
-            <h1>CLASSIFIED</h1>
-        </div>
-        
-        <!-- Document Navigation Control -->
-        <div class="doc-button-container">
-            <a href="/pages/deepdish.html" class="doc-return-home">
-                <img src="/assets/wee.gif" alt="[SEAL]">
-                <div class="doc-return-home-text">
-                    <span>◄ Return to Main Terminal</span>
-                    <small>Exit document viewer // Return to index</small>
-                </div>
+    <!-- DeepDish OCS technical documentation (workspace). Panels are wired by js/ocs-docs.js -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// OCS</span>
             </a>
-            
-            <a href="/pages/OCS-web-ui-demo.html" class="doc-ui-demo">
-                <img src="/assets/OCS.gif" alt="[INTERFACE]">
-                <div class="doc-ui-demo-text">
-                    <span>Launch Web UI Demo ►</span>
-                    <small>Interactive control interface // System monitoring</small>
-                </div>
-            </a>
-        </div>
-        
-        <!-- Alert ticker -->
-        <div class="ticker-wrap">
-            <div class="ticker">
-                ⚠ PRIORITY ALERT: SECTOR 7-G ANOMALY DETECTED — COGNITIVE FRAMEWORK UPDATE PENDING — ASSET DEEPDISH-03 OFFLINE FOR MAINTENANCE — <span class="redacted">████████</span> PROTOCOL INITIATED — NEXT SYNC: 0347Z — ⚠ PRIORITY ALERT: SECTOR 7-G ANOMALY DETECTED — COGNITIVE FRAMEWORK UPDATE PENDING — ASSET DEEPDISH-03 OFFLINE FOR MAINTENANCE —
-            </div>
-        </div>
-        
-        <!-- Quick status bar -->
-        <div class="document-bar">
-            <div class="document-bar-item">
-                <label>Document ID</label>
-                <span>DEEP-OCS-7734-Δ</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Clearance</label>
-                <span class="clearance-badge ts">TS/SCI</span><span class="clearance-badge s">OCULAR</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Status</label>
-                <span style="color: #50fa7b;">● ACTIVE</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Last Update</label>
-                <span><span class="redacted">██</span>/01/2026</span>
-            </div>
-        </div>
-        
-        <!-- Secondary status bar -->
-        <div class="secondary-stats-mobile" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; font-size: 0.6rem;">
-            <div class="mini-stat">
-                <div class="value">9</div>
-                <div class="label">Active Assets</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">99.8%</div>
-                <div class="label">Network Integrity</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">14,847</div>
-                <div class="label">Subjects Tracked</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">847</div>
-                <div class="label">Expressions/hr</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">40+</div>
-                <div class="label">Metrics</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">NOMINAL</div>
-                <div class="label">Status</div>
-            </div>
-        </div>
-        
-        <!-- Document metadata -->
-        <div class="document-info">
-            <p><strong>PROJECT:</strong> OCS (OCULAR CONTROL SYSTEM)</p>
-            <p><strong>CLASSIFICATION:</strong> TOP SECRET // SCI // ORCON</p>
-            <p><strong>ORIGINATOR:</strong> <span class="redacted">████████████</span></p>
-            <p><strong>PLATFORM:</strong> GAKKEN WORLDEYE</p>
-            <p><strong>HANDLING:</strong> OCULAR-INDOC ONLY</p>
-            <p><strong>COPIES:</strong> <span class="redacted">██</span> of <span class="redacted">██</span></p>
-        </div>
-        
-        <h1 style="color: #8be9fd; margin-bottom: 0.3rem; font-family: 'Special Elite', monospace; letter-spacing: 0.1em; font-size: 1.3rem;">OCULAR CONTROL SYSTEM</h1>
-        <p style="color: #5fcfdf; margin-bottom: 1.5rem; font-size: 0.75rem; letter-spacing: 0.15em;">TECHNICAL OPERATIONS MANUAL — REVISION 4.7.2 — GAKKEN WORLDEYE PLATFORM</p>
-        
-        <div class="document-layout">
-        <div class="main-content-area">
-        
-        <!-- System Status Grid -->
-        <div class="status-grid">
-            <div class="status-item">
-                <div class="value ok">ONLINE</div>
-                <div class="label">System Status</div>
-            </div>
-            <div class="status-item">
-                <div class="value">97.3%</div>
-                <div class="label">Uptime</div>
-            </div>
-            <div class="status-item">
-                <div class="value">2,847</div>
-                <div class="label">Subjects Logged</div>
-            </div>
-            <div class="status-item">
-                <div class="value alert">3</div>
-                <div class="label">Active Alerts</div>
-            </div>
-        </div>
-        
-        <!-- Extended operational data -->
-        <div class="four-col" style="margin-bottom: 1rem;">
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Current Target</div>
-                <div style="font-family: 'Share Tech Mono', monospace; color: #8be9fd;">SUBJ-<span class="redacted">████</span></div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Lock: 2m 47s | Conf: 94.2%</div>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Expression State</div>
-                <div style="font-family: 'Share Tech Mono', monospace; color: #50fa7b;">OBSERVANT</div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Queue: 3 | Trans: 0.2s</div>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">LLM Status</div>
-                <div style="font-family: 'Share Tech Mono', monospace; color: #8be9fd;">READY<span class="blink">_</span></div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Latency: 230ms | Tokens: 847</div>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Home Assistant</div>
-                <div style="font-family: 'Share Tech Mono', monospace; color: #50fa7b;">CONNECTED</div>
-                <div style="font-size: 0.6rem; color: #4a7a8a; margin-top: 0.3rem;">Entities: 15 | Poll: 15s</div>
-            </div>
-        </div>
-        
-        <div class="two-col" style="align-items: stretch;">
-            <div style="display: flex; flex-direction: column;">
-                <img src="/assets/OCS/computer.jpg" alt="[CLASSIFIED IMAGERY]" style="width: 100%; height: auto; border: 1px solid rgba(139, 233, 253, 0.15);">
-                <p style="font-size: 0.65rem; color: #4a7a8a; margin-top: 0.3rem;">Fig 1.1: Primary hardware deployment configuration</p>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-                <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);">
-                    <img src="/assets/OCS/webui.gif" alt="[REDACTED INTERFACE]" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                </div>
-                <p style="font-size: 0.65rem; color: #4a7a8a; margin-top: 0.3rem;">Fig 1.2: Web interface — behavioral expression matrix</p>
-            </div>
-        </div>
-        
-        <h2><span class="section-number">§1.0</span> EXECUTIVE SUMMARY</h2>
-        <div class="two-col">
-            <div>
-                <p>
-                    The following documentation pertains to PROJECT DEEPDISH, a covert optical surveillance and behavioral analysis system deployed on modified <span class="redacted">████████</span> hardware. The system provides real-time subject tracking, autonomous behavioral response mechanisms, and integration capabilities with <span class="redacted">████████████</span> intelligence frameworks.
-                </p>
-                <p>
-                    Field deployment has demonstrated exceptional efficacy in <span class="redacted">██████████████████</span> scenarios. All personnel interfacing with this system must maintain strict operational security protocols as outlined in Directive <span class="redacted">███-██</span>.
-                </p>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">Quick Reference</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>Codename: <strong>DEEPDISH</strong></li>
-                    <li>Platform: Gakken WorldEye</li>
-                    <li>Primary Function: Surveillance/Analysis</li>
-                    <li>AI Integration: <span class="redacted">████</span> LLM API</li>
-                    <li>Clearance Required: <span class="clearance-badge ts">TS/SCI</span></li>
-                    <li>Deployment Date: <span class="redacted">██/██/████</span></li>
-                </ul>
-            </div>
-        </div>
-        
-        <h2><span class="section-number">§2.0</span> SYSTEM CAPABILITIES</h2>
-        
-        <h3>§2.1 — OPTICAL INTERFACE MODULE</h3>
-        <div class="two-col">
-            <div>
-                <p>
-                    The primary visual apparatus consists of a bio-mimetic ocular display capable of naturalistic behavioral emulation. System exhibits autonomous pupillary response, saccadic movement patterns, and discrete expression matrices optimized for subject engagement.
-                </p>
-                <p>
-                    The optical unit employs 16-bit RGB color processing (65,536 colors) via GC9A01 LCD controller with SPI interface. Expression library includes 47 discrete emotional states spanning basic emotions (happy, sad, angry, surprised, fear, disgust, neutral), advanced cognitive states (observant, confused, calculating, interested, bored), behavioral indicators (focused, distracted, suspicious, trusting), autonomic responses (startled, amused, skeptical), and specialized blinking patterns with adaptive frequency.
-                </p>
-                
-                <div class="caution-box">
-                    Optical calibration must be performed every 72 hours to maintain behavioral accuracy. Double-buffering eliminates flicker artifacts; refresh synchronized at 60Hz.
-                </div>
-            </div>
-            <div>
-                <table class="spec-table">
-                    <tr>
-                        <th colspan="2">Optical Module Specifications</th>
-                    </tr>
-                    <tr>
-                        <td>Display Resolution</td>
-                        <td class="highlight">240×240 px</td>
-                    </tr>
-                    <tr>
-                        <td>Refresh Rate</td>
-                        <td class="highlight">60 Hz</td>
-                    </tr>
-                    <tr>
-                        <td>Expression States</td>
-                        <td class="highlight">47 discrete</td>
-                    </tr>
-                    <tr>
-                        <td>Pupil Response Time</td>
-                        <td class="highlight">&lt;50ms</td>
-                    </tr>
-                    <tr>
-                        <td>Viewing Angle</td>
-                        <td class="highlight">178° omnidirectional</td>
-                    </tr>
-                    <tr>
-                        <td>Color Depth</td>
-                        <td class="highlight">16-bit RGB (65k colors)</td>
-                    </tr>
-                    <tr>
-                        <td>Display Type</td>
-                        <td class="highlight">GC9A01 Round LCD 1.28"</td>
-                    </tr>
-                    <tr>
-                        <td>Glow Intensity</td>
-                        <td class="highlight">0.0-1.0 dynamic</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Expression Categories</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li><strong>Basic:</strong> Happy, Sad, Angry, Surprised</li>
-                    <li><strong>Cognitive:</strong> Observant, Confused, Calculating</li>
-                    <li><strong>Behavioral:</strong> Focused, Distracted, Suspicious</li>
-                    <li><strong>Autonomic:</strong> Startled, Amused, Vulnerable</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Visual Effects Engine</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>Dynamic glow (configurable)</li>
-                    <li>Pulsing animations (freq. tunable)</li>
-                    <li>Particle effects system</li>
-                    <li>Iris color manipulation</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Rendering Pipeline</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>Face position calculation</li>
-                    <li>Gaze vector computation</li>
-                    <li>Expression interpolation</li>
-                    <li>Iris + eyelid animation</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="warning-box">
-            <p style="margin: 0; color: #c41e3a;">
-                Extended exposure to the optical interface may induce <span class="redacted">████████████</span> in susceptible individuals. Medical personnel should be available during prolonged observation sessions. Refer to Medical Protocol MP-334 for emergency procedures.
-            </p>
-        </div>
-        
-        <h3>§2.2 — SUBJECT ACQUISITION & TRACKING</h3>
-        <div class="three-col">
-            <div>
-                <p>
-                    Integrated computer vision subsystem enables autonomous facial recognition and positional tracking within operational theater. Multi-tier detection hierarchy: primary MediaPipe Face Detection (Google algorithm), secondary OpenCV Haar Cascades (fallback), tertiary YOLO11 object detection for environmental context. System maintains up to 12 concurrent face locks with confidence scoring and prioritization algorithms.
-                </p>
-                <p>
-                    Smoothed position tracking via exponential moving average eliminates jitter. Automatic wandering behavior activates during subject loss periods. Environmental adaptation via continuous calibration system.
-                </p>
-                <div style="text-align: center; margin: 1rem 0;">
-                    <img src="/assets/OCS/crosshair.gif" alt="[TARGET ACQUISITION]" style="max-width: 120px; height: auto;">
-                    <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.2.1: Target lock overlay (active tracking)</p>
-                </div>
-            </div>
-            <div>
-                <table class="spec-table">
-                    <tr>
-                        <th colspan="2">Tracking Specifications</th>
-                    </tr>
-                    <tr>
-                        <td>Max Subjects</td>
-                        <td class="highlight">12 simultaneous</td>
-                    </tr>
-                    <tr>
-                        <td>Lock Acquisition</td>
-                        <td class="highlight">&lt;200ms target</td>
-                    </tr>
-                    <tr>
-                        <td>Range</td>
-                        <td class="highlight">0.5-8m optimal</td>
-                    </tr>
-                    <tr>
-                        <td>FOV</td>
-                        <td class="highlight">62° (camera native)</td>
-                    </tr>
-                    <tr>
-                        <td>Processing FPS</td>
-                        <td class="highlight">30fps target</td>
-                    </tr>
-                    <tr>
-                        <td>Primary Algorithm</td>
-                        <td class="highlight">MediaPipe Face Detect</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">Tracking Modes</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li><strong>PASSIVE:</strong> Silent observation, no visual indicator</li>
-                    <li><strong>ACTIVE:</strong> Visual engagement with tracking boxes</li>
-                    <li><strong>PURSUIT:</strong> Follow mode with predictive lead</li>
-                    <li><strong>LOCKOUT:</strong> Behavioral suppression override</li>
-                </ul>
-                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem; color: #4a7a8a;">
-                    YOLO11: 80-class object detection • Scene analysis • Activity classification
-                </div>
-            </div>
-        </div>
-        
-        <h3>§2.3 — COGNITIVE INTEGRATION FRAMEWORK</h3>
-        <div class="two-col">
-            <div>
-                <p>
-                    The system incorporates compatibility with large language model endpoints conforming to OpenAI-compatible API specifications. Supports LocalAI, LM Studio, Ollama, and direct OpenAI endpoints. This enables autonomous generation of behavioral responses, situational analysis, and vision-aware contextual awareness. 
-                </p>
-                <p>
-                    Integration pipeline: subject tracking data → behavioral context; vision scene description → environmental awareness; expression history → emotional continuity. Response caching and token-aware batching optimize API efficiency. Configurable personality profiles support multi-turn conversation management with timeout handling and fallback responses.
-                </p>
-                <div class="caution-box">
-                    LLM integration requires endpoint configuration. Response latency typically 230-500ms; token limits configurable per deployment.
-                </div>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">LLM Compatibility</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>✓ OpenAI API (ChatGPT-4, GPT-3.5)</li>
-                    <li>✓ LocalAI (self-hosted)</li>
-                    <li>✓ LM Studio (local inference)</li>
-                    <li>✓ Ollama (quantized models)</li>
-                    <li>✓ Any OpenAI-compatible endpoint</li>
-                </ul>
-                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
-                    <strong>Capabilities:</strong> Context-aware responses • Subject database queries • Token management • Personality profiles
-                </div>
-            </div>
-        </div>
-        
-        <div class="code-block">
-<span class="comment"># COGNITIVE INTERFACE INITIALIZATION</span>
-<span class="keyword">from</span> deepdish.cognitive <span class="keyword">import</span> LLMInterface
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Program</span><span class="sep">/</span>
+                <b id="g-crumb">DeepDish OCS</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search the docs&hellip;" autocomplete="off" aria-label="Search the documentation">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-client = LLMInterface(
-    endpoint=<span class="string">"http://localhost:1234/v1"</span>,
-    model=<span class="string">"neural-chat"</span>,
-    clearance_level=<span class="string">"TS/SCI"</span>
-)
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-toc-pane" aria-label="Contents">
+                    <div class="g-panel-title">Contents <span class="g-meta" id="g-toc-meta"></span></div>
+                    <ol class="g-toc" id="g-toc"></ol>
+                </section>
+                <section class="g-src-pane">
+                    <div class="g-panel-title">Source Map <span class="g-meta">LINES / PACKAGE</span></div>
+                    <ol class="g-src" id="g-src" data-source='[["render",5603],["api",2701],["display",1585],["shader",1230],["app",1116],["tracking",967],["behavior",824],["vision",791],["audio",776],["metrics",674],["services",375],["core",352]]'></ol>
+                </section>
+            </aside>
 
-<span class="comment"># Vision-aware behavioral response</span>
-response = client.generate_response(
-    context=subject_data,
-    scene_description=vision_output,
-    mode=<span class="string">"engagement"</span>,
-    temperature=<span class="string">0.7</span>
-)
+            <section class="g-main" id="g-main">
+                <div class="g-objhead">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/ocs-sentinel.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PROGRAM &middot; OPTICAL CONTROL SYSTEM</div>
+                            <h1>DeepDish OCS</h1>
+                        </div>
+                        <span class="g-chip tone-green"><i class="g-dot tone-green"></i>Program</span>
+                        <div class="g-objnav">
+                            <a class="g-btn g-visit" href="/pages/OCS-web-ui-demo.html">WEB UI DEMO &nearr;</a>
+                        </div>
+                    </div>
+                    <p class="g-summary">A face-tracking animated eye for the Gakken Worldeye spherical display. A webcam finds people and the eye follows them with expressions, moods, alerts and sound &mdash; driven from a desktop GUI, a web / mobile UI, a REST + Socket.IO API, or Home Assistant.</p>
+                    <div class="g-objmeta">
+                        <span>REPO</span><b>deepdish_ocs @ dbe8022 + showpiece WIP</b>
+                        <span>STACK</span><b>Python 3.11 &middot; OpenCV &middot; Flask</b>
+                        <span>API</span><b>:5001</b>
+                        <span>LICENSE</span><b>Viral Public License</b>
+                    </div>
+                </div>
+                <section class="g-card g-docs-pane">
+                    <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">TECHNICAL REFERENCE</span></div>
+                    <div class="g-docs-scroll" id="g-docs-scroll">
+                    <article class="doc" id="doc">
+
+                        <!-- §01 -->
+                        <section class="doc-sec" id="s-glance" data-title="At a glance">
+                            <h2><span class="doc-num">§01</span> At a glance</h2>
+                            <div class="doc-tiles">
+                                <div class="doc-tile"><span>display</span><b>Gakken Worldeye</b><small>spherical projection &middot; fullscreen 800&times;480</small></div>
+                                <div class="doc-tile"><span>frame rate</span><b>30 fps</b><small>active &middot; ~8 idle (20 / 5 low-memory)</small></div>
+                                <div class="doc-tile"><span>tracking</span><b>YOLOv8n-face</b><small>&rarr; YOLO11n &rarr; MediaPipe &rarr; Haar</small></div>
+                                <div class="doc-tile"><span>mood model</span><b>V &middot; A &middot; D</b><small>valence / arousal / dominance + behavior tree</small></div>
+                                <div class="doc-tile"><span>api</span><b>51 routes</b><small>+ 9 Socket.IO events &middot; port 5001</small></div>
+                                <div class="doc-tile"><span>looks</span><b>20 presets</b><small>11 iris &middot; 7 outer &middot; 7 middle &middot; 6 inner &middot; 12 fill</small></div>
+                                <div class="doc-tile"><span>sound</span><b>36 effects</b><small>3 variants per expression &middot; Chatterbox TTS</small></div>
+                                <div class="doc-tile"><span>telemetry</span><b>47 metrics</b><small>Prometheus &middot; 4 Grafana dashboards</small></div>
+                                <div class="doc-tile"><span>tests</span><b>38 + 20</b><small>core pytest (6 golden renders) + Home Assistant</small></div>
+                                <div class="doc-tile"><span>source</span><b>16,995 LOC</b><small>Python in 39 files under src/ &middot; 11.8k web UI</small></div>
+                            </div>
+                            <div class="doc-split">
+                                <figure class="doc-figure">
+                                    <img src="/assets/OCS/docs/rig.webp" alt="The Gakken Worldeye showing the OCS eye, mounted on top of the DeepDish rack" loading="lazy" decoding="async">
+                                    <figcaption>FIG 1.1 &mdash; deployment: the Worldeye on top of the DeepDish rack</figcaption>
+                                </figure>
+                                <div>
+                                    <h3>What it is</h3>
+                                    <p>OCS (Optical Control System) turns a Gakken Worldeye &mdash; a small projector that paints an image onto the inside of a frosted sphere &mdash; into an eye that watches the room. A webcam finds people; the eye follows them, reacts with expressions, drifts through moods when nobody is around, and fires alerts for the hour, sirens and aircraft passing overhead.</p>
+                                    <p>Everything goes through one HTTP API, so the same controls are available from the desktop GUI (tkinter), the web UI at <code>:5001</code>, the touch UI at <code>/mobile</code>, raw <code>curl</code>, and Home Assistant.</p>
+                                    <h3>Control surfaces</h3>
+                                    <table class="doc-table">
+                                        <tr><td>Desktop GUI</td><td><code>src/app</code> &mdash; tkinter control panel + eye window</td></tr>
+                                        <tr><td>Web UI</td><td><code>/</code> &mdash; full control panel, live eye + camera feeds</td></tr>
+                                        <tr><td>Mobile UI</td><td><code>/mobile</code> &mdash; touch controls</td></tr>
+                                        <tr><td>API</td><td>REST + Socket.IO, <code>GET /api/help</code> lists every endpoint</td></tr>
+                                        <tr><td>Home Assistant</td><td>custom integration v2.0.0 (&sect;10)</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- §02 -->
+                        <section class="doc-sec" id="s-arch" data-title="Architecture">
+                            <h2><span class="doc-num">§02</span> System architecture</h2>
+                            <p><code>deepdish_ocs.py</code> (542 lines) is only the entry point: it parses arguments and wires the packages together. The eye display is one class composed from render, behavior and tracking mixins; the API server, audio, vision, flyover monitor and metrics run beside it.</p>
+                            <div class="doc-flow" role="img" aria-label="Data flow: webcam to tracking, behavior and the frame pipeline, out to the eye window and the Worldeye sphere">
+                                <div class="flow-col">
+                                    <div class="flow-node in">webcam<small>/dev/video0</small></div>
+                                    <div class="flow-node">src/tracking<small>faces &middot; motion &middot; gaze</small></div>
+                                    <div class="flow-node">src/behavior<small>mood VAD &middot; behavior tree</small></div>
+                                </div>
+                                <div class="flow-arrow">&rarr;</div>
+                                <div class="flow-col">
+                                    <div class="flow-node core">src/display<small>frame pipeline (EyeDisplay)</small></div>
+                                    <div class="flow-node">src/render<small>fill &middot; housing &middot; rings &middot; iris &middot; effects &middot; events &middot; fit</small></div>
+                                    <div class="flow-node alt">src/shader<small>optional ModernGL renderer</small></div>
+                                </div>
+                                <div class="flow-arrow">&rarr;</div>
+                                <div class="flow-col">
+                                    <div class="flow-node">eye window<small>tkinter &middot; headless --display</small></div>
+                                    <div class="flow-node out">Worldeye sphere<small>display-fit remap</small></div>
+                                </div>
+                            </div>
+                            <div class="doc-flow doc-flow-side">
+                                <div class="flow-node">src/api<small>Flask + Socket.IO :5001</small></div>
+                                <div class="flow-node">src/services<small>flyover (ADS-B)</small></div>
+                                <div class="flow-node">src/audio<small>pygame &middot; self-heal</small></div>
+                                <div class="flow-node">src/vision<small>YOLO11 scenes</small></div>
+                                <div class="flow-node">src/metrics<small>Prometheus /metrics</small></div>
+                                <div class="flow-node">src/core<small>config &middot; presets &middot; runtime</small></div>
+                            </div>
+                            <table class="doc-table doc-modules">
+                                <thead><tr><th>package</th><th>files</th><th>lines</th><th>role</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>render</code></td><td>9</td><td>5,603</td><td>iris, rings, fill, housing, effects, event animations, FX toolkit, display fit</td></tr>
+                                    <tr><td><code>api</code></td><td>2</td><td>2,701</td><td>Flask routes, Socket.IO handlers, static web UI</td></tr>
+                                    <tr><td><code>display</code></td><td>2</td><td>1,585</td><td><code>EyeDisplay</code>: frame pipeline composed from the mixins</td></tr>
+                                    <tr><td><code>shader</code></td><td>3</td><td>1,230</td><td>GPU eye renderer + display (moderngl, pygame)</td></tr>
+                                    <tr><td><code>app</code></td><td>3</td><td>1,116</td><td>tkinter GUI, window placement</td></tr>
+                                    <tr><td><code>tracking</code></td><td>2</td><td>967</td><td>face detection backends, gaze smoothing, wander &amp; sweeps</td></tr>
+                                    <tr><td><code>behavior</code></td><td>3</td><td>824</td><td>expressions, mood vector, behavior tree</td></tr>
+                                    <tr><td><code>vision</code></td><td>2</td><td>791</td><td>YOLO11 scene analysis for chat context</td></tr>
+                                    <tr><td><code>audio</code></td><td>2</td><td>776</td><td>SoundManager, synthesis, audio-device recovery</td></tr>
+                                    <tr><td><code>metrics</code></td><td>2</td><td>674</td><td>Prometheus collectors</td></tr>
+                                    <tr><td><code>services</code></td><td>2</td><td>375</td><td>flyover monitor</td></tr>
+                                    <tr><td><code>core</code></td><td>6</td><td>352</td><td>config, presets, paths, runtime detection, optional deps</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §03 -->
+                        <section class="doc-sec" id="s-render" data-title="Render pipeline">
+                            <h2><span class="doc-num">§03</span> Render pipeline</h2>
+                            <p>Each frame is painted with OpenCV/NumPy from the back of the eye forward. Every layer has a named style; a preset is just a choice for each layer plus colors and motion. Frames are cached for 33&nbsp;ms while active (30&nbsp;fps) and 120&nbsp;ms when idle; low-memory mode uses 50 / 200&nbsp;ms.</p>
+                            <ol class="doc-stack">
+                                <li><b>01 ambient fill</b><span class="doc-chips"><i>nebula</i><i>aurora</i><i>starfield</i><i>vortex</i><i>embers</i><i>plasma</i><i>warp</i><i>lattice</i><i>hex</i><i>rain</i><i>glyphs</i><i>contour</i></span><small>material behind every ring; layered streak / cloud textures counter-rotate via cached remaps</small></li>
+                                <li><b>02 housing &middot; middle ring</b><span class="doc-chips"><i>gradient</i><i>plasma</i><i>ripple</i><i>hexagon</i><i>static</i><i>aperture</i><i>circuit</i></span><small>between the outer ring and the iris</small></li>
+                                <li><b>03 outer ring</b><span class="doc-chips"><i>solid</i><i>orbs</i><i>dashed</i><i>pulse</i><i>shards</i><i>helix</i><i>reactor</i></span></li>
+                                <li><b>04 iris</b><span class="doc-chips"><i>machine</i><i>holographic</i><i>classic</i><i>minimal</i><i>vortex</i><i>eclipse</i><i>shutter</i><i>serpent</i><i>nova</i><i>circuit</i><i>crystal</i></span><small>eleven hand-drawn designs, described below</small></li>
+                                <li><b>05 inner ring</b><span class="doc-chips"><i>glow</i><i>segments</i><i>electric</i><i>pulse</i><i>double</i><i>reticle</i></span><small>around the pupil; hidden while the lid is mostly closed</small></li>
+                                <li><b>06 effects</b><span class="doc-chips"><i>particles</i><i>data streams</i><i>scan line</i><i>heartbeat</i><i class="opt">comets</i><i class="opt">arcs</i><i class="opt">shockwave</i><i class="opt">bloom</i><i class="opt">glitch</i></span><small>base effects plus opt-in <b>showpiece</b> effects (outlined): off by default and skipped entirely in <code>--performance-mode</code></small></li>
+                                <li><b>07 event overlays</b><span class="doc-chips"><i>expression</i><i>hourly chime</i><i>flyover</i><i>siren</i></span><small>takeover animations (&sect;06)</small></li>
+                                <li><b>08 display fit</b><span class="doc-chips"><i>per-axis stretch</i><i>offset</i></span><small>cached <code>cv2.remap</code> grids map the frame onto the sphere; saved to <code>display_fit.json</code></small></li>
+                            </ol>
+                            <h3>Iris styles</h3>
+                            <table class="doc-table doc-iris">
+                                <thead><tr><th>style</th><th>design</th></tr></thead>
+                                <tbody>
+                                    <tr><td>machine</td><td>mechanical optic: an optically deep black lens, hairline circuitry and articulated aperture blades</td></tr>
+                                    <tr><td>holographic</td><td>transparent diffraction optic with animated spectral etching</td></tr>
+                                    <tr><td>classic</td><td>organic cyber-iris: fibrous stroma, zig-zag collarette, dark crypts, limbal ring and a glassy cornea highlight</td></tr>
+                                    <tr><td>minimal</td><td>precision instrument: dark glass, three hairline rings, a fine tick scale and one comet arc sweeping the middle ring</td></tr>
+                                    <tr><td>vortex</td><td>maelstrom: logarithmic spiral arms streaming into a white-hot core, turbulent flow and infalling sparks</td></tr>
+                                    <tr><td>eclipse</td><td>black hole: event-horizon pupil, razor photon ring, lensed halo and a tilted, Doppler-beamed accretion disk</td></tr>
+                                    <tr><td>shutter <span class="doc-new">NEW</span></td><td>camera diaphragm: nine overlapping metal blades around a polygonal opening that breathes, over coated lens glass</td></tr>
+                                    <tr><td>serpent <span class="doc-new">NEW</span></td><td>reptile eye: a vertical slit pupil that narrows when tracking, in a mottled iris that burns brightest along the slit</td></tr>
+                                    <tr><td>nova <span class="doc-new">NEW</span></td><td>stellar corona: two counter-turning layers of rays streaming off a white-hot core, flaring where they line up</td></tr>
+                                    <tr><td>circuit <span class="doc-new">NEW</span></td><td>printed circuit: radial traces that jog sideways, solder pads, two ring buses and data pulses running outward</td></tr>
+                                    <tr><td>crystal <span class="doc-new">NEW</span></td><td>cut gem: a kaleidoscope of flat facets with bright edges, mirrored six ways, catching the light in turn</td></tr>
+                                </tbody>
+                            </table>
+                            <p>Every layer except the iris also accepts <code>none</code>. Defaults: glow 0.8, pulse speed 0.005, pulse depth 0.6, 400&nbsp;ms blinks. <code>--shader</code> swaps in a ModernGL renderer with five iris styles of its own: <code>plasma</code>, <code>machine</code>, <code>crystal</code>, <code>void</code>, <code>cyber</code>.</p>
+                            <h3>Preset schema</h3>
+                            <p>Presets live in <code>presets.json</code> (version 1, 20 entries) and are served to the web UI, the API and Home Assistant from the same file &mdash; new presets appear everywhere without code changes. Select one in the <b>Presets</b> panel to inspect it.</p>
+                            <div class="doc-split doc-split-even">
+                                <table class="doc-table">
+                                    <thead><tr><th>field</th><th>meaning</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>label</code></td><td>display name (with emoji)</td></tr>
+                                        <tr><td><code>primary</code> / <code>secondary</code></td><td>iris and accent colors</td></tr>
+                                        <tr><td><code>glow</code> / <code>ring</code> / <code>inner_ring</code></td><td>glow, outer and inner ring colors</td></tr>
+                                        <tr><td><code>pupil</code></td><td>pupil center color</td></tr>
+                                        <tr><td><code>iris</code> <code>outer</code> <code>middle</code> <code>inner</code> <code>fill</code></td><td>layer styles</td></tr>
+                                        <tr><td><code>intensity</code></td><td>glow intensity</td></tr>
+                                        <tr><td><code>pulse</code> / <code>depth</code></td><td>breathing speed and depth</td></tr>
+                                    </tbody>
+                                </table>
+<pre class="doc-code"><code>"reactor": {
+  "label": "⚛ Arc Reactor",
+  "primary": "#00b4ff", "secondary": "#bff6ff",
+  "glow": "#0077ff", "pupil": "#000814",
+  "ring": "#7fe3ff", "inner_ring": "#e0fbff",
+  "iris": "minimal", "outer": "reactor",
+  "middle": "hexagon", "inner": "glow",
+  "fill": "lattice",
+  "intensity": 1.6, "pulse": 0.007, "depth": 0.5
+}</code></pre>
+                            </div>
+                        </section>
+
+                        <!-- §04 -->
+                        <section class="doc-sec" id="s-behavior" data-title="Behavior &amp; mood">
+                            <h2><span class="doc-num">§04</span> Behavior &amp; mood</h2>
+                            <p>The eye's mood is a <b>Valence / Arousal / Dominance</b> vector. It decays exponentially toward a baseline; stimuli (a face appearing, motion, idle time, manual expressions) nudge it, and the mood biases which behaviors fire and how strongly. The 30 most recent stimuli are kept as a feed for the web UI.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>axis</th><th>range</th><th>baseline</th><th>decay / s</th><th>reads as</th></tr></thead>
+                                <tbody>
+                                    <tr><td>valence</td><td>&minus;1 &hellip; +1</td><td>0.05</td><td>0.020</td><td>sad / angry &harr; happy / content</td></tr>
+                                    <tr><td>arousal</td><td>0 &hellip; 1</td><td>0.30</td><td>0.040</td><td>calm / sleepy &harr; excited / alert</td></tr>
+                                    <tr><td>dominance</td><td>0 &hellip; 1</td><td>0.50</td><td>0.015</td><td>timid &harr; confident</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Expressions</h3>
+                            <p>Expressions last 0.5&ndash;10&nbsp;s at an intensity of 0&ndash;1, play their own sound and push the mood by (&Delta;V, &Delta;A, &Delta;D) &times; intensity, so manual triggers keep the eye's "feeling" consistent with its face.</p>
+                            <table class="doc-table doc-num-table">
+                                <thead><tr><th>expression</th><th>&Delta;V</th><th>&Delta;A</th><th>&Delta;D</th></tr></thead>
+                                <tbody>
+                                    <tr><td>happy</td><td class="pos">+0.20</td><td class="pos">+0.10</td><td>0</td></tr>
+                                    <tr><td>sad</td><td class="neg">&minus;0.20</td><td class="neg">&minus;0.10</td><td class="neg">&minus;0.05</td></tr>
+                                    <tr><td>angry / mad</td><td class="neg">&minus;0.15</td><td class="pos">+0.30</td><td class="pos">+0.20</td></tr>
+                                    <tr><td>surprised</td><td class="pos">+0.05</td><td class="pos">+0.30</td><td class="neg">&minus;0.05</td></tr>
+                                    <tr><td>confused</td><td class="neg">&minus;0.02</td><td class="pos">+0.10</td><td class="neg">&minus;0.10</td></tr>
+                                    <tr><td>suspicious</td><td class="neg">&minus;0.05</td><td class="pos">+0.05</td><td class="pos">+0.10</td></tr>
+                                    <tr><td>bored</td><td class="neg">&minus;0.05</td><td class="neg">&minus;0.20</td><td>0</td></tr>
+                                    <tr><td>thinking</td><td>0</td><td class="neg">&minus;0.05</td><td class="pos">+0.05</td></tr>
+                                    <tr><td>neutral</td><td>0</td><td>0</td><td>0</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Behavior tree</h3>
+                            <p>With reactive expressions on, each tick scores the behaviors whose conditions hold; each has a cooldown so the eye doesn't repeat itself.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>behavior</th><th>fires when</th><th>does</th><th>cooldown</th></tr></thead>
+                                <tbody>
+                                    <tr><td>WelcomeBack</td><td>a face returns after &gt;25&nbsp;s away (or &gt;40&nbsp;s idle)</td><td>surprised (or angry)</td><td>30&nbsp;s</td></tr>
+                                    <tr><td>EnjoyingFace</td><td>a face has been tracked for &gt;4&nbsp;s</td><td>happy 3.5&nbsp;s</td><td>180&nbsp;s</td></tr>
+                                    <tr><td>ConfusedByMotion</td><td>no face, average motion &gt;0.35</td><td>confused 3&nbsp;s</td><td>15&nbsp;s</td></tr>
+                                    <tr><td>SuspiciousMotion</td><td>no face for &gt;10&nbsp;s, motion 0.10&ndash;0.35</td><td>suspicious 3&nbsp;s</td><td>25&nbsp;s</td></tr>
+                                    <tr><td>IdleMood</td><td>no face, no movement for &gt;20&nbsp;s</td><td>bored or sad 4&nbsp;s</td><td>25&nbsp;s</td></tr>
+                                    <tr><td>CuriousScan</td><td>curious mood with nothing to focus on</td><td>quick searching look</td><td>60&nbsp;s</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §05 -->
+                        <section class="doc-sec" id="s-tracking" data-title="Tracking">
+                            <h2><span class="doc-num">§05</span> Tracking</h2>
+                            <p>Face tracking picks the best backend that actually works on the host and logs <i>why</i> each faster one failed &mdash; important for diagnosing CUDA driver / wheel mismatches and broken MediaPipe builds.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>order</th><th>backend</th><th>model</th><th>device</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>YOLO</td><td><code>yolov8n-face.pt</code>, falls back to <code>yolo11n.pt</code> (person)</td><td>CUDA</td></tr>
+                                    <tr><td>2</td><td>YOLO</td><td>same models</td><td>CPU</td></tr>
+                                    <tr><td>3</td><td>MediaPipe</td><td>face detection</td><td>CPU</td></tr>
+                                    <tr><td>4</td><td>OpenCV</td><td>Haar <code>frontalface_default</code></td><td>CPU, last resort</td></tr>
+                                </tbody>
+                            </table>
+                            <p>On top of detection: smoothed gaze toward the locked face, face-lock dynamics, idle wandering with dwells and sweeps, a smoothed motion average that feeds the behavior tree, and a surprised reaction (with cooldown) when a new face appears. <code>/api/calibration</code> tunes the gaze mapping; <code>/api/tracking</code> toggles it.</p>
+                        </section>
+
+                        <!-- §06 -->
+                        <section class="doc-sec" id="s-alerts" data-title="Alerts &amp; takeovers">
+                            <h2><span class="doc-num">§06</span> Alerts &amp; takeovers</h2>
+                            <table class="doc-table">
+                                <thead><tr><th>alert</th><th>endpoint</th><th>behavior</th></tr></thead>
+                                <tbody>
+                                    <tr><td>hourly chime</td><td><code>/api/eye/hourly-chime</code></td><td>on the hour, a chime animation (5&nbsp;s per cycle) with a jingle and a smooth gaze transition</td></tr>
+                                    <tr><td>siren</td><td><code>/api/eye/siren</code></td><td>full-eye siren animation with sound; optional duration</td></tr>
+                                    <tr><td>flyover</td><td><code>/api/eye/flyover</code></td><td>a plane crosses the eye when a real aircraft passes overhead</td></tr>
+                                    <tr><td>thinking</td><td><code>/api/eye/thinking</code></td><td>thinking state while a chat / LLM reply is pending</td></tr>
+                                </tbody>
+                            </table>
+                            <p>Only one takeover animation (siren, flyover, chime) runs at a time, and a flyover is refused while the siren is active.</p>
+                            <h3>Flyover monitor</h3>
+                            <p><code>src/services/flyover.py</code> polls community ADS-B APIs (no key required) for aircraft within a radius of home. A new aircraft entering the zone below the altitude ceiling triggers the flyover animation &mdash; the aviation sibling of the hourly chime.</p>
+                            <table class="doc-table doc-kv">
+                                <tr><td>sources</td><td><code>adsb.lol</code>, then <code>airplanes.live</code> (kept as an API-compatible fallback after provider policy changes)</td></tr>
+                                <tr><td>radius</td><td>3.0&nbsp;nm</td></tr>
+                                <tr><td>ceiling</td><td>15,000&nbsp;ft (ignores high-altitude cruisers)</td></tr>
+                                <tr><td>poll</td><td>every 15&nbsp;s, on a background thread</td></tr>
+                                <tr><td>location</td><td>lat / lon, or a zip code geocoded via <code>zippopotam.us</code>; persisted to <code>flyover_config.json</code></td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §07 -->
+                        <section class="doc-sec" id="s-audio" data-title="Audio &amp; voice">
+                            <h2><span class="doc-num">§07</span> Audio &amp; voice</h2>
+                            <table class="doc-table doc-kv">
+                                <tr><td>mixer</td><td>pygame, 44.1&nbsp;kHz stereo, 512-sample buffer, 16 channels with a reserved alert channel for ducking</td></tr>
+                                <tr><td>effects</td><td>36 files: three variants each for the eight expressions, plus blink, chime, chime jingle, face detected / lost, lock, flyover, siren, startup, shutdown, reconnect</td></tr>
+                                <tr><td>variation</td><td>per-play pitch jitter and live tone synthesis through <code>pygame.sndarray</code> (<code>/api/sound/synth</code>)</td></tr>
+                                <tr><td>recovery</td><td>an audio health monitor names its PipeWire / Pulse stream, notices when the default sink changes or the stream disappears, and re-initialises the mixer (<code>/api/sound/reconnect</code>)</td></tr>
+                                <tr><td>voice</td><td>Chatterbox TTS cloned from a reference clip (<code>assets/mech.wav</code>); <code>exaggeration</code> and <code>cfg_weight</code> per request; load / unload on demand to free VRAM</td></tr>
+                                <tr><td>chat</td><td><code>/api/chat</code> proxies to an OpenAI-compatible <code>/v1/chat/completions</code> server on the local network (avoids CORS in the web UI)</td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §08 -->
+                        <section class="doc-sec" id="s-vision" data-title="Vision">
+                            <h2><span class="doc-num">§08</span> Vision</h2>
+                            <p><code>src/vision</code> runs YOLO11 object detection on the camera feed to describe the scene, giving chat conversations context about what the eye is looking at.</p>
+                            <table class="doc-table doc-kv">
+                                <tr><td>models</td><td><code>yolo11n</code> (default) &middot; <code>s</code> &middot; <code>m</code> &middot; <code>l</code> &middot; <code>x</code></td></tr>
+                                <tr><td>confidence</td><td>0.4 minimum</td></tr>
+                                <tr><td>rate</td><td>at most one pass per 100&nbsp;ms</td></tr>
+                                <tr><td>endpoints</td><td><code>status</code> &middot; <code>scene</code> &middot; <code>annotated</code> (boxed frame) &middot; <code>events</code> &middot; <code>chat</code> &middot; <code>toggle</code> &middot; <code>config</code> &middot; <code>reset</code></td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §09 -->
+                        <section class="doc-sec" id="s-api" data-title="API reference">
+                            <h2><span class="doc-num">§09</span> API reference</h2>
+                            <p>Flask + Flask-SocketIO on port 5001 with CORS enabled. Every UI action is an API call; <code>GET /api/help</code> returns the full reference.</p>
+<pre class="doc-code"><code>curl -X POST localhost:5001/api/eye/expression -H 'Content-Type: application/json' \
+     -d '{"expression": "happy", "duration": 3}'
+curl -X POST localhost:5001/api/eye/gaze   -H 'Content-Type: application/json' -d '{"x": 0.5, "y": -0.3}'
+curl -X POST localhost:5001/api/eye/preset -H 'Content-Type: application/json' -d '{"name": "cyberpunk"}'
+curl -X POST localhost:5001/api/eye/blink
+curl localhost:5001/api/eye/render -o eye.png</code></pre>
+                            <table class="doc-table doc-api">
+                                <thead><tr><th>method</th><th>path</th><th>purpose</th></tr></thead>
+                                <tbody>
+                                    <tr class="grp"><td colspan="3">eye</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/config</td><td>full look + style lists</td></tr>
+                                    <tr><td>GET</td><td>/api/eye/presets</td><td>presets.json</td></tr>
+                                    <tr><td>POST</td><td>/api/eye/preset</td><td>apply a preset</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/expression</td><td>current / trigger expression</td></tr>
+                                    <tr><td>GET</td><td>/api/eye/expressions/list</td><td>available expressions</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/gaze</td><td>gaze target (x, y)</td></tr>
+                                    <tr><td>POST</td><td>/api/eye/blink</td><td>blink now</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/auto-blink</td><td>automatic blinking</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/mood</td><td>mood vector + stimuli feed</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/reactive-expressions</td><td>behavior tree on / off</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/effects</td><td>particles, scan lines, data streams&hellip;</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/display-fit</td><td>sphere alignment</td></tr>
+                                    <tr><td>GET</td><td>/api/eye/state</td><td>live state snapshot</td></tr>
+                                    <tr><td>GET</td><td>/api/eye/render</td><td>current frame (PNG)</td></tr>
+                                    <tr><td>GET</td><td>/api/eye/stream</td><td>MJPEG stream</td></tr>
+                                    <tr class="grp"><td colspan="3">alerts</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/siren</td><td>siren</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/flyover</td><td>flyover config / test</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/hourly-chime</td><td>chime config / test</td></tr>
+                                    <tr><td>GET POST</td><td>/api/eye/thinking</td><td>thinking state</td></tr>
+                                    <tr class="grp"><td colspan="3">tracking &amp; camera</td></tr>
+                                    <tr><td>GET POST</td><td>/api/tracking</td><td>face tracking on / off</td></tr>
+                                    <tr><td>GET POST</td><td>/api/calibration</td><td>gaze calibration</td></tr>
+                                    <tr><td>GET</td><td>/api/camera/image</td><td>annotated camera frame</td></tr>
+                                    <tr><td>GET</td><td>/api/camera/image/raw</td><td>raw camera frame</td></tr>
+                                    <tr class="grp"><td colspan="3">sound</td></tr>
+                                    <tr><td>GET</td><td>/api/sound/status &middot; /list</td><td>mixer state, available sounds</td></tr>
+                                    <tr><td>POST</td><td>/api/sound/play &middot; /synth &middot; /stop</td><td>play, synthesize, stop</td></tr>
+                                    <tr><td>GET POST</td><td>/api/sound/volume &middot; /events</td><td>volume, per-event sounds</td></tr>
+                                    <tr><td>POST</td><td>/api/sound/reconnect</td><td>re-init the audio device</td></tr>
+                                    <tr class="grp"><td colspan="3">voice &amp; chat</td></tr>
+                                    <tr><td>GET</td><td>/api/tts/status</td><td>model state</td></tr>
+                                    <tr><td>POST</td><td>/api/tts/enable &middot; /disable &middot; /unload</td><td>load / free the model</td></tr>
+                                    <tr><td>POST</td><td>/api/tts/speak &middot; /voice</td><td>speak text, set reference voice</td></tr>
+                                    <tr><td>POST</td><td>/api/chat</td><td>LLM proxy</td></tr>
+                                    <tr class="grp"><td colspan="3">vision</td></tr>
+                                    <tr><td>GET</td><td>/api/vision/status &middot; /scene &middot; /annotated &middot; /events</td><td>scene analysis</td></tr>
+                                    <tr><td>POST</td><td>/api/vision/chat &middot; /toggle &middot; /reset</td><td>vision chat, on / off, reset</td></tr>
+                                    <tr><td>GET POST</td><td>/api/vision/config</td><td>model size, confidence</td></tr>
+                                    <tr class="grp"><td colspan="3">system &amp; ui</td></tr>
+                                    <tr><td>GET</td><td>/api/status &middot; /api/help</td><td>health, endpoint reference</td></tr>
+                                    <tr><td>GET</td><td>/metrics</td><td>Prometheus exposition</td></tr>
+                                    <tr><td>GET</td><td>/ &middot; /mobile &middot; /fonts.css</td><td>web and mobile UI</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Socket.IO events</h3>
+                            <p class="doc-chips doc-chips-wide"><i>subscribe_eye_stream</i><i>unsubscribe_eye_stream</i><i>get_eye_frame</i><i>subscribe_eye_state</i><i>unsubscribe_eye_state</i><i>set_gaze</i><i>trigger_blink</i><i>set_expression</i><i>connect / disconnect</i></p>
+                        </section>
+
+                        <!-- §10 -->
+                        <section class="doc-sec" id="s-ha" data-title="Home Assistant">
+                            <h2><span class="doc-num">§10</span> Home Assistant</h2>
+                            <p>Custom integration <code>deepdish_ocs</code> v2.0.0: UI config flow (host + port, no YAML), <code>local_polling</code> every 10&nbsp;s against the OCS API. Preset and style options are read from OCS itself, so new presets show up without updating the integration. Install by copying <code>custom_components/deepdish_ocs</code> (or <code>deploy.sh</code> over SSH).</p>
+                            <table class="doc-table">
+                                <thead><tr><th>platform</th><th>entities</th></tr></thead>
+                                <tbody>
+                                    <tr><td>light</td><td><b>Eye</b>: brightness = glow, color = primary, effects = presets</td></tr>
+                                    <tr><td>select</td><td>preset, expression, iris / outer / middle / inner ring style, fill style</td></tr>
+                                    <tr><td>number</td><td>intensity (0.1&ndash;2.0), pulse speed, pulse depth, gaze X / Y, volume</td></tr>
+                                    <tr><td>switch</td><td>face tracking, auto blink, wander, thinking, reactive expressions, hourly chime, flyover alerts, sound, particles, scan lines, heartbeat, data streams, and the showpiece effects: bloom, comets, arcs, shockwave, glitch</td></tr>
+                                    <tr><td>button</td><td>blink, center gaze, siren, flyover test, chime test, stop sounds</td></tr>
+                                    <tr><td>sensor</td><td>status, gaze X / Y, connected clients, current expression</td></tr>
+                                    <tr><td>camera</td><td>OCS webcam, rendered eye view</td></tr>
+                                </tbody>
+                            </table>
+                            <p class="doc-chips doc-chips-wide"><i>set_look</i><i>apply_preset</i><i>trigger_expression</i><i>set_gaze</i><i>trigger_siren</i><i>trigger_flyover</i><i>trigger_chime</i><i>play_sound</i></p>
+<pre class="doc-code"><code>automation:
+  - alias: Doorbell flashes the eye
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.doorbell
+        to: "on"
+    actions:
+      - action: deepdish_ocs.trigger_siren
+        data: { duration: 8 }
+      - action: deepdish_ocs.trigger_expression
+        data: { expression: surprised, duration: 5 }</code></pre>
+                        </section>
+
+                        <!-- §11 -->
+                        <section class="doc-sec" id="s-telemetry" data-title="Telemetry">
+                            <h2><span class="doc-num">§11</span> Telemetry</h2>
+                            <p>47 Prometheus series under <code>deepdish_*</code> at <code>/metrics</code>, visualised by four Grafana dashboards (<code>deepdish_ocs</code>, <code>deepdish_combined</code>, <code>deepdish_jboc</code>, <code>node_exporter</code>).</p>
+                            <table class="doc-table">
+                                <thead><tr><th>group</th><th>series</th></tr></thead>
+                                <tbody>
+                                    <tr><td>mood</td><td>mood_valence &middot; mood_arousal &middot; mood_dominance &middot; mood_label_active &middot; mood_stimuli_total &middot; behavior_chosen_total &middot; behavior_score</td></tr>
+                                    <tr><td>expression</td><td>expression_active &middot; expression_intensity &middot; expression_progress &middot; expression_duration_seconds &middot; expression_triggered_total &middot; reactive_expression_triggered_total &middot; reactive_expressions_enabled</td></tr>
+                                    <tr><td>gaze &amp; face</td><td>gaze_x/y &middot; gaze_target_x/y &middot; face_detected &middot; face_position_x/y &middot; faces_detected_total &middot; face_tracking_enabled &middot; tracking_intensity &middot; wandering_enabled &middot; motion_level &middot; motion_average</td></tr>
+                                    <tr><td>render</td><td>frame_render_duration_seconds &middot; glow_intensity &middot; pulse_speed &middot; blink_factor &middot; blinks_total &middot; auto_blink_enabled &middot; particles_count &middot; effect_enabled</td></tr>
+                                    <tr><td>alerts</td><td>siren_active &middot; siren_triggered_total &middot; hourly_chime_active &middot; hourly_chime_enabled &middot; hourly_chimes_total</td></tr>
+                                    <tr><td>system</td><td>system_running &middot; camera_healthy &middot; connected_clients &middot; api_requests_total &middot; api_request_duration_seconds</td></tr>
+                                </tbody>
+                            </table>
+                            <figure class="doc-figure doc-figure-wide">
+                                <img src="/assets/OCS/docs/grafana.webp" alt="Grafana dashboard panels for DeepDish OCS" loading="lazy" decoding="async">
+                                <figcaption>FIG 11.1 &mdash; Grafana: OCS dashboard</figcaption>
+                            </figure>
+                        </section>
+
+                        <!-- §12 -->
+                        <section class="doc-sec" id="s-deploy" data-title="Deployment">
+                            <h2><span class="doc-num">§12</span> Deployment</h2>
+<pre class="doc-code"><code>bash scripts/setup_venv.sh    # create the venv and install requirements
+bash run_deepdish.sh          # start; arguments pass through, e.g. --debug
+
+docker compose up -d --build  # headless API + web UI on :5001, eye window via X11</code></pre>
+                            <p>Runtime: Python 3.11 with OpenCV, NumPy, Pillow, Flask, Flask-CORS, Flask-SocketIO, Ultralytics, prometheus-client, Chatterbox TTS + torchaudio, pygame and moderngl. On a CIFS / SMB mount the launcher puts the venv in <code>~/.venv-gakken-worldeye</code>, since those mounts can't hold executables. The web UI uses the licensed Berkeley Mono font when its files are present and falls back to system monospace.</p>
+                            <table class="doc-table doc-flags">
+                                <thead><tr><th>flag</th><th>effect</th></tr></thead>
+                                <tbody>
+                                    <tr><td>--camera-id ID</td><td>camera device (default 0)</td></tr>
+                                    <tr><td>--no-face-tracking</td><td>disable tracking</td></tr>
+                                    <tr><td>--debug</td><td>show the camera debug view</td></tr>
+                                    <tr><td>--headless</td><td>API and web UI only, no tkinter GUI</td></tr>
+                                    <tr><td>--display</td><td>with --headless, a lightweight eye window</td></tr>
+                                    <tr><td>--fullscreen-display</td><td>start the eye window fullscreen (for the Worldeye)</td></tr>
+                                    <tr><td>--screen-size WxH</td><td>fullscreen resolution, e.g. 800x480</td></tr>
+                                    <tr><td>--display-size WxH</td><td>render size (default 400x400)</td></tr>
+                                    <tr><td>--fullscreen</td><td>fullscreen GUI</td></tr>
+                                    <tr><td>--api-port PORT</td><td>API port (default 5001)</td></tr>
+                                    <tr><td>--enable-api</td><td>API server (on by default)</td></tr>
+                                    <tr><td>--shader &middot; --shader-style</td><td>GPU shader display (moderngl, pygame), style default plasma</td></tr>
+                                    <tr><td>--performance-mode</td><td>fewer effects, smoother rendering</td></tr>
+                                    <tr><td>--force-cpu</td><td>disable GPU acceleration</td></tr>
+                                    <tr><td>--low-memory</td><td>lighter caches (auto in containers under 2&nbsp;GB)</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Docker</h3>
+                            <table class="doc-table doc-kv">
+                                <tr><td>image</td><td><code>python:3.11-slim</code>, entrypoint <code>python deepdish_ocs.py</code>, default <code>--headless --display --api-port 5001 --force-cpu</code></td></tr>
+                                <tr><td>deepdish</td><td>host networking for X11, <code>DISPLAY</code> + PulseAudio socket passthrough, <code>/dev/video0</code></td></tr>
+                                <tr><td>deepdish-no-camera</td><td>profile: API + web UI only on <code>5001:5001</code>, tracking off</td></tr>
+                                <tr><td>tts-cache</td><td>named volume so the TTS model downloads once</td></tr>
+                            </table>
+                            <h3>Eye window placement</h3>
+                            <p>The eye is normally fullscreened on a secondary display &mdash; the Worldeye's projector. Window managers open new windows on whichever monitor has focus, so <code>src/app/window_placement.py</code> saves the placement when the window goes fullscreen and restores it at the next start (<code>eye_window.json</code>). Monitors are identified through Hyprland (<code>hyprctl</code>); other window managers fall back to the saved screen position.</p>
+                        </section>
+
+                        <!-- §13 -->
+                        <section class="doc-sec" id="s-tests" data-title="Tests">
+                            <h2><span class="doc-num">§13</span> Tests</h2>
+                            <p>The suite needs no camera or audio device: configuration is hermetic and the audio health monitor is stopped during runs. It was written first, as "phase 0", so the restructure into <code>src/</code> could be checked step by step.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>suite</th><th>covers</th></tr></thead>
+                                <tbody>
+                                    <tr><td>test_golden</td><td>renders six presets and compares them to stored golden frames (below)</td></tr>
+                                    <tr><td>test_api</td><td>HTTP API through the Flask test client</td></tr>
+                                    <tr><td>test_behavior</td><td>mood vector and behavior tree</td></tr>
+                                    <tr><td>test_styles &middot; test_presets</td><td>every style renders; presets load and apply</td></tr>
+                                    <tr><td>test_animations &middot; test_blink</td><td>event animations, blinking</td></tr>
+                                    <tr><td>test_tracking &middot; test_sound</td><td>tracking logic, sound manager</td></tr>
+                                    <tr><td>test_web_fit &middot; test_window_placement</td><td>display fit, window placement</td></tr>
+                                    <tr><td>Home Assistant (20)</td><td>config flow, setup, entities and services against a fake OCS</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="doc-golden" id="doc-golden"></div>
+                        </section>
+
+                        <!-- §14 -->
+                        <section class="doc-sec" id="s-changelog" data-title="Changelog">
+                            <h2><span class="doc-num">§14</span> Changelog</h2>
+                            <ol class="doc-log">
+                                <li class="wip"><time>2026-10 &middot; uncommitted</time><b>Showpiece update.</b> Five new iris styles (shutter, serpent, nova, circuit, crystal), seven new ambient fills (vortex, embers, plasma, warp, hex, rain, glyphs) and nine new presets (dragon, supernova, mainframe, prism, optic, hyperdrive, netrunner, toxic, glacier). Opt-in showpiece effects &mdash; comets, arcs, shockwave, bloom, glitch &mdash; with Home Assistant switches; the effects endpoint now accepts any effect. Faster particle, data-stream and scan-line compositing; monitor-aware pop-out eye window; golden frames re-baselined.</li>
+                                <li><time>2026-09</time><b>Restructure.</b> Regression suite first, then the monolith moved into <code>src/</code> in twelve steps: audio, render, behavior, services, core, API, events, housing, tracking, display fit, display core, GUI. Twelve unused legacy renderers removed; presets served from <code>presets.json</code> everywhere; audio self-heal fixed for non-PipeWire backends; Home Assistant integration v2 (look control, alerts, sound); drone integration removed; repo organised into <code>web/ assets/ docs/ scripts/</code>.</li>
+                                <li><time>2026-01</time><b>Headless.</b> Headless mode and display options for running without the desktop GUI; code structure cleanup.</li>
+                                <li><time>2025-12</time><b>DeepDish Optical Control System.</b> Project renamed and licensed (VPL). Blink API, gaze tracking and control-panel metrics, eye color presets in the web UI, Chatterbox TTS, hourly chime, boot sequence and reactive expressions, visual effects control, the first Home Assistant integration and the Grafana monitoring dashboard.</li>
+                            </ol>
+                        </section>
+                        <p class="doc-end">&mdash; end of document &middot; source: deepdish_ocs @ dbe8022 + uncommitted showpiece work (2026-10-03) &mdash;</p>
+                    </article>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-render-pane">
+                    <div class="g-panel-title">Render <span class="g-meta" id="g-render-meta"></span></div>
+                    <div class="g-render" id="g-render"></div>
+                </section>
+                <section class="g-presets-pane">
+                    <div class="g-panel-title">Presets <span class="g-meta">presets.json &middot; 20</span></div>
+                    <ol class="g-presets" id="g-presets"></ol>
+                </section>
+            </aside>
         </div>
-        
-        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Integration Points</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>Subject tracking data</li>
-                    <li>Vision scene description</li>
-                    <li>Expression history</li>
-                    <li>Web interface prompts</li>
-                </ul>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span>SRC 16,995 LOC &middot; 59 COMMITS + WIP &middot; 51 ROUTES</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">/ search &middot; [ ] previous / next section</span>
             </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Performance Metrics</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>Avg latency: 230ms</li>
-                    <li>Tokens/session: 847+</li>
-                    <li>Requests cached</li>
-                    <li>Fallback enabled</li>
-                </ul>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
             </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">REST API Endpoints</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
-                    <li>POST /api/vision/chat</li>
-                    <li>POST /api/analyze</li>
-                    <li>GET /api/context</li>
-                </ul>
-            </div>
-        </div>
-        
-        <h3>§2.4 — TEMPORAL SYNCHRONIZATION PROTOCOL</h3>
-        <div class="two-col">
-            <div>
-                <p>
-                    At predetermined intervals, the system initiates a covert synchronization routine disguised as a horological display. This mechanism facilitates encrypted burst transmissions to <span class="redacted">████████████</span> listening posts while maintaining operational cover.
-                </p>
-                <table class="spec-table">
-                    <tr>
-                        <th>Interval</th>
-                        <th>Function</th>
-                        <th>Duration</th>
-                    </tr>
-                    <tr>
-                        <td>15 min</td>
-                        <td>Telemetry sync</td>
-                        <td>2.3s</td>
-                    </tr>
-                    <tr>
-                        <td>1 hour</td>
-                        <td>Full data burst</td>
-                        <td>8.7s</td>
-                    </tr>
-                    <tr>
-                        <td>6 hour</td>
-                        <td><span class="redacted">████████</span></td>
-                        <td><span class="redacted">██</span>s</td>
-                    </tr>
-                </table>
-            </div>
-            <div style="text-align: center;">
-                <img src="/assets/OCS/clock.gif" alt="[SYNC PROTOCOL]" style="max-width: 150px; height: auto; margin-bottom: 0.5rem;">
-                <p style="font-size: 0.6rem; color: #4a7a8a;">Fig 2.4.1: Clock mode (cover)</p>
-            </div>
-        </div>
-        
-        <h3>§2.6 — HOME ASSISTANT INTEGRATION</h3>
-        <p>
-            DeepDish OCS exposes 15+ Home Assistant entities via custom coordinator integration. MQTT synchronization enables seamless ecosystem integration. Retry logic with exponential backoff (3 attempts) ensures reliability; response caching preserves state during connectivity loss. Polling interval optimized to 15s; request timeout set to 10s per connection.
-        </p>
-        <div class="three-col" style="font-size: 0.7rem; margin: 0.75rem 0;">
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Exposed Sensors</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
-                    <li>deepdish_ocs_status</li>
-                    <li>deepdish_ocs_gaze_x/y</li>
-                    <li>deepdish_ocs_expression_state</li>
-                    <li>deepdish_ocs_face_detected</li>
-                    <li>deepdish_ocs_connected_clients</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Control Switches</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
-                    <li>deepdish_ocs_face_tracking</li>
-                    <li>deepdish_ocs_auto_blink</li>
-                    <li>deepdish_ocs_wander</li>
-                    <li>deepdish_ocs_blink (button)</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">REST API Endpoints</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.65rem;">
-                    <li>GET /api/status</li>
-                    <li>POST /api/expression/{name}</li>
-                    <li>POST /api/gaze</li>
-                    <li>POST /api/face_tracking/{state}</li>
-                </ul>
-            </div>
-        </div>
-        
-        <h3>§2.7 — K417 DRONE FLEET INTEGRATION</h3>
-        <div class="two-col">
-            <div>
-                <p>
-                    Multi-agent autonomous platform coordination system for K417 brushless drone (Karuisrc). Alternative support for S20, S29, V88, D16, E58 models. Direct WiFi UDP broadcast protocol at 80Hz control frequency with s2x command architecture (S2X_RC + S2X_Video). Mission types: Patrol (autonomous waypoint), Surveillance (hover observation), Loiter (circular patrol), Return-to-Home (GPS), and Formation (multi-drone).
-                </p>
-                <p>
-                    Auto-safety features include low-battery return-to-home, emergency fleet recall, and real-time telemetry monitoring. Video stream via MJPEG through turbodrone SDK. Fleet status dashboard with individual drone telemetry, battery levels, altitude, and signal strength.
-                </p>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">Drone API Control</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>GET /api/drone/status</li>
-                    <li>POST /api/drone/deploy</li>
-                    <li>POST /api/drone/recall/{id}</li>
-                    <li>POST /api/drone/emergency</li>
-                    <li>GET /api/drone/telemetry/{id}</li>
-                </ul>
-                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
-                    <strong>Connection:</strong> WiFi UDP • <strong>Protocol:</strong> s2x • <strong>Freq:</strong> 80Hz • <strong>Video:</strong> MJPEG
-                </div>
-            </div>
-        </div>
-        <h3>§2.8 — TELEMETRY & ANALYTICS</h3>
-        <p>
-            All operational data exported in Prometheus-compatible format for integration with Agency monitoring infrastructure. System tracks 40+ metrics: gaze vector analysis, expression state triggers, face detection confidence, blink frequency, subject tracking intensity, CPU/memory/disk utilization, API request latency, and connected client count. Real-time visualization via Grafana dashboard with historical trend analysis, custom queries, and expression activity heatmaps.
-        </p>
-        
-        <img src="/assets/OCS/OCS_Grafana.png" alt="[TELEMETRY DASHBOARD]" style="width: 100%; height: auto; margin: 1rem 0; border: 1px solid rgba(139, 233, 253, 0.15);">
-        <p style="font-size: 0.65rem; color: #4a7a8a; text-align: center; margin-top: -0.5rem;">Fig 2.8.1: Grafana operational dashboard — real-time metrics visualization</p>
-        
-        <div class="three-col" style="font-size: 0.65rem; margin: 0.75rem 0;">
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Expression Metrics</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>deepdish_expression_triggered_total</li>
-                    <li>deepdish_expression_active</li>
-                    <li>deepdish_expression_intensity</li>
-                    <li>deepdish_blinks_total</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Tracking & System</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>deepdish_face_detected</li>
-                    <li>deepdish_tracking_intensity</li>
-                    <li>deepdish_faces_detected_total</li>
-                    <li>deepdish_api_requests_total</li>
-                </ul>
-            </div>
-            <div class="info-box" style="margin: 0;">
-                <div class="info-box-header">Alert Thresholds</div>
-                <ul style="margin: 0; padding-left: 1rem;">
-                    <li>CPU: &gt;75°C</li>
-                    <li>Memory: &gt;90%</li>
-                    <li>Subject loss: &gt;5s</li>
-                    <li>Anomaly: &gt;0.85</li>
-                </ul>
-            </div>
-        </div>
-        
-        <h2><span class="section-number">§3.0</span> TECHNICAL SPECIFICATIONS</h2>
-        <div class="two-col">
-            <div>
-                <table class="spec-table">
-                    <tr>
-                        <th colspan="2">Hardware Configuration</th>
-                    </tr>
-                    <tr>
-                        <td>Platform</td>
-                        <td class="highlight">Raspberry Pi 4B (4GB)</td>
-                    </tr>
-                    <tr>
-                        <td>Display</td>
-                        <td class="highlight">1.28" GC9A01 Round LCD</td>
-                    </tr>
-                    <tr>
-                        <td>Camera</td>
-                        <td class="highlight">Pi Camera Module v2</td>
-                    </tr>
-                    <tr>
-                        <td>Housing</td>
-                        <td class="highlight">Gakken WorldEye</td>
-                    </tr>
-                    <tr>
-                        <td>Power</td>
-                        <td class="highlight">5V/3A USB-C</td>
-                    </tr>
-                    <tr>
-                        <td>Storage</td>
-                        <td class="highlight">64GB microSD</td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <table class="spec-table">
-                    <tr>
-                        <th colspan="2">Software Stack</th>
-                    </tr>
-                    <tr>
-                        <td>OS</td>
-                        <td class="highlight">Raspberry Pi OS Lite</td>
-                    </tr>
-                    <tr>
-                        <td>Runtime</td>
-                        <td class="highlight">Python 3.11</td>
-                    </tr>
-                    <tr>
-                        <td>Vision</td>
-                        <td class="highlight">OpenCV 4.8</td>
-                    </tr>
-                    <tr>
-                        <td>Web Framework</td>
-                        <td class="highlight">Flask 3.0</td>
-                    </tr>
-                    <tr>
-                        <td>Display Driver</td>
-                        <td class="highlight">PIL + SPI</td>
-                    </tr>
-                    <tr>
-                        <td>Metrics</td>
-                        <td class="highlight">prometheus_client</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <h3>§3.1 — WEB INTERFACE & REST API</h3>
-        <div class="two-col">
-            <div>
-                <p>
-                    Flask 3.0 web server provides comprehensive browser-based control and real-time monitoring (localhost:5001). HTML5/CSS3 interface with cyberpunk aesthetic includes Eye Control (live camera feed, expression selector, gaze control, blink triggers), Chat Interface (LLM conversation, vision-aware context), Drone Control (fleet management, telemetry), Metrics Tab (performance graphs, expression heatmaps), and Configuration options.
-                </p>
-                <p>
-                    REST API with full CORS support, request logging, rate limiting, and thread-safe metric collection. WebSocket support for real-time updates. All endpoints documented with JSON request/response schemas.
-                </p>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">API Framework</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li><strong>Server:</strong> Flask 3.0</li>
-                    <li><strong>Port:</strong> 5001 (default)</li>
-                    <li><strong>CORS:</strong> Enabled</li>
-                    <li><strong>Threads:</strong> Thread-safe</li>
-                    <li><strong>Logging:</strong> Full request tracking</li>
-                    <li><strong>Rate Limiting:</strong> Configurable</li>
-                </ul>
-                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(139, 233, 253, 0.15); font-size: 0.65rem;">
-                    <strong>Sync:</strong> Multi-client support • Real-time metric export
-                </div>
-            </div>
-        </div>
-        
-        <h2><span class="section-number">§4.0</span> DEVELOPMENT TIMELINE</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="date">Q3 2024</div>
-                <strong>Initial Prototype</strong> — Basic eye display with static expressions
-            </div>
-            <div class="timeline-item">
-                <div class="date">Q4 2024</div>
-                <strong>Vision Integration</strong> — OpenCV face tracking, autonomous gaze
-            </div>
-            <div class="timeline-item">
-                <div class="date">Q1 2025</div>
-                <strong>LLM Integration</strong> — Cognitive framework, behavioral responses
-            </div>
-            <div class="timeline-item">
-                <div class="date">Q2 2025</div>
-                <strong>Telemetry System</strong> — Prometheus metrics, Grafana dashboards
-            </div>
-            <div class="timeline-item">
-                <div class="date">Q3 2025</div>
-                <strong><span class="redacted">████████████████</span></strong> — <span class="redacted">████████████████████████████</span>
-            </div>
-            <div class="timeline-item">
-                <div class="date">CURRENT</div>
-                <strong>Field Deployment</strong> — Active operational status
-            </div>
-        </div>
-        
-        <h2><span class="section-number">§5.0</span> FUTURE DEVELOPMENT INITIATIVES</h2>
-        <div class="three-col">
-            <div class="info-box">
-                <div class="info-box-header">Phase 5.1 — Enhanced Optics</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>Expanded expression matrix (128 states)</li>
-                    <li>Iris color manipulation</li>
-                    <li>Tear duct simulation</li>
-                    <li><span class="redacted">████████████</span></li>
-                </ul>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">Phase 5.2 — Tracking</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>Multi-camera array</li>
-                    <li>3D depth sensing</li>
-                    <li>Gait analysis</li>
-                    <li>Thermal overlay</li>
-                </ul>
-            </div>
-            <div class="info-box">
-                <div class="info-box-header">Phase 5.3 — Integration</div>
-                <ul style="margin: 0; padding-left: 1rem; font-size: 0.7rem;">
-                    <li>UAV coordination</li>
-                    <li>Mobile command app</li>
-                    <li>Mesh networking</li>
-                    <li><span class="redacted">████████████</span></li>
-                </ul>
-            </div>
-        </div>
-        
-        </div><!-- end main-content-area -->
-        
-        <!-- INTEL SIDEBAR -->
-        <div class="intel-sidebar">
-            <!-- Live Incident Log -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header">Live Incident Log</div>
-                <div class="incident-log">
-                    <div class="incident-entry">
-                        <div class="incident-time">02:47:33Z</div>
-                        <div class="incident-msg alert">ANOMALY: Subject 7734 behavioral deviation</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:45:12Z</div>
-                        <div class="incident-msg ok">SYNC: Telemetry burst complete</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:41:08Z</div>
-                        <div class="incident-msg">INFO: Expression matrix calibrated</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:38:55Z</div>
-                        <div class="incident-msg warn">WARN: CPU temp 73°C</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:35:22Z</div>
-                        <div class="incident-msg">INFO: New subject acquired (ID: <span class="redacted">████</span>)</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:30:00Z</div>
-                        <div class="incident-msg ok">HEARTBEAT: All systems nominal</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:27:41Z</div>
-                        <div class="incident-msg">INFO: Gaze vector updated</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">02:22:18Z</div>
-                        <div class="incident-msg alert">ALERT: <span class="redacted">████████████</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Network Status -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header cyan">Network Topology</div>
-                <div class="network-grid">
-                    <div class="network-node">
-                        <div class="node-id">OCS-01</div>
-                        <div class="node-status up">●</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">OCS-02</div>
-                        <div class="node-status up">●</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">OCS-03</div>
-                        <div class="node-status down">●</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">RELAY-A</div>
-                        <div class="node-status up">●</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">RELAY-B</div>
-                        <div class="node-status degraded">●</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">C2-NODE</div>
-                        <div class="node-status up">●</div>
-                    </div>
-                </div>
-                <div style="margin-top: 0.5rem; font-size: 0.55rem; color: #4a7a8a;">
-                    MESH INTEGRITY: <span style="color: #50fa7b;">83%</span> | LATENCY: <span style="color: #8be9fd;">42ms</span>
-                </div>
-            </div>
-            
-            <!-- Personnel Roster -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header green">Cleared Personnel</div>
-                <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">███████</span>, J.</span>
-                    <span class="personnel-status active">ACTIVE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">████</span>, M.</span>
-                    <span class="personnel-status active">ACTIVE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">██████</span>, R.</span>
-                    <span class="personnel-status active">ACTIVE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">███</span>, T.</span>
-                    <span class="personnel-status active">ACTIVE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name"><span class="redacted">███████████</span>, S.</span>
-                    <span class="personnel-status standby">STANDBY</span>
-                </div>
-            </div>
-            
-            <!-- Comms Intercept -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header">Comms Intercept</div>
-                <div class="comms-entry priority">
-                    <div class="comms-header">
-                        <span class="comms-channel">CH-7 PRIORITY</span>
-                        <span class="comms-time">02:44Z</span>
-                    </div>
-                    <div class="comms-body"><span class="redacted">████████</span> confirmed at grid ref <span class="redacted">██████</span></div>
-                </div>
-                <div class="comms-entry">
-                    <div class="comms-header">
-                        <span class="comms-channel">CH-3 ROUTINE</span>
-                        <span class="comms-time">02:38Z</span>
-                    </div>
-                    <div class="comms-body">Asset rotation complete. DEEPDISH-02 now primary.</div>
-                </div>
-                <div class="comms-entry">
-                    <div class="comms-header">
-                        <span class="comms-channel">CH-1 ADMIN</span>
-                        <span class="comms-time">02:31Z</span>
-                    </div>
-                    <div class="comms-body">Maintenance window 0400-0600Z confirmed.</div>
-                </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header cyan">Performance Metrics</div>
-                <table class="compact-table">
-                    <tr>
-                        <td>Uptime</td>
-                        <td style="color: #50fa7b;">97.3%</td>
-                    </tr>
-                    <tr>
-                        <td>Expressions/hr</td>
-                        <td style="color: #8be9fd;">847</td>
-                    </tr>
-                    <tr>
-                        <td>Lock Time</td>
-                        <td style="color: #8be9fd;">143ms avg</td>
-                    </tr>
-                    <tr>
-                        <td>CPU Load</td>
-                        <td style="color: #f1fa8c;">67%</td>
-                    </tr>
-                    <tr>
-                        <td>Memory</td>
-                        <td style="color: #50fa7b;">2.1GB / 4GB</td>
-                    </tr>
-                    <tr>
-                        <td>LLM Latency</td>
-                        <td style="color: #8be9fd;">230ms</td>
-                    </tr>
-                    <tr>
-                        <td>API Calls</td>
-                        <td style="color: #8be9fd;">234+/session</td>
-                    </tr>
-                    <tr>
-                        <td>Gaze Rate</td>
-                        <td style="color: #8be9fd;">30Hz</td>
-                    </tr>
-                </table>
-            </div>
-            
-            <!-- Classification Legend -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header">Classification Guide</div>
-                <div style="font-size: 0.55rem; line-height: 1.6;">
-                    <span class="clearance-badge ts">TS/SCI</span> Compartmented Intel<br>
-                    <span class="clearance-badge s">SECRET</span> Need-to-Know<br>
-                    <span class="clearance-badge c">CONF</span> Standard Access<br>
-                    <span style="color: #4a7a8a;">ORCON: Originator Controlled</span><br>
-                    <span style="color: #4a7a8a;">NOFORN: No Foreign Nationals</span>
-                </div>
-            </div>
-        </div><!-- end intel-sidebar -->
-        </div><!-- end document-layout -->
-        
-        <h2><span class="section-number">§6.0</span> MISSION STATEMENT</h2>
-        <div class="redacted-block" style="background: rgba(139, 233, 253, 0.05); border-left: 3px solid #8be9fd; color: #9aafba; padding: 1rem; margin: 1rem 0; font-style: normal; font-size: 0.75rem; line-height: 1.8;">
-            <p style="margin: 0 0 0.75rem 0;">
-                Arch Linux Worldeye Gaze Control Network Synchronization Protocol Deep Surveillance Behavioral Expression Matrix Optical Calibration Cognition Integration LLM Endpoints Subject Acquisition Tracking Confidence Scoring Drone Fleet Autonomous Coordination Home Assistant Ecosystem MQTT Bridges Prometheus Metrics Grafana Visualization Real-time Expression Heatmaps Temporal Synchronization Covert Burst Transmissions Encrypted Telemetry Listening Posts Operational Theater Theater Theater Eye Display Bio-mimetic Pupillary Response Saccadic Movement Emotional Continuity Vision-Aware Contextual Awareness Subject Database Personality Profiles Token-Aware Batching Multi-turn Conversation Management Fallback Responses Mesh Network Integrity Latency Measurement Network Topology Node Status Active Standby Offline Degraded System Heartbeat Nominal Performance Anomaly Detection Behavioral Deviation Susceptible Individuals Medical Protocol MP-334 Emergency Procedures Extended Exposure Warning Personnel Clearance TS/SCI Compartmented Intel Need-to-Know Originator Controlled No Foreign Nationals.
-            </p>
-            <p style="margin: 0;">
-                Silicon Oracular Gaze Gentle Observation Field Deployment Active Operational Status Covert System Cyber-Asiatic Future Orientalism Ancient Mysticism Insect Capitalism Market Runaway Tech Return Eastern Hegemon Cultural Tradition Spirituality History Dream Jade McDonald's Infodensity Bombardment Detail Packed Frame Endless Tabs Browser Angel Experiential Blur Unceasingly Text Network Generation Interface Petri Dish Organism Microscope Primordial Instinct Epochs Ago Speed Development Significant Lifetime Observation Biological Egregorical Inhabit Cells Greater Body Incompatibilities Obstacles Biology Psychology Spirituality Navigate Day By Day. Worldeye Worldeye Worldeye Seeing Seeing Seeing. 
-            </p>
-        </div>
-        
-        <div class="document-footer">
-            <p>— END OF DOCUMENT —</p>
-            <p style="margin-top: 0.75rem;">
-                DISTRIBUTION: <span class="redacted">████████</span> • COPY <span class="redacted">██</span> OF <span class="redacted">██</span><br>
-                UNAUTHORIZED DISCLOSURE SUBJECT TO PENALTIES UNDER 18 U.S.C. §798
-            </p>
-        </div>
-        
-        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid rgba(139, 233, 253, 0.15);">
-        
-        <p class="footnote">
-            * This document has been sanitized for distribution outside of <span class="redacted">████████████</span> facilities. Original classification markings have been preserved for audit purposes. Any resemblance to actual government programs, living or dead, is purely coincidental and probably your imagination. <span class="redacted">████████</span>.
-        </p>
-    </section>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <div id="radgotchi-container">
-                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            </div>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
 
-        </div>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/background3d.js?v=1.6"></script>
-    <script src="/js/script.js?v=1.8"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    
+    <!-- Docs (contents, search, source map) + OCS presets and renders -->
+    <script defer src="/js/docs.js?v=1.2"></script>
+    <script defer src="/js/ocs-docs.js?v=2.0"></script>
 </body>
 </html>

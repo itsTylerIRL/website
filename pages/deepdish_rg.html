@@ -14,14 +14,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/radgotchi">
     <meta property="og:title" content="RadGotchi - Tyler (in real life)">
-    <meta property="og:description" content="RadGotchi - AI-powered network device & embeddable web companion">
+    <meta property="og:description" content="RadGotchi: a desktop and web pixel-art companion that watches your system, chats with local AI and levels up. Technical documentation.">
     <meta property="og:image" content="https://tylerirl.com/assets/radgotchi_panel.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/radgotchi">
     <meta property="twitter:title" content="RadGotchi - Tyler (in real life)">
-    <meta property="twitter:description" content="RadGotchi - AI-powered network device & embeddable web companion">
+    <meta property="twitter:description" content="RadGotchi: a desktop and web pixel-art companion that watches your system, chats with local AI and levels up. Technical documentation.">
     <meta property="twitter:image" content="https://tylerirl.com/assets/radgotchi_panel.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
@@ -33,847 +33,533 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/deepdish_rg.css?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/docs.css?v=1.3">
+    <link rel="stylesheet" href="/css/deepdish_rg.css?v=2.6">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
+    <!-- Sprite tint: the same filter RadGotchi uses (index.html #rg-tint) - flood the theme colour into the sprite's own pixels -->
+    <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+        <filter id="rg-tint" color-interpolation-filters="sRGB">
+            <feFlood class="rg-tint-flood"/>
+            <feComposite in2="SourceAlpha" operator="in"/>
+        </filter>
+    </svg>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.1rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Project Write-up Section -->
-    <section class="project-writeup">
-        <!-- Stamps -->
-        <div class="stamp approved">APPROVED</div>
-        <div class="stamp eyes-only">EYES ONLY</div>
-
-        <!-- Return Nav -->
-        <div class="doc-button-container">
-            <a href="/pages/deepdish.html" class="doc-return-home">
-                <img src="/assets/wee.gif" alt="DeepDish Terminal">
-                <div class="doc-return-home-text">
-                    <span>← Return to Main Terminal</span>
-                    <small>DEEPDISH // PROJECT INDEX</small>
-                </div>
+    <!-- RadGotchi technical documentation (workspace). Docs panels: js/docs.js; sprites, routines, ranks: js/rg-docs.js -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// RADGOTCHI</span>
             </a>
-        </div>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Program</span><span class="sep">/</span>
+                <b id="g-crumb">RadGotchi</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search the docs&hellip;" autocomplete="off" aria-label="Search the documentation">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Classification: open source">OPEN SOURCE // MIT</span>
+        </header>
 
-        <!-- === NEW HERO VALUE SECTION === -->
-        <div class="hero-value-section">
-            <h1 class="hero-tagline">RadGotchi</h1>
-            <p class="hero-subtitle">Your RadTech Desktop Intelligence Companion</p>
-            
-            <!-- Quick benefit highlights -->
-            <div class="hero-benefits">
-                <div class="hero-benefit"><span class="hero-benefit-icon">💬</span> Chat with Local AI</div>
-                <div class="hero-benefit"><span class="hero-benefit-icon">📈</span> Level Up & Earn XP</div>
-                <div class="hero-benefit"><span class="hero-benefit-icon">🖥️</span> System Health Monitor</div>
-                <div class="hero-benefit"><span class="hero-benefit-icon">🎮</span> 25+ Mood Animations</div>
-            </div>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-toc-pane" aria-label="Contents">
+                    <div class="g-panel-title">Contents <span class="g-meta" id="g-toc-meta"></span></div>
+                    <ol class="g-toc" id="g-toc"></ol>
+                </section>
+                <section class="g-ranks-pane">
+                    <div class="g-panel-title">Clearance <span class="g-meta">13 RANKS</span></div>
+                    <ol class="g-ranks" id="g-ranks"></ol>
+                </section>
+                <section class="g-src-pane">
+                    <div class="g-panel-title">Source Map <span class="g-meta">LINES / AREA</span></div>
+                    <ol class="g-src" id="g-src" data-source='[["src/main",7804],["src/styles",5643],["src/chat",2760],["src/renderer",2310],["root",954],["src/web",680],["skills",637],["test",527],["src/settings",268]]'></ol>
+                </section>
+            </aside>
 
-            <!-- Platform badges -->
-            <div class="platform-badges">
-                <div class="platform-badge">🪟 Windows</div>
-                <div class="platform-badge">🍎 macOS</div>
-                <div class="platform-badge">🐧 Linux</div>
-                <div class="platform-badge" style="border-color: rgba(139, 233, 253, 0.3); color: #8be9fd;">📦 Open Source</div>
-            </div>
-        </div>
-
-        <!-- Interactive RadGotchi -->
-        <div id="radgotchi-container" class="radgotchi-hero">
-            <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-            <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-        </div>
-
-        <!-- === PROMINENT INSTALL CTA === -->
-        <div class="install-hero">
-            <div class="install-hero-title">⚡ Quick Install</div>
-            <div class="install-hero-row">
-                <div class="install-commands-area">
-                    <div class="install-tabs">
-                        <div class="install-tab active" onclick="switchInstallTab('bash', this)">Linux / macOS</div>
-                        <div class="install-tab" onclick="switchInstallTab('ps', this)">Windows</div>
-                    </div>
-                    <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy">
-                        curl -fsSL https://tylerirl.com/install_rg.sh | bash
-                    </div>
-                    <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden>
-                        irm https://tylerirl.com/install_rg.ps1 | iex
-                    </div>
-                </div>
-                <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link">
-                    <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                    View on GitHub
-                </a>
-            </div>
-        </div>
-
-        <!-- === WHAT IS IT SECTION with SHOWCASE === -->
-        <div class="what-is-section">
-            <div class="what-is-question">What is RadGotchi?</div>
-            <p class="what-is-answer">
-                A <strong>desktop companion app</strong> that floats on your screen, <strong>chats with local AI</strong> (Ollama, LM Studio), monitors your system health, and rewards you with a <strong>full progression system</strong> — 50 levels, 13 clearance ranks, and achievement milestones. It's a virtual pet that actually does something useful.
-            </p>
-        </div>
-
-        <!-- === FEATURE SHOWCASE WITH DEMO IMAGES === -->
-        <div class="section-divider">Core Capabilities</div>
-        
-        <!-- Feature cards with emojis -->
-        <div class="feature-showcase">
-            <div class="feature-card chat">
-                <div class="feature-card-icon">💬</div>
-                <div class="feature-card-title">SIGINT Terminal</div>
-                <div class="feature-card-desc">Chat with local LLMs — Ollama, LM Studio, LocalAI. Streaming responses, markdown rendering.</div>
-            </div>
-            <div class="feature-card xp">
-                <div class="feature-card-icon">🎖️</div>
-                <div class="feature-card-title">Progression Engine</div>
-                <div class="feature-card-desc">50 levels, 13 ranks from TRAINEE to PHANTOM. XP from interactions, messages, focus sessions.</div>
-            </div>
-            <div class="feature-card system">
-                <div class="feature-card-icon">📊</div>
-                <div class="feature-card-title">System Telemetry</div>
-                <div class="feature-card-desc">CPU, memory, network monitoring. Visual alerts for high usage. Hung process detection.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">🎮</div>
-                <div class="feature-card-title">Movement Protocols</div>
-                <div class="feature-card-desc">STATIC, BOUNCE, FOLLOW, or WANDER. Your companion moves how you want.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">⏱️</div>
-                <div class="feature-card-title">Focus Operations</div>
-                <div class="feature-card-desc">Built-in Pomodoro. 25min work, 5min break. +25 XP per completed session.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">🔊</div>
-                <div class="feature-card-title">Audio Subsystem</div>
-                <div class="feature-card-desc">14 procedural sounds via Web Audio API. No external files. Toggle mute anytime.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">🏅</div>
-                <div class="feature-card-title">Clearance Ranks</div>
-                <div class="feature-card-desc">13 ranks from TRAINEE → PHANTOM. Unlock milestones at key levels.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">🏹</div>
-                <div class="feature-card-title">Asset Maintenance</div>
-                <div class="feature-card-desc">Feed via terminal. Energy via sleep mode. Stats panel tracks all vitals.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-card-icon">🧠</div>
-                <div class="feature-card-title">Behavioral Intelligence</div>
-                <div class="feature-card-desc">25+ mood states with smooth transitions. Contextual status in EN/中文.</div>
-            </div>
-        </div>
-
-        <!-- Ticker (moved below fold for info density) -->
-        <div class="ticker-wrap" style="margin-top: 0.5rem;">
-            <div class="ticker">◆ RADGOTCHI v2.0 LIVE ◆ SIGINT TERMINAL ACTIVE ◆ LOCAL LLM INTEGRATION: OLLAMA/LM STUDIO/LOCALAI ◆ 13 CLEARANCE RANKS: TRAINEE→PHANTOM ◆ 50+ LEVEL PROGRESSION ◆ 4 MOVEMENT PROTOCOLS: STATIC/BOUNCE/FOLLOW/WANDER ◆ 14 PROCEDURAL SOUND EFFECTS ◆ POMODORO FOCUS OPS: +25XP ◆ ASSET MAINTENANCE SYSTEM ◆ LOCALIZATION: EN/中文 ◆ CROSS-PLATFORM: WIN/MAC/LINUX ◆ 25+ MOOD STATES ◆ FULL XP PERSISTENCE ◆ GITHUB REPO OPEN SOURCE ◆</div>
-        </div>
-
-        <!-- Classified Header (now thematic accent, not barrier) -->
-        <div class="classified-header" style="margin-top: 0.5rem;">
-            <span class="classification-stamp">SI // NOFORN</span>
-            <h1>FIELD MANUAL // RADGOTCHI</h1>
-        </div>
-
-        <!-- Combined Panel + Stats Layout -->
-        <div class="section-divider" style="margin-top: 0.8rem;">Project Details</div>
-        <div class="panel-stats-grid">
-            <!-- RadGotchi Demo Video (left) -->
-            <div class="panel-image-cell">
-                <div class="demo-video-wrap">
-                    <div class="demo-video-label">◆ sigint terminal demo ◆</div>
-                    <video src="/assets/rg/bro.mov" autoplay loop muted playsinline></video>
-                </div>
-            </div>
-
-            <!-- Stats + Info (right) -->
-            <div class="panel-info-cell">
-                <!-- Document Bar Compact (2x2) -->
-                <div class="doc-bar-compact">
-                    <div class="document-bar-item">
-                        <label>Document ID</label>
-                        <span>RG-2026-0308</span>
-                    </div>
-                    <div class="document-bar-item">
-                        <label>Clearance</label>
-                        <span><span class="clearance-badge ts">TS</span>SI-GAMMA</span>
-                    </div>
-                    <div class="document-bar-item">
-                        <label>Status</label>
-                        <span style="color: #50fa7b;">● ACTIVE</span>
-                    </div>
-                    <div class="document-bar-item">
-                        <label>Last Update</label>
-                        <span>2026.03.08 // 09:47 UTC</span>
-                    </div>
-                </div>
-                <!-- Mini Stats Row -->
-                <div class="mini-stats-compact">
-                    <div class="mini-stat"><div class="value">25+</div><div class="label">Moods</div></div>
-                    <div class="mini-stat"><div class="value">13</div><div class="label">Ranks</div></div>
-                    <div class="mini-stat"><div class="value">50</div><div class="label">Levels</div></div>
-                    <div class="mini-stat"><div class="value">14</div><div class="label">Sounds</div></div>
-                    <div class="mini-stat"><div class="value">4</div><div class="label">Move Modes</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #50fa7b;">▲</div><div class="label">LIVE</div></div>
-                </div>
-                <!-- Document Info Compact -->
-                <div class="doc-info-compact">
-                    <div class="doc-row"><span class="doc-label">PROJECT:</span><span class="doc-value cyan">RADGOTCHI v2.0</span></div>
-                    <div class="doc-row"><span class="doc-label">CLASS:</span><span class="doc-value red">TOP SECRET//SI</span></div>
-                    <div class="doc-row"><span class="doc-label">SIGINT:</span><span class="doc-value pink">LLM TERMINAL</span></div>
-                    <div class="doc-row"><span class="doc-label">PLATFORM:</span><span class="doc-value cyan">Electron + Node.js</span></div>
-                    <div class="doc-row"><span class="doc-label">LOCALE:</span><span class="doc-value cyan">EN / 中文</span></div>
-                    <div class="doc-row"><span class="doc-label">AUTHOR:</span><span class="doc-value cyan">TylerIRL + Contributors</span></div>
-                </div>
-                <!-- Sidebar panels relocated here -->
-                <div class="sidebar-panels-inline">
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header green">Subsystems</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">main.js</span><span style="color: #50fa7b;">● RUNNING</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">SIGINT terminal</span><span style="color: #50fa7b;">● ACTIVE</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">progression</span><span style="color: #50fa7b;">● 50 LVL</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">audio engine</span><span style="color: #50fa7b;">● 14 SFX</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">mood states</span><span style="color: #50fa7b;">● 25+</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">localization</span><span style="color: #8be9fd;">● EN/中文</span></div>
+            <section class="g-main" id="g-main">
+                <div class="g-objhead">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/radgotchi.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PROGRAM &middot; DESKTOP INTELLIGENCE ASSET</div>
+                            <h1>RadGotchi</h1>
+                        </div>
+                        <span class="g-chip tone-green"><i class="g-dot tone-green"></i>Program</span>
+                        <div class="g-objnav">
+                            <a class="g-btn g-visit" href="https://github.com/itsTylerIRL/radgotchi" target="_blank" rel="noopener">GITHUB &nearr;</a>
                         </div>
                     </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header" style="color: #f1fa8c;">Clearance Ranks</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.5rem;">
-                            <span style="color: #4a7a8a;">TRAINEE → ANALYST → OPERATIVE</span>
-                            <span style="color: #8be9fd;">AGENT → SPECIALIST → HANDLER</span>
-                            <span style="color: #50fa7b;">CONTROLLER → DIRECTOR → EXECUTIVE</span>
-                            <span style="color: #ff79c6;">OVERSEER → SENTINEL → ARCHITECT</span>
-                            <span style="color: #c41e3a; font-weight: bold;">→ PHANTOM (Lv 50)</span>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header cyan">LLM Endpoints</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Ollama</span><span style="color: #50fa7b;">:11434 ✓</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LM Studio</span><span style="color: #50fa7b;">:1234 ✓</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">LocalAI</span><span style="color: #8be9fd;">Custom</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">OpenAI-compat</span><span style="color: #8be9fd;">Any</span></div>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header">Movement Protocols</div>
-                        <div class="network-grid">
-                            <div class="network-node"><div class="node-id">STATIC</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">BOUNCE</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">FOLLOW</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">WANDER</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">FOCUS</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">SLEEP</div><div class="node-status up">●</div></div>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header cyan">Quick Links</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                            <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" style="color: #8be9fd; text-decoration: none; border-bottom: 1px dashed rgba(139,233,253,0.5);">📦 GitHub Repo</a>
-                            <a href="https://github.com/itsTylerIRL/radgotchi/releases" target="_blank" style="color: #50fa7b; text-decoration: none; border-bottom: 1px dashed rgba(80,250,123,0.5);">⬇️ Releases</a>
-                            <a href="https://github.com/itsTylerIRL/radgotchi/issues" target="_blank" style="color: #f1fa8c; text-decoration: none; border-bottom: 1px dashed rgba(241,250,140,0.5);">🐛 Issues</a>
-                            <a href="https://github.com/itsTylerIRL/radgotchi/blob/main/CONTRIBUTING.md" target="_blank" style="color: #ff79c6; text-decoration: none; border-bottom: 1px dashed rgba(255,121,198,0.5);">🤝 Contributing</a>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header" style="color: #50fa7b;">XP Sources</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.5rem;">
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Passive</span><span style="color: #50fa7b;">+1 /30s</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Click</span><span style="color: #50fa7b;">+2 XP</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Send Msg</span><span style="color: #50fa7b;">+5 XP</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Receive Msg</span><span style="color: #50fa7b;">+3 XP</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Pomodoro</span><span style="color: #50fa7b;">+25 XP</span></div>
-                            <div style="display: flex; justify-content: space-between;"><span style="color: #4a7a8a;">Alert</span><span style="color: #50fa7b;">+15 XP</span></div>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header cyan">Contributors</div>
-                        <div style="display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.55rem;">
-                            <a href="https://github.com/itsTylerIRL" target="_blank" style="color: #8be9fd; text-decoration: none;">@itsTylerIRL</a>
-                            <a href="https://github.com/0x19e02" target="_blank" style="color: #8be9fd; text-decoration: none;">@0x19e02</a>
-                            <a href="https://github.com/claude" target="_blank" style="color: #8be9fd; text-decoration: none;">@claude</a>
-                            <a href="https://github.com/yurikoeth" target="_blank" style="color: #8be9fd; text-decoration: none;">@yurikoeth</a>
-                            <a href="https://x.com/giverrod" target="_blank" style="color: #ff79c6; text-decoration: none;">@giverrod (faces)</a>
-                        </div>
-                    </div>
-                    <div class="sidebar-panel">
-                        <div class="sidebar-panel-header">System Monitors</div>
-                        <div class="network-grid">
-                            <div class="network-node"><div class="node-id">CPU</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">MEM</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">NET</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">PROC</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">IDLE</div><div class="node-status up">●</div></div>
-                            <div class="network-node"><div class="node-id">XP</div><div class="node-status up">●</div></div>
-                        </div>
+                    <p class="g-summary">A cross-platform radbro companion that floats on your desktop (or runs headless as a phone web app), reacts to your system, chats with your local language model and levels up as you use it.</p>
+                    <div class="g-objmeta">
+                        <span>REPO</span><b>radgotchi @ 28e2288</b>
+                        <span>STACK</span><b>Electron 28 &middot; Node &middot; Web Audio</b>
+                        <span>WEB</span><b>:7777</b>
+                        <span>LICENSE</span><b>MIT</b>
                     </div>
                 </div>
-            </div>
+                <section class="g-card g-docs-pane">
+                    <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">TECHNICAL REFERENCE</span></div>
+                    <div class="g-docs-scroll" id="g-docs-scroll">
+                    <article class="doc" id="doc">
+
+                        <!-- §01 -->
+                        <section class="doc-sec" id="s-glance" data-title="At a glance">
+                            <h2><span class="doc-num">§01</span> At a glance</h2>
+                            <div class="doc-tiles">
+                                <div class="doc-tile"><span>platform</span><b>Electron 28</b><small>Windows &middot; macOS &middot; Linux &middot; Node 18+</small></div>
+                                <div class="doc-tile"><span>modes</span><b>desktop + web</b><small>floating overlay &middot; headless web UI on :7777</small></div>
+                                <div class="doc-tile"><span>moods</span><b>25 sprites</b><small>10 idle routines &middot; EN / 中文 status text</small></div>
+                                <div class="doc-tile"><span>progression</span><b>13 ranks</b><small>TRAINEE &rarr; PHANTOM &middot; levels 1&ndash;50+</small></div>
+                                <div class="doc-tile"><span>llm</span><b>any OpenAI API</b><small>Ollama &middot; LM Studio &middot; LocalAI &middot; tool calling</small></div>
+                                <div class="doc-tile"><span>skills</span><b>7 tools</b><small>markdown-defined &middot; 2 gated as dangerous</small></div>
+                                <div class="doc-tile"><span>rad mesh</span><b>UDP 47823</b><small>LAN peer discovery + chat &middot; SIGINT-1.0</small></div>
+                                <div class="doc-tile"><span>audio</span><b>22 sounds</b><small>synthesised live with Web Audio &middot; vibe mode</small></div>
+                                <div class="doc-tile"><span>tests</span><b>18 tests</b><small>node:test &middot; CI on 3 OSes &times; Node 20 / 22</small></div>
+                                <div class="doc-tile"><span>source</span><b>14,292 LOC</b><small>JavaScript &middot; + 5.6k CSS &middot; zero runtime deps</small></div>
+                            </div>
+                            <h3>What it is</h3>
+                            <p>RadGotchi is a radbro that lives on your screen: a transparent, always-on-top window holding a 144&times;44 pixel-art face. It watches your system (CPU, memory, network, hung apps, whether you're at the keyboard) and reacts with one of 25 hand-drawn moods. Click it and it opens the <b>SIGINT Terminal</b>, a CRT-styled chat with whatever local language model you point it at &mdash; which can call tools, remember things about you and see what you attach.</p>
+                            <p>Engagement earns XP: levels, clearance ranks, milestones, daily contracts and an arcade where XP is the currency. It needs feeding and rest, finds other RadGotchis on your LAN, and since October 2026 runs headless as a phone-first web app you can install on an iPhone home screen.</p>
+                            <div class="doc-sprites" aria-hidden="true">
+                                <img class="g-sprite" src="/assets/rg/sprites/AWAKE.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/HAPPY.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/COOL.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/SMART.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/INTENSE.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/SLEEP.png" alt="">
+                            </div>
+                        </section>
+
+                        <!-- §02 -->
+                        <section class="doc-sec" id="s-arch" data-title="Architecture">
+                            <h2><span class="doc-num">§02</span> Architecture</h2>
+                            <p>Standard Electron split: a main process that owns the windows, system access, persistence and the network, and renderers that draw the pet and the terminal. <code>main.js</code> (180 lines) only boots; <code>src/main/bootstrap.js</code> wires the modules together. In web mode <code>headless.js</code> runs the same main-process modules under plain Node, and <code>src/web/web-bridge.js</code> stands in for Electron IPC in the browser.</p>
+                            <div class="doc-flow" role="img" aria-label="Process layout: the main process serves the pet window, the SIGINT terminal and settings over IPC, or the web UI over WebSocket in headless mode">
+                                <div class="flow-col">
+                                    <div class="flow-node in">system<small>cpu &middot; mem &middot; net &middot; idle &middot; cursor</small></div>
+                                    <div class="flow-node">LLM endpoint<small>OpenAI-compatible</small></div>
+                                    <div class="flow-node">LAN peers<small>UDP broadcast</small></div>
+                                </div>
+                                <div class="flow-arrow">&rarr;</div>
+                                <div class="flow-col">
+                                    <div class="flow-node core">main process<small>src/main &middot; bootstrap.js</small></div>
+                                    <div class="flow-node alt">headless.js<small>same modules under Node</small></div>
+                                </div>
+                                <div class="flow-arrow">&rarr;</div>
+                                <div class="flow-col">
+                                    <div class="flow-node">pet window<small>src/renderer &middot; preload.js</small></div>
+                                    <div class="flow-node">SIGINT terminal<small>src/chat &middot; preload-chat.js</small></div>
+                                    <div class="flow-node out">web UI<small>src/web &middot; WebSocket</small></div>
+                                </div>
+                            </div>
+                            <table class="doc-table doc-rgmods">
+                                <thead><tr><th>src/main module</th><th>lines</th><th>role</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>web-server</code></td><td>1,122</td><td>headless HTTP + WebSocket server, HTTP / SSE fallback</td></tr>
+                                    <tr><td><code>llm</code></td><td>1,069</td><td>chat, streaming, tool-call rounds, LLM profiles</td></tr>
+                                    <tr><td><code>windows</code></td><td>690</td><td>pet, terminal and settings windows; tray menu</td></tr>
+                                    <tr><td><code>xp-system</code></td><td>659</td><td>XP, levels, ranks, milestones, attention events, idle decay</td></tr>
+                                    <tr><td><code>rad-mesh</code></td><td>611</td><td>UDP peer discovery and messaging</td></tr>
+                                    <tr><td><code>arcade</code></td><td>496</td><td>coinflip, blackjack, shop, inventory</td></tr>
+                                    <tr><td><code>movement</code></td><td>434</td><td>bounce, follow and wander physics</td></tr>
+                                    <tr><td><code>persistence</code></td><td>405</td><td>JSON state files in the user data directory</td></tr>
+                                    <tr><td><code>skill-loader</code></td><td>371</td><td>loads and sandboxes markdown skills</td></tr>
+                                    <tr><td><code>bootstrap</code></td><td>308</td><td>wires the modules together at startup</td></tr>
+                                    <tr><td><code>pet-memory</code></td><td>211</td><td>facts remembered about the operator</td></tr>
+                                    <tr><td><code>system-monitor</code></td><td>194</td><td>CPU, memory, network and hung-app telemetry</td></tr>
+                                    <tr><td><code>sleep-work</code></td><td>188</td><td>sleep and work animation cycles</td></tr>
+                                    <tr><td><code>pomodoro</code></td><td>186</td><td>focus timer</td></tr>
+                                    <tr><td><code>pet-needs</code></td><td>175</td><td>hunger and energy</td></tr>
+                                    <tr><td><code>network-discovery</code></td><td>150</td><td>adapter that keeps the old discovery API on top of RAD MESH</td></tr>
+                                    <tr><td><code>daily-contract</code></td><td>143</td><td>one rank-flavoured objective per day</td></tr>
+                                    <tr><td><code>desktop-env</code></td><td>136</td><td>cursor and work area, Hyprland-aware</td></tr>
+                                    <tr><td><code>settings-window</code></td><td>106</td><td>settings window</td></tr>
+                                    <tr><td><code>web-auth</code></td><td>91</td><td>web-mode login token</td></tr>
+                                    <tr><td><code>broadcast</code></td><td>59</td><td>push an event to every window</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §03 -->
+                        <section class="doc-sec" id="s-pet" data-title="Pet &amp; moods">
+                            <h2><span class="doc-num">§03</span> Pet &amp; moods</h2>
+                            <p>The face is one of 25 sprites, tinted to any colour through an SVG filter (default <code>#ff3344</code>; the choice syncs to every window, the web UI and mesh peers) with a breathing glow. Moods last a few seconds then settle back to <code>awake</code>; status text cycles in English or Chinese. Pick any sprite in the <b>Sprite Roster</b> panel, or play an idle routine in the <b>Specimen</b> viewer.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>mood</th><th>triggered by</th></tr></thead>
+                                <tbody>
+                                    <tr><td>happy &middot; excited</td><td>petting, 3 quick clicks, network back, memory / CPU recovering, waking up, contact milestones</td></tr>
+                                    <tr><td>angry</td><td>5+ rapid clicks; critical alerts</td></tr>
+                                    <tr><td>intense</td><td>CPU spike, memory pressure, health escalating to warn / critical</td></tr>
+                                    <tr><td>smart &middot; cool</td><td>sustained high CPU (working); CPU back to normal</td></tr>
+                                    <tr><td>lonely &middot; sad</td><td>network disconnected; something offline</td></tr>
+                                    <tr><td>debug &middot; broken</td><td>an app stops responding; failures and crashes</td></tr>
+                                    <tr><td>upload &middot; upload1 &middot; upload2</td><td>data transfer, LLM work animations</td></tr>
+                                    <tr><td>look_l / look_r (+ _happy)</td><td>eyes follow the cursor</td></tr>
+                                    <tr><td>grateful &middot; motivated &middot; cool</td><td>50, 100 and every 25 contacts past 100</td></tr>
+                                    <tr><td>friend</td><td>a RAD MESH peer comes online</td></tr>
+                                    <tr><td>sleep &middot; sleep2</td><td>idle for 2 minutes (alternating every 3&nbsp;s)</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Idle routines</h3>
+                            <p>After 15&nbsp;s without input while <code>awake</code>, <code>bored</code> or <code>cool</code>, the pet plays a short scripted routine.</p>
+                            <table class="doc-table doc-routines">
+                                <thead><tr><th>routine</th><th>sequence</th><th>step</th></tr></thead>
+                                <tbody>
+                                    <tr><td>patrol</td><td>look_l &rarr; awake &rarr; look_r &rarr; awake &rarr; look_l_happy &rarr; awake</td><td>1.5&nbsp;s</td></tr>
+                                    <tr><td>study</td><td>smart &rarr; smart &rarr; debug &rarr; smart &rarr; excited</td><td>2.0&nbsp;s</td></tr>
+                                    <tr><td>vibe</td><td>cool &rarr; cool &rarr; happy &rarr; cool &rarr; motivated</td><td>2.2&nbsp;s</td></tr>
+                                    <tr><td>restless</td><td>bored &rarr; look_l &rarr; look_r &rarr; bored &rarr; demotivated &rarr; bored</td><td>1.8&nbsp;s</td></tr>
+                                    <tr><td>workout</td><td>motivated &rarr; intense &rarr; motivated &rarr; excited &rarr; happy &rarr; cool</td><td>1.4&nbsp;s</td></tr>
+                                    <tr><td>nap_prep</td><td>bored &rarr; bored &rarr; sleep &rarr; sleep2 &rarr; sleep &rarr; sleep2 &rarr; sleep &rarr; awake</td><td>2.5&nbsp;s</td></tr>
+                                    <tr><td>hack</td><td>debug &rarr; smart &rarr; debug &rarr; intense &rarr; debug &rarr; excited</td><td>1.6&nbsp;s</td></tr>
+                                    <tr><td>social</td><td>look_l &rarr; friend &rarr; happy &rarr; look_r &rarr; friend &rarr; grateful</td><td>1.8&nbsp;s</td></tr>
+                                    <tr><td>upload_cycle</td><td>upload &rarr; upload1 &rarr; upload2 &rarr; upload1 &rarr; upload2 &rarr; happy</td><td>0.8&nbsp;s</td></tr>
+                                    <tr><td>existential</td><td>smart &rarr; lonely &rarr; sad &rarr; smart &rarr; bored &rarr; cool</td><td>2.2&nbsp;s</td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Movement</h3>
+                            <table class="doc-table doc-kv">
+                                <tr><td>static</td><td>stays where you drag it</td></tr>
+                                <tr><td>bounce</td><td>patrols the screen, reflecting off edges and cycling through nine neon colours</td></tr>
+                                <tr><td>follow</td><td>chases the cursor (max speed 5&nbsp;px / tick)</td></tr>
+                                <tr><td>wander</td><td>explores on its own with rests (max speed 2)</td></tr>
+                            </table>
+                            <p>Drag to move, scroll to scale. On Linux the pet runs through XWayland so it can position itself; under Hyprland it reads the cursor position and the space reserved by bars from Hyprland's IPC socket, because XWayland can't see either. Recommended <code>hyprland.conf</code> rules make it float, pin, and drop borders, shadow and blur.</p>
+                        </section>
+
+                        <!-- §04 -->
+                        <section class="doc-sec" id="s-telemetry" data-title="System telemetry">
+                            <h2><span class="doc-num">§04</span> System telemetry</h2>
+                            <table class="doc-table">
+                                <thead><tr><th>trigger</th><th>response</th></tr></thead>
+                                <tbody>
+                                    <tr><td>CPU &gt; 80%</td><td>alert state (smart / intense)</td></tr>
+                                    <tr><td>CPU &gt; 95%</td><td>spike: critical alert</td></tr>
+                                    <tr><td>memory &gt; 85%</td><td>pressure warning</td></tr>
+                                    <tr><td>network down / up</td><td>lonely / excited, logged</td></tr>
+                                    <tr><td>app not responding</td><td>debug face, names the hung app</td></tr>
+                                    <tr><td>idle 2 minutes</td><td>sleep mode; any input wakes it</td></tr>
+                                </tbody>
+                            </table>
+                            <p>Health is graded <code>good</code> / <code>warn</code> / <code>crit</code>; escalations shake the pet and announce "THREAT LVL CRITICAL", recovery makes it happy again.</p>
+                        </section>
+
+                        <!-- §05 -->
+                        <section class="doc-sec" id="s-needs" data-title="Needs &amp; care">
+                            <h2><span class="doc-num">§05</span> Needs &amp; care</h2>
+                            <table class="doc-table doc-kv">
+                                <tr><td>hunger</td><td>&minus;1.5 per minute; restored by feeding</td></tr>
+                                <tr><td>energy</td><td>&minus;0.8 per minute; regenerates while asleep (hunger stops decaying)</td></tr>
+                                <tr><td>zones</td><td>low below 30, critical below 10 &mdash; each logs a warning</td></tr>
+                                <tr><td>penalty</td><td>below 20, XP gains are halved</td></tr>
+                            </table>
+                            <h3>Shop</h3>
+                            <table class="doc-table doc-num-table">
+                                <thead><tr><th>item</th><th>effect</th><th>cost</th></tr></thead>
+                                <tbody>
+                                    <tr><td>RATION PACK</td><td>+50% hunger</td><td>50&nbsp;XP</td></tr>
+                                    <tr><td>ENERGY CELL</td><td>+50% energy</td><td>50&nbsp;XP</td></tr>
+                                    <tr><td>STIM SHOT</td><td>+25% both</td><td>40&nbsp;XP</td></tr>
+                                    <tr><td>FULL RESTORE</td><td>both to 100%</td><td>150&nbsp;XP</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §06 -->
+                        <section class="doc-sec" id="s-xp" data-title="Progression">
+                            <h2><span class="doc-num">§06</span> Progression</h2>
+                            <div class="doc-split doc-split-even">
+                                <table class="doc-table doc-num-table">
+                                    <thead><tr><th>source</th><th>XP</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>passive, every 30&nbsp;s</td><td class="pos">+1</td></tr>
+                                        <tr><td>click (3&nbsp;s cooldown)</td><td class="pos">+2</td></tr>
+                                        <tr><td>message sent / received</td><td class="pos">+5 / +3</td></tr>
+                                        <tr><td>attention event resolved</td><td class="pos">+5</td></tr>
+                                        <tr><td>focus cycle / break</td><td class="pos">+25 / +5</td></tr>
+                                        <tr><td>daily contract</td><td class="pos">+30&hellip;70</td></tr>
+                                        <tr><td>arcade wins</td><td class="pos">wager</td></tr>
+                                        <tr><td>ignored attention, per 30&nbsp;s</td><td class="neg">&minus;2</td></tr>
+                                        <tr><td>idle decay, per minute</td><td class="neg">&minus;1&hellip;10</td></tr>
+                                    </tbody>
+                                </table>
+                                <div>
+                                    <p><b>Attention events</b> fire with a 15% chance every 2 minutes from level 2; the pet wants you, and leaving it costs XP until you respond. <b>Idle decay</b> starts after 3 minutes away, from 1 XP a minute up to 10 on a curve. Nothing is gained or lost while asleep.</p>
+                                    <p><b>Focus</b>: a Pomodoro of 25&nbsp;min work and 5&nbsp;min break, with a 15&nbsp;min long break and a 10&nbsp;XP focus bonus.</p>
+                                </div>
+                            </div>
+                            <h3>Levels &amp; ranks</h3>
+                            <table class="doc-table doc-levels">
+                                <thead><tr><th>level</th><th>XP</th><th>level</th><th>XP</th><th>level</th><th>XP</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>0</td><td>8</td><td>1,500</td><td>15</td><td>7,200</td></tr>
+                                    <tr><td>2</td><td>50</td><td>9</td><td>2,000</td><td>16</td><td>8,500</td></tr>
+                                    <tr><td>3</td><td>150</td><td>10</td><td>2,600</td><td>17</td><td>10,000</td></tr>
+                                    <tr><td>4</td><td>300</td><td>11</td><td>3,300</td><td>18</td><td>12,000</td></tr>
+                                    <tr><td>5</td><td>500</td><td>12</td><td>4,100</td><td>19</td><td>14,500</td></tr>
+                                    <tr><td>6</td><td>750</td><td>13</td><td>5,000</td><td>20</td><td>17,500</td></tr>
+                                    <tr><td>7</td><td>1,100</td><td>14</td><td>6,000</td><td>21</td><td>21,000</td></tr>
+                                </tbody>
+                            </table>
+                            <p>Past level 21 every level costs another 3,000&nbsp;XP. The rank ladder is in the <b>Clearance</b> panel.</p>
+                            <h3>Milestones</h3>
+                            <table class="doc-table doc-kv">
+                                <tr><td>clicks</td><td>10 &middot; 50 &middot; 100 &middot; 250 &middot; 500 &middot; 1,000 &middot; 2,500 &middot; 5,000</td></tr>
+                                <tr><td>messages</td><td>5 &middot; 25 &middot; 50 &middot; 100 &middot; 250 &middot; 500</td></tr>
+                                <tr><td>sessions</td><td>5 &middot; 10 &middot; 25 &middot; 50 &middot; 100</td></tr>
+                                <tr><td>total XP</td><td>100 &middot; 500 &middot; 1K &middot; 2.5K &middot; 5K &middot; 10K &middot; 25K &middot; 50K</td></tr>
+                                <tr><td>uptime</td><td>1&nbsp;h &middot; 5&nbsp;h &middot; 24&nbsp;h &middot; 72&nbsp;h</td></tr>
+                            </table>
+                            <h3>Daily contracts</h3>
+                            <p>One rank-flavoured directive per day, chosen deterministically from the date.</p>
+                            <table class="doc-table doc-num-table">
+                                <thead><tr><th>directive</th><th>target</th><th>bounty</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Complete {n} focus cycles</td><td>2</td><td>60</td></tr>
+                                    <tr><td>Exchange {n} transmissions</td><td>8</td><td>50</td></tr>
+                                    <tr><td>Make {n} direct contacts</td><td>25</td><td>40</td></tr>
+                                    <tr><td>Resupply: use {n} inventory item</td><td>1</td><td>30</td></tr>
+                                    <tr><td>Win {n} wagers in the arcade</td><td>2</td><td>70</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §07 -->
+                        <section class="doc-sec" id="s-arcade" data-title="Arcade">
+                            <h2><span class="doc-num">§07</span> Arcade</h2>
+                            <p>XP is the currency. Wins, losses and profit are tracked per game and persisted in <code>arcade-data.json</code> with the inventory.</p>
+                            <table class="doc-table doc-kv">
+                                <tr><td>coinflip</td><td>bet 5&ndash;500&nbsp;XP; a win pays 1.8&times; (a 10% house edge on double-or-nothing)</td></tr>
+                                <tr><td>blackjack</td><td>bet 10&ndash;500&nbsp;XP; hit, stand, or double down on the first action; naturals checked on the deal, auto-stand at 21, pushes return the bet</td></tr>
+                                <tr><td>shop</td><td>spend XP on consumables (&sect;05); items go to the inventory until used</td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §08 -->
+                        <section class="doc-sec" id="s-sigint" data-title="SIGINT terminal">
+                            <h2><span class="doc-num">§08</span> SIGINT terminal &amp; LLM</h2>
+                            <p>Click the pet to open the terminal: CRT scanlines, streaming replies rendered as markdown with copyable code blocks, file attachments with previews, an activity log, the XP bar, needs, Pomodoro, mesh panel and an audio equaliser. History persists between sessions.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>backend</th><th>default endpoint</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Ollama</td><td><code>localhost:11434/v1/chat/completions</code></td></tr>
+                                    <tr><td>LM Studio</td><td><code>localhost:1234/v1/chat/completions</code></td></tr>
+                                    <tr><td>LocalAI / other</td><td>any OpenAI-compatible endpoint; several profiles can be saved</td></tr>
+                                </tbody>
+                            </table>
+                            <table class="doc-table doc-kv">
+                                <tr><td>chat</td><td>streaming, temperature 0.8, short replies (200 tokens)</td></tr>
+                                <tr><td>tools</td><td>up to 5 tool-call rounds per message; tool rounds run non-streaming at temperature 0.3 with 2,048 tokens</td></tr>
+                                <tr><td>memory</td><td>after each reply the pet extracts facts about you and keeps up to 50 (<code>pet-memory.json</code>), injected into the system prompt; can be viewed, cleared or disabled</td></tr>
+                                <tr><td>vibe mode</td><td>captures desktop audio (WASAPI / ScreenCaptureKit / PipeWire loopback) and makes the pet dance to it, with a live equaliser</td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §09 -->
+                        <section class="doc-sec" id="s-skills" data-title="Skills">
+                            <h2><span class="doc-num">§09</span> Skills</h2>
+                            <p>Tools the model can call are plain markdown files in <code>skills/</code>: YAML frontmatter (name, description, typed parameters, optional <code>dangerous</code> and <code>timeout</code>) plus the first <code>```js</code> block as the implementation. Each runs in a Node <code>vm</code> sandbox (5&nbsp;s to set up, 30&nbsp;s per call by default). API keys come from a <code>.env</code> in the project root.</p>
+                            <table class="doc-table">
+                                <thead><tr><th>skill</th><th>does</th><th>needs</th></tr></thead>
+                                <tbody>
+                                    <tr><td>web_search</td><td>current news, weather, scores, prices, facts</td><td>&mdash;</td></tr>
+                                    <tr><td>read_file</td><td>read a local file</td><td>&mdash;</td></tr>
+                                    <tr><td>list_directory</td><td>list a folder</td><td>&mdash;</td></tr>
+                                    <tr><td>home_assistant</td><td>states, history, call services (lights, switches, climate&hellip;)</td><td><code>HASS_URL</code>, <code>HASS_TOKEN</code></td></tr>
+                                    <tr><td>grafana_query</td><td>dashboards, alerts, datasource queries</td><td><code>GRAFANA_URL</code>, <code>GRAFANA_API_KEY</code></td></tr>
+                                    <tr><td>run_command <span class="doc-new">DANGEROUS</span></td><td>run a shell command</td><td>&mdash;</td></tr>
+                                    <tr><td>create_file <span class="doc-new">DANGEROUS</span></td><td>create or overwrite a file</td><td>&mdash;</td></tr>
+                                </tbody>
+                            </table>
+<pre class="doc-code"><code>---
+name: home_assistant
+description: Control and query Home Assistant ...
+icon: 🏠
+parameters:
+  action:
+    type: string
+    description: "One of: states, state, call_service, services, history"
+    required: true
+---
+```js
+// implementation: the first js block in the file
+```</code></pre>
+                        </section>
+
+                        <!-- §10 -->
+                        <section class="doc-sec" id="s-mesh" data-title="RAD MESH">
+                            <h2><span class="doc-num">§10</span> RAD MESH</h2>
+                            <p>Peer discovery and chat between RadGotchis on the same LAN over UDP broadcast. Peers show up in the terminal's network panel with node ID (e.g. <code>RG-A3F2K9</code>), operator name, rank, level, colour and signal strength; mesh messages persist in <code>mesh-messages.json</code>.</p>
+                            <table class="doc-table doc-kv">
+                                <tr><td>protocol</td><td><code>SIGINT-1.0</code> on UDP port 47823</td></tr>
+                                <tr><td>heartbeat</td><td>every 3&nbsp;s &plusmn; 500&nbsp;ms jitter (prevents sync storms)</td></tr>
+                                <tr><td>peer states</td><td>ONLINE &rarr; STALE after 3 missed (~9&nbsp;s) &rarr; OFFLINE after 6 (~18&nbsp;s)</td></tr>
+                                <tr><td>messages</td><td>&le; 200 chars, sent 3 times 150&nbsp;ms apart, de-duplicated for 60&nbsp;s</td></tr>
+                                <tr><td>interfaces</td><td>skips docker, veth, virbr, br-, tailscale, tun, tap and wg</td></tr>
+                                <tr><td>recovery</td><td>socket re-opened up to 5 times, 2&nbsp;s apart</td></tr>
+                            </table>
+                        </section>
+
+                        <!-- §11 -->
+                        <section class="doc-sec" id="s-web" data-title="Web mode">
+                            <h2><span class="doc-num">§11</span> Headless web mode</h2>
+                            <p><code>npm run start:headless</code> runs RadGotchi over SSH with no display: a Node-only server for a phone-first web UI (the pet in its chamber plus the full terminal), installable as an iPhone home-screen app with an offline screen.</p>
+<pre class="doc-code"><code>npm run start:headless                 # 127.0.0.1:7777
+tailscale serve --bg 7777              # https://&lt;machine&gt;.&lt;tailnet&gt;.ts.net
+npm run start:headless -- --host=::    # or: all interfaces, IPv4 + IPv6, plain HTTP</code></pre>
+                            <table class="doc-table doc-kv">
+                                <tr><td>listen</td><td><code>127.0.0.1:7777</code> by default; Tailscale Serve recommended for HTTPS with a real certificate</td></tr>
+                                <tr><td>login</td><td>a 24-byte random token (<code>web-token</code>, mode 600, stable across restarts); <code>/?token=&hellip;</code> sets an HttpOnly cookie, or send <code>Authorization: Bearer</code>; compared in constant time. Delete the file or set <code>RADGOTCHI_WEB_TOKEN</code> to rotate</td></tr>
+                                <tr><td>transport</td><td>a minimal RFC 6455 WebSocket with no dependencies, 30&nbsp;s keep-alive, plus an HTTP fallback (<code>/api/invoke</code>, <code>/api/send</code>, SSE <code>/api/chat-stream</code>)</td></tr>
+                                <tr><td>hardening</td><td>16&nbsp;MB body limit (413), CSP, <code>Referrer-Policy: no-referrer</code>; <code>run_command</code> and <code>create_file</code> are off unless <code>RADGOTCHI_ALLOW_DANGEROUS_TOOLS=1</code></td></tr>
+                                <tr><td>at boot</td><td><code>contrib/radgotchi-web.service</code> systemd user unit + <code>loginctl enable-linger</code></td></tr>
+                            </table>
+                            <p>Keep web mode behind Tailscale or a trusted LAN &mdash; anyone with the token drives the pet and its tools.</p>
+                        </section>
+
+                        <!-- §12 -->
+                        <section class="doc-sec" id="s-audio" data-title="Audio">
+                            <h2><span class="doc-num">§12</span> Audio</h2>
+                            <p>Every sound is synthesised on the fly with the Web Audio API &mdash; there are no audio files.</p>
+                            <p class="doc-chips doc-chips-wide"><i>boot</i><i>shutdown</i><i>click</i><i>chatOpen</i><i>chatClose</i><i>messageSend</i><i>messageReceive</i><i>sleepStart</i><i>sleepEnd</i><i>attentionStart</i><i>attentionEnd</i><i>levelUp</i><i>milestone</i><i>xpGain</i><i>xpLoss</i><i>pomodoroStart</i><i>pomodoroComplete</i><i>statsOpen</i><i>statsClose</i><i>selectChange</i><i>gong</i><i>starSpangledBanner</i></p>
+                        </section>
+
+                        <!-- §13 -->
+                        <section class="doc-sec" id="s-api" data-title="Developer API">
+                            <h2><span class="doc-num">§13</span> Developer API</h2>
+<pre class="doc-code"><code>RG.setMood('happy', { duration: 3000, anim: 'bounce', status: 'Custom text' });
+RG.react('critical', 'Alert message');        // 'warning' | 'ok'
+RG.assessHealth({ cpu: { usage_total: 45 }, memory: { percent: 60 } });
+
+SoundSystem.play('levelUp');
+SoundSystem.setVolume(0.5);                  // 0.0 - 1.0
+SoundSystem.setEnabled(false);</code></pre>
+                            <p>Renderers subscribe to main-process pushes with <code>api.on()</code>; 40 channels in all, the main ones:</p>
+                            <table class="doc-table doc-api">
+                                <thead><tr><th>event</th><th>payload</th></tr></thead>
+                                <tbody>
+                                    <tr><td>xp-update</td><td><code>{level, totalXp, progress, leveledUp}</code></td></tr>
+                                    <tr><td>needs-update</td><td><code>{hunger, energy}</code></td></tr>
+                                    <tr><td>system-event</td><td><code>{type, value}</code></td></tr>
+                                    <tr><td>idle-change</td><td><code>{idle}</code></td></tr>
+                                    <tr><td>chat-stream-chunk</td><td><code>{content, done}</code></td></tr>
+                                    <tr><td>attention-event</td><td><code>{type, message}</code></td></tr>
+                                    <tr><td>pomodoro-update &middot; -complete</td><td><code>{mode, remaining}</code> &middot; <code>{mode}</code></td></tr>
+                                    <tr><td>network-update</td><td><code>{type, node, totalNodes}</code></td></tr>
+                                    <tr><td>audio-levels</td><td><code>{levels[], peak}</code></td></tr>
+                                    <tr><td>activity-log-update</td><td><code>{type, message, ts}</code></td></tr>
+                                    <tr><td>movement-mode-change &middot; set-color &middot; set-language</td><td>mode &middot; color &middot; lang</td></tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- §14 -->
+                        <section class="doc-sec" id="s-build" data-title="Build &amp; data">
+                            <h2><span class="doc-num">§14</span> Build &amp; data</h2>
+                            <h3>Install</h3>
+<pre class="doc-code"><code>curl -fsSL https://tylerirl.com/install_rg.sh | bash     # Linux / macOS
+irm https://tylerirl.com/install_rg.ps1 | iex            # Windows (PowerShell)
+
+git clone https://github.com/itsTylerIRL/radgotchi.git &amp;&amp; cd radgotchi
+npm install &amp;&amp; npm start</code></pre>
+                            <table class="doc-table doc-flags">
+                                <thead><tr><th>npm run</th><th>does</th></tr></thead>
+                                <tbody>
+                                    <tr><td>start</td><td>desktop app (<code>electron .</code>)</td></tr>
+                                    <tr><td>start:safe</td><td>no sandbox, no GPU (VMs, remote sessions)</td></tr>
+                                    <tr><td>start:wayland</td><td>native Wayland client (the pet shows but can't move)</td></tr>
+                                    <tr><td>start:headless</td><td>web mode under Node</td></tr>
+                                    <tr><td>build &middot; build:win / :mac / :linux</td><td>electron-builder: NSIS + portable, DMG + ZIP, AppImage + DEB</td></tr>
+                                    <tr><td>test</td><td><code>node --test test/</code></td></tr>
+                                </tbody>
+                            </table>
+                            <h3>Persistent data</h3>
+                            <p>JSON files in the system user-data directory, surviving updates:</p>
+                            <p class="doc-chips doc-chips-wide"><i>xp-data.json</i><i>chat-data.json</i><i>llm-config.json</i><i>llm-profiles.json</i><i>pet-memory.json</i><i>arcade-data.json</i><i>mesh-messages.json</i><i>window-states.json</i><i>web-token</i></p>
+                        </section>
+
+                        <!-- §15 -->
+                        <section class="doc-sec" id="s-tests" data-title="Tests &amp; CI">
+                            <h2><span class="doc-num">§15</span> Tests &amp; CI</h2>
+                            <table class="doc-table">
+                                <thead><tr><th>suite</th><th>tests</th><th>covers</th></tr></thead>
+                                <tbody>
+                                    <tr><td>unit.test.js</td><td>9</td><td>core logic</td></tr>
+                                    <tr><td>web-auth.test.js</td><td>6</td><td>token generation, persistence, cookie / bearer checks</td></tr>
+                                    <tr><td>desktop-env.test.js</td><td>2</td><td>Hyprland cursor / work-area handling</td></tr>
+                                    <tr><td>headless-smoke.test.js</td><td>1</td><td>boots web mode and talks to it</td></tr>
+                                </tbody>
+                            </table>
+                            <p>GitHub Actions runs <code>npm ci --ignore-scripts</code> and <code>npm test</code> on Ubuntu, Windows and macOS against Node 20 and 22.</p>
+                        </section>
+
+                        <!-- §16 -->
+                        <section class="doc-sec" id="s-changelog" data-title="Changelog">
+                            <h2><span class="doc-num">§16</span> Changelog</h2>
+                            <ol class="doc-log">
+                                <li><time>2026-10</time><b>Web mode.</b> Headless Node server with a locked-down web UI; phone-first layout, iPhone home-screen install and offline screens; HTTPS via Tailscale Serve; IPv6 via <code>--host=::</code>; pet glow and desktop movement fixes.</li>
+                                <li><time>2026-07 &middot; 08</time><b>Big update.</b> Chat message hints and better autoscroll, plus fixes.</li>
+                                <li><time>2026-04</time><b>Skills &amp; arcade.</b> Skill loader and web server; read_file, run_command, web_search, then Home Assistant and Grafana skills with <code>.env</code> keys; the arcade; file attachments; memory update; mobile UI and PWA manifest.</li>
+                                <li><time>2026-03</time><b>Foundation.</b> 78 commits: the pet, moods, telemetry and progression; cross-platform audio capture; network discovery with the SIGINT protocol and mesh chat; needs; the pet gets a memory; the codebase split into modules.</li>
+                            </ol>
+                        </section>
+                        <p class="doc-end">&mdash; end of document &middot; source: radgotchi @ 28e2288 &middot; MIT &mdash;</p>
+                    </article>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-specimen-pane">
+                    <div class="g-panel-title">Specimen <span class="g-meta" id="g-specimen-meta"></span></div>
+                    <div class="g-specimen" id="g-specimen"></div>
+                </section>
+                <section class="g-roster-pane">
+                    <div class="g-panel-title">Sprite Roster <span class="g-meta">25 &middot; 144&times;44</span></div>
+                    <ol class="g-roster" id="g-roster"></ol>
+                </section>
+            </aside>
         </div>
 
-        <!-- Title -->
-        <h1 style="color: #8be9fd; font-family: 'Special Elite', monospace; font-size: 0.9rem; letter-spacing: 0.15em; margin: 0.5rem 0 0.05rem 0; text-transform: uppercase;">RadGotchi — Desktop Intelligence Asset</h1>
-        <p style="color: #ff79c6; font-size: 0.58rem; margin-bottom: 0.2rem; font-style: italic;">Cross-platform companion // Local LLM chat // Progression system // Reacts to your system // Keeps you company</p>
-
-        <!-- Document Layout: Main + Sidebar -->
-        <div class="section-divider" style="margin-top: 0.6rem;">Technical Deep Dive</div>
-        <div class="document-layout">
-            <div class="main-content-area">
-
-                <!-- §1.0 OVERVIEW -->
-                <h2><span class="section-number">§1.0</span> Project Overview</h2>
-                <p>
-                    RadGotchi is a cross-platform <strong>Electron desktop application</strong> — a persistent intelligence asset that floats on your screen, interfaces with <strong>local AI</strong> via SIGINT Terminal, tracks your cursor, monitors system health, and rewards operational engagement through a full <strong>progression system</strong> with 50 levels and 13 clearance ranks.
-                </p>
-
-                <div class="info-box" style="margin-top: 0.2rem; border-color: rgba(80, 250, 123, 0.4);">
-                    <div class="info-box-header" style="color: #50fa7b;">📦 Open Source — MIT License</div>
-                    <p style="margin: 0; font-size: 0.62rem;"><a href="https://github.com/itsTylerIRL/radgotchi" target="_blank">github.com/itsTylerIRL/radgotchi</a> — Clone, build, customize. Contributions welcome.</p>
-                </div>
-
-           
-
-                <!-- §2.0 PLATFORM SPECS -->
-                <h2><span class="section-number">§2.0</span> Platform &amp; Requirements</h2>
-
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Component</th><th>Specification</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Framework</td><td class="highlight">Electron (Chromium + Node.js)</td><td style="color:#50fa7b;">NOMINAL</td></tr>
-                        <tr><td>Node.js</td><td class="highlight">v18+ required</td><td style="color:#50fa7b;">NOMINAL</td></tr>
-                        <tr><td>Windows</td><td class="highlight">10/11 (NSIS installer + portable)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
-                        <tr><td>macOS</td><td class="highlight">10.15+ Catalina (DMG + ZIP)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
-                        <tr><td>Linux</td><td class="highlight">Ubuntu/Debian (AppImage + DEB)</td><td style="color:#50fa7b;">SUPPORTED</td></tr>
-                        <tr><td>SIGINT Terminal</td><td class="highlight">Local LLM Chat (Ollama/LM Studio)</td><td style="color:#50fa7b;">ACTIVE</td></tr>
-                        <tr><td>Progression</td><td class="highlight">50 Levels, 13 Ranks, XP System</td><td style="color:#50fa7b;">TRACKING</td></tr>
-                        <tr><td>Audio</td><td class="highlight">14 Procedural Sounds (Web Audio API)</td><td style="color:#50fa7b;">LOADED</td></tr>
-                        <tr><td>Localization</td><td class="highlight">English + 中文 (Chinese)</td><td style="color:#50fa7b;">READY</td></tr>
-                        <tr><td>License</td><td class="highlight">MIT (Open Source)</td><td style="color:#50fa7b;">FREE</td></tr>
-                    </tbody>
-                </table>
-
-                <p style="font-size: 0.58rem; color: #4a7a8a; margin-top: 0.15rem;">Built with Electron for cross-platform desktop deployment. Custom faces by <a href="https://x.com/giverrod" target="_blank">RiverGod</a>. Contributors: TylerIRL, 0x19e02, Claude, Yuriko.</p>
-
-                <!-- §3.0 FEATURES -->
-                <h2><span class="section-number">§3.0</span> Core Features</h2>
-
-                <div class="two-col">
-                    <div class="info-box">
-                        <div class="info-box-header">💬 SIGINT Terminal</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>Local LLM integration</strong> — Ollama, LM Studio, LocalAI. Streaming decode. Session persistence. Markdown rendering. CRT aesthetic terminal interface.</p>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header">🎮 Movement Protocols</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>4 modes:</strong> STATIC (fixed), BOUNCE (edge patrol), FOLLOW (cursor tracking), WANDER (autonomous exploration). Switch via tray menu.</p>
-                    </div>
-                </div>
-
-                <div class="two-col" style="margin-top: 0.15rem;">
-                    <div class="info-box">
-                        <div class="info-box-header">📈 Progression Engine</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>50 levels, 13 ranks</strong> from TRAINEE to PHANTOM. XP from interactions, messages, focus sessions. Milestone achievements. All progress persists.</p>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header">🔊 Audio Subsystem</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>14 procedural sounds</strong> via Web Audio API. Level ups, clicks, chat events, pomodoro alerts. Volume control. Toggle mute via UI.</p>
-                    </div>
-                </div>
-
-                <div class="two-col" style="margin-top: 0.15rem;">
-                    <div class="info-box">
-                        <div class="info-box-header">🎙️ 25+ Mood States</div>
-                        <p style="margin: 0; font-size: 0.62rem;">Hand-crafted pixel art with smooth transitions. Contextual status messages in EN/中文. Adapts to system events and user engagement.</p>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header">📊 System Telemetry</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>CPU monitoring</strong> (80%/95% thresholds), <strong>memory pressure</strong> (85%), <strong>network status</strong>, <strong>hung process detection</strong>, <strong>idle detection</strong> (2min sleep).</p>
-                    </div>
-                </div>
-
-                <div class="two-col" style="margin-top: 0.15rem;">
-                    <div class="info-box">
-                        <div class="info-box-header">🏹 Asset Maintenance</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>Sustenance system</strong> — Feed via terminal. Energy via sleep mode. XP penalties for neglect. Stats panel tracks all vitals.</p>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header">⏱️ Focus Operations</div>
-                        <p style="margin: 0; font-size: 0.62rem;"><strong>Pomodoro timer</strong> — 25min work, 5min break. Audio alerts. <strong>+25 XP</strong> per completed session. Stay productive, level up.</p>
-                    </div>
-                </div>
-
-            
-
-                <!-- DETAILED SPEC DEEP DIVE (collapsible) -->
-                <div class="section-divider">Technical Specifications</div>
-                <div class="deep-dive-toggle" onclick="toggleDeepDive(this)">
-                    <span class="deep-dive-toggle-title">📋 Event Response Matrix + Movement Protocols</span>
-                    <span class="deep-dive-toggle-hint">[ click to expand ]</span>
-                </div>
-                <div class="deep-dive-content">
-                    <!-- System Reactions Table -->
-                    <h3><span class="section-number">§3.1</span> Event Response Matrix</h3>
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Trigger</th><th>Asset Response</th><th>State</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>CPU &gt; 80%</td><td class="highlight">Alert state, elevated alertness</td><td style="color:#f1fa8c;">WARNING</td></tr>
-                        <tr><td>CPU &gt; 95%</td><td class="highlight">Critical alert, shaking animation</td><td style="color:#c41e3a;">CRITICAL</td></tr>
-                        <tr><td>Memory &gt; 85%</td><td class="highlight">Pressure warning indicator</td><td style="color:#f1fa8c;">WARNING</td></tr>
-                        <tr><td>Network Lost</td><td class="highlight">Connection lost indicator</td><td style="color:#c41e3a;">ALERT</td></tr>
-                        <tr><td>Network Up</td><td class="highlight">Connectivity restored</td><td style="color:#50fa7b;">OK</td></tr>
-                        <tr><td>Process Hung</td><td class="highlight">Process fault detected</td><td style="color:#c41e3a;">ALERT</td></tr>
-                        <tr><td>User Idle 2min</td><td class="highlight">Sleep mode engaged</td><td style="color:#8be9fd;">SLEEP</td></tr>
-                        <tr><td>User Returns</td><td class="highlight">Wake event, excited animation</td><td style="color:#50fa7b;">AWAKE</td></tr>
-                    </tbody>
-                </table>
-
-                <!-- Movement Protocols -->
-                <h3><span class="section-number">§3.2</span> Movement Protocols</h3>
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Mode</th><th>Behavior</th><th>Use Case</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">STATIC</td><td>Fixed position, manual repositioning only</td><td>Work focus</td></tr>
-                        <tr><td class="highlight">BOUNCE</td><td>Perimeter patrol, edge reflection</td><td>Screensaver</td></tr>
-                        <tr><td class="highlight">FOLLOW</td><td>Cursor tracking, maintains visual contact</td><td>Companion</td></tr>
-                        <tr><td class="highlight">WANDER</td><td>Autonomous exploration with rest intervals</td><td>Ambient</td></tr>
-                    </tbody>
-                </table>
-                </div><!-- end deep-dive-content -->
-
-             
-
-                <!-- §4.0 INSTALLATION -->
-                <h2><span class="section-number">§4.0</span> Installation &amp; Quick Start</h2>
-                <p>
-                    Clone the repo, install dependencies, run. That's it. No config needed — works out of the box on all platforms.
-                </p>
-
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="value ok">●</div>
-                        <div class="label">Node.js 18+</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="value ok">●</div>
-                        <div class="label">npm install</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="value ok">●</div>
-                        <div class="label">npm start</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="value" style="color: #8be9fd;">3 STEPS</div>
-                        <div class="label">Total</div>
-                    </div>
-                </div>
-
-                <h3><span class="section-number">§4.1</span> Quick Start Commands</h3>
-                <div class="code-block">
-<span class="comment"># Clone the repository</span>
-git clone https://github.com/itsTylerIRL/radgotchi.git
-cd radgotchi
-
-<span class="comment"># Install dependencies</span>
-npm install
-
-<span class="comment"># Run the app</span>
-npm start
-
-<span class="comment"># GPU issues? (VM/remote session)</span>
-npm run start:safe
-                </div>
-
-                <h3><span class="section-number">§4.2</span> Project Structure</h3>
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>File</th><th>Purpose</th><th>Type</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">main.js</td><td>Electron main process — state management, IPC, tray</td><td>Main</td></tr>
-                        <tr><td class="highlight">preload.js</td><td>Secure IPC bridge for main window</td><td>Bridge</td></tr>
-                        <tr><td class="highlight">preload-chat.js</td><td>Secure IPC bridge for terminal window</td><td>Bridge</td></tr>
-                        <tr><td class="highlight">renderer.js</td><td>UI logic — drag, resize, interactions</td><td>Renderer</td></tr>
-                        <tr><td class="highlight">radgotchi.js</td><td>Pet behavior module — mood engine, reactions</td><td>Module</td></tr>
-                        <tr><td class="highlight">sounds.js</td><td>Audio synthesis — 14 procedural sounds</td><td>Audio</td></tr>
-                        <tr><td class="highlight">index.html</td><td>Primary interface — main pet window</td><td>UI</td></tr>
-                        <tr><td class="highlight">chat.html</td><td>SIGINT Terminal — LLM chat interface</td><td>UI</td></tr>
-                        <tr><td class="highlight">styles.css</td><td>Animations, themes, glow effects</td><td>Styles</td></tr>
-                        <tr><td class="highlight">assets/</td><td>25+ sprite images (gotchi/ folder)</td><td>Assets</td></tr>
-                    </tbody>
-                </table>
-
-                <!-- §4.3 SPRITE ROSTER -->
-                <h3><span class="section-number">§4.3</span> Sprite Roster — 25 Mood Expressions</h3>
-                <p>Each sprite is hand-crafted pixel art. Full face atlas (sample shown):</p>
-
-                <div class="sprite-grid">
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/HAPPY.png" alt="HAPPY">
-                        <div class="sprite-label">HAPPY</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/COOL.png" alt="COOL">
-                        <div class="sprite-label">COOL</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/EXCITED.png" alt="EXCITED">
-                        <div class="sprite-label">EXCITED</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/GRATEFUL.png" alt="GRATEFUL">
-                        <div class="sprite-label">GRATEFUL</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/INTENSE.png" alt="INTENSE">
-                        <div class="sprite-label">INTENSE</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/LONELY.png" alt="LONELY">
-                        <div class="sprite-label">LONELY</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/LOOK_L.png" alt="LOOK_L">
-                        <div class="sprite-label">LOOK_L</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/LOOK_L_HAPPY.png" alt="LOOK_L_HAPPY">
-                        <div class="sprite-label">LOOK_L_HAPPY</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/LOOK_R.png" alt="LOOK_R">
-                        <div class="sprite-label">LOOK_R</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/LOOK_R_HAPPY.png" alt="LOOK_R_HAPPY">
-                        <div class="sprite-label">LOOK_R_HAPPY</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/SAD.png" alt="SAD">
-                        <div class="sprite-label">SAD</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/SLEEP.png" alt="SLEEP">
-                        <div class="sprite-label">SLEEP</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/SLEEP2.png" alt="SLEEP2">
-                        <div class="sprite-label">SLEEP2</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/SMART.png" alt="SMART">
-                        <div class="sprite-label">SMART</div>
-                    </div>
-                    <div class="sprite-cell">
-                        <img src="/assets/radbros/UPLOAD.png" alt="UPLOAD">
-                        <div class="sprite-label">UPLOAD</div>
-                    </div>
-                </div>
-
-                <!-- §4.4 CONTROLS -->
-                <h3><span class="section-number">§4.4</span> Controls &amp; XP Rewards</h3>
-
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Action</th><th>Effect</th><th>XP Reward</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">Drag</td><td>Reposition asset on screen</td><td style="color:#8be9fd;">—</td></tr>
-                        <tr><td class="highlight">Scroll Wheel</td><td>Scale adjustment (resize)</td><td style="color:#8be9fd;">—</td></tr>
-                        <tr><td class="highlight">Click</td><td>Interaction event (3s cooldown)</td><td style="color:#50fa7b;">+2 XP</td></tr>
-                        <tr><td class="highlight">Passive</td><td>Every 30 seconds of uptime</td><td style="color:#50fa7b;">+1 XP</td></tr>
-                        <tr><td class="highlight">Send Message</td><td>Chat transmission to LLM</td><td style="color:#50fa7b;">+5 XP</td></tr>
-                        <tr><td class="highlight">Receive Message</td><td>LLM response received</td><td style="color:#50fa7b;">+3 XP</td></tr>
-                        <tr><td class="highlight">Focus Complete</td><td>Pomodoro session done (25min)</td><td style="color:#50fa7b;">+25 XP</td></tr>
-                        <tr><td class="highlight">Alert Response</td><td>Attention event triggered</td><td style="color:#50fa7b;">+15 XP</td></tr>
-                        <tr><td class="highlight">Right-click Tray</td><td>Access Command Center menu</td><td style="color:#8be9fd;">—</td></tr>
-                    </tbody>
-                </table>
-
-                <h3><span class="section-number">§4.5</span> Command Center (Tray Menu)</h3>
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Option</th><th>Function</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">Always on Top</td><td>Window priority toggle</td></tr>
-                        <tr><td class="highlight">Reset Position</td><td>Return to origin coordinates</td></tr>
-                        <tr><td class="highlight">Movement</td><td>Protocol selection (STATIC/BOUNCE/FOLLOW/WANDER)</td></tr>
-                        <tr><td class="highlight">Color</td><td>Visual theme configuration (10 themes)</td></tr>
-                        <tr><td class="highlight">Language</td><td>Localization toggle (EN/中文)</td></tr>
-                        <tr><td class="highlight">Chat Settings</td><td>LLM endpoint configuration</td></tr>
-                        <tr><td class="highlight">Dev Tools</td><td>Debug interface</td></tr>
-                        <tr><td class="highlight">Update</td><td>Pull latest from repository</td></tr>
-                        <tr><td class="highlight">Quit</td><td>Terminate session</td></tr>
-                    </tbody>
-                </table>
-
-                <!-- §5.0 BUILDING -->
-                <h2><span class="section-number">§5.0</span> Building Distributables</h2>
-
-                <caution class="caution-box">Requires Node.js 18+ and npm. Build outputs go to <code>dist/</code> folder.</caution>
-
-                <h3><span class="section-number">§5.1</span> Build Commands</h3>
-                <div class="code-block">
-<span class="comment"># Build for current platform</span>
-npm run build
-
-<span class="comment"># Platform-specific builds</span>
-npm run build:win      <span class="comment"># Windows (NSIS installer + portable)</span>
-npm run build:mac      <span class="comment"># macOS (DMG + ZIP)</span>
-npm run build:linux    <span class="comment"># Linux (AppImage + DEB)</span>
-
-<span class="comment"># Windows portable only</span>
-npm run build:portable
-                </div>
-
-                <h3><span class="section-number">§5.2</span> Build Outputs</h3>
-                <table class="spec-table">
-                    <thead>
-                        <tr><th>Platform</th><th>Installer</th><th>Portable/Archive</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="highlight">Windows</td><td>Radgotchi Setup x.x.x.exe</td><td>Radgotchi x.x.x.exe</td></tr>
-                        <tr><td class="highlight">macOS</td><td>Radgotchi-x.x.x.dmg</td><td>Radgotchi-x.x.x-mac.zip</td></tr>
-                        <tr><td class="highlight">Linux</td><td>radgotchi_x.x.x_amd64.deb</td><td>Radgotchi-x.x.x.AppImage</td></tr>
-                    </tbody>
-                </table>
-
-                <!-- §5.3 SIGINT TERMINAL -->
-                <h2><span class="section-number">§5.3</span> SIGINT Terminal (LLM Chat)</h2>
-                <p>Integrated communication interface with local language model support. All traffic stays local unless you configure external endpoints.</p>
-
-                <div class="two-col">
-                    <div class="info-box">
-                        <div class="info-box-header" style="color: #ff79c6;">📶 Compatible Endpoints</div>
-                        <table class="spec-table" style="margin: 0;">
-                            <tbody>
-                                <tr><td class="highlight">Ollama</td><td>localhost:11434/v1/chat/completions</td></tr>
-                                <tr><td class="highlight">LM Studio</td><td>localhost:1234/v1/chat/completions</td></tr>
-                                <tr><td class="highlight">LocalAI</td><td>Custom configuration</td></tr>
-                                <tr><td class="highlight">OpenAI</td><td>Any conformant endpoint</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header" style="color: #50fa7b;">💻 Terminal Features</div>
-                        <ul style="margin: 0; padding-left: 1rem; font-size: 0.58rem;">
-                            <li>CRT scanlines, grid overlay, retro aesthetic</li>
-                            <li>Real-time streaming token decode</li>
-                            <li>Session history persistence</li>
-                            <li>Activity log (XP, milestones, system)</li>
-                            <li>Markdown with code block copy</li>
-                            <li>Movement, theme, language controls</li>
-                            <li>Stats panel, focus timer, MUTE toggle</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <p style="margin-top: 0.15rem; font-size: 0.58rem;"><strong>Configuration:</strong> Command Center → Chat Settings → Enable, set endpoint URL, model ID (llama2, mistral, etc.), optional system prompt.</p>
-
-                <!-- §6.0 CLEARANCE PROGRESSION -->
-                <h2><span class="section-number">§6.0</span> Clearance Progression</h2>
-                <p>Operational engagement generates XP. Sustained activity advances clearance level through 50 levels and 13 ranks.</p>
-
-                <div class="two-col">
-                    <div class="info-box">
-                        <div class="info-box-header" style="color: #f1fa8c;">🎖️ Clearance Ranks (13 Tiers)</div>
-                        <table class="spec-table" style="margin: 0; font-size: 0.55rem;">
-                            <tbody>
-                                <tr><td>TRAINEE</td><td>Lv 1</td><td class="highlight">CONTROLLER</td><td>Lv 17</td></tr>
-                                <tr><td>ANALYST</td><td>Lv 3</td><td class="highlight">DIRECTOR</td><td>Lv 20</td></tr>
-                                <tr><td>OPERATIVE</td><td>Lv 5</td><td class="highlight">EXECUTIVE</td><td>Lv 24</td></tr>
-                                <tr><td>AGENT</td><td>Lv 8</td><td class="highlight">OVERSEER</td><td>Lv 28</td></tr>
-                                <tr><td>SPECIALIST</td><td>Lv 11</td><td class="highlight">SENTINEL</td><td>Lv 33</td></tr>
-                                <tr><td>HANDLER</td><td>Lv 14</td><td class="highlight">ARCHITECT</td><td>Lv 40</td></tr>
-                                <tr><td colspan="2"></td><td class="highlight" style="color: #ff79c6;">PHANTOM</td><td>Lv 50</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="info-box">
-                        <div class="info-box-header" style="color: #50fa7b;">🏆 Milestone Objectives</div>
-                        <table class="spec-table" style="margin: 0; font-size: 0.55rem;">
-                            <tbody>
-                                <tr><td>Interactions</td><td class="highlight">10→50→100→500→1K→5K</td></tr>
-                                <tr><td>Transmissions</td><td class="highlight">5→25→50→100→250→500</td></tr>
-                                <tr><td>Sessions</td><td class="highlight">5→10→25→50→100</td></tr>
-                                <tr><td>Total XP</td><td class="highlight">100→500→1K→5K→10K→50K</td></tr>
-                                <tr><td>Uptime</td><td class="highlight">1h→4h→12h→24h→48h→72h</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <p style="margin-top: 0.15rem; font-size: 0.58rem;"><strong>Persistence:</strong> All XP, levels, milestones, and chat history stored in user data directory (JSON). Survives updates.</p>
-
-                <!-- §7.0 API -->
-                <h2><span class="section-number">§7.0</span> Programmatic API</h2>
-
-                <h3><span class="section-number">§7.1</span> RG Module</h3>
-                <p>The global <code>RG</code> object for asset manipulation:</p>
-
-                <div class="code-block" style="margin-top: 0.1rem;">
-<span class="comment">// Set mood with options</span>
-RG.setMood(<span class="string">'happy'</span>, { duration: <span class="keyword">3000</span>, anim: <span class="string">'bounce'</span>, status: <span class="string">'Custom!'</span> });
-
-<span class="comment">// React to severity levels</span>
-RG.react(<span class="string">'critical'</span>, <span class="string">'Alert!'</span>);
-RG.react(<span class="string">'warning'</span>, <span class="string">'Heads up'</span>);
-RG.react(<span class="string">'ok'</span>, <span class="string">'All good'</span>);
-
-<span class="comment">// Feed system metrics</span>
-RG.assessHealth({ cpu: { usage_total: <span class="keyword">45</span> }, memory: { percent: <span class="keyword">60</span> } });
-
-<span class="comment">// Read state</span>
-console.log(RG.mood, RG.petCount);
-                </div>
-
-                <h3><span class="section-number">§7.2</span> SoundSystem API</h3>
-                <p>Procedural audio control via Web Audio API:</p>
-
-                <div class="code-block" style="margin-top: 0.1rem;">
-<span class="comment">// Playback</span>
-SoundSystem.play(<span class="string">'levelUp'</span>);
-SoundSystem.play(<span class="string">'click'</span>);
-SoundSystem.play(<span class="string">'messageReceive'</span>);
-
-<span class="comment">// Available: chatOpen, chatClose, messageSend, messageReceive, click,</span>
-<span class="comment">// sleepStart, sleepEnd, attentionStart, attentionEnd, levelUp,</span>
-<span class="comment">// milestone, pomodoroStart, pomodoroComplete, xpGain, xpLoss</span>
-
-<span class="comment">// Enable/disable & volume</span>
-SoundSystem.setEnabled(<span class="keyword">true</span>);
-SoundSystem.setVolume(<span class="keyword">0.5</span>);  <span class="comment">// 0.0 - 1.0</span>
-                </div>
-
-                <!-- §8.0 CUSTOMIZATION -->
-                <h2><span class="section-number">§8.0</span> Customization</h2>
-
-                <h3><span class="section-number">§8.1</span> Visual Themes (10 Presets)</h3>
-                <p>Right-click tray → Color, or use terminal dropdown:</p>
-                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.15rem; margin: 0.1rem 0;">
-                    <div class="mini-stat"><div class="value" style="color: #ff3344;">●</div><div class="label">Red</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #8be9fd;">●</div><div class="label">Cyan</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #50fa7b;">●</div><div class="label">Green</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #bd93f9;">●</div><div class="label">Purple</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #ff79c6;">●</div><div class="label">Pink</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #ffb86c;">●</div><div class="label">Orange</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #f1fa8c;">●</div><div class="label">Yellow</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #a8ff60;">●</div><div class="label">Lime</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #6272a4;">●</div><div class="label">Blue</div></div>
-                    <div class="mini-stat"><div class="value" style="color: #f8f8f2;">●</div><div class="label">White</div></div>
-                </div>
-
-                <h3><span class="section-number">§8.2</span> Localization</h3>
-                <p>Switch instantly via tray or terminal. All interface elements localize automatically:</p>
-                <div class="two-col" style="margin-top: 0.1rem;">
-                    <div class="mini-stat"><div class="value">🇺🇸</div><div class="label">English (Default)</div></div>
-                    <div class="mini-stat"><div class="value">🇨🇳</div><div class="label">中文 (Chinese)</div></div>
-                </div>
-
-                <h3><span class="section-number">§8.3</span> Sleepy Mode</h3>
-                <p>Low-power rest state via terminal toggle. Reduces visual activity, prevents energy loss.</p>
-
-                <h3><span class="section-number">§8.4</span> CSS Variables</h3>
-                <p>For deeper customization, edit <code>styles.css</code>:</p>
-                <div class="code-block">
-:root {
-    --rg-color: <span class="string">#ff3344</span>;       <span class="comment">/* Main accent */</span>
-    --rg-glow: <span class="string">#ff334488</span>;      <span class="comment">/* Glow effect */</span>
-    --rg-status-color: <span class="string">#cc2233</span>; <span class="comment">/* Status text */</span>
-}
-                </div>
-
-                <h3><span class="section-number">§8.5</span> Persistent Data</h3>
-                <p>Stored in user data directory (survives updates):</p>
-                <table class="spec-table" style="margin-top: 0.1rem;">
-                    <tbody>
-                        <tr><td class="highlight">llm-config.json</td><td>LLM endpoint configuration</td></tr>
-                        <tr><td class="highlight">xp-data.json</td><td>Progression state, streaks</td></tr>
-                        <tr><td class="highlight">chat-data.json</td><td>Message history</td></tr>
-                        <tr><td class="highlight">milestones.json</td><td>Achievement records</td></tr>
-                    </tbody>
-                </table>
-
-                <!-- Document Footer -->
-                <div class="document-footer">
-                    <p>DOCUMENT CLASSIFICATION: <span style="color: #c41e3a; font-weight: bold;">TOP SECRET // SI // NOFORN</span></p>
-                    <p>Dissemination and extraction of information from this document is controlled by originator.</p>
-                    <p style="margin-top: 0.2rem;">"Desktop Intelligence Asset — Monitors your system, interfaces with local AI, rewards operational engagement."</p>
-                </div>
-
-                <div class="footnote">
-                    <p>† RadGotchi faces by RiverGod (<a href="https://x.com/giverrod" target="_blank">@giverrod</a>). Desktop app by TylerIRL, 0x19e02, Claude, Yuriko. MIT License — <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank">GitHub</a></p>
-                    <p>‡ Inspired by <a href="https://radbro.xyz" target="_blank">Radbro Webring</a> and <a href="https://remilio.org" target="_blank">Remilio</a> (Remilia Corporation). Clone, build, customize. Contributions welcome.</p>
-                </div>
-
-            </div><!-- /main-content-area -->
-        </div><!-- /document-layout -->
-    </section>
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span>SRC 14,292 LOC &middot; 108 COMMITS &middot; 22 SOUNDS</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">/ search &middot; [ ] previous / next section</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
 
-        </div>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/background3d.js?v=1.6"></script>
-    <script src="/js/script.js?v=1.8"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    
-    <script src="/js/deepdish_rg.js?v=1.0"></script>
-    
+    <!-- Docs (contents, search, source map) + RadGotchi sprites, routines and ranks -->
+    <script defer src="/js/docs.js?v=1.2"></script>
+    <script defer src="/js/rg-docs.js?v=1.1"></script>
 </body>
 </html>

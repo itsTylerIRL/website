@@ -1,87 +1,16 @@
-/* Page styles for timer.html — speedcube timer */
+/* Page styles for timer.html: the speedcube timer in the DEEPDISH workspace.
+   Shell comes from css/workspace.css; this file styles the session controls, stats, solve list,
+   timer stage (states set by js/timer.js) and the solve edit modal. */
 
-/* Hologram Hero Image Effects (shared pattern) */
-.hologram-container {
-    position: relative;
-    display: inline-block;
-    max-width: 200px;
-    overflow: visible;
-    -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
-    mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
-}
-.hologram-image {
-    max-width: 160px;
-    height: auto;
-    filter: contrast(1.1) saturate(1.2);
-    animation: hologramPhase 4s ease-in-out infinite;
-    image-rendering: pixelated;
-}
-.hologram-scanlines {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
-    pointer-events: none;
-    z-index: 10;
-    animation: scanlineMove 0.1s linear infinite;
-}
-.hologram-flicker {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(139, 233, 253, 0.03);
-    pointer-events: none;
-    z-index: 11;
-    animation: hologramFlicker 0.15s infinite;
-    mix-blend-mode: overlay;
-}
-@keyframes hologramPhase {
-    0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); }
-    25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); }
-    50% { opacity: 0.9; transform: scale(0.99) translateY(1px); }
-    75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); }
-}
-@keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
-@keyframes hologramFlicker {
-    0%, 100% { opacity: 0.03; } 50% { opacity: 0.15; } 80% { opacity: 0.03; }
-}
-
-/* Container */
-.timer-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0.5rem 1.5rem 4rem;
-}
-
-.timer-header {
-    text-align: center;
-    margin-bottom: 1.25rem;
-}
-.timer-header h1 {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: #eaeaea;
-}
-.timer-header h1 span {
-    color: #8be9fd;
-    text-shadow: 0 0 18px rgba(139, 233, 253, 0.4);
-}
-.timer-header .subtitle {
-    color: #6272a4;
-    font-size: 0.85rem;
-    margin-top: 0.2rem;
-}
-
-/* Session bar */
+/* ---------- Session + options (left column) ---------- */
 .session-bar,
 .options-bar {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
 }
-
+.session-bar .g-actions .session-btn { flex: 1 1 auto; }
 .session-label {
     color: #6272a4;
     font-size: 0.75rem;
@@ -159,32 +88,12 @@
     height: 14px;
 }
 
-/* Layout */
-.timer-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 1.25rem;
-    align-items: stretch;
-    margin-top: 0.5rem;
-}
-
-/* Stats panel */
-.stats-panel {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(139, 233, 253, 0.18);
-    border-radius: 14px;
-    padding: 1rem;
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
-    min-height: 420px;
-}
-
+/* ---------- Stats ---------- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 10px 12px 12px;
 }
 
 .stat-box {
@@ -215,32 +124,14 @@
 .stat-box.accent-orange { border-color: rgba(255, 184, 108, 0.3); }
 .stat-box.accent-orange .stat-value { color: #ffb86c; }
 
-/* Solve list */
-.solve-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #6272a4;
-    padding: 0 0.2rem 0.4rem;
-    border-bottom: 1px solid rgba(98, 114, 164, 0.2);
-}
-.solve-list-hint {
-    text-transform: none;
-    letter-spacing: 0;
-    font-size: 0.62rem;
-    opacity: 0.7;
-}
-
+/* ---------- Solve list ---------- */
 .solve-list {
     flex: 1;
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
     gap: 0.35rem;
-    padding: 0.6rem 0.2rem 0.2rem;
+    padding: 10px 12px 12px;
     align-content: start;
 }
 .solve-list::-webkit-scrollbar { width: 6px; }
@@ -297,10 +188,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(139, 233, 253, 0.18);
-    border-radius: 14px;
-    backdrop-filter: blur(10px);
+    position: relative;
+    background:
+        radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.07) 0%, transparent 65%),
+        linear-gradient(rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 32px 32px;
+    border: 1px solid transparent;
     outline: none;
     min-height: 420px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
@@ -359,22 +252,125 @@
 .timer-stage.state-inspection.warn .timer-display { color: #ffb86c; }
 .timer-stage.state-inspection.danger .timer-display { color: #ff5555; }
 
-/* Hidden UI while timing */
-body.timing-active .stats-panel,
-body.timing-active .session-bar,
-body.timing-active .options-bar,
-body.timing-active .timer-header,
-body.timing-active #home,
-body.timing-active footer,
-body.timing-active .floating-home {
+.timer-stage .g-reticle { position: absolute; }
+
+/* Scramble across the top of the stage */
+.g-scramble-bar {
+    position: absolute;
+    top: 14px;
+    left: 26px;
+    right: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.g-scramble-label {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--g-dim);
+}
+.g-scramble {
+    font-family: var(--g-mono);
+    font-size: clamp(12px, 1.05vw, 17px);
+    letter-spacing: 0.06em;
+    word-spacing: 0.18em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    color: var(--g-text);
+    text-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.3);
+    text-align: center;
+}
+.g-scramble-bar .g-btn { flex: none; }
+body.timing-active .g-scramble-bar { opacity: 0; }
+
+/* ---------- Solve trend chart ---------- */
+.g-trend-pane { margin-top: var(--g-gap); }
+.g-trend {
+    height: clamp(120px, 20vh, 240px);
+    padding: 0 4px;
+}
+.g-trend svg { display: block; }
+.g-trend .grid { stroke: rgba(139, 233, 253, 0.08); stroke-width: 1; }
+.g-trend .axis {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    fill: var(--g-dim);
+    text-anchor: end;
+}
+.g-trend .solves { fill: none; stroke: rgba(139, 233, 253, 0.55); stroke-width: 1.2; }
+.g-trend .pt { fill: var(--g-blue); }
+.g-trend .pt.pb { fill: var(--g-green); filter: drop-shadow(0 0 4px rgba(80, 250, 123, 0.8)); }
+.g-trend .ao5 { fill: none; stroke: #bd93f9; stroke-width: 2; filter: drop-shadow(0 0 4px rgba(189, 147, 249, 0.5)); }
+.g-trend .best { stroke: rgba(80, 250, 123, 0.55); stroke-width: 1; stroke-dasharray: 4 4; }
+.g-trend .best-label {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    fill: var(--g-green);
+    text-anchor: end;
+}
+.g-trend .dnf { font-size: 12px; fill: var(--g-red); text-anchor: middle; }
+.g-trend-empty {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--g-dim);
+}
+.g-trend-legend {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    padding: 0 14px 8px;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+}
+.g-trend-legend span::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+    background: currentColor;
+}
+.g-trend-legend .k-solves { color: rgba(139, 233, 253, 0.8); }
+.g-trend-legend .k-ao5 { color: #bd93f9; }
+.g-trend-legend .k-best { color: var(--g-green); }
+.g-trend-legend .k-dnf { color: var(--g-red); }
+
+/* ---------- Session report ---------- */
+.g-report dd { font-variant-numeric: tabular-nums; }
+.g-timer-pane { margin-top: var(--g-gap); }
+
+/* ---------- Hide UI while timing ----------
+   The workspace fades out and the stage takes over the viewport. The glass panels' backdrop-filter
+   would make them the containing block for the fixed stage, so it's switched off while timing. */
+body.timing-active .g-topbar,
+body.timing-active .g-rail,
+body.timing-active .g-side,
+body.timing-active .g-objhead,
+body.timing-active .g-timer-pane > .g-panel-title,
+body.timing-active .g-statusbar {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
 }
-body.timing-active .timer-layout {
-    grid-template-columns: 1fr;
+body.timing-active .g-timer-pane {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
 }
-/* Center the timer in the viewport while a solve is in progress */
 body.timing-active .timer-stage {
     position: fixed;
     inset: 0;
@@ -383,10 +379,9 @@ body.timing-active .timer-stage {
     min-height: 100vh;
     border: none;
     background: transparent;
-    backdrop-filter: none;
-    border-radius: 0;
     z-index: 500;
 }
+body.timing-active .timer-stage .g-reticle { display: none; }
 
 /* Solve edit modal */
 .solve-modal {
@@ -457,11 +452,41 @@ body.timing-active .timer-stage {
 }
 .solve-modal-close:hover { color: #eaeaea; }
 
-/* Responsive */
-@media (max-width: 820px) {
-    .timer-layout {
-        grid-template-columns: 1fr;
-    }
-    .stats-panel { min-height: auto; order: 2; }
-    .timer-stage { min-height: 300px; order: 1; }
+/* ---------- One-screen layout (desktop) ---------- */
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-objhead { flex: none; }
+    .g-timer-pane { flex: 1 1 0; min-height: 220px; }
+    .timer-stage { flex: 1 1 0; min-height: 0; }
+    .timer-display { font-size: clamp(4rem, 9vw, 10rem); }
+    .g-trend-pane { flex: none; }
+}
+/* Short desktop windows: smaller stage minimum and chart so the centre column still fits */
+@media (min-width: 1360px) and (min-height: 600px) and (max-height: 799px) {
+    .g-timer-pane { min-height: 150px; }
+    .g-trend { height: 96px; }
+    .g-trend-legend { display: none; }
+}
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-session-pane,
+    .g-options-pane { flex: none; }
+    .g-howto-pane { flex: 1 1 0; }
+    .g-howto-pane .g-pane-body { overflow-y: auto; scrollbar-width: none; }
+    .g-stats-pane,
+    .g-report-pane { flex: none; }
+    .g-times-pane { flex: 1 1 0; min-height: 110px; }
+    .solve-list { min-height: 0; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 899px) {
+    .g-stats-pane { order: 3; }
+    .g-report-pane { order: 4; }
+    .g-times-pane { order: 4; }
+    .g-scramble-bar { top: 10px; left: 14px; right: 14px; }
+    .g-scramble-label { display: none; }
+    .g-session-pane { order: 5; }
+    .g-options-pane { order: 6; }
+    .g-howto-pane { order: 7; }
+    .timer-stage { min-height: 280px; }
+    .solve-list { max-height: 50vh; }
 }

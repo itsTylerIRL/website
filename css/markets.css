@@ -1,609 +1,230 @@
-/* Page styles for markets.html (extracted from inline <style>) */
-/* Compact Bento Grid Styles for Markets */
-.bento-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
+/* Page styles for markets.html: Neochibi Markets in the DEEPDISH workspace.
+   Shell comes from css/workspace.css; this file adds the collection explorer, range toggle, market board,
+   price trend chart and the CULT widget panel. Content is rendered by js/markets.js. */
 
-.bento-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+/* Δ badge (board, explorer, header, properties) */
+.g-delta {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    white-space: nowrap;
+    color: var(--g-dim);
 }
+.g-delta.up { color: var(--g-green); }
+.g-delta.down { color: var(--g-red); }
 
-.bento-title {
-    font-size: 1.2rem;
-    color: #8be9fd;
-    text-transform: lowercase;
-    letter-spacing: 0.1em;
-    position: relative;
+/* ---------- Collections explorer ---------- */
+.g-colls {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
 }
-
-.bento-title::after {
-    content: '_';
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-/* Bento Grid - 3 columns */
-.bento-grid {
+.g-coll {
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: auto;
-    gap: 0.75rem;
-    position: relative;
+    grid-template-columns: 30px minmax(0, 1fr) 7px;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 12px;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+    color: var(--g-text);
 }
-
-/* Scanline overlay */
-.bento-grid::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.1) 2px,
-        rgba(0, 0, 0, 0.1) 4px
-    );
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0.5;
+.g-coll:hover { background: rgba(var(--g-blue-rgb), 0.06); }
+.g-coll[aria-current="true"] {
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.16), transparent);
+    border-left-color: var(--g-blue);
 }
-
-/* Market Bento Items - Dark Glass Style (compact) */
-.market-bento {
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(139, 233, 253, 0.1);
-    border-top-color: rgba(255, 255, 255, 0.05);
-    border-left-color: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
+.g-coll-logo,
+.g-board-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 1px var(--g-border);
+}
+.g-coll-text {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-    padding: 0.85rem;
-    box-shadow: 
-        0 6px 24px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    line-height: 1.3;
 }
-
-/* Top reflection/shine - subtle */
-.market-bento::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.02) 0%, 
-        transparent 100%);
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.3s;
-}
-
-/* Moving reflection effect */
-.market-bento::after {
-    content: '';
-    position: absolute;
-    top: -100%;
-    left: -100%;
-    width: 60%;
-    height: 200%;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(139, 233, 253, 0.02) 45%,
-        rgba(139, 233, 253, 0.05) 50%,
-        rgba(139, 233, 253, 0.02) 55%,
-        transparent 100%
-    );
-    transform: rotate(25deg);
-    transition: all 0.6s ease;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.market-bento:hover::after {
-    left: 150%;
-    top: -50%;
-}
-
-.market-bento:hover {
-    background: rgba(0, 0, 0, 0.18);
-    border-color: rgba(139, 233, 253, 0.25);
-    border-top-color: rgba(139, 233, 253, 0.3);
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(139, 233, 253, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
-
-.market-bento:hover::before {
-    opacity: 0.8;
-}
-
-
-
-/* Market Header */
-.market-header {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 0.6rem;
-    position: relative;
-    z-index: 2;
-}
-
-.market-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    object-fit: cover;
-    filter: grayscale(30%) brightness(0.9);
-    transition: all 0.4s ease;
-}
-
-.market-bento:hover .market-logo {
-    filter: grayscale(0%) brightness(1.1);
-    transform: scale(1.05);
-}
-
-.market-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #fff;
-    text-transform: lowercase;
-    margin: 0;
-    line-height: 1.2;
-}
-
-/* Glitch effect on hover */
-.market-bento:hover .market-name {
-    animation: glitch 0.3s ease;
-}
-
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-}
-
-/* Stats Grid */
-.market-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    position: relative;
-    z-index: 2;
-}
-
-.market-stat {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid rgba(139, 233, 253, 0.08);
-    transition: all 0.3s;
-}
-
-.market-bento:hover .market-stat {
-    border-color: rgba(139, 233, 253, 0.2);
-    background: rgba(139, 233, 253, 0.05);
-}
-
-.market-stat-label {
-    font-size: 0.55rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.15rem;
-}
-
-.market-stat-value {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #8be9fd;
-}
-
-/* Description */
-.market-desc {
-    font-size: 0.7rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-    flex-grow: 1;
-    position: relative;
-    z-index: 2;
-    line-height: 1.4;
-}
-
-.market-bento:hover .market-desc {
-    color: #999;
-}
-
-/* Links */
-.market-links {
-    display: flex;
-    gap: 0.4rem;
-    position: relative;
-    z-index: 2;
-}
-
-.market-link {
-    flex: 1;
-    padding: 0.4rem 0.6rem;
-    background: transparent;
-    border: 1px solid #333;
-    border-radius: 6px;
-    color: #666;
-    text-decoration: none;
-    font-size: 0.65rem;
-    text-transform: lowercase;
-    letter-spacing: 0.03em;
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.market-link:hover {
-    border-color: #8be9fd;
-    color: #8be9fd;
-    background: rgba(139, 233, 253, 0.1);
-    box-shadow: 0 0 20px rgba(139, 233, 253, 0.2);
-}
-
-/* Chart container - Glass Style */
-.chart-container {
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(139, 233, 253, 0.1);
-    border-radius: 16px;
-    padding: 1rem;
-    margin-top: 1rem;
-    transition: all 0.4s ease;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.02);
-}
-
-.chart-container:hover {
-    border-color: rgba(139, 233, 253, 0.25);
-    background: rgba(0, 0, 0, 0.18);
-}
-
-.chart-title {
-    font-size: 0.8rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.chart-title::before {
-    content: '📈';
-}
-
-/* Last-updated feed indicator */
-.bento-header-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.markets-updated {
-    font-size: 0.6rem;
-    color: #555;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+.g-coll-name {
+    font-size: 12.5px;
     white-space: nowrap;
-}
-
-/* Time range toggle */
-.market-range-toggle {
-    display: flex;
-    gap: 0;
-    border: 1px solid rgba(139, 233, 253, 0.2);
-    border-radius: 6px;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
+.g-coll[aria-current="true"] .g-coll-name { color: var(--g-blue); text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.5); }
+.g-coll-floor {
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    color: var(--g-dim);
+}
+.g-coll-floor .g-delta { font-size: 10px; margin-left: 6px; }
 
-.range-btn {
-    background: rgba(0, 0, 0, 0.3);
-    border: none;
-    color: #666;
-    font-family: inherit;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.6rem;
-    cursor: none;
-    transition: all 0.2s ease;
+/* ---------- Range ---------- */
+.g-range {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
 }
-
-.range-btn + .range-btn {
-    border-left: 1px solid rgba(139, 233, 253, 0.15);
-}
-
-.range-btn:hover {
-    color: #8be9fd;
-    background: rgba(139, 233, 253, 0.08);
-}
-
-.range-btn.active {
-    color: #8be9fd;
-    background: rgba(139, 233, 253, 0.15);
-    text-shadow: 0 0 8px rgba(139, 233, 253, 0.5);
-}
-
-/* Price change badge (24h avg vs 7d avg) */
-.market-change {
-    font-size: 0.55rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    margin-left: 0.25rem;
-}
-.market-change.up { color: #50fa7b; }
-.market-change.down { color: #ff5555; }
-
-/* Avg price sparkline */
-.market-spark {
-    height: 0;
-    margin: 0;
-    overflow: hidden;
-    transition: height 0.3s ease, margin 0.3s ease;
-}
-.market-spark.has-data {
+.g-range .g-btn {
     height: 28px;
-    margin: 0.5rem 0 0.25rem;
+    font-family: var(--g-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
 }
-.market-spark svg {
-    display: block;
-    width: 100%;
-    height: 100%;
+.g-range .g-btn[aria-pressed="true"] {
+    border-color: var(--g-blue);
+    background: rgba(var(--g-blue-rgb), 0.16);
+    color: var(--g-blue);
+    box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.25);
+}
+.g-range-note {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--g-dim);
 }
 
-/* Spreadsheet-style market table */
-.market-table-wrap {
-    overflow-x: auto;
-    border: 1px solid rgba(139, 233, 253, 0.2);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
+/* ---------- Header: video/logo icon ---------- */
+.g-objhead video.g-objimg { object-fit: cover; }
+.g-objmeta .g-delta { font-size: 10.5px; }
 
-.market-table {
+/* ---------- Market board ---------- */
+.g-board-pane { margin-top: var(--g-gap); }
+.g-board-wrap { overflow-x: auto; }
+.g-board {
     width: 100%;
     border-collapse: collapse;
+    font-size: 12px;
+}
+.g-board th {
+    padding: 7px 12px;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    text-align: right;
+    border-bottom: 1px solid var(--g-border);
     white-space: nowrap;
 }
-
-.market-table th {
-    font-size: 0.55rem;
-    font-weight: 600;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+.g-board td {
+    padding: 5px 12px;
+    font-family: var(--g-mono);
     text-align: right;
-    padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid rgba(139, 233, 253, 0.25);
-    background: rgba(139, 233, 253, 0.04);
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(var(--g-blue-rgb), 0.06);
 }
-
-.market-table th.col-name { text-align: left; }
-.market-table th.col-spark,
-.market-table th.col-links { text-align: center; }
-
-.market-table td {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #8be9fd;
-    text-align: right;
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid rgba(139, 233, 253, 0.08);
-    font-variant-numeric: tabular-nums;
-    vertical-align: middle;
+.g-board th:first-child,
+.g-board td:first-child { text-align: left; }
+.g-board tbody tr { cursor: pointer; transition: background 0.15s ease; }
+.g-board tbody tr:hover { background: rgba(var(--g-blue-rgb), 0.05); }
+.g-board tbody tr[aria-selected="true"] {
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.14), transparent);
+    box-shadow: inset 2px 0 0 var(--g-blue);
 }
-
-.market-table tbody tr:last-child td { border-bottom: none; }
-.market-table tbody tr { transition: background 0.15s ease; }
-.market-table tbody tr:nth-child(even) { background: rgba(139, 233, 253, 0.02); }
-.market-table tbody tr:hover { background: rgba(139, 233, 253, 0.07); }
-
-.market-table td.col-name { text-align: left; }
-
-.market-table .market-logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-    object-fit: cover;
-    filter: grayscale(50%);
-    transition: filter 0.2s ease;
+.g-board tbody tr:last-child td { border-bottom: none; }
+.g-board .col-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--g-sans);
 }
+.g-board-logo { width: 24px; height: 24px; border-radius: 5px; }
+.g-board tr[aria-selected="true"] .col-name span { color: var(--g-blue); }
+.g-board .col-spark { width: 110px; }
+.g-board .col-spark svg { display: block; width: 100px; height: 24px; margin-left: auto; }
 
-.market-table tbody tr:hover .market-logo { filter: none; }
-
-.market-table .market-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #ccc;
-    letter-spacing: 0.05em;
-    vertical-align: middle;
-}
-
-.market-table tbody tr:hover .market-name { color: #8be9fd; }
-
-.market-table td.col-links { text-align: center; }
-
-.market-table .market-link {
-    font-size: 0.5rem;
-    padding: 0.15rem 0.5rem;
-}
-
-.market-table .market-spark {
-    width: 90px;
-    height: 20px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.market-table .market-spark.has-data {
-    height: 20px;
-    margin: 0 auto;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .bento-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .bento-grid {
-        grid-template-columns: 1fr;
-    }
-    .bento-header {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-}
-
-/* Hologram Hero Image Effects */
-.hologram-container {
+/* ---------- Price trend ---------- */
+.g-trend-pane { margin-top: var(--g-gap); }
+.g-trend {
     position: relative;
-    display: inline-block;
-    max-width: 200px;
-    overflow: visible;
-    -webkit-mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
-    mask-image: radial-gradient(ellipse 75% 80% at center, black 40%, transparent 70%);
+    height: 300px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.05) 0%, transparent 65%),
+        linear-gradient(rgba(var(--g-blue-rgb), 0.03) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.03) 1px, transparent 1px) 0 0 / 32px 32px;
 }
-.hologram-image {
-    max-width: 200px;
-    height: auto;
-    filter: contrast(1.1) saturate(1.2);
-    animation: hologramPhase 4s ease-in-out infinite, hologramGlitch 8s step-end infinite;
-    image-rendering: pixelated;
-}
-.hologram-container::before, .hologram-container::after {
-    content: '';
+.g-trend .g-reticle { position: absolute; z-index: 2; }
+.g-trend-svg {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: inherit;
-    pointer-events: none;
+    inset: 0;
+    display: block;
 }
-.hologram-container::before {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
-    mix-blend-mode: screen;
-    opacity: 0.4;
-    filter: hue-rotate(-30deg) saturate(1.5);
-    animation: chromaShiftRed 3s ease-in-out infinite;
+.g-trend-svg .grid line { stroke: rgba(var(--g-blue-rgb), 0.12); stroke-dasharray: 3 5; }
+.g-trend-svg text {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    fill: var(--g-dim);
 }
-.hologram-container::after {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
-    mix-blend-mode: screen;
-    opacity: 0.4;
-    filter: hue-rotate(30deg) saturate(1.5);
-    animation: chromaShiftBlue 3s ease-in-out infinite reverse;
+.g-trend-svg text.l { letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px; }
+.g-trend-svg .area { fill: var(--trend); opacity: 0.08; }
+.g-trend-svg .line {
+    fill: none;
+    stroke: var(--trend);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px var(--trend));
 }
-.hologram-scanlines {
+.g-trend-svg .dots circle { fill: #000; stroke: var(--trend); stroke-width: 2; }
+.g-trend-svg .dots text.v { fill: var(--g-text); font-size: 11.5px; }
+.g-trend-empty {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.4) 1px, rgba(0,0,0,0.4) 2px);
-    pointer-events: none;
-    z-index: 10;
-    animation: scanlineMove 0.1s linear infinite;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--g-mono);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: var(--g-blue);
+    text-shadow: 0 0 14px rgba(var(--g-blue-rgb), 0.5);
+    animation: g-acq 1.2s ease-in-out infinite;
 }
-.hologram-flicker {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(139, 233, 253, 0.03);
-    pointer-events: none;
-    z-index: 11;
-    animation: hologramFlicker 0.15s infinite;
-    mix-blend-mode: overlay;
+@keyframes g-acq { 50% { opacity: 0.4; } }
+
+/* ---------- Properties + CULT ---------- */
+.g-props-pane .g-props dd .g-delta { font-size: 12px; }
+.g-cult { padding: 8px; min-height: 300px; }
+.g-cult gecko-coin-price-chart-widget { display: block; width: 100%; }
+
+/* ---------- One-screen layout (desktop): this page's panels ----------
+   The feed log, the price trend and the CULT chart take their column's spare height. */
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-explorer,
+    .g-range-pane,
+    .g-objhead,
+    .g-board-pane,
+    .g-props-pane { flex: none; }
+    .g-trend-pane { flex: 1 1 0; min-height: 140px; }
+    .g-trend { flex: 1 1 0; height: auto; min-height: 0; }
+    .g-cult-pane { flex: 1 1 0; min-height: 150px; }
+    .g-cult { flex: 1 1 0; min-height: 0; overflow: auto; scrollbar-width: thin; }
 }
-.hologram-noise {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    z-index: 12;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.15;
-    mix-blend-mode: overlay;
-    animation: noiseShift 0.5s steps(10) infinite;
+@media (min-width: 1360px) and (min-height: 600px) and (max-height: 820px) {
+    .g-range-note { display: none; }
+    .g-coll { padding: 3px 12px; }
+    .g-board td { padding: 3px 12px; }
+    .g-board-logo { width: 20px; height: 20px; }
+    .g-props-pane .g-props dt,
+    .g-props-pane .g-props dd { padding: 4px 12px; }
 }
-@keyframes hologramPhase {
-    0%, 100% { opacity: 0.95; transform: scale(1) translateY(0); filter: contrast(1.1) saturate(1.2) brightness(1); }
-    25% { opacity: 0.85; transform: scale(1.01) translateY(-1px); filter: contrast(1.2) saturate(1.4) brightness(1.1); }
-    50% { opacity: 0.9; transform: scale(0.99) translateY(1px); filter: contrast(1.15) saturate(1.3) brightness(0.95); }
-    75% { opacity: 1; transform: scale(1.005) translateY(-0.5px); filter: contrast(1.25) saturate(1.5) brightness(1.15); }
+
+/* ---------- Responsive: this page's panels ---------- */
+@media (max-width: 899px) {
+    .g-range-pane { order: 3; }
+    .g-props-pane { order: 4; }
+    .g-cult-pane { order: 5; }
+    .g-board .col-spark { display: none; }
+    .g-trend { height: 240px; }
 }
-@keyframes hologramGlitch {
-    0%, 95%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-    96% { clip-path: inset(20% 0 30% 0); transform: translate(-3px, 0); }
-    97% { clip-path: inset(50% 0 10% 0); transform: translate(3px, 0); }
-    98% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); }
-    99% { clip-path: inset(40% 0 20% 0); transform: translate(2px, 0); }
-}
-@keyframes chromaShiftRed { 0%, 100% { transform: translate(-1px, 0); } 50% { transform: translate(-2px, 1px); } }
-@keyframes chromaShiftBlue { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(2px, -1px); } }
-@keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
-@keyframes hologramFlicker {
-    0%, 100% { opacity: 0.03; } 10% { opacity: 0.08; } 20% { opacity: 0.02; } 30% { opacity: 0.1; }
-    40% { opacity: 0.04; } 50% { opacity: 0.15; } 60% { opacity: 0.05; } 70% { opacity: 0.12; }
-    80% { opacity: 0.03; } 90% { opacity: 0.08; }
-}
-@keyframes noiseShift {
-    0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -5%); } 20% { transform: translate(5%, 5%); }
-    30% { transform: translate(-5%, 5%); } 40% { transform: translate(5%, -5%); } 50% { transform: translate(-2%, 2%); }
-    60% { transform: translate(2%, -2%); } 70% { transform: translate(-3%, -3%); } 80% { transform: translate(3%, 3%); }
-    90% { transform: translate(-1%, 1%); } 100% { transform: translate(0, 0); }
-}
-.hologram-container:hover .hologram-image { animation: hologramPhaseIntense 2s ease-in-out infinite, hologramGlitchIntense 3s step-end infinite; filter: contrast(1.3) saturate(1.6) brightness(1.2); }
-.hologram-container:hover .hologram-noise { opacity: 0.25; }
-.hologram-container:hover .hologram-flicker { animation: hologramFlickerIntense 0.08s infinite; }
-@keyframes hologramPhaseIntense {
-    0%, 100% { opacity: 1; transform: scale(1); } 25% { opacity: 0.7; transform: scale(1.02) translateX(-2px); }
-    50% { opacity: 0.9; transform: scale(0.98) translateX(2px); } 75% { opacity: 0.8; transform: scale(1.01) translateY(-2px); }
-}
-@keyframes hologramGlitchIntense {
-    0%, 90%, 100% { clip-path: inset(0 0 0 0); }
-    91% { clip-path: inset(30% 0 20% 0); transform: translate(-4px, 0); } 92% { clip-path: inset(10% 0 50% 0); transform: translate(4px, 0); }
-    93% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 0); } 94% { clip-path: inset(20% 0 40% 0); transform: translate(3px, 0); }
-    95% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); } 96% { clip-path: inset(15% 0 55% 0); transform: translate(2px, 0); }
-    97% { clip-path: inset(50% 0 20% 0); transform: translate(-3px, 0); } 98% { clip-path: inset(25% 0 45% 0); transform: translate(3px, 0); }
-    99% { clip-path: inset(35% 0 35% 0); transform: translate(-1px, 0); }
-}
-@keyframes hologramFlickerIntense {
-    0%, 100% { opacity: 0.1; background: rgba(139, 233, 253, 0.05); } 25% { opacity: 0.2; background: rgba(255, 100, 100, 0.05); }
-    50% { opacity: 0.05; background: rgba(100, 255, 100, 0.05); } 75% { opacity: 0.25; background: rgba(139, 233, 253, 0.08); }
+
+@media (prefers-reduced-motion: reduce) {
+    .g-trend-empty { animation: none; }
 }

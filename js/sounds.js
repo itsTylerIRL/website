@@ -93,7 +93,7 @@
         });
         
         // Generic buttons
-        document.querySelectorAll('button:not(#scanlineToggle)').forEach(el => {
+        document.querySelectorAll('button').forEach(el => {
             addHoverSound(el);
             addClickSound(el);
         });

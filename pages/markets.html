@@ -9,14 +9,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/markets">
     <meta property="og:title" content="Neochibi Markets - Tyler (in real life)">
     <meta property="og:description" content="NFT collections and market data">
     <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/markets">
@@ -31,216 +31,135 @@
     <!-- Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
-    
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    
-    <link rel="stylesheet" href="/css/markets.css?v=1.3">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/markets.css?v=2.5">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Neochibi Markets workspace: js/markets.js fetches the feeds and renders every panel from its COLLECTIONS list -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// NEOCHIBI MARKETS</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Tool</span><span class="sep">/</span>
+                <b id="g-crumb">&mdash;</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-    <!-- Markets Bento Section -->
-    <section id="markets" style="padding: 1rem 0 2rem;">
-        <div class="bento-container">
-            <div class="bento-header">
-                <h2 class="bento-title">neochibi markets</h2>
-                <div class="bento-header-right">
-                    <div class="market-range-toggle" id="market-range-toggle">
-                        <button class="range-btn active" data-range="one_day">24h</button>
-                        <button class="range-btn" data-range="seven_day">1w</button>
-                        <button class="range-btn" data-range="thirty_day">1m</button>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-explorer" aria-label="Collections">
+                    <div class="g-panel-title">Collections <span class="g-meta" id="g-coll-meta"></span></div>
+                    <ul class="g-colls" id="g-colls"></ul>
+                </section>
+                <section class="g-range-pane">
+                    <div class="g-panel-title">Range</div>
+                    <div class="g-pane-body">
+                        <div class="g-range" id="g-range" role="group" aria-label="Time range">
+                            <button type="button" class="g-btn" data-range="one_day">24h</button>
+                            <button type="button" class="g-btn" data-range="seven_day">1w</button>
+                            <button type="button" class="g-btn" data-range="thirty_day">1m</button>
+                        </div>
+                        <p class="g-range-note">volume, sales and average price use this window; &Delta; compares it with the next longer one</p>
                     </div>
-                    <span class="markets-updated" id="markets-updated">syncing feed...</span>
-                </div>
-            </div>
-            
-            <div class="market-table-wrap">
-                <table class="market-table">
-                    <thead>
-                        <tr>
-                            <th class="col-name">collection</th>
-                            <th>floor</th>
-                            <th>Δ</th>
-                            <th data-dyn-label="vol">24h vol</th>
-                            <th>owners</th>
-                            <th data-dyn-label="avg">24h avg px</th>
-                            <th class="col-spark">trend</th>
-                            <th class="col-links">links</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Milady Maker -->
-                        <tr>
-                            <td class="col-name">
-                                <img src="/assets/milady.png" alt="Milady Maker" class="market-logo">
-                                <span class="market-name" title="10,000 generative pfps. neochibi street style.">milady maker</span>
-                            </td>
-                            <td id="milady-floor">Loading...</td>
-                            <td><span class="market-change" id="milady-change"></span></td>
-                            <td id="milady-volume">Loading...</td>
-                            <td id="milady-owners">Loading...</td>
-                            <td id="milady-avg">Loading...</td>
-                            <td class="col-spark"><div class="market-spark" id="milady-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
-                            <td class="col-links">
-                                <a href="https://opensea.io/collection/milady" target="_blank" class="market-link">opensea</a>
-                                <a href="https://miladymaker.net" target="_blank" class="market-link">site</a>
-                            </td>
-                        </tr>
-                
-                        <!-- Remilio Babies -->
-                        <tr>
-                            <td class="col-name">
-                                <img src="/assets/remilio.jpg" alt="Redacted Remilio Babies" class="market-logo">
-                                <span class="market-name" title="10,000 male milady variants. underground culture.">remilio babies</span>
-                            </td>
-                            <td id="remilio-floor">Loading...</td>
-                            <td><span class="market-change" id="remilio-change"></span></td>
-                            <td id="remilio-volume">Loading...</td>
-                            <td id="remilio-owners">Loading...</td>
-                            <td id="remilio-avg">Loading...</td>
-                            <td class="col-spark"><div class="market-spark" id="remilio-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
-                            <td class="col-links">
-                                <a href="https://opensea.io/collection/remilio-babies" target="_blank" class="market-link">opensea</a>
-                                <a href="https://remilio.org" target="_blank" class="market-link">site</a>
-                            </td>
-                        </tr>
-                
-                        <!-- Schizoposters -->
-                        <tr>
-                            <td class="col-name">
-                                <img src="/assets/schizo.png" alt="Schizoposters" class="market-logo">
-                                <span class="market-name" title="I HATE THE ANTICHRIST.">schizoposters</span>
-                            </td>
-                            <td id="schizo-floor">Loading...</td>
-                            <td><span class="market-change" id="schizo-change"></span></td>
-                            <td id="schizo-volume">Loading...</td>
-                            <td id="schizo-owners">Loading...</td>
-                            <td id="schizo-avg">Loading...</td>
-                            <td class="col-spark"><div class="market-spark" id="schizo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
-                            <td class="col-links">
-                                <a href="https://opensea.io/collection/schizoposters" target="_blank" class="market-link">opensea</a>
-                                <a href="https://schizoposters.xyz" target="_blank" class="market-link">site</a>
-                            </td>
-                        </tr>
-                
-                        <!-- Radbro Webring -->
-                        <tr>
-                            <td class="col-name">
-                                <img src="/assets/radbro.png" alt="Radbro Webring" class="market-logo">
-                                <span class="market-name" title="Check the Chain.">radbro webring</span>
-                            </td>
-                            <td id="radbro-floor">Loading...</td>
-                            <td><span class="market-change" id="radbro-change"></span></td>
-                            <td id="radbro-volume">Loading...</td>
-                            <td id="radbro-owners">Loading...</td>
-                            <td id="radbro-avg">Loading...</td>
-                            <td class="col-spark"><div class="market-spark" id="radbro-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
-                            <td class="col-links">
-                                <a href="https://opensea.io/collection/radbro-webring" target="_blank" class="market-link">opensea</a>
-                                <a href="http://radbro.xyz" target="_blank" class="market-link">site</a>
-                            </td>
-                        </tr>
-                
-                        <!-- Fumo Baby 404 -->
-                        <tr>
-                            <td class="col-name">
-                                <video src="https://blog.remilia.org/content/media/2024/04/fumo_01-1.mp4" class="market-logo" autoplay muted loop playsinline></video>
-                                <span class="market-name" title="Hardforked 404 collection.">fumo baby 404</span>
-                            </td>
-                            <td id="fumo-floor">Loading...</td>
-                            <td><span class="market-change" id="fumo-change"></span></td>
-                            <td id="fumo-volume">Loading...</td>
-                            <td id="fumo-owners">Loading...</td>
-                            <td id="fumo-avg">Loading...</td>
-                            <td class="col-spark"><div class="market-spark" id="fumo-spark" title="avg sale price: 30d → 7d → 24h → floor"></div></td>
-                            <td class="col-links">
-                                <a href="https://opensea.io/collection/milady-fumo-baby-404" target="_blank" class="market-link">opensea</a>
-                                <a href="https://blog.remilia.org/fumo-404" target="_blank" class="market-link">blog</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- CULT Chart -->
-            <div class="chart-container">
-                <div class="chart-title">cultcoin price</div>
-                <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
-                <gecko-coin-price-chart-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" coin-id="milady-cult-coin" initial-currency="usd"></gecko-coin-price-chart-widget>
-            </div>
-        </div>
-    </section>
+                </section>
+                <section class="g-activity-pane">
+                    <div class="g-panel-title">Feed Log <span class="g-meta" id="g-log-meta"></span></div>
+                    <ol class="g-activity" id="g-log"></ol>
+                </section>
+            </aside>
 
-    <!-- Floating Return Home Button -->
-    <a href="/" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="/assets/wee.gif" alt="Return home">
-            </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
-            </div>
+            <section class="g-main" id="g-main" aria-live="polite">
+                <div class="g-objhead" id="g-objhead">
+                    <noscript><p>This workspace needs JavaScript to load market data.</p></noscript>
+                </div>
+                <section class="g-card g-board-pane">
+                    <div class="g-panel-title">Market Board <span class="g-meta" id="g-board-meta">click a row to inspect</span></div>
+                    <div class="g-board-wrap">
+                        <table class="g-board">
+                            <thead>
+                                <tr>
+                                    <th>collection</th>
+                                    <th>floor</th>
+                                    <th>&Delta;</th>
+                                    <th data-range-label="vol">24h vol</th>
+                                    <th>sales</th>
+                                    <th>owners</th>
+                                    <th class="col-spark">trend</th>
+                                </tr>
+                            </thead>
+                            <tbody id="g-board"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="g-card g-trend-pane">
+                    <div class="g-panel-title">Price Trend <span class="g-meta" id="g-trend-meta">avg sale price: 30d &rarr; 7d &rarr; 24h &rarr; floor</span></div>
+                    <div class="g-trend" id="g-trend">
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-props-pane">
+                    <div class="g-panel-title">Properties <span class="g-meta" id="g-props-meta"></span></div>
+                    <dl class="g-props" id="g-props"></dl>
+                </section>
+                <section class="g-cult-pane">
+                    <div class="g-panel-title">CULT <span class="g-meta">milady cult coin &middot; coingecko</span></div>
+                    <div class="g-cult">
+                        <gecko-coin-price-chart-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" coin-id="milady-cult-coin" initial-currency="usd"></gecko-coin-price-chart-widget>
+                    </div>
+                </section>
+            </aside>
         </div>
-    </a>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-muted" id="g-feed-dot"></i><span id="g-feed">SYNCING</span></span>
+                <span id="g-eth"></span>
+                <span id="g-clock"></span>
+                <span class="g-hint">&uarr; &darr; switch collection &middot; 1 2 3 range</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <div id="radgotchi-container">
-                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            </div>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
-        </div>
-    </footer>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
 
-    <!-- External JavaScript -->
-    <script src="/js/background3d.js?v=1.6"></script>
-    <script src="/js/script.js?v=1.8"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    
-    <!-- Parallax tilt effect -->
-    <script src="/js/markets.js?v=1.0"></script>
+    <!-- Neochibi Markets -->
+    <script defer src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
+    <script defer src="/js/markets.js?v=2.1"></script>
 </body>
 </html>

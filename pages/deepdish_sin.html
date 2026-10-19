@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIN Bot - Tyler (in real life)</title>
+    <title>RADactedBot - Tyler (in real life)</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
@@ -12,17 +12,17 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tylerirl.com/discord-bot">
-    <meta property="og:title" content="Discord Bot - Tyler (in real life)">
-    <meta property="og:description" content="A custom Discord bot with unique features and functionality">
-    <meta property="og:image" content="https://tylerirl.com/assets/discord-bot.png">
+    <meta property="og:url" content="https://tylerirl.com/pages/deepdish_sin.html">
+    <meta property="og:title" content="RADactedBot - Tyler (in real life)">
+    <meta property="og:description" content="RADactedBot: a modular Discord and Telegram bot for economy, games, cross-platform relays and autonomous LLM agents.">
+    <meta property="og:image" content="https://tylerirl.com/assets/redacted/panel.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tylerirl.com/discord-bot">
-    <meta property="twitter:title" content="Discord Bot - Tyler (in real life)">
-    <meta property="twitter:description" content="A custom Discord bot with unique features and functionality">
-    <meta property="twitter:image" content="https://tylerirl.com/assets/discord-bot.png">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/deepdish_sin.html">
+    <meta property="twitter:title" content="RADactedBot - Tyler (in real life)">
+    <meta property="twitter:description" content="RADactedBot: a modular Discord and Telegram bot for economy, games, cross-platform relays and autonomous LLM agents.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/redacted/panel.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
     <meta name="supported-color-schemes" content="dark light">
@@ -33,188 +33,122 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/deepdish_sin.css?v=1.0">
-</head><body>
-    <!-- Corner Brackets Border -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/docs.css?v=1.3">
+    <link rel="stylesheet" href="/css/deepdish_sin.css?v=2.3">
+</head>
+<body>
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Project Write-up Section -->
-    <section class="project-writeup">
-        <!-- Classification stamps -->
-        <div class="stamp approved">OPERATIONAL</div>
-        <div class="stamp eyes-only">EYES ONLY</div>
-        
-        <!-- Document header -->
-        <div class="classified-header">
-            <span class="classification-stamp">CLEARANCE: RADBRO</span>
-            <h1>CLASSIFIED</h1>
-        </div>
-        
-        <!-- Return to DeepDish -->
-        <div class="doc-button-container">
-            <a href="/pages/deepdish.html" class="doc-return-home">
-                <img src="/assets/wee.gif" alt="[SEAL]">
-                <div class="doc-return-home-text">
-                    <span>&#9668; Return to Main Terminal</span>
-                    <small>Exit document viewer // Return to index</small>
-                </div>
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// RADactedBot</span>
             </a>
-        </div>
-        
-        <!-- Alert ticker -->
-        <div class="ticker-wrap">
-            <div class="ticker">
-                &#9888; RELAY STATUS: NOMINAL &#8212; DISCORD &#8596; TELEGRAM BRIDGE ACTIVE &#8212; LLM AGENTS: 6 ONLINE &#8212; ECONOMY POOL: 847,291 CREDITS &#8212; DEFCON LEVEL: 5 (ALL CLEAR) &#8212; NEXT MAINTENANCE: 0400Z &#8212; &#9888; RELAY STATUS: NOMINAL &#8212; DISCORD &#8596; TELEGRAM BRIDGE ACTIVE &#8212;
-            </div>
-        </div>
-        
-        <!-- Quick status bar -->
-        <div class="document-bar">
-            <div class="document-bar-item">
-                <label>Project Codename</label>
-                <span>SIN</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Platform</label>
-                <span>Discord / Telegram</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Status</label>
-                <span style="color: #50fa7b;">&#9679; OPERATIONAL</span>
-            </div>
-            <div class="document-bar-item">
-                <label>Classification</label>
-                <span class="clearance-badge ts">RESTRICTED</span>
-            </div>
-        </div>
-        
-        <!-- Secondary stats bar -->
-        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; margin-bottom: 0.7rem; font-size: 0.6rem;">
-            <div class="mini-stat">
-                <div class="value">3</div>
-                <div class="label">Servers</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">847K</div>
-                <div class="label">Economy Pool</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">6</div>
-                <div class="label">LLM Agents</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">23</div>
-                <div class="label">Commands/hr</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value">12</div>
-                <div class="label">Modules</div>
-            </div>
-            <div class="mini-stat">
-                <div class="value" style="color: #50fa7b;">99.7%</div>
-                <div class="label">Uptime</div>
-            </div>
-        </div>
-        
-        <!-- Document metadata -->
-        <div class="document-info">
-            <p><strong>PROJECT:</strong> SIN (SYNTHETIC INTELLIGENCE NODE)</p>
-            <p><strong>CLASSIFICATION:</strong> RESTRICTED // RADBRO-INDOC</p>
-            <p><strong>ORIGINATOR:</strong> <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span></p>
-            <p><strong>PLATFORM:</strong> DISCORD.PY / PYTHON 3.x</p>
-            <p><strong>HANDLING:</strong> WEBRING INTERNAL ONLY</p>
-            <p><strong>REVISION:</strong> v3.2.1-STABLE</p>
-        </div>
-        
-        <h1 style="color: #8be9fd; margin-bottom: 0.15rem; font-family: 'Special Elite', monospace; letter-spacing: 0.1em; font-size: 1.1rem;"><span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> BOT</h1>
-        <p style="color: #5fcfdf; margin-bottom: 0.7rem; font-size: 0.65rem; letter-spacing: 0.15em;">MULTI-PURPOSE DISCORD INTELLIGENCE SYSTEM &#8212; RADBRO WEBRING INTEGRATION</p>
-        
-        <div class="document-layout">
-        <div class="main-content-area">
-        
-        <!-- Capability Status Grid -->
-        <div class="status-grid">
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">Economy</div>
-            </div>
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">Gambling</div>
-            </div>
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">Moderation</div>
-            </div>
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">Cross-Platform</div>
-            </div>
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">Web3</div>
-            </div>
-            <div class="status-item">
-                <div class="value ok">ACTIVE</div>
-                <div class="label">LLM Bots</div>
-            </div>
-        </div>
-        
-        <h2><span class="section-number">01</span> Overview</h2>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Program</span><span class="sep">/</span>
+                <b id="g-crumb">RADactedBot</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search the docs&hellip;" autocomplete="off" aria-label="Search the documentation">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Restricted // Radbro">RESTRICTED // RADBRO</span>
+        </header>
+
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-toc-pane" aria-label="Contents">
+                    <div class="g-panel-title">Contents <span class="g-meta" id="g-toc-meta"></span></div>
+                    <ol class="g-toc" id="g-toc"></ol>
+                </section>
+                <section class="sin-modules-pane">
+                    <div class="g-panel-title">Modules <span class="g-meta">REFERENCE</span></div>
+                    <ul class="sin-list sin-modules"><li><span>ECON</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>GAMBL</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>MOD</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>RELAY</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>WEB3</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>LLM</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>VOICE</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>DEFCON</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li>
+<li><span>MEDIA</span><b><i class="g-dot tone-green"></i>ACTIVE</b></li></ul>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main">
+                <div class="g-objhead">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/sin-defcon4.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PROGRAM &middot; DISCORD / TELEGRAM BOT</div>
+                            <h1>RADactedBot</h1>
+                        </div>
+                        <span class="g-chip tone-green"><i class="g-dot tone-green"></i>Program</span>
+                        <div class="g-objnav"><a class="g-btn g-visit" href="/pages/deepdish.html">DEEPDISH &nearr;</a></div>
+                    </div>
+                    <p class="g-summary">A modular Discord and Telegram intelligence system: community economy, games, moderation, cross-platform relays and autonomous LLM personalities.</p>
+                    <div class="g-objmeta">
+                        <span>STACK</span><b>Python 3.x &middot; discord.py &middot; web3.py</b>
+                        <span>REVISION</span><b>v3.2.1-STABLE</b>
+                        <span>NETWORK</span><b>RADBRO WEBRING</b>
+                    </div>
+                </div>
+                <section class="g-card g-docs-pane">
+                    <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">PROJECT REFERENCE</span></div>
+                    <div class="g-docs-scroll" id="g-docs-scroll">
+                    <article class="doc" id="doc">
+<section class="doc-sec" id="s-overview" data-title="Overview">
+<h2><span class="doc-num">§01</span> Overview</h2>
+<div class="sin-snapshot-label">PROJECT SNAPSHOT &middot; v3.2.1-STABLE</div><div class="doc-tiles"><div class="doc-tile"><span>Servers</span><b>3</b></div>
+<div class="doc-tile"><span>Economy Pool</span><b>847K</b></div>
+<div class="doc-tile"><span>LLM Agents</span><b>6</b></div>
+<div class="doc-tile"><span>Commands/hr</span><b>23</b></div>
+<div class="doc-tile"><span>Modules</span><b>12</b></div>
+<div class="doc-tile"><span>Uptime</span><b>99.7%</b></div></div>
         <p>
             <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> Bot is a multi-purpose, extensible Discord bot with deep integration into community culture, games, moderation, analytics, and cross-platform relays. Designed for chaos, fun, and utility across Discord and Telegram with a modular system built for rapid feature expansion.
         </p>
         
-        <div class="caution-box">All module interactions generate audit logs. Economy manipulation triggers automated review.</div>
-        
-        <h2><span class="section-number">02</span> Major Systems</h2>
-        
-        <h3>&#9658; Daily !claim System</h3>
-        <div class="info-box">
-            <span class="info-box-header">Core Engagement Loop</span>
-            <p style="margin: 0;">
+        <div class="g-callout">All module interactions generate audit logs. Economy manipulation triggers automated review.</div>
+</section>
+
+<section class="doc-sec" id="s-claims" data-title="Daily !claim System">
+<h2><span class="doc-num">§02</span> Daily !claim System</h2>
+<div class="sin-note">
+            <span class="sin-note-title">Core Engagement Loop</span>
+            <p>
                 The core engagement system rewards users for claiming daily. Each day, users can use <code>!claim</code> to receive a payout that scales with their streak of consecutive claims. The longer a user claims without missing a day, the higher their daily reward grows, incentivizing consistent community participation.
             </p>
         </div>
         <p>
             Extra claims and bonus payouts are awarded for daily engagement with community features like participating in Daily Radbro or generating custom RadPacks. Users who participate in these activities earn additional claim refreshes and multiplier bonuses, turning everyday gameplay into a rewarding cycle of community creation and earning.
         </p>
-        
-        <h3>&#9658; Gambling &amp; Games</h3>
-        <p>
+</section>
+
+<section class="doc-sec" id="s-games" data-title="Gambling &amp; Games">
+<h2><span class="doc-num">§03</span> Gambling &amp; Games</h2>
+<p>
             Fully interactive games including Blackjack, Roulette, Dice, Rock-Paper-Scissors, Coin Flips, and Quickdraw Duels. All games feature custom embeds, emoji-rich interactions, streaks, and statistics. Users can bet in-game currency with leaderboards and detailed stats tracking. Daily claims with streak bonuses and early claim penalties keep players engaged.
         </p>
         
-        <div class="two-col">
-            <div class="info-box">
-                <span class="info-box-header">Game Modules</span>
-                <ul style="margin: 0.15rem 0 0 1rem; padding: 0; font-size: 0.6rem;">
+        <div class="doc-split doc-split-even">
+            <div class="sin-note">
+                <span class="sin-note-title">Game Modules</span>
+                <ul>
                     <li>Blackjack (multi-hand)</li>
                     <li>Roulette (full table)</li>
                     <li>Dice / Coin Flip</li>
@@ -222,9 +156,9 @@
                     <li>Quickdraw Duels</li>
                 </ul>
             </div>
-            <div class="info-box">
-                <span class="info-box-header">Tracking Systems</span>
-                <ul style="margin: 0.15rem 0 0 1rem; padding: 0; font-size: 0.6rem;">
+            <div class="sin-note">
+                <span class="sin-note-title">Tracking Systems</span>
+                <ul>
                     <li>Win/Loss ratios</li>
                     <li>Best streaks</li>
                     <li>Claim patterns</li>
@@ -233,303 +167,208 @@
                 </ul>
             </div>
         </div>
-        
-        <h3>&#9658; Radpack Generation</h3>
-        <p>
+</section>
+
+<section class="doc-sec" id="s-radpacks" data-title="Radpack Generation">
+<h2><span class="doc-num">§04</span> Radpack Generation</h2>
+<p>
             Generate custom cigarette packs using casino credit winnings. Users can create unique Radpacks with personalized designs powered by their in-game earnings. Each generated pack is a piece of community art, converting gambling wins into shareable meme content.
         </p>
-        <div class="intel-images">
-            <img src="/assets/redacted/radpack.png" alt="Radpack Generation" style="max-width: 200px; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-pack" href="/assets/redacted/radpack.png" target="_blank" rel="noopener" aria-label="Open Radpack Generation image"><img src="/assets/redacted/radpack.png" alt="Radpack Generation" width="447" height="559" loading="lazy" decoding="async"></a>
         </div>
+</section>
 
-        <h3>&#9658; Moderation &amp; Analytics</h3>
-        <p>
+<section class="doc-sec" id="s-moderation" data-title="Moderation &amp; Analytics">
+<h2><span class="doc-num">§05</span> Moderation &amp; Analytics</h2>
+<p>
             Comprehensive tracking of moderator actions, ban streaks, and badge generation. Detailed per-user and per-action analytics including win/loss ratios, best streaks, claim patterns, and gambling statistics. LLM rate limiting controls access to AI features per user, per hour.
         </p>
-        
-        <h3>&#9658; Cross-Platform Relays</h3>
-        <div class="info-box">
-            <span class="info-box-header">Bi-Directional Relay Network</span>
-            <p style="margin: 0;">
+</section>
+
+<section class="doc-sec" id="s-relays" data-title="Cross-Platform Relays">
+<h2><span class="doc-num">§06</span> Cross-Platform Relays</h2>
+<div class="sin-note">
+            <span class="sin-note-title">Bi-Directional Relay Network</span>
+            <p>
                 Message, media, and asset relays between Discord and Telegram with toggleable settings. Integration with Noosphere and webring servers for seamless cross-posting. Relay chain tracking enables moderation across platforms.
             </p>
         </div>
-        <div class="intel-images">
-            <img src="/assets/redacted/relays.png" alt="Cross-Platform Relays" style="max-width: 600px; width: 100%; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-capture" href="/assets/redacted/relays.png" target="_blank" rel="noopener" aria-label="Open Cross-Platform Relays image"><img src="/assets/redacted/relays.png" alt="Cross-Platform Relays" width="1407" height="1180" loading="lazy" decoding="async"></a>
         </div>
         
-        <h3>&#9658; NFT &amp; Web3 Integration</h3>
-        <p>
+<details class="sin-snapshot"><summary>Relay intercept &middot; reference snapshot</summary><table class="doc-table"><thead><tr><th>Time</th><th>Channel</th><th>Message</th></tr></thead><tbody><tr><td>0341Z</td><td>#general</td><td>Message relayed to Telegram</td></tr>
+<tr><td>0318Z</td><td>#alerts</td><td>DEFCON update broadcast</td></tr>
+<tr><td>0255Z</td><td>#noosphere</td><td>Cross-post from webring</td></tr></tbody></table></details>
+</section>
+
+<section class="doc-sec" id="s-web3" data-title="NFT &amp; Web3 Integration">
+<h2><span class="doc-num">§07</span> NFT &amp; Web3 Integration</h2>
+<p>
             Monitor NFT sales, mints, and burns for configured collections with optional OpenSea and ENS support. RAD Token-based payment verification for in-bot actions like queue skips and claim refreshes.
         </p>
-        <div class="intel-images">
-            <img src="/assets/redacted/sale1.png" alt="NFT Sale 1" style="max-width: 45%; height: auto;">
-            <img src="/assets/redacted/sale2.png" alt="NFT Sale 2" style="max-width: 45%; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-sale" href="/assets/redacted/sale1.png" target="_blank" rel="noopener" aria-label="Open NFT Sale 1 image"><img src="/assets/redacted/sale1.png" alt="NFT Sale 1" width="377" height="569" loading="lazy" decoding="async"></a>
+            <a class="sin-sale" href="/assets/redacted/sale2.png" target="_blank" rel="noopener" aria-label="Open NFT Sale 2 image"><img src="/assets/redacted/sale2.png" alt="NFT Sale 2" width="396" height="577" loading="lazy" decoding="async"></a>
         </div>
-        
-        <h3>&#9658; Voice &amp; Media</h3>
-        <p>
+</section>
+
+<section class="doc-sec" id="s-voice" data-title="Voice &amp; Media">
+<h2><span class="doc-num">§08</span> Voice &amp; Media</h2>
+<p>
             Control voice channels, manage user movement, play audio, and queue YouTube videos. Payment-based skip and refresh system for queue management keeps servers interactive and user-driven.
         </p>
-        
-        <h3>&#9658; DEFCON System</h3>
-        <div class="info-box">
-            <span class="info-box-header">Alert Level Protocol</span>
-            <p style="margin: 0;">
+</section>
+
+<section class="doc-sec" id="s-defcon" data-title="DEFCON System">
+<h2><span class="doc-num">§09</span> DEFCON System</h2>
+<div class="sin-note">
+            <span class="sin-note-title">Alert Level Protocol</span>
+            <p>
                 An interactive DEFCON status panel that escalates server alert levels from DEFCON 5 (all clear) through DEFCON 1 (maximum alert). Each level features custom profile pictures, unique audio alerts, and dynamic status messages. The panel updates in real-time and commands can escalate or de-escalate the server's DEFCON status based on events or community decisions.
             </p>
         </div>
-        <div class="intel-images">
-            <img src="/assets/redacted/panel.png" alt="DEFCON Panel" style="max-width: 100%; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-capture" href="/assets/redacted/panel.png" target="_blank" rel="noopener" aria-label="Open DEFCON Panel image"><img src="/assets/redacted/panel.png" alt="DEFCON Panel" width="587" height="705" loading="lazy" decoding="async"></a>
         </div>
-        <div class="intel-images" style="margin-top: 0.3rem;">
-            <img src="/assets/redacted/DEFCON5.png" alt="DEFCON 5" style="max-width: 15%; height: auto;">
-            <img src="/assets/redacted/DEFCON4.png" alt="DEFCON 4" style="max-width: 15%; height: auto;">
-            <img src="/assets/redacted/DEFCON3.png" alt="DEFCON 3" style="max-width: 15%; height: auto;">
-            <img src="/assets/redacted/DEFCON2.png" alt="DEFCON 2" style="max-width: 15%; height: auto;">
-            <img src="/assets/redacted/DEFCON1.png" alt="DEFCON 1" style="max-width: 15%; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-level" href="/assets/redacted/DEFCON5.png" target="_blank" rel="noopener" aria-label="Open DEFCON 5 image"><img src="/assets/redacted/DEFCON5.png" alt="DEFCON 5" width="2048" height="2042" loading="lazy" decoding="async"></a>
+            <a class="sin-level" href="/assets/redacted/DEFCON4.png" target="_blank" rel="noopener" aria-label="Open DEFCON 4 image"><img src="/assets/redacted/DEFCON4.png" alt="DEFCON 4" width="2048" height="2042" loading="lazy" decoding="async"></a>
+            <a class="sin-level" href="/assets/redacted/DEFCON3.png" target="_blank" rel="noopener" aria-label="Open DEFCON 3 image"><img src="/assets/redacted/DEFCON3.png" alt="DEFCON 3" width="2048" height="2042" loading="lazy" decoding="async"></a>
+            <a class="sin-level" href="/assets/redacted/DEFCON2.png" target="_blank" rel="noopener" aria-label="Open DEFCON 2 image"><img src="/assets/redacted/DEFCON2.png" alt="DEFCON 2" width="2048" height="2042" loading="lazy" decoding="async"></a>
+            <a class="sin-level" href="/assets/redacted/DEFCON1.png" target="_blank" rel="noopener" aria-label="Open DEFCON 1 image"><img src="/assets/redacted/DEFCON1.png" alt="DEFCON 1" width="2048" height="2042" loading="lazy" decoding="async"></a>
         </div>
-        
-        <h3>&#9658; Customization &amp; Modes</h3>
-        <p>
+</section>
+
+<section class="doc-sec" id="s-modes" data-title="Customization &amp; Modes">
+<h2><span class="doc-num">§10</span> Customization &amp; Modes</h2>
+<p>
             Chinese Mode and St. Petersburg Mode provide toggleable alternate language, emoji, and payout logic. Archetype bots are modular sub-bots with unique personalities and relay logic. Dynamic image overlays power meme generation, and TempBotManager enables on-demand bot spawning and management. A Terminal Panel in dedicated channels provides live-updating status and analytics.
         </p>
-        
-        <h2><span class="section-number">03</span> Autonomous LLM Agents</h2>
-        
-        <div class="warning-box">
-            <p style="margin: 0; color: #c41e3a;">Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype.</p>
+</section>
+
+<section class="doc-sec" id="s-agents" data-title="Autonomous LLM Agents">
+<h2><span class="doc-num">§11</span> Autonomous LLM Agents</h2>
+<div class="sin-note sin-alert">
+            <p>Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype.</p>
         </div>
         <p>
             The LLM layer allows for natural, context-aware responses that reflect each bot's individual personality, transforming them from simple command executors into active community participants with their own presence and voice.
         </p>
-        <div class="intel-images">
-            <img src="/assets/redacted/posters.png" alt="Schizoposter Archetype Bots" style="max-width: 600px; width: 100%; height: auto;">
+        <div class="sin-evidence">
+            <a class="sin-capture" href="/assets/redacted/posters.png" target="_blank" rel="noopener" aria-label="Open Schizoposter Archetype Bots image"><img src="/assets/redacted/posters.png" alt="Schizoposter Archetype Bots" width="609" height="409" loading="lazy" decoding="async"></a>
         </div>
+</section>
+
+<section class="doc-sec" id="s-stack" data-title="Tech Stack">
+<h2><span class="doc-num">§12</span> Tech Stack</h2>
+<pre class="doc-code"><code>import discord, web3, mcstatus, PIL, dotenv
+# Python 3.x + discord.py + web3.py
+# Modular utility architecture for rapid expansion</code></pre>
         
-        <h2><span class="section-number">04</span> Tech Stack</h2>
-        <div class="code-block"><span class="keyword">import</span> discord, web3, mcstatus, PIL, dotenv<br><span class="comment"># Python 3.x + discord.py + web3.py</span><br><span class="comment"># Modular utility architecture for rapid expansion</span></div>
-        
-        <table class="spec-table">
+        <table class="doc-table">
             <tr><th>Component</th><th>Technology</th><th>Status</th></tr>
-            <tr><td>Core Runtime</td><td class="highlight">Python 3.x</td><td style="color:#50fa7b;">ACTIVE</td></tr>
-            <tr><td>Discord API</td><td class="highlight">discord.py</td><td style="color:#50fa7b;">ACTIVE</td></tr>
-            <tr><td>Blockchain</td><td class="highlight">web3.py</td><td style="color:#50fa7b;">ACTIVE</td></tr>
-            <tr><td>Image Processing</td><td class="highlight">Pillow (PIL)</td><td style="color:#50fa7b;">ACTIVE</td></tr>
-            <tr><td>Server Monitoring</td><td class="highlight">mcstatus</td><td style="color:#50fa7b;">ACTIVE</td></tr>
+            <tr><td>Core Runtime</td><td class="tone-blue">Python 3.x</td><td>ACTIVE</td></tr>
+            <tr><td>Discord API</td><td class="tone-blue">discord.py</td><td>ACTIVE</td></tr>
+            <tr><td>Blockchain</td><td class="tone-blue">web3.py</td><td>ACTIVE</td></tr>
+            <tr><td>Image Processing</td><td class="tone-blue">Pillow (PIL)</td><td>ACTIVE</td></tr>
+            <tr><td>Server Monitoring</td><td class="tone-blue">mcstatus</td><td>ACTIVE</td></tr>
         </table>
-        
-        <h2><span class="section-number">05</span> Development Timeline</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="date">Phase 1</div>
+</section>
+
+<section class="doc-sec" id="s-timeline" data-title="Development Timeline">
+<h2><span class="doc-num">§13</span> Development Timeline</h2>
+<ol class="doc-log">
+            <li><time>Phase 1</time>
                 <strong>Core Bot &#8212;</strong> Economy, claims, basic gambling modules deployed
-            </div>
-            <div class="timeline-item">
-                <div class="date">Phase 2</div>
+            </li>
+            <li><time>Phase 2</time>
                 <strong>Cross-Platform &#8212;</strong> Discord &#8596; Telegram relay bridge activated
-            </div>
-            <div class="timeline-item">
-                <div class="date">Phase 3</div>
+            </li>
+            <li><time>Phase 3</time>
                 <strong>Web3 Integration &#8212;</strong> NFT monitoring, RAD token payments online
-            </div>
-            <div class="timeline-item">
-                <div class="date">Phase 4</div>
+            </li>
+            <li><time>Phase 4</time>
                 <strong>LLM Agents &#8212;</strong> Schizoposter archetype bots with autonomous AI
-            </div>
-            <div class="timeline-item">
-                <div class="date">Ongoing</div>
+            </li>
+            <li><time>Ongoing</time>
                 <strong>Expansion &#8212;</strong> New games, deeper analytics, community-driven features
-            </div>
+            </li></ol>
+</section>
+
+<section class="doc-sec" id="s-credits" data-title="Acknowledgments">
+<h2><span class="doc-num">§14</span> Acknowledgments</h2>
+<p>Special thanks to <a href="https://x.com/schizalcoatl" target="_blank" rel="noopener">schizalcoatl</a> and <a href="https://x.com/giverrod" target="_blank" rel="noopener">RiverGod</a> for their contributions and collaboration on this project.</p>
+        
+        <div class="sin-note">
+            <p>Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development. All systems subject to <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> review protocols.</p>
         </div>
-        
-        <h2><span class="section-number">06</span> Acknowledgments</h2>
-        <p>Special thanks to <a href="https://x.com/schizalcoatl" target="_blank">schizalcoatl</a> and <a href="https://x.com/giverrod" target="_blank">RiverGod</a> for their contributions and collaboration on this project.</p>
-        
-        <div class="footnote">
-            <p style="margin: 0;">Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development. All systems subject to <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> review protocols.</p>
+</section>
+                        <p class="doc-end">A bot for Radbros &middot; Built by Hating the Antichrist</p>
+                    </article>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="sin-project-pane">
+                    <div class="g-panel-title">Project File <span class="g-meta">RESTRICTED</span></div>
+                    <dl class="g-props">
+                        <dt>Codename</dt><dd>RADactedBot</dd>
+                        <dt>Platform</dt><dd>Discord / Telegram</dd>
+                        <dt>Revision</dt><dd>v3.2.1-STABLE</dd>
+                        <dt>Clearance</dt><dd>RADBRO-INDOC</dd>
+                        <dt>Handling</dt><dd>WEBRING INTERNAL</dd>
+                        <dt>Originator</dt><dd><span class="redacted">REDACTED</span></dd>
+                    </dl>
+                </section>
+                <section class="sin-agents-pane">
+                    <div class="g-panel-title">Agent Roster <span class="g-meta">SNAPSHOT</span></div>
+                    <ul class="sin-list"><li><span>Archetype-01</span><b class="tone-green">ONLINE</b></li>
+<li><span>Archetype-02</span><b class="tone-green">ONLINE</b></li>
+<li><span>Archetype-03</span><b class="tone-green">ONLINE</b></li>
+<li><span>Archetype-04</span><b class="tone-orange">STANDBY</b></li>
+<li><span>Archetype-05</span><b class="tone-green">ONLINE</b></li>
+<li><span>Archetype-06</span><b class="tone-green">ONLINE</b></li></ul>
+                </section>
+                <section class="sin-activity-pane">
+                    <div class="g-panel-title">Activity Log <span class="g-meta">SNAPSHOT</span></div>
+                    <ol class="g-activity"><li><i class="g-dot tone-green"></i><div><time>0347Z</time>Economy pool rebalanced</div></li>
+<li><i class="g-dot tone-green"></i><div><time>0312Z</time>!claim streak: user hit 30-day</div></li>
+<li><i class="g-dot tone-orange"></i><div><time>0258Z</time>LLM rate limit triggered</div></li>
+<li><i class="g-dot tone-green"></i><div><time>0241Z</time>Relay bridge reconnected</div></li>
+<li><i class="g-dot tone-green"></i><div><time>0215Z</time>Blackjack payout: 12,400 credits</div></li>
+<li><i class="g-dot tone-red"></i><div><time>0203Z</time>DEFCON escalated to 3</div></li>
+<li><i class="g-dot tone-green"></i><div><time>0147Z</time>NFT sale detected: Radbro #847</div></li>
+<li><i class="g-dot tone-green"></i><div><time>0122Z</time>RadPack generated by user</div></li></ol>
+                </section>
+            </aside>
         </div>
-        
-        </div><!-- end main-content-area -->
-        
-        <!-- Intel Sidebar -->
-        <div class="intel-sidebar">
-            
-            <!-- Module Status -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header cyan">Module Status</div>
-                <div class="network-grid">
-                    <div class="network-node">
-                        <div class="node-id">ECON</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">GAMBL</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">MOD</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">RELAY</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">WEB3</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">LLM</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">VOICE</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">DEFCON</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                    <div class="network-node">
-                        <div class="node-id">MEDIA</div>
-                        <div class="node-status up">&#9679;</div>
-                    </div>
-                </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>PROJECT FILE</span>
+                <span>RADactedBot &middot; v3.2.1-STABLE &middot; DISCORD / TELEGRAM</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">/ search &middot; [ ] previous / next section</span>
             </div>
-            
-            <!-- LLM Agent Roster -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header">Agent Roster</div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-01</span>
-                    <span class="personnel-status active">ONLINE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-02</span>
-                    <span class="personnel-status active">ONLINE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-03</span>
-                    <span class="personnel-status active">ONLINE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-04</span>
-                    <span class="personnel-status standby">STANDBY</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-05</span>
-                    <span class="personnel-status active">ONLINE</span>
-                </div>
-                <div class="personnel-entry">
-                    <span class="personnel-name">Archetype-06</span>
-                    <span class="personnel-status active">ONLINE</span>
-                </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
             </div>
-            
-            <!-- Activity Log -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header green">Activity Log</div>
-                <div class="incident-log">
-                    <div class="incident-entry">
-                        <div class="incident-time">0347Z</div>
-                        <div class="incident-msg ok">Economy pool rebalanced</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0312Z</div>
-                        <div class="incident-msg">!claim streak: user hit 30-day</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0258Z</div>
-                        <div class="incident-msg warn">LLM rate limit triggered</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0241Z</div>
-                        <div class="incident-msg ok">Relay bridge reconnected</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0215Z</div>
-                        <div class="incident-msg">Blackjack payout: 12,400 credits</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0203Z</div>
-                        <div class="incident-msg alert">DEFCON escalated to 3</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0147Z</div>
-                        <div class="incident-msg ok">NFT sale detected: Radbro #847</div>
-                    </div>
-                    <div class="incident-entry">
-                        <div class="incident-time">0122Z</div>
-                        <div class="incident-msg">RadPack generated by user</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Relay Comms -->
-            <div class="sidebar-panel">
-                <div class="sidebar-panel-header">Relay Intercept</div>
-                <div class="comms-entry">
-                    <div class="comms-header">
-                        <span class="comms-channel">#general</span>
-                        <span class="comms-time">0341Z</span>
-                    </div>
-                    <div class="comms-body">Message relayed to Telegram</div>
-                </div>
-                <div class="comms-entry priority">
-                    <div class="comms-header">
-                        <span class="comms-channel">#alerts</span>
-                        <span class="comms-time">0318Z</span>
-                    </div>
-                    <div class="comms-body">DEFCON update broadcast</div>
-                </div>
-                <div class="comms-entry">
-                    <div class="comms-header">
-                        <span class="comms-channel">#noosphere</span>
-                        <span class="comms-time">0255Z</span>
-                    </div>
-                    <div class="comms-body">Cross-post from webring</div>
-                </div>
-            </div>
-            
-        </div><!-- end intel-sidebar -->
-        </div><!-- end document-layout -->
-        
-        <div class="document-footer">
-            <p>A bot for Radbros<br>
-            <span class="highlight">Built by Hating the Antichrist</span></p>
-        </div>
-    </section>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <div id="radgotchi-container">
-                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            </div>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
-
-        </div>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/background3d.js?v=1.6"></script>
-    <script src="/js/script.js?v=1.8"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    
+    <!-- Shared workspace and documentation helpers, in dependency order. -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+    <script defer src="/js/docs.js?v=1.2"></script>
 </body>
 </html>

@@ -59,238 +59,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// NFT pricing data fetcher
-function formatUSD(amount) {
-    if (amount >= 1000000) {
-        return `$${(amount / 1000000).toFixed(2)}M`;
-    } else {
-        return amount.toLocaleString('en-US', { 
-            style: 'currency', 
-            currency: 'USD', 
-            maximumFractionDigits: 0 
-        });
-    }
-}
-
-// Collections shown on the markets page. prefix maps to element ids:
-// {prefix}-floor, {prefix}-volume, {prefix}-owners, {prefix}-avg, {prefix}-change, {prefix}-spark
-const NFT_COLLECTIONS = [
-    { slug: 'milady', prefix: 'milady' },
-    { slug: 'remilio-babies', prefix: 'remilio' },
-    { slug: 'schizoposters', prefix: 'schizo' },
-    { slug: 'radbro-webring', prefix: 'radbro' },
-    { slug: 'milady-fumo-baby-404', prefix: 'fumo' }
-];
-
-function setMarketText(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-}
-
-function formatEth(v) {
-    return `${v.toFixed(v < 0.1 ? 3 : 2)} ETH`;
-}
-
-// Tiny SVG sparkline of avg sale price: 30d -> 7d -> 24h -> current floor
-function renderMarketSparkline(prefix, points) {
-    const host = document.getElementById(prefix + '-spark');
-    if (!host) return;
-    const pts = points.filter(p => typeof p === 'number' && isFinite(p) && p > 0);
-    if (pts.length < 2) { host.innerHTML = ''; return; }
-
-    const w = 100, h = 28, pad = 3;
-    const min = Math.min(...pts), max = Math.max(...pts);
-    const span = (max - min) || 1;
-    const step = (w - pad * 2) / (pts.length - 1);
-    const coords = pts.map((p, i) => [
-        pad + i * step,
-        h - pad - ((p - min) / span) * (h - pad * 2)
-    ]);
-    const line = coords.map(c => c[0].toFixed(1) + ',' + c[1].toFixed(1)).join(' ');
-    const rising = pts[pts.length - 1] >= pts[0];
-    const color = rising ? '#50fa7b' : '#ff5555';
-    const area = 'M' + coords[0][0].toFixed(1) + ',' + (h - pad) +
-        ' L' + coords.map(c => c[0].toFixed(1) + ',' + c[1].toFixed(1)).join(' L') +
-        ' L' + coords[coords.length - 1][0].toFixed(1) + ',' + (h - pad) + ' Z';
-    const last = coords[coords.length - 1];
-
-    host.innerHTML =
-        '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" aria-hidden="true">' +
-        '<path d="' + area + '" fill="' + color + '" opacity="0.08"></path>' +
-        '<polyline points="' + line + '" fill="none" stroke="' + color + '" stroke-width="1.5" ' +
-        'stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></polyline>' +
-        '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2" fill="' + color + '"></circle>' +
-        '</svg>';
-    host.classList.add('has-data');
-}
-
-// Time range toggle: one_day | seven_day | thirty_day
-const MARKET_RANGE_LABELS = { one_day: '24h', seven_day: '1w', thirty_day: '1m' };
-let marketRange = null;
-try { marketRange = localStorage.getItem('marketRange'); } catch (e) { /* storage unavailable */ }
-if (!MARKET_RANGE_LABELS[marketRange]) marketRange = 'one_day';
-const marketCache = { ethPriceUSD: 2500, stats: {} };
-
-function getMarketAvg(ivl) {
-    if (!ivl) return 0;
-    return ivl.average_price || (ivl.sales ? ivl.volume / ivl.sales : 0);
-}
-
-function updateMarketCard(prefix, stats, ethPriceUSD) {
-    marketCache.ethPriceUSD = ethPriceUSD;
-    marketCache.stats[prefix] = stats;
-    renderMarketCard(prefix);
-}
-
-function renderMarketCard(prefix) {
-    const stats = marketCache.stats[prefix];
-    if (!stats) return;
-    const ethPriceUSD = marketCache.ethPriceUSD;
-    const total = stats.total || {};
-    const intervals = {};
-    (stats.intervals || []).forEach(i => { intervals[i.interval] = i; });
-    const ivl = intervals[marketRange] || {};
-
-    // Floor price
-    const floor = total.floor_price || 0;
-    const floorUSD = (floor * ethPriceUSD).toLocaleString('en-US', {
-        style: 'currency', currency: 'USD', maximumFractionDigits: 0
-    });
-    setMarketText(prefix + '-floor', `${formatEth(floor)} (${floorUSD})`);
-
-    // Volume + sales count for the selected range
-    const vol = ivl.volume || 0;
-    const sales = ivl.sales || 0;
-    setMarketText(prefix + '-volume', `${vol.toFixed(1)} ETH \u00b7 ${sales} sale${sales === 1 ? '' : 's'}`);
-
-    // Unique owners
-    setMarketText(prefix + '-owners', total.num_owners ? total.num_owners.toLocaleString('en-US') : '\u2014');
-
-    // Average sale price for the selected range
-    const avg = getMarketAvg(ivl);
-    setMarketText(prefix + '-avg', avg ? formatEth(avg) : '\u2014');
-
-    // Change badge: selected range avg vs the next-longer window
-    let baseAvg = 0, baseTitle = '';
-    if (marketRange === 'one_day') {
-        baseAvg = getMarketAvg(intervals.seven_day);
-        baseTitle = '24h avg sale price vs 7d avg';
-    } else if (marketRange === 'seven_day') {
-        baseAvg = getMarketAvg(intervals.thirty_day);
-        baseTitle = '1w avg sale price vs 1m avg';
-    } else {
-        baseAvg = total.average_price || 0;
-        baseTitle = '1m avg sale price vs all-time avg';
-    }
-    const changeEl = document.getElementById(prefix + '-change');
-    if (changeEl) {
-        if (avg && baseAvg) {
-            const pct = ((avg - baseAvg) / baseAvg) * 100;
-            const up = pct >= 0;
-            changeEl.textContent = `${up ? '\u25b2' : '\u25bc'} ${Math.abs(pct).toFixed(1)}%`;
-            changeEl.classList.remove('up', 'down');
-            changeEl.classList.add(up ? 'up' : 'down');
-            changeEl.title = baseTitle;
-        } else {
-            changeEl.textContent = '';
-        }
-    }
-
-    // Price history sparkline: 30d avg -> 7d avg -> 24h avg -> current floor
-    renderMarketSparkline(prefix, [
-        getMarketAvg(intervals.thirty_day),
-        getMarketAvg(intervals.seven_day),
-        getMarketAvg(intervals.one_day),
-        floor
-    ]);
-}
-
-function applyMarketRange(range) {
-    marketRange = range;
-    try { localStorage.setItem('marketRange', range); } catch (e) { /* private mode */ }
-    const label = MARKET_RANGE_LABELS[range];
-    document.querySelectorAll('[data-dyn-label="vol"]').forEach(el => { el.textContent = label + ' vol'; });
-    document.querySelectorAll('[data-dyn-label="avg"]').forEach(el => { el.textContent = label + ' avg px'; });
-    document.querySelectorAll('#market-range-toggle .range-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.range === range);
-    });
-    Object.keys(marketCache.stats).forEach(renderMarketCard);
-}
-
-function markMarketCardOffline(prefix) {
-    ['-floor', '-volume', '-owners', '-avg'].forEach(suffix => {
-        const el = document.getElementById(prefix + suffix);
-        if (el && el.textContent === 'Loading...') el.textContent = '\u2014';
-    });
-}
-
-async function fetchNFTData() {
-    // Only relevant on the markets page; skip background refreshes while the tab is hidden
-    if (!document.getElementById('milady-floor') || document.hidden) return;
-
-    const apiKey = '5a79fc7192de4ababec6b822f0ca4635';
-    const headers = {
-        'X-API-KEY': apiKey,
-        'Accept': 'application/json'
-    };
-
-    // Get current ETH price in USD first
-    let ethPriceUSD = 2500; // fallback price
-    try {
-        const ethResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-        if (ethResponse.ok) {
-            const ethData = await ethResponse.json();
-            ethPriceUSD = ethData.ethereum.usd;
-        }
-    } catch (e) {
-        console.log('Using fallback ETH price');
-    }
-
-    // Fetch all collections in parallel; one failure doesn't break the rest
-    const results = await Promise.allSettled(NFT_COLLECTIONS.map(async c => {
-        const res = await fetch(`https://api.opensea.io/api/v2/collections/${c.slug}/stats`, { headers });
-        if (!res.ok) throw new Error(`${c.slug}: HTTP ${res.status}`);
-        return res.json();
-    }));
-
-    results.forEach((result, i) => {
-        const prefix = NFT_COLLECTIONS[i].prefix;
-        if (result.status === 'fulfilled') {
-            try {
-                updateMarketCard(prefix, result.value, ethPriceUSD);
-            } catch (e) {
-                console.error('Error rendering ' + prefix + ':', e);
-                markMarketCardOffline(prefix);
-            }
-        } else {
-            console.error('Error fetching ' + prefix + ':', result.reason);
-            markMarketCardOffline(prefix);
-        }
-    });
-
-    // "last updated" stamp in the section header
-    const updated = document.getElementById('markets-updated');
-    if (updated) {
-        const t = new Date().toLocaleTimeString('en-US', { hour12: false });
-        updated.textContent = `feed synced ${t}`;
-    }
-}
-
-// Load NFT data when page loads + wire up the range toggle
-document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('market-range-toggle');
-    if (toggle) {
-        toggle.addEventListener('click', e => {
-            const btn = e.target.closest('.range-btn');
-            if (btn && btn.dataset.range) applyMarketRange(btn.dataset.range);
-        });
-        applyMarketRange(marketRange); // restore persisted range (labels + active button)
-    }
-    fetchNFTData();
-});
-
-// Refresh data every 5 minutes
-setInterval(fetchNFTData, 5 * 60 * 1000);
+// Market data for markets.html lives in js/markets.js
 
 // Profile picture click functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -334,188 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// PFP Card Popup Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const pfpCards = document.querySelectorAll('.pfp-card');
-    const popup = document.getElementById('pfpPopup');
-    // Popup only exists on the gallery page
-    if (!popup) return;
-    
-    pfpCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            const artist = this.getAttribute('data-artist');
-            const description = this.getAttribute('data-description');
-            const opensea = this.getAttribute('data-opensea');
-            const etherscan = this.getAttribute('data-etherscan');
-            
-            // Check if it's a video or image
-            const mediaElement = this.querySelector('img, video');
-            const isVideo = mediaElement.tagName.toLowerCase() === 'video';
-            const mediaSrc = isVideo ? mediaElement.src : mediaElement.src;
-            
-            // Update popup content - show appropriate element
-            const popupImage = document.getElementById('popupImage');
-            const popupVideo = document.getElementById('popupVideo');
-            
-            if (isVideo) {
-                popupVideo.src = mediaSrc;
-                popupVideo.style.display = 'block';
-                popupImage.style.display = 'none';
-            } else {
-                popupImage.src = mediaSrc;
-                popupImage.style.display = 'block';
-                popupVideo.style.display = 'none';
-            }
-            document.getElementById('popupName').textContent = name;
-            document.getElementById('popupArtist').textContent = `by ${artist}`;
-            document.getElementById('popupDescription').textContent = description;
-            
-            // Update icon links
-            const openseaLink = document.getElementById('openseaLink');
-            const etherscanLink = document.getElementById('etherscanLink');
-            
-            if (opensea) {
-                openseaLink.href = opensea;
-                openseaLink.style.display = 'inline-flex';
-            } else {
-                openseaLink.style.display = 'none';
-            }
-            
-            if (etherscan) {
-                etherscanLink.href = etherscan;
-                etherscanLink.style.display = 'inline-flex';
-            } else {
-                etherscanLink.style.display = 'none';
-            }
-            
-            // Show popup
-            popup.classList.add('active');
-            
-            // Show popup scanline and hide main scanline
-            const popupScanline = popup.querySelector('.scanline-popup');
-            const mainScanline = document.querySelector('.scanline');
-            if (popupScanline) {
-                popupScanline.style.display = 'block';
-            }
-            if (mainScanline) {
-                mainScanline.style.display = 'none';
-            }
-            
-            // Hide floating home button
-            const floatingHome = document.querySelector('.floating-home');
-            if (floatingHome) {
-                floatingHome.style.display = 'none';
-            }
-        });
-    });
-    
-    // Close popup when clicking outside content
-    popup.addEventListener('click', function(e) {
-        if (e.target === popup) {
-            closePfpPopup();
-        }
-    });
-    
-    // Close with escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closePfpPopup();
-        }
-    });
-});
-
-function closePfpPopup() {
-    const popup = document.getElementById('pfpPopup');
-    if (!popup) return;
-    popup.classList.remove('active');
-    
-    // Hide popup scanline and show main scanline
-    const popupScanline = popup.querySelector('.scanline-popup');
-    const mainScanline = document.querySelector('.scanline');
-    if (popupScanline) {
-        popupScanline.style.display = 'none';
-    }
-    if (mainScanline) {
-        mainScanline.style.display = 'block';
-    }
-    
-    // Show floating home button again
-    const floatingHome = document.querySelector('.floating-home');
-    if (floatingHome) {
-        floatingHome.style.display = 'block';
-    }
-}
-
-// PFP Filter Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const pfpCards = document.querySelectorAll('.pfp-card');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const filterCategory = this.getAttribute('data-filter');
-            
-            // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Filter PFP cards
-            pfpCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                
-                if (['tyler', 'schizo', 'remilia'].includes(filterCategory) && cardCategory === filterCategory) {
-                    card.style.display = 'block';
-                    // Apply loading animation if image hasn't been processed
-                    const img = card.querySelector('img, video');
-                    if (img && !img.classList.contains('loaded') && !img.classList.contains('lazy')) {
-                        img.classList.add('lazy');
-                        // Simulate loading delay for animation effect
-                        setTimeout(() => {
-                            img.classList.remove('lazy');
-                            img.classList.add('loaded');
-                        }, 300 + Math.random() * 400); // Random delay between 300-700ms
-                    }
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Handle remilia filter - show message if no images available
-            if (filterCategory === 'remilia') {
-                const pfpGrid = document.querySelector('.pfp-grid');
-                const remiliaCards = document.querySelectorAll('.pfp-card[data-category="remilia"]');
-                
-                if (remiliaCards.length === 0) {
-                    // Create temporary message if not exists
-                    let messageCard = document.querySelector('.remilia-message');
-                    if (!messageCard) {
-                        messageCard = document.createElement('div');
-                        messageCard.className = 'remilia-message';
-                        messageCard.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 2rem; color: #00ff41; font-family: "Courier New", monospace;';
-                        messageCard.innerHTML = '<p>Remilia PFPs coming soon...</p>';
-                        pfpGrid.appendChild(messageCard);
-                    }
-                    messageCard.style.display = 'block';
-                } else {
-                    // Hide message if remilia cards exist
-                    const messageCard = document.querySelector('.remilia-message');
-                    if (messageCard) {
-                        messageCard.style.display = 'none';
-                    }
-                }
-            } else {
-                // Hide message for other filters
-                const messageCard = document.querySelector('.remilia-message');
-                if (messageCard) {
-                    messageCard.style.display = 'none';
-                }
-            }
-        });
-    });
-});
+// Gallery popup + filters live in js/gallery.js
 
 // Radbro - Dynamic Mouse Reactive Display
 (function() {
@@ -763,5 +351,33 @@ document.addEventListener('DOMContentLoaded', function() {
     slider.addEventListener('pointercancel', function() {
         downValue = null;
         moved = false;
+    });
+})();
+
+// Page transitions fallback: browsers with cross-document view transitions animate navigations
+// from CSS alone (@view-transition in css/styles.css). Elsewhere, fade the page out on internal
+// link clicks, then fade the next page in.
+(function() {
+    if ('CSSViewTransitionRule' in window) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const root = document.documentElement;
+    if (!reduced) {
+        root.classList.add('tirl-entering');
+        setTimeout(() => root.classList.remove('tirl-entering'), 400);
+    }
+    // Back/forward cache restores the page as it was left: clear the fade-out
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) root.classList.remove('tirl-leaving');
+    });
+    document.addEventListener('click', (e) => {
+        if (reduced || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target instanceof Element && e.target.closest('a[href]');
+        if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin) return;
+        if (url.pathname === location.pathname && url.search === location.search) return; // same page / hash link
+        e.preventDefault();
+        root.classList.add('tirl-leaving');
+        setTimeout(() => { location.href = url.href; }, 180);
     });
 })();

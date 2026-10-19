@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rocketry Project - Tyler (in real life)</title>
+    <title>Missile Program - Tyler (in real life)</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
@@ -13,16 +13,16 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/rocketry">
-    <meta property="og:title" content="Rocketry Project - Tyler (in real life)">
-    <meta property="og:description" content="Follow along as I build and launch my rocket project">
-    <meta property="og:image" content="https://tylerirl.com/assets/rocketry/rocket-og.png">
+    <meta property="og:title" content="Missile Program - Tyler (in real life)">
+    <meta property="og:description" content="Missile program workspace: high power rocket builds, milestones and launch status">
+    <meta property="og:image" content="https://tylerirl.com/assets/HPR/DeepDish_HPR.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/rocketry">
-    <meta property="twitter:title" content="Rocketry Project - Tyler (in real life)">
-    <meta property="twitter:description" content="Follow along as I build and launch my rocket project">
-    <meta property="twitter:image" content="https://tylerirl.com/assets/rocketry/rocket-og.png">
+    <meta property="twitter:title" content="Missile Program - Tyler (in real life)">
+    <meta property="twitter:description" content="Missile program workspace: high power rocket builds, milestones and launch status">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/HPR/DeepDish_HPR.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
     <meta name="supported-color-schemes" content="dark light">
@@ -33,370 +33,104 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
-    <link rel="stylesheet" href="/css/radgotchi.css">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     
-    <!-- Three.js for 3D background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
-    <link rel="stylesheet" href="/css/rocketry.css?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/rocketry.css?v=4.4">
 </head>
 <body>
-    <!-- Rocket Navigation Arrows -->
-    <div class="rocket-nav prev disabled" onclick="switchRocket(-1)">
-        <span>◀</span>
-        <div class="nav-label">PREV</div>
-    </div>
-    <div class="rocket-nav next" onclick="switchRocket(1)">
-        <span>▶</span>
-        <div class="nav-label">NEXT</div>
-    </div>
-    
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Missile program workspace (content rendered by js/rocketry.js from its VEHICLES data) -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// MISSILE PROGRAM</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Vehicle</span><span class="sep">/</span>
+                <b id="g-crumb">&mdash;</b>
+            </nav>
+            <label class="g-search">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+                <input id="g-search" type="search" placeholder="Search objects&hellip;" autocomplete="off" aria-label="Search objects">
+                <kbd>/</kbd>
+            </label>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-    <!-- Classified Briefing -->
-    <div class="rocket-indicators">
-        <div class="rocket-dot active" onclick="goToRocket(0)" title="PATRIOT"></div>
-        <div class="rocket-dot" onclick="goToRocket(1)" title="BULLPUP"></div>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-explorer" aria-label="Object explorer">
+                    <div class="g-panel-title">Object Explorer</div>
+                    <div class="g-tree">
+                        <div class="g-tree-group"><span class="caret">&#9662;</span>Vehicle<span class="g-count" id="g-count">0</span></div>
+                        <ul id="g-vehicles"></ul>
+                        <div class="g-tree-group is-empty"><span class="caret">&#9656;</span>Launch Site<span class="g-count">0</span></div>
+                        <div class="g-empty-hint">pending site selection</div>
+                        <div class="g-tree-group is-empty"><span class="caret">&#9656;</span>Flight Record<span class="g-count">0</span></div>
+                        <div class="g-empty-hint">no flights logged</div>
+                    </div>
+                </section>
+                <section class="g-activity-pane">
+                    <div class="g-panel-title">Activity <span class="g-meta">newest first</span></div>
+                    <ol class="g-activity" id="g-activity"></ol>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main" aria-live="polite">
+                <noscript><p style="padding: 16px;">This workspace needs JavaScript to load its objects.</p></noscript>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-milestones-pane">
+                    <div class="g-panel-title">Build Milestones <span class="g-meta" id="g-ms-meta"></span></div>
+                    <ol class="g-ms-list" id="g-milestones"></ol>
+                </section>
+                <section class="g-graph-pane">
+                    <div class="g-panel-title">Link Analysis <span class="g-meta" id="g-graph-meta"></span></div>
+                    <svg class="g-graph" id="g-graph" viewBox="0 0 300 244" role="img" aria-label="Linked objects"></svg>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span id="g-status-objects"></span>
+                <span id="g-clock"></span>
+                <span class="g-hint">&larr; &rarr; switch object &middot; / search</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
     </div>
-    
-    <!-- ROCKET 1: PATRIOT -->
-    <section class="project-writeup rocket-section active" data-rocket="0">
-        
-        <div class="classified-header">
-            <span class="classification-stamp">UNCLASSIFIED // FOUO</span>
-            <h1>Project Patriot</h1>
-        </div>
-        
-        <div class="doc-meta">
-            <span>DOC ID: RCKT-2026-0107</span>
-            <span>ORIGINATOR: TYLER</span>
-            <span id="doc-date"></span>
-        </div>
-        
-        <div class="section-header">Mission Brief</div>
-        <p class="briefing-text">
-            Construction and deployment of a high-power rocket system designated <span style="color: #8be9fd;">PATRIOT</span>. 
-            Program initiated January 2026. Vehicle is currently in final pre-flight preparation following completion of paint and finishing.
-        </p>
-        
-        <div class="rocket-img-container">
-            <img src="/assets/rocketry/rocket.png" alt="PATRIOT Vehicle">
-            <div class="img-label">FIG 1. — PATRIOT VEHICLE ASSEMBLY</div>
-        </div>
-        
-        <div class="section-header">Vehicle Specifications</div>
-        <div class="specs-grid">
-            <div class="spec-item">
-                <span class="spec-label">Designation</span>
-                <span class="spec-value">PATRIOT</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Class</span>
-                <span class="spec-value">HIGH POWER</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Propulsion</span>
-                <span class="spec-value">SOLID MOTOR</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Recovery</span>
-                <span class="spec-value">PARACHUTE</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Program Start</span>
-                <span class="spec-value">07 JAN 2026</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Status</span>
-                <span class="spec-value" style="color: #50fa7b;">BUILD COMPLETE</span>
-            </div>
-        </div>
-        
-        <div class="section-header">Build Milestones</div>
-        
-        <div class="status-bar">
-            <div class="status-bar-label">Overall Progress</div>
-            <div class="progress-track">
-                <div class="progress-fill"></div>
-            </div>
-            <div class="progress-text">6 / 8 MILESTONES COMPLETE</div>
-        </div>
-        
-        <table class="milestone-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Phase</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="ms-id">MS-01</td>
-                    <td>Kit Received</td>
-                    <td class="ms-date">07 JAN 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-02</td>
-                    <td>Parts Inventory & Planning</td>
-                    <td class="ms-date">10 JAN 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-03</td>
-                    <td>Body Tube Assembly</td>
-                    <td class="ms-date">31 JAN 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-04</td>
-                    <td>Fin Installation</td>
-                    <td class="ms-date">20 FEB 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-05</td>
-                    <td>Recovery System</td>
-                    <td class="ms-date">26 FEB 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-06</td>
-                    <td>Paint & Finishing</td>
-                    <td class="ms-date">27 FEB 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-07</td>
-                    <td>Pre-Flight Checks</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-08</td>
-                    <td>Launch</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="warning-box">
-            <span class="warn-label">⚠ NOTICE:</span> Launch window pending site selection and weather clearance. Final pre-flight inspection required before ignition authorization.
-        </div>
-        
-        <div class="doc-footer-line">
-            <span class="red">UNCLASSIFIED // FOR OFFICIAL USE ONLY</span><br>
-            DISTRIBUTION: PUBLIC RELEASE AUTHORIZED
-        </div>
-        
-    </section>
-    
-    <!-- ROCKET 2: BULLPUP -->
-    <section class="project-writeup rocket-section" data-rocket="1">
-        
-        <div class="classified-header">
-            <span class="classification-stamp">UNCLASSIFIED // FOUO</span>
-            <h1>Project Bullpup</h1>
-        </div>
-        
-        <div class="doc-meta">
-            <span>DOC ID: RCKT-2026-0308</span>
-            <span>ORIGINATOR: TYLER</span>
-            <span id="doc-date-2"></span>
-        </div>
-        
-        <div class="section-header">Mission Brief</div>
-        <p class="briefing-text">
-            Construction and deployment of a high-power rocket system designated <span style="color: #8be9fd;">BULLPUP</span>. 
-            Program initiated March 2026. Vehicle is currently in early construction phase.
-        </p>
-        
-        <div class="rocket-img-container" style="height: 100px; display: flex; align-items: center; justify-content: center;">
-            <img src="/assets/rocketry/bullpup.png" alt="BULLPUP Vehicle" style="transform: rotate(-90deg); height: 500px; width: auto;">
-            <div class="img-label" style="position: absolute; bottom: 0.3rem;">FIG 1. — BULLPUP VEHICLE ASSEMBLY</div>
-        </div>
-        
-        <div class="section-header">Vehicle Specifications</div>
-        <div class="specs-grid">
-            <div class="spec-item">
-                <span class="spec-label">Designation</span>
-                <span class="spec-value">BULLPUP</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Class</span>
-                <span class="spec-value">HIGH POWER</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Propulsion</span>
-                <span class="spec-value">SOLID MOTOR</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Recovery</span>
-                <span class="spec-value">PARACHUTE</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Program Start</span>
-                <span class="spec-value">08 MAR 2026</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">Status</span>
-                <span class="spec-value" style="color: #ffb86c;">IN PROGRESS</span>
-            </div>
-        </div>
-        
-        <div class="section-header">Build Milestones</div>
-        
-        <div class="status-bar">
-            <div class="status-bar-label">Overall Progress</div>
-            <div class="progress-track">
-                <div class="progress-fill" style="width: 12.5%;"></div>
-            </div>
-            <div class="progress-text">1 / 8 MILESTONES COMPLETE</div>
-        </div>
-        
-        <table class="milestone-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Phase</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="ms-id">MS-01</td>
-                    <td>Kit Received</td>
-                    <td class="ms-date">08 MAR 2026</td>
-                    <td><span class="ms-status complete">Complete</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-02</td>
-                    <td>Parts Inventory & Planning</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status active">Active</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-03</td>
-                    <td>Body Tube Assembly</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-04</td>
-                    <td>Fin Installation</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-05</td>
-                    <td>Recovery System</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-06</td>
-                    <td>Paint & Finishing</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-07</td>
-                    <td>Pre-Flight Checks</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td class="ms-id">MS-08</td>
-                    <td>Launch</td>
-                    <td class="ms-date">—</td>
-                    <td><span class="ms-status pending">Pending</span></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="warning-box">
-            <span class="warn-label">⚠ NOTICE:</span> Build in early stages. Timeline estimates pending completion of initial assembly phases.
-        </div>
-        
-        <div class="doc-footer-line">
-            <span class="red">UNCLASSIFIED // FOR OFFICIAL USE ONLY</span><br>
-            DISTRIBUTION: PUBLIC RELEASE AUTHORIZED
-        </div>
-        
-    </section>
-    
-    <!-- Floating Return Home Button -->
-    <a href="/" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="/assets/wee.gif" alt="Return home">
-            </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
-            </div>
-        </div>
-    </a>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <div id="radgotchi-container">
-                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            </div>
-            
-            <!-- Particle Count Slider -->
-            <div style="margin: 0.15rem 0; display: flex; align-items: center; justify-content: center;">
-                <input type="range" id="particleSlider" min="500" max="6000" value="3000" step="100" 
-                    style="width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: #1a1a1a; border-radius: 2px; outline: none; cursor: pointer;">
-            </div>
-            
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+    
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/sounds.js?v=1.1"></script>
+    <script defer src="/js/radgotchi.js"></script>
 
-        </div>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/background3d.js?v=1.6"></script>
-    <script src="/js/script.js?v=1.8"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    
-    <!-- Rocket Navigation Script -->
-    <script src="/js/rocketry.js?v=1.0"></script>
-    
+    <!-- Missile program workspace -->
+    <script defer src="/js/rocketry.js?v=2.7"></script>
 </body>
 </html>

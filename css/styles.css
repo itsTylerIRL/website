@@ -50,125 +50,74 @@ input[type="range"]::-ms-thumb {
     cursor: none !important;
 }
 
-/* Custom Cursor - Palantir/Futuristic Tech Style */
+/* Custom Cursor - Palantir/Futuristic Tech Style
+   A zero-size anchor at the pointer: js/interactions.js moves it with a pixel-snapped translate3d
+   (compositor only, no layout). Children centre themselves on it with translate(-50%, -50%). */
 .custom-cursor {
     position: fixed;
-    width: 8px;
-    height: 8px;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: width 0.2s ease, height 0.2s ease;
+    will-change: transform;
+    contain: layout style;
     perspective: 200px;
     transform-style: preserve-3d;
 }
 
-/* Cursor container for 3D rotation */
-.cursor-3d-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50px;
-    height: 50px;
-    transform: translate(-50%, -50%);
-    transform-style: preserve-3d;
-    animation: cursorOrbit 8s linear infinite;
+/* Corner brackets: the viewport frame. Thin reticles in the same family as the panel corners
+   (1px, short, low-key); a mouse press nudges them inward and brightens them (js/interactions.js).
+   --frame-inset is how far page content sits from the window edges (.bracket-content-area). */
+:root {
+    --bracket-edge: 10px;
+    --bracket-size: 22px;
+    --frame-inset: 26px;
+}
+@media (max-width: 768px) {
+    :root { --bracket-edge: 8px; --bracket-size: 16px; --frame-inset: 18px; }
+}
+@media (max-width: 500px) {
+    :root { --bracket-edge: 6px; --bracket-size: 14px; --frame-inset: 12px; }
 }
 
-@keyframes cursorOrbit {
-    0% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); }
-    25% { transform: translate(-50%, -50%) rotateX(5deg) rotateY(90deg); }
-    50% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(180deg); }
-    75% { transform: translate(-50%, -50%) rotateX(-5deg) rotateY(270deg); }
-    100% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(360deg); }
-}
-
-/* Corner Brackets Border */
 .corner-brackets {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     pointer-events: none;
     z-index: 9998;
 }
-
 .corner-brackets::before,
 .corner-brackets::after,
 .corner-brackets .bottom::before,
 .corner-brackets .bottom::after {
     content: '';
     position: absolute;
-    width: 40px;
-    height: 40px;
-    border-color: rgba(139, 233, 253, 0.5);
-    border-style: solid;
-    border-width: 0;
-    transition: all 0.15s ease-out;
+    width: var(--bracket-size);
+    height: var(--bracket-size);
+    border: 0 solid rgba(139, 233, 253, 0.45);
+    transition: transform 0.18s ease-out, border-color 0.18s ease-out;
 }
+.corner-brackets::before { top: var(--bracket-edge); left: var(--bracket-edge); border-top-width: 1px; border-left-width: 1px; }
+.corner-brackets::after { top: var(--bracket-edge); right: var(--bracket-edge); border-top-width: 1px; border-right-width: 1px; }
+.corner-brackets .bottom::before { bottom: var(--bracket-edge); left: var(--bracket-edge); border-bottom-width: 1px; border-left-width: 1px; }
+.corner-brackets .bottom::after { bottom: var(--bracket-edge); right: var(--bracket-edge); border-bottom-width: 1px; border-right-width: 1px; }
 
-/* Active/held state - brackets pulse and expand */
+/* Held press: a small inward nudge and a brighter line */
 .corner-brackets.active::before,
 .corner-brackets.active::after,
 .corner-brackets.active .bottom::before,
-.corner-brackets.active .bottom::after {
-    border-color: rgba(139, 233, 253, 1);
-    width: 60px;
-    height: 60px;
-    filter: drop-shadow(0 0 8px rgba(139, 233, 253, 0.8));
-}
-
-.corner-brackets.active::before {
-    top: 10px;
-    left: 10px;
-}
-
-.corner-brackets.active::after {
-    top: 10px;
-    right: 10px;
-}
-
-.corner-brackets.active .bottom::before {
-    bottom: 10px;
-    left: 10px;
-}
-
-.corner-brackets.active .bottom::after {
-    bottom: 10px;
-    right: 10px;
-}
-
-/* Top-left */
-.corner-brackets::before {
-    top: 15px;
-    left: 15px;
-    border-top-width: 2px;
-    border-left-width: 2px;
-}
-
-/* Top-right */
-.corner-brackets::after {
-    top: 15px;
-    right: 15px;
-    border-top-width: 2px;
-    border-right-width: 2px;
-}
-
-/* Bottom-left */
-.corner-brackets .bottom::before {
-    bottom: 15px;
-    left: 15px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
-}
-
-/* Bottom-right */
-.corner-brackets .bottom::after {
-    bottom: 15px;
-    right: 15px;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
+.corner-brackets.active .bottom::after { border-color: rgba(139, 233, 253, 0.9); }
+.corner-brackets.active::before { transform: translate(3px, 3px); }
+.corner-brackets.active::after { transform: translate(-3px, 3px); }
+.corner-brackets.active .bottom::before { transform: translate(3px, -3px); }
+.corner-brackets.active .bottom::after { transform: translate(-3px, -3px); }
+@media (prefers-reduced-motion: reduce) {
+    .corner-brackets.active::before,
+    .corner-brackets.active::after,
+    .corner-brackets.active .bottom::before,
+    .corner-brackets.active .bottom::after { transform: none; }
 }
 
 /* Core dot - pulsing center */
@@ -206,15 +155,6 @@ input[type="range"]::-ms-thumb {
     box-shadow: 
         0 0 8px rgba(139, 233, 253, 0.4),
         inset 0 0 6px rgba(139, 233, 253, 0.1);
-}
-
-/* Secondary counter-rotating ring - HIDDEN */
-.cursor-ring-outer {
-    display: none;
-}
-
-.cursor-ring-outer::before {    
-    display: none;
 }
 
 /* Corner brackets - 3D depth effect */
@@ -319,11 +259,6 @@ input[type="range"]::-ms-thumb {
 }
 
 /* Hover state - expanded targeting mode */
-.custom-cursor.hover {
-    width: 16px;
-    height: 16px;
-}
-
 .custom-cursor.hover::after {
     width: 6px;
     height: 6px;
@@ -337,12 +272,6 @@ input[type="range"]::-ms-thumb {
     width: 26px;
     height: 26px;
     border-color: #8be9fd;
-}
-
-.custom-cursor.hover .cursor-ring-outer {
-    width: 38px;
-    height: 38px;
-    border-color: rgba(139, 233, 253, 0.5);
 }
 
 .custom-cursor.hover .cursor-bracket {
@@ -433,24 +362,6 @@ input[type="range"]::-ms-thumb {
     }
     to {
         transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@keyframes rotateCursor {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@keyframes rotateCursorReverse {
-    from {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-    to {
-        transform: translate(-50%, -50%) rotate(0deg);
     }
 }
 
@@ -2857,8 +2768,8 @@ footer {
 /* Floating Return Home Button */
 .floating-home {
     position: fixed;
-    top: 62px;
-    right: 62px;
+    top: calc(var(--frame-inset) + 8px);
+    right: calc(var(--frame-inset) + 8px);
     z-index: 9997;
     background: rgba(0, 0, 0, 0.9);
     border: 1px solid rgba(139, 233, 253, 0.3);
@@ -2916,8 +2827,8 @@ footer {
 /* Tablet adjustments for floating button */
 @media (max-width: 768px) {
     .floating-home {
-        top: 50px;
-        right: 24px;
+        top: calc(var(--frame-inset) + 6px);
+        right: calc(var(--frame-inset) + 6px);
         padding: 0.45rem 0.6rem;
         border-radius: 8px;
     }
@@ -2971,10 +2882,7 @@ footer {
 
 .bracket-content-area {
     position: fixed;
-    top: 55px;
-    left: 55px;
-    right: 55px;
-    bottom: 55px;
+    inset: var(--frame-inset);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1;
@@ -3002,24 +2910,7 @@ footer {
     background: rgba(139, 233, 253, 0.5);
 }
 
-/* Responsive bracket content area */
-@media (max-width: 768px) {
-    .bracket-content-area {
-        top: 45px;
-        left: 20px;
-        right: 20px;
-        bottom: 45px;
-    }
-}
-
-@media (max-width: 500px) {
-    .bracket-content-area {
-        top: 35px;
-        left: 18px;
-        right: 18px;
-        bottom: 35px;
-    }
-}
+/* Inset shrinks with the frame on smaller screens (see --frame-inset) */
 /* Footer particle count slider (shared across all pages; extracted from inline <style> blocks) */
 #particleSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -3075,4 +2966,50 @@ body.animations-paused #particleSlider::-webkit-slider-thumb {
 body.animations-paused #particleSlider::-moz-range-thumb {
     background: #555;
     box-shadow: none;
+}
+
+/* ---------- Page transitions ----------
+   Cross-document view transitions (Chrome / Edge / Safari): every page opts in, so same-origin
+   navigations animate instead of flashing white. The page content fades out with a slight blur
+   and the next one settles in; the top bar and status bar are named so they morph in place
+   between workspace pages; the background canvas keeps its old snapshot underneath while the new
+   one (whose clock continues, see js/background.js) fades in on top, so the field never blinks.
+   Browsers without cross-document support get a JS fade instead (js/script.js). */
+@view-transition { navigation: auto; }
+
+.g-topbar { view-transition-name: tirl-topbar; }
+footer.g-statusbar { view-transition-name: tirl-statusbar; }
+#bg3d-canvas { view-transition-name: tirl-bg; }
+
+::view-transition-old(root) { animation: tirl-page-out 0.22s ease-in both; }
+::view-transition-new(root) { animation: tirl-page-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s both; }
+::view-transition-group(tirl-topbar),
+::view-transition-group(tirl-statusbar) { animation-duration: 0.34s; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+::view-transition-old(tirl-bg) { animation: none; opacity: 1; }
+::view-transition-new(tirl-bg) { animation: tirl-fade-in 0.3s ease both; }
+
+@keyframes tirl-page-out {
+    to { opacity: 0; transform: scale(0.985); filter: blur(4px); }
+}
+@keyframes tirl-page-in {
+    from { opacity: 0; transform: scale(1.012); filter: blur(4px); }
+}
+@keyframes tirl-fade-in {
+    from { opacity: 0; }
+}
+
+/* JS fallback (no cross-document view transitions): same feel, driven by classes on <html> */
+html.tirl-leaving body > *:not(#bg3d-canvas):not(.custom-cursor) {
+    animation: tirl-page-out 0.18s ease-in both;
+}
+html.tirl-entering body > *:not(#bg3d-canvas):not(.custom-cursor) {
+    animation: tirl-page-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) { animation: none !important; }
+    html.tirl-leaving body > *,
+    html.tirl-entering body > * { animation: none !important; }
 }

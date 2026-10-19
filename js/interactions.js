@@ -316,208 +316,124 @@ document.addEventListener('DOMContentLoaded', function() {
     //     });
     // });
 
-    // Custom Cursor Implementation - Only on desktop
-    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    console.log('Mobile detection:', isMobile, 'Width:', window.innerWidth, 'UserAgent:', navigator.userAgent);
-    
-    if (isMobile) {
-        console.log('Mobile detected, skipping custom cursor');
-        return; // Exit early, don't initialize custom cursor on mobile
+    // Custom Cursor - desktop (fine pointer) only
+    // Performance notes: position is a compositor-only translate3d snapped to device pixels (crisp,
+    // no layout); hover is detected on pointerover with a per-element cache instead of hit-testing
+    // every mousemove; the rAF loop runs only while the cursor is catching up, with frame-rate
+    // independent easing so it feels the same at 60Hz and 144Hz.
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        || !window.matchMedia('(pointer: fine)').matches;
+    if (isMobile) return;
+
+    // Reuse cursor markup a page already has (grep.html ships one), otherwise build it
+    let cursor = document.querySelector('.custom-cursor');
+    if (!cursor) {
+        cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        ['tl', 'tr', 'bl', 'br'].forEach((pos) => {
+            const bracket = document.createElement('div');
+            bracket.className = `cursor-bracket ${pos}`;
+            cursor.appendChild(bracket);
+        });
+        ['horizontal', 'vertical'].forEach((dir) => {
+            const line = document.createElement('div');
+            line.className = `cursor-line ${dir}`;
+            cursor.appendChild(line);
+        });
+        document.body.appendChild(cursor);
     }
-    
-    console.log('Initializing custom cursor');
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    
-    // Create outer rotating ring
-    const outerRing = document.createElement('div');
-    outerRing.className = 'cursor-ring-outer';
-    cursor.appendChild(outerRing);
-    
-    // Create corner brackets
-    const brackets = ['tl', 'tr', 'bl', 'br'];
-    brackets.forEach(pos => {
-        const bracket = document.createElement('div');
-        bracket.className = `cursor-bracket ${pos}`;
-        cursor.appendChild(bracket);
-    });
-    
-    // Create targeting lines
-    const lineH = document.createElement('div');
-    lineH.className = 'cursor-line horizontal';
-    cursor.appendChild(lineH);
-    
-    const lineV = document.createElement('div');
-    lineV.className = 'cursor-line vertical';
-    cursor.appendChild(lineV);
-    
-    document.body.appendChild(cursor);
-    console.log('Custom cursor element added to DOM:', cursor);
+    cursor.style.opacity = '0'; // hidden until the first pointer move places it
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
+    const INTERACTIVE = 'a, button, img, label, select, summary, [role="button"], [onclick], [draggable="true"], ' +
+        '.pfp-card, .filter-btn, .project-link, .contact-link, .social-icon, .kol-badge, ' +
+        '[style*="cursor: pointer"], [style*="cursor:pointer"]';
+    const interactiveCache = new WeakMap();
+    const isInteractive = (el) => {
+        if (!(el instanceof Element)) return false;
+        let hit = interactiveCache.get(el);
+        if (hit === undefined) {
+            hit = !!el.closest(INTERACTIVE);
+            interactiveCache.set(el, hit);
+        }
+        return hit;
+    };
 
+    const SMOOTHING_MS = 40; // time constant of the follow easing; lower = snappier
+    let targetX = 0, targetY = 0, x = 0, y = 0;
+    let placed = false, raf = 0, last = 0;
     let isHoveringInteractive = false;
     let isMouseDown = false;
-    let isDragging = false;
 
-    // Update mouse position
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        // Detect if we're dragging (mouse down + movement)
-        if (isMouseDown) {
-            isDragging = true;
+    function render() {
+        const dpr = window.devicePixelRatio || 1;
+        // Snap to the device pixel grid so the glow never resamples between pixels
+        const sx = Math.round(x * dpr) / dpr, sy = Math.round(y * dpr) / dpr;
+        cursor.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+    }
+    function tick(now) {
+        const dt = last ? Math.min(now - last, 100) : 16;
+        last = now;
+        const k = 1 - Math.exp(-dt / SMOOTHING_MS);
+        x += (targetX - x) * k;
+        y += (targetY - y) * k;
+        if (Math.abs(targetX - x) < 0.1 && Math.abs(targetY - y) < 0.1) {
+            x = targetX; y = targetY;
+            render();
+            raf = 0; last = 0; // settled: stop until the pointer moves again
+            return;
         }
-        
-        // Check if hovering over interactive elements
-        const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
-        isHoveringInteractive = elementUnderCursor && (
-            elementUnderCursor.tagName === 'A' ||
-            elementUnderCursor.tagName === 'BUTTON' ||
-            elementUnderCursor.tagName === 'IMG' ||
-            elementUnderCursor.classList.contains('pfp-card') ||
-            elementUnderCursor.classList.contains('filter-btn') ||
-            elementUnderCursor.classList.contains('project-link') ||
-            elementUnderCursor.classList.contains('contact-link') ||
-            elementUnderCursor.classList.contains('social-icon') ||
-            elementUnderCursor.classList.contains('kol-badge') ||
-            elementUnderCursor.closest('.social-icon') ||
-            elementUnderCursor.closest('.kol-badge') ||
-            elementUnderCursor.style.cursor === 'pointer' ||
-            window.getComputedStyle(elementUnderCursor).cursor === 'pointer'
-        );
-        
-        // Always maintain hover state when over interactive elements
-        if (isHoveringInteractive) {
-            cursor.classList.add('hover');
-        } else if (!cursor.classList.contains('clicked')) {
-            cursor.classList.remove('hover');
-        }
-    }, { passive: true });
-
-    // Smooth cursor animation
-    function updateCursor() {
-        // Add smooth easing to cursor movement
-        const ease = 0.15;
-        cursorX += (mouseX - cursorX) * ease;
-        cursorY += (mouseY - cursorY) * ease;
-        
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        
-        requestAnimationFrame(updateCursor);
+        render();
+        raf = requestAnimationFrame(tick);
     }
 
-    updateCursor();
+    document.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        targetX = e.clientX;
+        targetY = e.clientY;
+        if (!placed) { // first move: appear at the pointer instead of flying in from the corner
+            placed = true;
+            x = targetX; y = targetY;
+            render();
+            cursor.style.opacity = '1';
+        }
+        if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
 
-    // Function to snap rotations to cardinal directions with animation
-    function snapToCardinalDirections() {
-        // Calculate elapsed time to determine current rotation angles
-        const now = Date.now();
-        const rotationDuration = 2000; // 2 seconds per full rotation
-        
-        // Calculate current angles based on animation timing
-        const outerAngle = ((now / rotationDuration) * 360) % 360;
-        const innerAngle = 360 - ((now / rotationDuration) * 360) % 360; // Counter-clockwise
-        
-        // Find nearest 45° increment for outer square (corners facing NSEW)
-        let outerTargetAngle;
-        const outerRemainder = outerAngle % 90;
-        if (outerRemainder <= 45) {
-            outerTargetAngle = Math.floor(outerAngle / 90) * 90 + 45;
-        } else {
-            outerTargetAngle = (Math.floor(outerAngle / 90) + 1) * 90 + 45;
-        }
-        
-        // Normalize to 0-360 range
-        outerTargetAngle = ((outerTargetAngle % 360) + 360) % 360;
-        
-        // Find nearest 45° increment for inner square
-        let innerTargetAngle;
-        const innerRemainder = innerAngle % 90;
-        if (innerRemainder <= 45) {
-            innerTargetAngle = Math.floor(innerAngle / 90) * 90 + 45;
-        } else {
-            innerTargetAngle = (Math.floor(innerAngle / 90) + 1) * 90 + 45;
-        }
-        
-        // Normalize to 0-360 range
-        innerTargetAngle = ((innerTargetAngle % 360) + 360) % 360;
-        
-        // Set current positions as animation start points
-        cursor.style.setProperty('--current-rotation-outer', `${outerAngle}deg`);
-        cursor.style.setProperty('--current-rotation-inner', `${innerAngle}deg`);
-        
-        // Set target positions for animation end points
-        cursor.style.setProperty('--frozen-rotation-outer', `${outerTargetAngle}deg`);
-        cursor.style.setProperty('--frozen-rotation-inner', `${innerTargetAngle}deg`);
+    function setHover(on) {
+        isHoveringInteractive = on;
+        if (on) cursor.classList.add('hover');
+        else if (!cursor.classList.contains('clicked')) cursor.classList.remove('hover');
+    }
+    document.addEventListener('pointerover', (e) => setHover(isInteractive(e.target)), { passive: true });
+
+    function releaseClick() {
+        cursor.classList.remove('clicked');
+        if (!isHoveringInteractive) cursor.classList.remove('hover');
     }
 
     // Click animation - lock-on effect
     document.addEventListener('mousedown', () => {
         isMouseDown = true;
-        isDragging = false;
-        cursor.classList.add('clicked');
-        cursor.classList.add('hover');
+        cursor.classList.add('clicked', 'hover');
     });
-
     document.addEventListener('mouseup', () => {
         isMouseDown = false;
-        
-        // Only remove clicked state if we're not in the middle of a drag operation
-        // or if the drag has completed
-        setTimeout(() => {
-            // Small delay to ensure drag operations complete first
-            if (!isMouseDown) {
-                cursor.classList.remove('clicked');
-                cursor.style.removeProperty('--frozen-rotation-outer');
-                cursor.style.removeProperty('--frozen-rotation-inner');
-                
-                // Only remove hover if not actually hovering over interactive element
-                if (!isHoveringInteractive) {
-                    cursor.classList.remove('hover');
-                }
-            }
-            isDragging = false; // Reset dragging state
-        }, 50); // 50ms delay to handle drag completion
+        // Small delay so drag operations complete first
+        setTimeout(() => { if (!isMouseDown) releaseClick(); }, 50);
     });
-
-    // Handle drag end events specifically
     document.addEventListener('dragend', () => {
         isMouseDown = false;
-        isDragging = false;
-        cursor.classList.remove('clicked');
-        cursor.style.removeProperty('--frozen-rotation-outer');
-        cursor.style.removeProperty('--frozen-rotation-inner');
-        
-        // Only remove hover if not actually hovering over interactive element
-        if (!isHoveringInteractive) {
-            cursor.classList.remove('hover');
-        }
+        releaseClick();
     });
 
-    // Also handle mouse leave during click/drag
-    document.addEventListener('mouseleave', () => {
+    // Hide when the pointer leaves the window, show again on return
+    document.documentElement.addEventListener('mouseleave', () => {
         isMouseDown = false;
-        isDragging = false;
-        cursor.classList.remove('clicked');
-        cursor.classList.remove('hover');
-        cursor.style.removeProperty('--frozen-rotation-outer');
-        cursor.style.removeProperty('--frozen-rotation-inner');
-    });
-
-    // Hide cursor when leaving window
-    document.addEventListener('mouseenter', () => {
-        cursor.style.opacity = '1';
-    });
-
-    document.addEventListener('mouseleave', () => {
+        cursor.classList.remove('clicked', 'hover');
         cursor.style.opacity = '0';
+    });
+    document.documentElement.addEventListener('mouseenter', () => {
+        if (placed) cursor.style.opacity = '1';
     });
 
     // Add hover sound effects to navigation cards on index page

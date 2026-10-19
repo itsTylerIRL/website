@@ -33,23 +33,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css?v=1.5">
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
     
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js Post-processing for bloom effect -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     
     <!-- Web3 Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     
     <link rel="stylesheet" href="/css/cornhub.css?v=1.0">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -171,27 +165,23 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <center>
-            <div style="text-align: center; margin-bottom: 0.1rem;">
-                <img src="/assets/radbros/HAPPY.png" alt="Radbro" style="width: 80px; height: auto; filter: invert(1) sepia(1) saturate(8) hue-rotate(155deg) brightness(1.3) drop-shadow(0 0 3px rgba(139, 233, 253, 1)) drop-shadow(0 0 8px rgba(139, 233, 253, 0.8)) drop-shadow(0 0 16px rgba(139, 233, 253, 0.4)); image-rendering: pixelated;">
-            </div>
-            <div style="margin-bottom: 0.1rem;">
-                <input type="range" id="particle-slider" min="500" max="6000" value="3000" 
-                    style="width: 120px; cursor: pointer; accent-color: #8be9fd;"
-                    oninput="if(window.setParticleCount) window.setParticleCount(parseInt(this.value))">
-            </div>
-            <span style="font-size: 0.85rem;">&copy; 2026 tyler</span></center>
+    <footer class="g-statusbar is-standalone">
+        <div class="g-status-main">
+            <span><i class="g-dot tone-green"></i>CONNECTED</span>
         </div>
+        <div class="g-pet" id="radgotchi-container">
+            <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+            <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+        </div>
+        <span class="g-copy">&copy; 2026 tyler</span>
     </footer>
     
     <!-- External JavaScript -->
-    <script src="/js/script.js?v=1.8"></script>
+    <script src="/js/script.js?v=2.1"></script>
     <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.1"></script>
-    <script src="/js/effects.js?v=1.4"></script>
-    <script src="/js/background3d.js?v=1.6"></script>
+    <script src="/js/interactions.js?v=1.2"></script>
+    <script src="/js/background.js?v=1.3"></script>
+    <script src="/js/radgotchi.js"></script>
     <script src="/js/cornhub-web3.js"></script>
     
     <script src="/js/cornhub.js?v=1.0"></script>
