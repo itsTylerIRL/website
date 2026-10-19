@@ -53,7 +53,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.4">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/objects.css?v=6.11">
+    <link rel="stylesheet" href="/css/objects.css?v=6.15">
     <link rel="stylesheet" href="/css/cancel-preview.css?v=1.5">
     <link rel="stylesheet" href="/css/kol-preview.css?v=1.5">
 </head>
@@ -268,6 +268,8 @@
                                 <div class="hologram-noise"></div>
                             </div>
                             <figcaption class="g-op-tag"><i class="g-dot tone-green" id="g-presence-dot"></i>SUBJECT &middot; TYLERIRL</figcaption>
+                            <!-- Online state or last seen, under the tag (js/presence.js) -->
+                            <span class="g-op-seen" id="g-presence-seen" hidden></span>
                         </figure>
                         <div class="g-home-links">
                             <div class="g-op-label">COMMS <span>5 CHANNELS OPEN</span></div>
@@ -307,6 +309,8 @@
                                 <a class="g-xcard" id="g-xcard" href="https://x.com/itsTylerIRL" target="_blank" rel="noopener" hidden data-slide="x" data-label="X &middot; @ITSTYLERIRL"></a>
                                 <!-- Live Discord presence via Lanyard (js/presence.js): Spotify, game, custom status or online state -->
                                 <a class="g-presence" id="g-presence" href="https://discordapp.com/users/367487663990898689" target="_blank" rel="noopener" hidden data-slide="discord" data-label="DISCORD &middot; LIVE"></a>
+                                <!-- Music: now playing (or last played) on TIDAL, via Last.fm (js/music.js, via lastfm-now on cancel-api.tylerirl.com/lastfm) -->
+                                <a class="g-presence g-music" id="g-music" href="https://www.last.fm/user/tylerIRL" target="_blank" rel="noopener" hidden data-slide="music" data-label="MUSIC &middot; TIDAL"></a>
                                 <!-- GitHub: contributions heatmap and streaks (js/index.js) -->
                                 <a class="g-gh" id="g-gh" href="https://github.com/itstylerirl" target="_blank" rel="noopener" hidden data-slide="github" data-label="GITHUB &middot; ITSTYLERIRL"></a>
                                 <!-- Steam: status and recent games (js/socials.js, via steam-proxy on cancel-api.tylerirl.com/steam) -->
@@ -368,11 +372,12 @@
     <script defer src="/js/cancel-preview.js?v=1.2"></script>
     <script defer src="/js/kol-calendar.js?v=1.0"></script>
     <script defer src="/js/kol-preview.js?v=1.6"></script>
-    <script defer src="/js/objects.js?v=4.11"></script>
+    <script defer src="/js/objects.js?v=4.12"></script>
     <!-- Service worker registration -->
     <script defer src="/js/index.js?v=1.11"></script>
-    <script defer src="/js/presence.js?v=1.3"></script>
-    <script defer src="/js/live-rows.js?v=1.0"></script>
+    <script defer src="/js/presence.js?v=1.7"></script>
+    <script defer src="/js/music.js?v=1.0"></script>
+    <script defer src="/js/live-rows.js?v=1.3"></script>
     <script defer src="/js/socials.js?v=1.2"></script>
 </body>
 </html>

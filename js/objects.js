@@ -8,7 +8,7 @@
 // icon: small icon from assets/object-icons/ (leave empty to show the name's initial)
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
 const OBJECTS = [
-    { key: 'home', name: 'tylerirl.com', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website' },
+    { key: 'home', name: 'Tyler (in real life)', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website' },
     { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
     { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud' },

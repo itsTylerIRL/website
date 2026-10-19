@@ -29,6 +29,7 @@
     z-index: -1;
     pointer-events: none;
     overflow: hidden;
+    contain: paint;
 }
 .g-op-floor {
     --cell: 56px;
@@ -44,30 +45,37 @@
     -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 80%);
     mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 80%);
 }
-/* The grid itself scrolls by transform (no per-frame repaint), one cell per loop, inside the fixed mask */
+/* The grid itself scrolls by transform (no per-frame repaint), one cell per loop, inside the fixed mask.
+   The tilt squashes the rows to a third of a pixel near the horizon, where hard 1px lines blink on and off
+   as they cross pixel rows; soft 3px rows (and 2px columns) keep their brightness steady while they move. */
 .g-op-floor::before {
     content: '';
     position: absolute;
     inset: calc(var(--cell) * -1) 0 0;
     background:
-        linear-gradient(rgba(var(--g-blue-rgb), 0.5) 1px, transparent 1px) 0 0 / var(--cell) var(--cell),
-        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.38) 1px, transparent 1px) 0 0 / var(--cell) var(--cell);
+        linear-gradient(transparent, rgba(var(--g-blue-rgb), 0.42) 1px, rgba(var(--g-blue-rgb), 0.42) 2px, transparent 3px) 0 0 / var(--cell) var(--cell),
+        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.38) 1px, transparent 2px) 0 0 / var(--cell) var(--cell);
     will-change: transform;
+    backface-visibility: hidden;
     animation: g-op-floor 2.8s linear infinite;
 }
-@keyframes g-op-floor { to { transform: translateY(var(--cell)); } }
+@keyframes g-op-floor { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, var(--cell), 0); } }
+/* The beam sweeps by transform too (percentages of its own 22% width: -114% and 500% are -25% and 110%
+   of the panel), so it never repaints over the grid */
 .g-op-beam {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -25%;
+    left: 0;
     width: 22%;
     background: linear-gradient(90deg, transparent, rgba(var(--g-blue-rgb), 0.09) 45%, rgba(var(--g-blue-rgb), 0.16) 50%, rgba(var(--g-blue-rgb), 0.09) 55%, transparent);
+    transform: translateX(-114%);
+    will-change: transform;
     animation: g-op-beam 7s ease-in-out infinite;
 }
 @keyframes g-op-beam {
-    0% { left: -25%; }
-    55%, 100% { left: 110%; }
+    0% { transform: translateX(-114%); }
+    55%, 100% { transform: translateX(500%); }
 }
 
 /* Subject: remilio inside a radar scope */
@@ -133,6 +141,20 @@
     white-space: nowrap;
     z-index: 1;
 }
+/* Under the tag: online state or last seen (js/presence.js), in the status colour */
+.g-op-seen {
+    margin-top: -3px;
+    font-family: var(--g-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--tone, var(--g-dim));
+    text-shadow: 0 0 8px color-mix(in srgb, var(--tone, transparent) 50%, transparent);
+    z-index: 1;
+}
+.g-op-seen[hidden] { display: none; }
+.g-op-seen.is-gaming { --tone: rgb(189, 147, 249); }
 
 /* Right side: labelled rows */
 .g-home-links {
@@ -334,6 +356,17 @@
 }
 .g-presence[hidden] { display: none; }
 .g-presence.is-spotify { --pres: #1db954; }
+/* Music card (js/music.js): the presence card's layout in TIDAL's cyan, dimmer for the last track played; a
+   note glyph sits behind the cover art (and shows when there isn't any), and a small equalizer while playing */
+.g-music { --pres: color-mix(in srgb, #33e1ed 55%, var(--g-muted)); }
+.g-music.is-playing { --pres: #33e1ed; }
+.g-music-note { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-size: 18px; color: var(--pres); opacity: 0.6; }
+.g-music .g-presence-art img { position: relative; }
+.g-music-eq { display: inline-flex; align-items: flex-end; gap: 1px; height: 8px; }
+.g-music-eq i { width: 2px; height: 100%; background: var(--pres); transform-origin: 50% 100%; animation: g-music-eq 0.9s ease-in-out infinite alternate; }
+.g-music-eq i:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.3s; }
+.g-music-eq i:nth-child(3) { animation-duration: 1.1s; animation-delay: -0.6s; }
+@keyframes g-music-eq { from { transform: scaleY(0.25); } to { transform: scaleY(1); } }
 .g-presence.is-activity { --pres: #8a93f8; }
 .g-presence:hover,
 .g-presence:focus-visible { border-color: var(--pres); box-shadow: 0 0 16px color-mix(in srgb, var(--pres) 30%, transparent); }
@@ -352,6 +385,31 @@
     box-shadow: 0 0 0 3px #05080a, 0 0 8px var(--tone, transparent);
 }
 .g-presence-text { flex: 1 1 200px; display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+/* Profile card (status / idle): the Discord nameplate faded in behind the right side, the display name in its
+   own colours (brightened for the dark card) with badges, and a custom emoji before the status text */
+.g-presence-plate {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: auto;
+    opacity: 0.3;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
+    mask-image: linear-gradient(90deg, transparent, #000 45%);
+}
+.g-presence > :not(.g-presence-plate):not(.g-presence-bar) { position: relative; }
+.g-presence-name.is-styled {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--name) 55%, #fff), color-mix(in srgb, var(--name2) 55%, #fff));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--name) 60%, transparent));
+}
+.g-presence-badge,
+.g-presence-emoji { width: 14px; height: 14px; vertical-align: -3px; }
+.g-presence-badge { margin-left: 5px; }
+.g-presence-emoji { margin-right: 4px; }
 /* Right-hand stats (js/presence.js), in the card's own colour; long values (the album) truncate */
 .g-presence-side { flex: 0 1 auto; min-width: 0; display: flex; }
 .g-presence .g-soc-stat b { color: var(--pres); }
@@ -932,7 +990,8 @@
     .g-op-stat { padding: 3px 4px; }
     .g-op-stat b { font-size: 13px; }
     .g-op-stat.is-credit b { font-size: 16px; }
-    .g-op-tag { display: none; }
+    .g-op-tag,
+    .g-op-seen { display: none; }
     .g-presence { padding-block: 3px; }
     .g-presence-art { width: 32px; height: 32px; }
     .g-presence-text em { display: none; }
@@ -1162,6 +1221,7 @@
     .g-op-ring,
     .g-op-stats.ready b { animation: none; }
     .g-presence-status { animation: none !important; }
+    .g-music-eq i { animation: none; transform: scaleY(0.6); }
     .g-presence-bar i { transition: none; }
     .g-live-dot { animation: none; }
     .g-dossier > [data-slide] { transition: none; transform: none; }

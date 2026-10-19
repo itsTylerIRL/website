@@ -1,6 +1,6 @@
 /* Live telemetry for the Results list: one short line per object that has a live source, shown in place of
    its path (window.ObjectsLive from js/objects.js). Sources and refresh:
-   - tylerirl.com: Discord presence (js/presence.js), as it changes
+   - Tyler (in real life): the track playing (js/music.js), else the live status (js/presence.js), as they change
    - Kingdom of Loathing: today's date and time to rollover (js/kol-calendar.js), every minute
    - the cancel is coming: this week's king of the hill (cancel-api, which only answers tylerirl.com), every 5 minutes
    - RadGotchi, DigiFlip: last push and stars from one GitHub call, cached for the session (GitHub allows 60 an hour)
@@ -21,16 +21,20 @@
     };
     const every = (ms, fn) => { fn(); setInterval(() => { if (!document.hidden) fn(); }, ms); };
 
-    // tylerirl.com: what Tyler is up to right now
-    function presence(p) {
+    // Tyler (in real life): what Tyler is up to right now, music first
+    let pres = window.tirlPresence, music = window.tirlMusic;
+    function home() {
+        if (music) return set('home', `♫ ${music.name}`, 'blue');
+        const p = pres;
         if (!p) return;
-        const text = p.kind === 'spotify' ? `♫ ${p.title}`
+        const text = p.music ? `♫ ${p.title}`
             : p.kind === 'activity' ? `${p.label.toLowerCase()} ${p.title}`
-            : `discord · ${p.word}`;
+            : `I am currently ${p.word[0].toUpperCase()}${p.word.slice(1)}`;
         set('home', text, p.tone);
     }
-    presence(window.tirlPresence);
-    window.addEventListener('tirl:presence', e => presence(e.detail));
+    home();
+    window.addEventListener('tirl:presence', e => { pres = e.detail; home(); });
+    window.addEventListener('tirl:music', e => { music = e.detail; home(); });
 
     // Kingdom of Loathing: the KoL date and the countdown to rollover
     if (typeof KOL !== 'undefined') {
