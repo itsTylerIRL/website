@@ -1,11 +1,12 @@
-/* Native, readable preview rather than the scaled iframe used by internal pages. */
-.g-preview.is-cancel {
-    container: cancel-preview / inline-size;
+/* Native, readable previews (this one and css/kol-preview.css) rather than the scaled iframe used by internal pages. */
+.g-preview.is-native {
+    container: native-preview / inline-size;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 222, 23, 0.3) transparent;
+    scrollbar-color: rgba(var(--g-blue-rgb), 0.3) transparent;
 }
-.g-preview-screen.is-cancel {
+.g-preview.is-cancel { scrollbar-color: rgba(255, 222, 23, 0.3) transparent; }
+.g-preview-screen.is-native {
     position: relative;
     inset: auto;
     width: 100%;
@@ -13,11 +14,11 @@
     min-height: 100%;
     border: 0;
     box-shadow: none;
-    background: radial-gradient(ellipse at 50% 0, rgba(255, 222, 23, 0.07), transparent 65%);
     overflow: visible;
 }
-.g-preview-screen.is-cancel::before,
-.g-preview-screen.is-cancel::after { display: none; }
+.g-preview-screen.is-native::before,
+.g-preview-screen.is-native::after { display: none; }
+.g-preview-screen.is-cancel { background: radial-gradient(ellipse at 50% 0, rgba(255, 222, 23, 0.07), transparent 65%); }
 .g-cancel-preview {
     --cancel-gold: #ffde17;
     width: 100%;
@@ -113,10 +114,10 @@
 .g-cancel-message { margin: 28px 0; color: var(--g-muted); font-size: 12px; line-height: 1.7; }
 .g-cancel-retry { margin-bottom: 16px; }
 @media (max-width: 899px) {
-    .g-preview.is-cancel { height: auto; min-height: 0; }
+    .g-preview.is-native { height: auto; min-height: 0; }
 }
 /* Wide panes: king beside the calendar, so the whole board shows without scrolling */
-@container cancel-preview (min-width: 820px) {
+@container native-preview (min-width: 820px) {
     .g-cancel-preview {
         max-width: 1100px;
         display: grid;
@@ -133,7 +134,7 @@
     .g-cancel-throne { margin-bottom: 8px; }
     .g-cancel-cell { height: clamp(30px, 4.2cqi, 54px); }
 }
-@container cancel-preview (max-width: 360px) {
+@container native-preview (max-width: 360px) {
     .g-cancel-intro { gap: 8px; margin-bottom: 12px; }
     .g-cancel-intro > img { width: 42px; height: 42px; }
     .g-cancel-month h3 span { display: block; margin-left: 0; }

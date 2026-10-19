@@ -95,6 +95,12 @@
     align-items: center;
     gap: 18px;
     padding: 10px 16px;
+    /* Pinned to the top of the scroller (.bracket-content-area) whenever the page scrolls;
+       a darker glass so panels sliding underneath don't muddy the search box */
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.62);
 }
 
 .g-brand {
@@ -840,6 +846,8 @@
     :where(.g-side) > section { order: 3; }
     .g-explorer { order: 1; }
     .g-main { order: 2; }
+    /* With a results list, the explorer's type chips sit directly above it so filtering is visible in place */
+    .gotham:has(.g-results-pane) .g-explorer { order: 3; }
     .g-activity-pane { order: 9; }
     .g-activity { max-height: none; }
     /* Explorer becomes a horizontal strip of object chips */

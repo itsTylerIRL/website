@@ -8,7 +8,7 @@
 // icon: small icon from assets/object-icons/ (leave empty to show the name's initial)
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
 const OBJECTS = [
-    { key: 'home', name: 'tylerirl.com', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/home.webp', desc: 'home base: remilio enjoyer, contact links and this index of every page on the site' },
+    { key: 'home', name: 'tylerirl.com', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website' },
     { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
     { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud' },
@@ -35,9 +35,10 @@ const OBJECTS = [
 // sprites: [frame names, ms per frame] plays RadGotchi sprites from assets/rg/sprites/ instead of art;
 // badge: art is a KoL avatar (black ink on white), cropped to the character, tinted and refreshed hourly;
 // accent: r,g,b; cta: button label; blurb: the card's short subtext (the full desc stays in the header)
+// info: the card selects the object here (its info view, which links out) instead of opening it
 const FEATURED = [
-    { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'PLAY', blurb: 'roguelite autobattler' },
-    { key: 'kol', art: 'https://images.weserv.nl/?url=sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'VISIT', blurb: 'live moons, display case and KoLmafia' },
+    { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'INFO', info: true, blurb: 'roguelite autobattler' },
+    { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
     { key: 'digiflip', art: '/assets/featured/digiflip.webp', accent: '255,85,85', cta: 'PLAY', blurb: 'flipper zero digimon' },
     { key: 'rocketry', art: '/assets/object-icons/rocketry.webp', accent: '255,184,108', cta: 'EXPLORE', blurb: 'high power rocketry' },
     { key: 'likes', art: '/assets/object-icons/likes-full.webp', accent: '189,147,249', cta: 'BROWSE', blurb: 'crypto, tech and fun' },
@@ -134,13 +135,28 @@ const FEATURED = [
     });
 
     // ---------- Results ----------
+    // Live telemetry per row (set by js/live-rows.js through window.ObjectsLive): key -> { text, tone }.
+    // A live row shows it under the name in place of the path, which moves to the tooltip.
+    const live = {};
+    const pathOf = (o) => (o.external ? o.host : o.url);
+    const descHtml = (o) => live[o.key]
+        ? `<i class="g-live-dot tone-${esc(live[o.key].tone || 'green')}"></i>${esc(live[o.key].text)}`
+        : esc(pathOf(o));
+    window.ObjectsLive = (key, text, tone) => {
+        if (text) live[key] = { text, tone }; else delete live[key];
+        const desc = els.results.querySelector(`.g-res[data-key="${CSS.escape(key)}"] .g-res-desc`);
+        const o = objects.find((x) => x.key === key);
+        if (!desc || !o) return;
+        desc.classList.toggle('is-live', !!live[key]);
+        desc.innerHTML = descHtml(o);
+    };
     function renderResults() {
         const list = visible();
         els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
         els.results.innerHTML = list.length ? list.map((o) => `<li><button type="button" class="g-res" data-key="${o.key}" aria-current="${o === current}">
                 ${iconHtml(o, 'g-res-icon')}
                 <span class="g-res-text"><span class="g-res-title">${esc(o.name)}</span>
-                    <span class="g-res-desc">${esc(o.external ? o.host : o.url)}</span></span>
+                    <span class="g-res-desc${live[o.key] ? ' is-live' : ''}" title="${esc(pathOf(o))}">${descHtml(o)}</span></span>
                 <i class="g-dot tone-${toneOf(o.type)}" title="${esc(typeName(o.type))}"></i>
             </button></li>`).join('')
             : '<li class="g-no-results">No matching objects</li>';
@@ -189,13 +205,17 @@ const FEATURED = [
 
     // ---------- Live preview ----------
     // Internal pages render in a scaled-down iframe (VIEW_W x VIEW_H virtual viewport); external hosts
-    // may refuse to be framed, so they get a "preview disabled" screen (Cancel gets its public leaderboard).
-    // Loading waits a beat so
+    // may refuse to be framed, so they get a "preview disabled" screen. Objects in NATIVE draw their own
+    // readable preview instead (Cancel's leaderboard, KoL at a glance). Loading waits a beat so
     // arrowing through the list doesn't spin up every page.
+    const NATIVE = {
+        cancel: { title: 'Monthly Leaderboard', renderer: () => window.CancelPreview },
+        kol: { title: 'Today in the Kingdom', renderer: () => window.KolPreview }
+    };
     let previewTimer = null;
-    let clearCancelPreview = null;
+    let clearNativePreview = null;
     function scalePreview() {
-        if (els.screen.classList.contains('is-cancel')) return 1;
+        if (els.screen.classList.contains('is-native')) return 1;
         const r = els.preview.getBoundingClientRect();
         const k = Math.max(0.05, Math.min((r.width - 28) / VIEW_W, (r.height - 28) / VIEW_H));
         els.screen.style.transform = `translate(-50%, -50%) scale(${k})`;
@@ -203,11 +223,12 @@ const FEATURED = [
     }
     function renderPreview(o) {
         clearTimeout(previewTimer);
-        if (clearCancelPreview) { clearCancelPreview(); clearCancelPreview = null; }
-        const cancel = o.key === 'cancel' && !!window.CancelPreview;
-        els.preview.classList.toggle('is-cancel', cancel);
-        els.screen.classList.remove('is-cancel');
-        els.screen.classList.remove('ready');
+        if (clearNativePreview) { clearNativePreview(); clearNativePreview = null; }
+        const native = NATIVE[o.key]?.renderer() ? NATIVE[o.key] : null;
+        const nativeClasses = ['is-native', ...Object.keys(NATIVE).map((k) => 'is-' + k)];
+        els.preview.classList.remove(...nativeClasses);
+        els.screen.classList.remove(...nativeClasses, 'ready');
+        if (native) els.preview.classList.add('is-native', 'is-' + o.key);
         // tylerirl.com is this page (framing it would recurse): spotlight what's new instead
         const home = o.key === HOME;
         els.preview.hidden = home;
@@ -218,12 +239,12 @@ const FEATURED = [
             renderFeatured();
             return;
         }
-        if (cancel) {
-            els.previewTitle.textContent = 'Monthly Leaderboard';
+        if (native) {
+            els.previewTitle.textContent = native.title;
             els.screen.classList.remove('offline');
-            els.screen.classList.add('is-cancel');
+            els.screen.classList.add('is-native', 'is-' + o.key);
             els.screen.style.transform = '';
-            clearCancelPreview = window.CancelPreview.render(els.screen, els.previewMeta, o.url);
+            clearNativePreview = native.renderer().render(els.screen, els.previewMeta, o.url);
             return;
         }
         if (o.external) {
@@ -268,21 +289,21 @@ const FEATURED = [
     function renderFeatured() {
         const items = FEATURED.map((f) => ({ ...f, o: objects.find((x) => x.key === f.key) })).filter((f) => f.o);
         els.previewMeta.textContent = 'EXPLORE MORE IN RESULTS';
-        // weserv caches KoL avatars by URL: an hourly key keeps outfit changes current
+        // An hourly key keeps KoL avatar outfit changes current
         const artHtml = ({ art, round, sprites, badge }) => sprites
             ? `<span class="g-feat-art is-sprite"><img src="${spriteSrc(sprites[0][0])}" alt="" decoding="async" data-sprite></span>`
             : badge
-                ? `<span class="g-feat-art is-badge"><img src="${esc(art)}&amp;_=${Math.floor(Date.now() / 3600000)}" alt="" decoding="async"></span>`
+                ? `<span class="g-feat-art is-badge"><img src="${esc(art)}?_=${Math.floor(Date.now() / 3600000)}" alt="" decoding="async"></span>`
                 : `<span class="g-feat-art${round ? ' is-round' : ''}"><img src="${esc(art)}" alt="" decoding="async"></span>`;
         els.featured.innerHTML = `<div class="g-feat-grid">${items.map((f) => `
-                <a class="g-feat g-spot" href="${esc(f.o.url)}"${openAttrs(f.o)} style="--feat: ${esc(f.accent)}">
+                <a class="g-feat g-spot" ${f.info ? `href="/#${esc(f.o.key)}" data-key="${esc(f.o.key)}"` : `href="${esc(f.o.url)}"${openAttrs(f.o)}`} style="--feat: ${esc(f.accent)}">
                     <span class="g-feat-body">
                         ${artHtml(f)}
                         <span class="g-feat-text">
                             <span class="g-feat-head"><strong class="g-feat-name">${esc(f.o.name)}</strong></span>
                             <span class="g-feat-desc">${esc(f.blurb || f.o.desc)}</span>
                         </span>
-                        <span class="g-btn g-feat-cta">${esc(f.cta)} ${f.o.external ? '&nearr;' : '&rarr;'}</span>
+                        <span class="g-btn g-feat-cta">${esc(f.cta)} ${f.o.external && !f.info ? '&nearr;' : '&rarr;'}</span>
                     </span>
                 </a>`).join('')}
             </div>`;
@@ -330,6 +351,14 @@ const FEATURED = [
     els.activity.addEventListener('click', (e) => {
         const b = e.target.closest('.g-act-link');
         if (b) select(objects.find((o) => o.key === b.dataset.key));
+    });
+    // Info cards open the object's view in place, same as picking it from Results
+    els.featured.addEventListener('click', (e) => {
+        const a = e.target.closest('.g-feat[data-key]');
+        if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        e.preventDefault();
+        select(objects.find((o) => o.key === a.dataset.key));
+        header.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
 
     // ---------- Selection ----------
