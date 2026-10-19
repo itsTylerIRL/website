@@ -70,6 +70,11 @@ if ('serviceWorker' in navigator) {
             box.innerHTML = `<span class="g-gh-map"><span class="g-gh-grid">${cells.map((d) => `<i class="l${d.level}"></i>`).join('')}</span></span>`
                 + `<span class="g-gh-stats">${stat(sum(days), 'past year')}${stat(sum(days.slice(-84)), '12 weeks')}${stat(streak, 'day streak')}${stat(best, 'best streak')}${stat(active, 'active days')}</span>`;
             box.title = `${sum(days)} GitHub contributions in the past year`;
+            // For the status-bar ticker (js/ticker.js)
+            (window.tirlFeed = window.tirlFeed || {}).github = [
+                { text: `${sum(days).toLocaleString('en-US')} github contributions this year`, tone: 'green', href: 'https://github.com/itstylerirl' },
+                ...(streak > 1 ? [{ text: `${streak}-day commit streak`, tone: 'green', href: 'https://github.com/itstylerirl' }] : [])
+            ];
             box.setAttribute('aria-label', box.title);
             box.hidden = false;
         })

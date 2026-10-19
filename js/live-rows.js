@@ -24,7 +24,7 @@
     // Tyler (in real life): what Tyler is up to right now, music first
     let pres = window.tirlPresence, music = window.tirlMusic;
     function home() {
-        if (music) return set('home', `♫ ${music.name}`, 'blue');
+        if (music) return set('home', `♫ ${music.name} – ${music.artist}`, 'blue');
         const p = pres;
         if (!p) return;
         const text = p.music ? `♫ ${p.title}`
@@ -49,9 +49,14 @@
     every(FIVE_MIN, async () => {
         try {
             const { king } = await getJSON('https://cancel-api.tylerirl.com/api/king', { cache: 'no-store' });
-            if (!king) return set('cancel', '♛ throne empty · take the crown', 'orange');
+            const feed = (window.tirlFeed = window.tirlFeed || {});
+            if (!king) {
+                feed.cancel = [{ text: '♛ the cancel is coming: throne empty, take the crown', tone: 'orange', href: 'https://cancel.tylerirl.com' }];
+                return set('cancel', '♛ throne empty · take the crown', 'orange');
+            }
             const who = king.handle ? (String(king.handle).startsWith('~') ? king.handle : '~' + king.handle) : king.name || 'anon';
             set('cancel', `♛ ${who} · ${king.score ?? 0} drip`, 'orange');
+            feed.cancel = [{ text: `♛ ${who} holds the cancel crown · ${king.score ?? 0} drip`, tone: 'orange', href: 'https://cancel.tylerirl.com' }];
         } catch (_) {}
     });
 
@@ -75,5 +80,9 @@
             const r = repos[name.toLowerCase()];
             if (r) set(key, `pushed ${ago(new Date(r.pushed))}${r.stars ? ` · ★${r.stars}` : ''}`, 'green');
         });
+        // For the status-bar ticker (js/ticker.js)
+        (window.tirlFeed = window.tirlFeed || {}).repos = Object.values(REPOS).filter(name => repos[name.toLowerCase()]).map(name => ({
+            text: () => `pushed to ${name} ${ago(new Date(repos[name.toLowerCase()].pushed))}`, tone: 'green', href: `https://github.com/itsTylerIRL/${name}`
+        }));
     })();
 })();

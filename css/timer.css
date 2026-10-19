@@ -359,6 +359,7 @@ body.timing-active .g-rail,
 body.timing-active .g-side,
 body.timing-active .g-objhead,
 body.timing-active .g-timer-pane > .g-panel-title,
+body.timing-active .g-trend-pane,
 body.timing-active .g-statusbar {
     opacity: 0;
     pointer-events: none;

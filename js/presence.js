@@ -201,7 +201,7 @@
         card.querySelectorAll('.g-presence-plate, .g-presence-badge, .g-presence-emoji')
             .forEach(el => el.addEventListener('error', () => el.remove()));
         card.hidden = false;
-        window.tirlPresence = { ...d, word, tone };
+        window.tirlPresence = { ...d, word, tone, seen };
         window.dispatchEvent(new CustomEvent('tirl:presence', { detail: window.tirlPresence }));
         clearInterval(timer);
         if (d.start) { tick(); timer = setInterval(tick, 1000); }

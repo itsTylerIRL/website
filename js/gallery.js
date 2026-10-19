@@ -400,7 +400,9 @@
         else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); step(e.key === 'ArrowLeft' ? -1 : 1); }
         else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomAt(1 + STEP); }
         else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomAt(1 / (1 + STEP)); }
-        else if (e.key === '0' || e.key === 'Escape') { resetZoom(); }
+        else if (e.key === '0') { resetZoom(); }
+        // Escape resets a zoom; unzoomed, it's left to js/escape-home.js (back to the home page)
+        else if (e.key === 'Escape' && scale !== 1) { e.preventDefault(); resetZoom(); }
     });
 
     // ---------- Status bar ----------

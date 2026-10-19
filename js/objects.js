@@ -438,6 +438,11 @@ const FEATURED = [
         if (el && el.closest('input, textarea, [contenteditable="true"]')) return;
         if (e.key === '/') { e.preventDefault(); els.search.focus(); }
         else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); step(e.key === 'ArrowLeft' ? -1 : 1); }
+        // Escape: back to the home object (other pages go back to this one, js/escape-home.js)
+        else if (e.key === 'Escape' && current && current.key !== 'home') {
+            const home = objects.find((o) => o.key === 'home');
+            if (home) select(home);
+        }
         else if (e.key === 'Enter' && current && !(el && el.closest('button, a'))) {
             const open = header.querySelector('.g-visit');
             if (open) open.click();

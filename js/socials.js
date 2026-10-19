@@ -59,6 +59,11 @@
                 </span>
                 <span class="g-soc-stats">${stat(short(data.followers), 'followers')}${stat(short(data.posts), 'posts')}</span>`;
             xCard.querySelector('img').addEventListener('error', e => e.target.remove(), { once: true });
+            // For the status-bar ticker (js/ticker.js): the post, cut short
+            if (p) {
+                const text = p.text.replace(/\s+/g, ' ').trim();
+                (window.tirlFeed = window.tirlFeed || {}).x = [{ text: () => `𝕏 “${text.length > 90 ? text.slice(0, 88).trimEnd() + '…' : text}” · ${ago(p.at)}`, tone: 'blue', href: p.url }];
+            }
             xCard.hidden = false;
         }
         const runX = () => loadX().catch(e => console.log('X card unavailable:', e.message));
@@ -90,6 +95,10 @@
             steamCard.querySelectorAll('img').forEach(img => img.addEventListener('error', () => img.remove(), { once: true }));
             steamCard.hidden = false;
             if (steamTile) steamTile.textContent = g ? `playing ${g.name}` : label.toLowerCase();
+            // For the status-bar ticker (js/ticker.js)
+            (window.tirlFeed = window.tirlFeed || {}).steam = g
+                ? [{ text: `in-game on steam · ${g.name}`, tone: 'purple', href: g.link || d.profile }]
+                : recent && games[0] ? [{ text: `${hours(recent)} on steam the past 2 weeks · mostly ${games[0].name}`, tone: 'blue', href: d.profile }] : [];
         }
         const runSteam = () => loadSteam().catch(e => console.log('Steam card unavailable:', e.message));
         runSteam();

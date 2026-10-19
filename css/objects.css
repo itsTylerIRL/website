@@ -18,11 +18,13 @@
     padding: 12px 22px;
     overflow: hidden;
     isolation: isolate;
-    background: radial-gradient(ellipse at 14% 55%, rgba(var(--g-blue-rgb), 0.1) 0%, transparent 55%), rgba(0, 0, 0, 0.25);
+    background: radial-gradient(ellipse at 14% 55%, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.1) 0%, transparent 55%), rgba(0, 0, 0, 0.25);
 }
 .g-home .g-reticle { position: absolute; z-index: 3; }
 
-/* Background: perspective grid floor scrolling toward the viewer + a slow scan beam */
+/* Background: perspective grid floor scrolling toward the viewer + a slow scan beam. Both take the sky's colour
+   (--sky-rgb, --sky-a from js/sky.js: cyan by day, coral at sunrise and sunset, indigo at night), and stars
+   come out over the floor at night (--night). */
 .g-op-fx {
     position: absolute;
     inset: 0;
@@ -53,8 +55,9 @@
     position: absolute;
     inset: calc(var(--cell) * -1) 0 0;
     background:
-        linear-gradient(transparent, rgba(var(--g-blue-rgb), 0.42) 1px, rgba(var(--g-blue-rgb), 0.42) 2px, transparent 3px) 0 0 / var(--cell) var(--cell),
-        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.38) 1px, transparent 2px) 0 0 / var(--cell) var(--cell);
+        linear-gradient(transparent, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.42) 1px, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.42) 2px, transparent 3px) 0 0 / var(--cell) var(--cell),
+        linear-gradient(90deg, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.38) 1px, transparent 2px) 0 0 / var(--cell) var(--cell);
+    opacity: var(--sky-a, 1);
     will-change: transform;
     backface-visibility: hidden;
     animation: g-op-floor 2.8s linear infinite;
@@ -68,11 +71,32 @@
     bottom: 0;
     left: 0;
     width: 22%;
-    background: linear-gradient(90deg, transparent, rgba(var(--g-blue-rgb), 0.09) 45%, rgba(var(--g-blue-rgb), 0.16) 50%, rgba(var(--g-blue-rgb), 0.09) 55%, transparent);
+    background: linear-gradient(90deg, transparent, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.09) 45%, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.16) 50%, rgba(var(--sky-rgb, var(--g-blue-rgb)), 0.09) 55%, transparent);
     transform: translateX(-114%);
     will-change: transform;
     animation: g-op-beam 7s ease-in-out infinite;
 }
+/* Stars: three scattered layers of dots in the upper part of the panel, faded in by --night; one layer
+   breathes slowly (no blinking) */
+.g-op-stars {
+    position: absolute;
+    inset: 0 0 35% 0;
+    opacity: var(--night, 0);
+    background:
+        radial-gradient(1px 1px at 23px 17px, #fff, transparent) 0 0 / 137px 89px,
+        radial-gradient(1px 1px at 71px 52px, rgba(255, 255, 255, 0.8), transparent) 0 0 / 191px 113px,
+        radial-gradient(1.5px 1.5px at 113px 31px, rgba(200, 210, 255, 0.9), transparent) 0 0 / 263px 127px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent);
+    mask-image: linear-gradient(to bottom, #000 30%, transparent);
+}
+.g-op-stars::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(1px 1px at 51px 9px, #fff, transparent) 0 0 / 157px 71px;
+    animation: g-op-stars 9s ease-in-out infinite alternate;
+}
+@keyframes g-op-stars { from { opacity: 0.35; } to { opacity: 1; } }
 @keyframes g-op-beam {
     0% { transform: translateX(-114%); }
     55%, 100% { transform: translateX(500%); }
@@ -367,6 +391,36 @@
 .g-music-eq i:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.3s; }
 .g-music-eq i:nth-child(3) { animation-duration: 1.1s; animation-delay: -0.6s; }
 @keyframes g-music-eq { from { transform: scaleY(0.25); } to { transform: scaleY(1); } }
+/* The artist rides on the title line where the compact layout drops the subtitle */
+.g-music-by { display: none; color: var(--g-muted); }
+
+/* Status-bar ticker (js/ticker.js): takes most of the bar's free space on home (the status items shed from
+   their end first), fades in and out at its edges, and crawls by transform */
+footer.g-statusbar .g-ticker {
+    flex: 2.2 1 0;
+    min-width: 0;
+    height: 20px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+footer.g-statusbar .g-ticker-track { display: flex; align-items: center; width: max-content; height: 100%; will-change: transform; }
+footer.g-statusbar .g-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    color: var(--sb-text);
+    text-decoration: none;
+}
+footer.g-statusbar .g-ticker-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex: none; background: var(--tone, var(--sb-dim)); box-shadow: 0 0 6px var(--tone, transparent); }
+footer.g-statusbar .g-ticker-item::after { content: '◆'; margin: 0 16px; font-size: 7px; color: var(--sb-dim); }
+footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
+.g-ticker-item.tone-purple { --tone: rgb(189, 147, 249); }
+.g-ticker-item.tone-cyan { --tone: #33e1ed; }
+@media (max-width: 760px) {
+    footer.g-statusbar .g-ticker { display: none; }
+}
 .g-presence.is-activity { --pres: #8a93f8; }
 .g-presence:hover,
 .g-presence:focus-visible { border-color: var(--pres); box-shadow: 0 0 16px color-mix(in srgb, var(--pres) 30%, transparent); }
@@ -995,6 +1049,7 @@
     .g-presence { padding-block: 3px; }
     .g-presence-art { width: 32px; height: 32px; }
     .g-presence-text em { display: none; }
+    .g-music-by { display: inline; }
     .g-gh { padding-block: 3px; }
     .g-gh-grid { --cell: 4px; }
 }
@@ -1216,6 +1271,7 @@
     .g-obj-btn:not([aria-current="true"]):hover { padding-left: 28px; }
     .g-preview-wait,
     .g-op-floor::before,
+    .g-op-stars::after,
     .g-op-beam,
     .g-op-sweep,
     .g-op-ring,

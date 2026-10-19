@@ -60,7 +60,7 @@
                 <i class="g-music-note" aria-hidden="true">&#9835;</i></span>
             <span class="g-presence-text">
                 <small><span>${playing ? 'NOW PLAYING' : 'LAST PLAYED'}</span>${playing ? '<i class="g-music-eq" aria-hidden="true"><i></i><i></i><i></i></i>' : ''}<span class="g-presence-time"></span></small>
-                <b>${esc(t.name)}</b>
+                <b>${esc(t.name)}<span class="g-music-by"> · ${esc(t.artist)}</span></b>
                 <em>by ${esc(t.artist)}</em>
             </span>
             <span class="g-presence-side">
@@ -76,6 +76,10 @@
         clearInterval(timer);
         timer = setInterval(tick, playing ? 1000 : 60000);
         window.tirlMusic = j.playing || null;
+        // For the status-bar ticker (js/ticker.js)
+        (window.tirlFeed = window.tirlFeed || {}).music = [playing
+            ? { text: `♫ now playing ${t.name} – ${t.artist}`, tone: 'cyan', href: t.url || PROFILE }
+            : { text: () => `♫ last played ${t.name} – ${t.artist} · ${ago(t.start)}`, tone: 'cyan', href: t.url || PROFILE }];
         window.dispatchEvent(new CustomEvent('tirl:music', { detail: window.tirlMusic }));
     }
 
