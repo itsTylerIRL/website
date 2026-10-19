@@ -1,5 +1,48 @@
-/* Page scripts for deepdish_rg.html: the Specimen viewer (tint + idle routines), Sprite Roster and Clearance ladder.
+/* Page scripts for deepdish_rg.html: the Deploy installer, the Specimen viewer (tint + idle routines), Sprite Roster and Clearance ladder.
    Contents, search and the source map come from js/docs.js. Data from the radgotchi repo at 28e2288. */
+
+// ---------- Deploy: OS tabs (defaults to the visitor's OS) and click-to-copy ----------
+(function() {
+    const pane = document.querySelector('.g-install-pane');
+    if (!pane) return;
+    const tabs = pane.querySelectorAll('.g-install-tab');
+    const cmds = pane.querySelectorAll('.g-install-cmd');
+    const src = document.getElementById('g-install-src');
+
+    function select(os) {
+        tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.os === os)));
+        cmds.forEach(c => { c.hidden = c.dataset.os !== os; });
+        src.href = os === 'ps' ? '/install_rg.ps1' : '/install_rg.sh';
+    }
+    tabs.forEach(t => t.addEventListener('click', () => select(t.dataset.os)));
+    if (/Win/.test(navigator.platform || navigator.userAgent)) select('ps');
+
+    function copied(btn) {
+        const label = btn.querySelector('.g-install-copy');
+        btn.classList.add('copied');
+        label.textContent = 'COPIED';
+        setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'COPY'; }, 1500);
+    }
+    // Fallback: temporary textarea + execCommand (non-secure contexts, or the clipboard API refusing)
+    function legacyCopy(btn, text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { if (document.execCommand('copy')) copied(btn); } catch (e) { console.error('Copy failed:', e); }
+        ta.remove();
+    }
+    cmds.forEach(btn => btn.addEventListener('click', () => {
+        const text = btn.dataset.cmd;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => copied(btn), () => legacyCopy(btn, text));
+        } else {
+            legacyCopy(btn, text);
+        }
+    }));
+})();
 
 // Sprites (assets/rg/sprites, copied from radgotchi/assets/gotchi) and what triggers them (src/renderer)
 const RG_SPRITES = [
@@ -136,6 +179,7 @@ const RG_RANKS = [
         stop();
         show(b.dataset.key);
     });
+
 
     setTint('#ff3344');
     show('awake');

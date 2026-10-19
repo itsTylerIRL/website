@@ -1,6 +1,6 @@
 /* Page styles for deepdish_rg.html: RadGotchi technical documentation.
    Shell: css/workspace.css; contents, search and documentation typography: css/docs.css.
-   This file adds the sprite tint, Specimen viewer, Sprite Roster and Clearance ladder (js/rg-docs.js). */
+   This file adds the sprite tint, Deploy installer, Specimen viewer, Sprite Roster and Clearance ladder (js/rg-docs.js). */
 
 /* ---------- Sprites: tinted with the app's own SVG filter (#rg-tint) ---------- */
 :root { --rg: #ff3344; }
@@ -24,6 +24,101 @@
     border: 1px solid var(--g-border);
     border-radius: 10px;
 }
+
+/* ---------- Deploy: one-line installer (install_rg.sh / install_rg.ps1) ---------- */
+.g-side > .g-install-pane {
+    border-color: color-mix(in srgb, var(--rg) 55%, transparent);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 0 22px color-mix(in srgb, var(--rg) 22%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 24px color-mix(in srgb, var(--rg) 8%, transparent);
+}
+.g-install-pane .g-panel-title {
+    color: var(--rg);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--rg) 60%, transparent);
+    background: color-mix(in srgb, var(--rg) 7%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--rg) 30%, transparent);
+}
+.g-install { padding: 10px 12px 12px; }
+.g-install-tabs { display: flex; }
+.g-install-tab {
+    flex: 1 1 0;
+    padding: 5px 8px;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    background: var(--g-well);
+    border: 1px solid var(--g-border);
+    border-bottom: none;
+    cursor: pointer;
+}
+.g-install-tab:first-child { border-radius: 6px 0 0 0; }
+.g-install-tab:last-child { border-radius: 0 6px 0 0; border-left: none; }
+.g-install-tab:hover { color: var(--g-muted); }
+.g-install-tab[aria-selected="true"] {
+    color: var(--g-text);
+    background: color-mix(in srgb, var(--rg) 14%, rgba(0, 0, 0, 0.45));
+    border-color: color-mix(in srgb, var(--rg) 50%, transparent);
+}
+.g-install-cmd {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid color-mix(in srgb, var(--rg) 50%, transparent);
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.g-install-cmd[hidden] { display: none; }
+.g-install-cmd:hover,
+.g-install-cmd:focus-visible {
+    border-color: var(--rg);
+    background: color-mix(in srgb, var(--rg) 10%, rgba(0, 0, 0, 0.55));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--rg) 35%, transparent);
+}
+.g-install-prompt {
+    flex: none;
+    font-family: var(--g-mono);
+    font-size: 12px;
+    color: var(--rg);
+}
+.g-install-cmd code {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--g-mono);
+    font-size: 12px;
+    color: #9fe8f7;
+    word-break: break-all;
+}
+.g-install-copy {
+    flex: none;
+    padding: 2px 6px;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--g-muted);
+    border: 1px solid var(--g-border-strong);
+    border-radius: 4px;
+}
+.g-install-cmd:hover .g-install-copy { color: var(--g-text); border-color: var(--rg); }
+.g-install-cmd.copied { border-color: var(--g-green); box-shadow: 0 0 14px rgba(80, 250, 123, 0.35); }
+.g-install-cmd.copied .g-install-copy { color: var(--g-green); border-color: var(--g-green); }
+.g-install-note {
+    margin: 8px 0 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--g-muted);
+}
+.g-install-note code { font-family: var(--g-mono); color: var(--g-text); }
+.g-install-note a { color: var(--g-blue); text-decoration: none; white-space: nowrap; }
+.g-install-note a:hover { text-decoration: underline; }
 
 /* ---------- Clearance ladder ---------- */
 .g-ranks {
@@ -173,6 +268,7 @@
 /* ---------- One-screen layout (desktop): this page's panels ---------- */
 @media (min-width: 1360px) and (min-height: 600px) {
     .g-ranks-pane { flex: none; }
+    .g-install-pane { flex: none; }
     .g-specimen-pane { flex: none; }
     .g-roster-pane { flex: 1 1 0; min-height: 120px; }
     .g-roster {
@@ -197,7 +293,13 @@
 }
 
 /* ---------- Responsive: this page's panels ---------- */
+/* Two-column side grid below the docs: the installer spans it */
+@media (max-width: 1359px) {
+    .g-side > .g-install-pane { grid-column: 1 / -1; }
+}
 @media (max-width: 899px) {
+    /* Single column: install sits above the docs */
+    .g-install-pane { order: 1; }
     .g-specimen-pane { order: 3; }
     .g-roster-pane { order: 4; }
     .g-ranks-pane { order: 5; }

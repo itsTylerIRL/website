@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="/css/workspace.css?v=2.3">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/docs.css?v=1.3">
-    <link rel="stylesheet" href="/css/deepdish_rg.css?v=2.6">
+    <link rel="stylesheet" href="/css/deepdish_rg.css?v=2.7">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -97,7 +97,7 @@
             <section class="g-main" id="g-main">
                 <div class="g-objhead">
                     <div class="g-objrow">
-                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/radgotchi.webp" alt=""></div>
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/radgotchi-shades.webp" alt=""></div>
                         <div class="g-objtitle">
                             <div class="g-objtype">OBJECT &middot; PROGRAM &middot; DESKTOP INTELLIGENCE ASSET</div>
                             <h1>RadGotchi</h1>
@@ -523,6 +523,22 @@ npm install &amp;&amp; npm start</code></pre>
             </section>
 
             <aside class="g-side">
+                <section class="g-install-pane" aria-labelledby="g-install-title">
+                    <div class="g-panel-title"><span id="g-install-title">Deploy</span> <span class="g-meta">ONE-LINE INSTALL</span></div>
+                    <div class="g-install">
+                        <div class="g-install-tabs" role="tablist" aria-label="Operating system">
+                            <button type="button" role="tab" class="g-install-tab" data-os="sh" aria-selected="true">Linux / macOS</button>
+                            <button type="button" role="tab" class="g-install-tab" data-os="ps" aria-selected="false">Windows</button>
+                        </div>
+                        <button type="button" class="g-install-cmd" data-os="sh" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" title="Click to copy">
+                            <span class="g-install-prompt">$</span><code>curl -fsSL https://tylerirl.com/install_rg.sh | bash</code><span class="g-install-copy">COPY</span>
+                        </button>
+                        <button type="button" class="g-install-cmd" data-os="ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" title="Click to copy" hidden>
+                            <span class="g-install-prompt">PS&gt;</span><code>irm https://tylerirl.com/install_rg.ps1 | iex</code><span class="g-install-copy">COPY</span>
+                        </button>
+                        <p class="g-install-note">Checks for git, Node and npm (offers to install them), clones or updates <code>~/radgotchi</code>, installs dependencies and offers a shortcut. Re-run it to update. <a href="/install_rg.sh" target="_blank" rel="noopener" id="g-install-src">Read the script &nearr;</a></p>
+                    </div>
+                </section>
                 <section class="g-specimen-pane">
                     <div class="g-panel-title">Specimen <span class="g-meta" id="g-specimen-meta"></span></div>
                     <div class="g-specimen" id="g-specimen"></div>
@@ -560,6 +576,6 @@ npm install &amp;&amp; npm start</code></pre>
 
     <!-- Docs (contents, search, source map) + RadGotchi sprites, routines and ranks -->
     <script defer src="/js/docs.js?v=1.2"></script>
-    <script defer src="/js/rg-docs.js?v=1.1"></script>
+    <script defer src="/js/rg-docs.js?v=1.2"></script>
 </body>
 </html>

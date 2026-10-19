@@ -177,12 +177,14 @@
     transition: transform 0.6s ease;
 }
 .g-chan:hover,
+.g-chan.is-ambient,
 .g-chan:focus-visible {
     border-color: rgba(var(--chan), 0.85);
     box-shadow: 0 0 18px rgba(var(--chan), 0.3), inset 0 0 14px rgba(var(--chan), 0.1);
     transform: translateY(-2px);
 }
-.g-chan:hover::before { transform: translateX(100%); }
+.g-chan:hover::before,
+.g-chan.is-ambient::before { transform: translateX(100%); }
 .g-chan-icon {
     width: 30px;
     height: 30px;
@@ -194,7 +196,8 @@
 }
 .g-chan-icon svg { width: 17px; height: 17px; }
 .g-chan-icon img { width: 21px; height: 21px; filter: invert(1) drop-shadow(0 0 4px rgb(var(--chan))); }
-.g-chan:hover .g-chan-icon { box-shadow: 0 0 0 1px rgb(var(--chan)), 0 0 12px rgba(var(--chan), 0.6); }
+.g-chan:hover .g-chan-icon,
+.g-chan.is-ambient .g-chan-icon { box-shadow: 0 0 0 1px rgb(var(--chan)), 0 0 12px rgba(var(--chan), 0.6); }
 .g-chan-text { display: flex; flex-direction: column; min-width: 0; max-width: 100%; line-height: 1.25; }
 .g-chan-text b {
     font-weight: 500;
@@ -213,9 +216,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.g-chan:hover .g-chan-text small { color: rgb(var(--chan)); }
+.g-chan:hover .g-chan-text small,
+.g-chan.is-ambient .g-chan-text small { color: rgb(var(--chan)); }
 
-/* Dossier: live RemiliaNET stats (js/index.js fills [data-stat]) + the KoL badge */
+/* Dossier: live RemiliaNET stats (js/index.js fills [data-stat]) */
 .g-dossier {
     display: flex;
     align-items: center;
@@ -271,8 +275,6 @@
 .g-op-stats.ready b { animation: g-op-in 0.8s ease-out; }
 @keyframes g-op-in { 0% { opacity: 0; filter: blur(4px); } 100% { opacity: 1; filter: none; } }
 .g-op-stats.offline b { color: var(--g-dim); text-shadow: none; }
-.g-home-kol { flex: none; line-height: 0; }
-.g-home-kol img { width: clamp(150px, 16vw, 260px); height: auto; }
 
 /* ---------- Live preview ---------- */
 .g-preview-pane { margin-top: var(--g-gap); }
@@ -467,6 +469,7 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .g-feat:hover,
+.g-feat.is-ambient,
 .g-feat:focus-visible {
     border-color: rgb(var(--feat));
     box-shadow: 0 0 24px rgba(var(--feat), 0.3), inset 0 0 24px rgba(var(--feat), 0.08);
@@ -520,8 +523,24 @@
     filter: invert(1) sepia(1) saturate(6) hue-rotate(160deg) brightness(1.2)
             drop-shadow(0 0 4px rgba(var(--feat), 0.9)) drop-shadow(0 0 14px rgba(var(--feat), 0.45));
 }
-.g-feat:hover .g-feat-art img { transform: scale(1.06) rotate(-2deg); }
-.g-feat:hover .g-feat-art.is-sprite img { transform: scale(1.06); }
+/* KoL avatar (100x100, black ink on white): only its left half holds the character (the right is the
+   "Kingdom of Loathing" caption), so the box is half as wide and the image covers it from the left.
+   Inverted and tinted; #brightnessToAlpha (index.html) drops the inverted, now black, page */
+.g-feat-art.is-badge img {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1 / 2;
+    object-fit: cover;
+    object-position: 0 50%;
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) brightness(1.2) url(#brightnessToAlpha)
+            drop-shadow(0 0 6px rgba(var(--feat), 0.6));
+}
+.g-feat:hover .g-feat-art img,
+.g-feat.is-ambient .g-feat-art img { transform: scale(1.06) rotate(-2deg); }
+.g-feat:hover .g-feat-art.is-sprite img,
+.g-feat.is-ambient .g-feat-art.is-sprite img,
+.g-feat:hover .g-feat-art.is-badge img,
+.g-feat.is-ambient .g-feat-art.is-badge img { transform: scale(1.06); }
 .g-feat-name {
     grid-area: name;
     max-width: 100%;
@@ -556,7 +575,8 @@
     border-color: rgba(var(--feat), 0.6);
     color: rgb(var(--feat));
 }
-.g-feat:hover .g-feat-cta { background: rgba(var(--feat), 0.15); }
+.g-feat:hover .g-feat-cta,
+.g-feat.is-ambient .g-feat-cta { background: rgba(var(--feat), 0.15); }
 /* Short cards drop the description first, then trim it to one line */
 @container feat (max-height: 104px) {
     .g-feat-desc { display: none; }
@@ -586,6 +606,7 @@
     }
     .g-feat-cta { font-size: clamp(10px, min(4.6cqh, 3.8cqw), 12px); }
 }
+
 
 /* ---------- Three columns: recently viewed fills the rail below the explorer ----------
    The rail stretches to the row height and the size-contained panel takes whatever is left,
@@ -638,6 +659,9 @@
         grid-template-rows: repeat(var(--rows), minmax(72px, 1fr));
         overflow-y: auto;
         scrollbar-width: thin;
+        /* The scroller clips its edges: room for a hovered card's lift and rim, without moving the layout */
+        padding: 4px;
+        margin: -4px;
     }
     .g-feat { aspect-ratio: auto; }
     /* Columns that keep each cell nearest a ~1.6:1 card: cell aspect = pane aspect * 6 / cols^2 */
@@ -682,7 +706,6 @@
     .g-op-stat b { font-size: 13px; }
     .g-op-stat.is-credit b { font-size: 16px; }
     .g-op-tag { display: none; }
-    .g-home-kol img { width: clamp(140px, 14vw, 220px); }
 }
 
 /* ---------- Responsive: this page's panels ---------- */
@@ -784,10 +807,14 @@
     transition: opacity 0.35s ease;
     z-index: 1;
 }
-.g-spot:hover::after { opacity: 1; }
+.g-spot:hover::after,
+.g-spot.is-ambient::after { opacity: 1; }
 :is(.g-rail, .g-side) > section.g-spot:hover,
+:is(.g-rail, .g-side) > section.g-spot.is-ambient,
 .g-objhead.g-spot:hover,
-.g-card.g-spot:hover {
+.g-objhead.g-spot.is-ambient,
+.g-card.g-spot:hover,
+.g-card.g-spot.is-ambient {
     border-color: rgba(139, 233, 253, 0.42);
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
@@ -795,7 +822,8 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         inset 0 0 24px rgba(139, 233, 253, 0.05);
 }
-.g-spot:hover > .g-panel-title { color: #c9f6ff; text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.45); }
+.g-spot:hover > .g-panel-title,
+.g-spot.is-ambient > .g-panel-title { color: #c9f6ff; text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.45); }
 .g-panel-title { transition: color 0.3s ease, text-shadow 0.3s ease; }
 
 /* Featured cards: the light takes the card's accent and a glint sweeps across */
@@ -810,8 +838,10 @@
     transform: translateX(-120%);
     z-index: 1;
 }
-.g-feat:hover::before { transform: translateX(120%); transition: transform 0.8s ease; }
-.g-feat:hover .g-feat-name { text-shadow: 0 0 18px rgba(var(--feat), 0.7); }
+.g-feat:hover::before,
+.g-feat.is-ambient::before { transform: translateX(120%); transition: transform 0.8s ease; }
+.g-feat:hover .g-feat-name,
+.g-feat.is-ambient .g-feat-name { text-shadow: 0 0 18px rgba(var(--feat), 0.7); }
 
 /* Object explorer: accent rail slides in, the dot lights up */
 .g-obj-btn { transition: background 0.2s ease, border-color 0.2s ease, padding-left 0.2s ease; }
@@ -841,25 +871,59 @@
 
 /* Comms: cards lift on top of their existing sweep and icon ring */
 .g-chan { transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease; }
-.g-chan:hover { transform: translateY(-2px); }
+.g-chan:hover,
+.g-chan.is-ambient { transform: translateY(-2px); }
 
 /* Dossier: each stat lights up on its own */
 .g-op-stat { transition: background 0.2s ease; }
 .g-op-stat b { transition: text-shadow 0.2s ease, transform 0.2s ease; }
-.g-op-stat:hover { background: rgba(var(--g-blue-rgb), 0.07); }
-.g-op-stat:hover b { transform: scale(1.08); text-shadow: 0 0 12px currentColor; }
+.g-op-stat:hover,
+.g-op-stat.is-ambient { background: rgba(var(--g-blue-rgb), 0.07); }
+.g-op-stat:hover b,
+.g-op-stat.is-ambient b { transform: scale(1.08); text-shadow: 0 0 12px currentColor; }
 
 /* Object header: the icon tilts toward you */
 .g-objicon { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.g-objhead:hover .g-objicon { transform: perspective(200px) rotateY(-14deg) scale(1.05); box-shadow: 0 0 16px rgba(var(--g-blue-rgb), 0.35); }
+.g-objhead:hover .g-objicon,
+.g-objhead.is-ambient .g-objicon { transform: perspective(200px) rotateY(-14deg) scale(1.05); box-shadow: 0 0 16px rgba(var(--g-blue-rgb), 0.35); }
+
+/* ---------- Ambient mode (js/objects.js): idle-screen effects ----------
+   Most effects reuse the hover styles above through their .is-ambient twins; these are its own. */
+.g-ambient-tag { color: var(--g-blue); }
+.g-ambient-tag[hidden] { display: none; }
+.g-ambient-tag .g-dot { background: var(--g-blue); box-shadow: 0 0 6px var(--g-blue); animation: g-ambient-blink 1.6s steps(1) infinite; }
+@keyframes g-ambient-blink { 50% { opacity: 0.2; } }
+/* A scan line sweeping one panel */
+.g-ambient-scan { position: relative; }
+.g-ambient-scan::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 48px;
+    pointer-events: none;
+    z-index: 6;
+    background: linear-gradient(transparent, rgba(var(--g-blue-rgb), 0.07) 70%, rgba(var(--g-blue-rgb), 0.16));
+    border-bottom: 1px solid rgba(var(--g-blue-rgb), 0.5);
+    box-shadow: 0 6px 14px rgba(var(--g-blue-rgb), 0.12);
+    animation: g-ambient-scan 2.6s linear both;
+}
+@keyframes g-ambient-scan {
+    from { top: -48px; }
+    to { top: 100%; }
+}
 
 @media (prefers-reduced-motion: reduce) {
     .g-feat::before { display: none; }
+    .g-ambient-tag .g-dot { animation: none; }
     .g-res:hover .g-res-icon,
     .g-res:hover .g-res-text,
     .g-chan:hover,
+    .g-chan.is-ambient,
     .g-op-stat:hover b,
-    .g-objhead:hover .g-objicon { transform: none; }
+    .g-op-stat.is-ambient b,
+    .g-objhead:hover .g-objicon,
+    .g-objhead.is-ambient .g-objicon { transform: none; }
     .g-obj-btn:not([aria-current="true"]):hover { padding-left: 28px; }
     .g-preview-wait,
     .g-op-floor,

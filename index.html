@@ -46,14 +46,15 @@
     <link rel="stylesheet" href="/css/styles.css?v=1.8">
     <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     <!-- Hologram hero + boot splash -->
-    <link rel="stylesheet" href="/css/index.css?v=2.1">
+    <link rel="stylesheet" href="/css/index.css?v=2.2">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.3">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/objects.css?v=5.4">
+    <link rel="stylesheet" href="/css/objects.css?v=6.1">
+    <link rel="stylesheet" href="/css/cancel-preview.css?v=1.2">
 </head>
 <body>
     <!-- Boot splash (first visit per session): a glass handshake panel over the live background -->
@@ -197,6 +198,18 @@
     })();
     </script>
 
+    <!-- KoL badge on the featured card: black ink on white, so invert it and turn brightness into alpha -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="brightnessToAlpha" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix"
+                    values="1 0 0 0 0
+                            0 1 0 0 0
+                            0 0 1 0 0
+                            0.2126 0.7152 0.0722 0 0"/>
+            </filter>
+        </defs>
+    </svg>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
 
@@ -288,26 +301,6 @@
                                     <span class="g-op-stat"><b data-stat="beetles">&mdash;</b><small>beetles</small></span>
                                     <span class="g-op-stat"><b data-stat="pokes">&mdash;</b><small>pokes</small></span>
                                 </a>
-                                <!-- Parked for a future KoL page: retain the badge markup, SVG filter,
-                                     and .g-home-kol styles in css/objects.css (including responsive sizing). -->
-                                <template id="kol-badge-template">
-                                <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
-                                        <defs>
-                                            <filter id="brightnessToAlpha" color-interpolation-filters="sRGB">
-                                                <!-- Convert luminance to alpha: dark=transparent, bright=opaque -->
-                                                <feColorMatrix type="matrix"
-                                                    values="1 0 0 0 0
-                                                            0 1 0 0 0
-                                                            0 0 1 0 0
-                                                            0.2126 0.7152 0.0722 0 0"/>
-                                            </filter>
-                                        </defs>
-                                    </svg>
-                                <a class="g-home-kol" href="https://www.kingdomofloathing.com" target="_blank" rel="noopener">
-                                    <!-- Proxied via images.weserv.nl: origin is http-only, which browsers block as mixed content on https -->
-                                    <img src="https://images.weserv.nl/?url=sigs.kingdomofloathing.com/player_571951/mode_bigsig/l1_created/l2_collection_8778/s1_ascensions/s2_num_all/s3_turnsplayed/playerfeed_571951_bigsig.gif" alt="Kingdom of Loathing player badge" loading="lazy" decoding="async" style="filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) url(#brightnessToAlpha);" onerror="this.parentNode.style.display='none';">
-                                </a>
-                                </template>
                             </div>
                         </div>
                     </div>
@@ -338,6 +331,7 @@
             <!-- One clipped line: items that don't fit wrap out of view, last first; CONNECTED always stays -->
             <div class="g-status-main">
                 <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span class="g-ambient-tag" id="g-ambient" hidden><i class="g-dot"></i>AMBIENT</span>
                 <span id="g-status-objects"></span>
                 <span id="g-status-filter"></span>
                 <span id="g-clock"></span>
@@ -361,7 +355,8 @@
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- Objects index workspace -->
-    <script defer src="/js/objects.js?v=3.5"></script>
+    <script defer src="/js/cancel-preview.js?v=1.1"></script>
+    <script defer src="/js/objects.js?v=4.4"></script>
     <!-- Service worker registration -->
     <script defer src="/js/index.js?v=1.7"></script>
 </body>

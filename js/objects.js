@@ -10,21 +10,22 @@
 const OBJECTS = [
     { key: 'home', name: 'tylerirl.com', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/home.webp', desc: 'home base: remilio enjoyer, contact links and this index of every page on the site' },
     { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/gallery.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
+    { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud' },
+    { key: 'kol', name: 'Kingdom of Loathing', url: '/pages/kol.html', type: 'collection', workspace: true, icon: '/assets/object-icons/kol.webp', desc: 'TylerIRL in the Kingdom: live moons and calendar, display case with mall prices and what\'s new in KoLmafia' },
     { key: 'rocketry', name: 'Missile Program', url: '/pages/rocketry.html', type: 'program', workspace: true, icon: '/assets/object-icons/rocketry.webp', desc: 'high power rocketry: vehicle builds, milestones, flight footage and launch status' },
-    { key: 'deepdish', name: 'DeepDish', url: '/pages/deepdish.html', type: 'program', icon: '/assets/object-icons/deepdish.webp', desc: 'custom computer build, monitoring and the projects that run on it' },
+    { key: 'deepdish', hidden: true, name: 'DeepDish', url: '/pages/deepdish.html', type: 'program', icon: '/assets/object-icons/deepdish.webp', desc: 'custom computer build, monitoring and the projects that run on it' },
     { key: 'ocs', name: 'DeepDish OCS', url: '/pages/deepdish_ocs.html', type: 'program', workspace: true, icon: '/assets/object-icons/ocs-sentinel.webp', desc: 'optical control system: a face-tracking animated eye for the Gakken Worldeye, with technical docs' },
     { key: 'ocs-demo', hidden: true, name: 'OCS Web UI Demo', url: '/pages/OCS-web-ui-demo.html', type: 'program', icon: '/assets/object-icons/ocs-demo.webp', desc: 'interactive demo of the DeepDish OCS web interface' },
-    { key: 'top', name: 'DeepDish TOP', url: '/pages/deepdish_top.html', type: 'program', icon: '/assets/object-icons/top.webp', desc: 'terminal operations panel: real-time infrastructure monitoring dashboard' },
+    { key: 'top', name: 'DeepDish TOP', url: '/pages/deepdish_top.html', type: 'program', workspace: true, icon: '/assets/object-icons/top.webp', desc: 'terminal operations panel: host and cluster monitoring, Docker, OCS and a technical reference' },
     { key: 'sin', name: 'RADactedBot', url: '/pages/deepdish_sin.html', type: 'program', workspace: true, icon: '/assets/object-icons/sin-defcon4.webp', desc: 'Discord and Telegram bot: economy, games, relays, LLM agents and moderation' },
-    { key: 'radgotchi', name: 'RadGotchi', url: '/pages/deepdish_rg.html', type: 'program', workspace: true, icon: '/assets/object-icons/radgotchi.webp', desc: 'desktop + web pixel-art companion: system telemetry, local-AI chat with tools, XP and a LAN mesh, with technical docs' },
+    { key: 'radgotchi', name: 'RadGotchi', url: '/pages/deepdish_rg.html', type: 'program', workspace: true, icon: '/assets/object-icons/radgotchi-shades.webp', desc: 'desktop + web pixel-art companion: system telemetry, local-AI chat with tools, XP and a LAN mesh, with technical docs' },
     { key: 'grep', hidden: true, name: 'grep dojo', url: '/pages/grep.html', type: 'tool', icon: '/assets/object-icons/grep.webp', desc: 'master grep through interactive terminal challenges' },
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser' },
     { key: 'timer', name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser' },
     { key: 'markets', name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart' },
     { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit' },
     { key: 'cornhub', hidden: true, name: 'CornHub', url: '/pages/cornhub.html', type: 'page', icon: '/assets/object-icons/cornhub.webp', desc: 'cornhub intl inc. - yet another shitcoin' },
-    { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
     { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star' },
     { key: 'raddem', name: '~raddem-tidwyt', url: 'http://urbit.tylerirl.com', type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet' }
 ];
@@ -32,11 +33,11 @@ const OBJECTS = [
 // ---------- Featured pages (shown while tylerirl.com is selected; edit here to change the spotlight) ----------
 // key: an OBJECTS key (name, link and description come from there); art: image (round: ringed circle);
 // sprites: [frame names, ms per frame] plays RadGotchi sprites from assets/rg/sprites/ instead of art;
+// badge: art is a KoL avatar (black ink on white), cropped to the character, tinted and refreshed hourly;
 // accent: r,g,b; cta: button label; blurb: the card's short subtext (the full desc stays in the header)
 const FEATURED = [
     { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'PLAY', blurb: 'roguelite autobattler' },
-    { key: 'radgotchi', sprites: [['awake', 'look_l', 'awake', 'look_r', 'look_r_happy', 'happy', 'cool', 'cool', 'smart', 'debug', 'smart', 'excited',
-        'upload', 'upload1', 'upload2', 'upload1', 'happy', 'bored', 'sleep', 'sleep2', 'sleep', 'awake'], 900], accent: '139,233,253', cta: 'MEET', blurb: 'desktop local-AI chat' },
+    { key: 'kol', art: 'https://images.weserv.nl/?url=sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'VISIT', blurb: 'live moons, display case and KoLmafia' },
     { key: 'digiflip', art: '/assets/featured/digiflip.webp', accent: '255,85,85', cta: 'PLAY', blurb: 'flipper zero digimon' },
     { key: 'rocketry', art: '/assets/object-icons/rocketry.webp', accent: '255,184,108', cta: 'EXPLORE', blurb: 'high power rocketry' },
     { key: 'likes', art: '/assets/object-icons/likes-full.webp', accent: '189,147,249', cta: 'BROWSE', blurb: 'crypto, tech and fun' },
@@ -188,10 +189,13 @@ const FEATURED = [
 
     // ---------- Live preview ----------
     // Internal pages render in a scaled-down iframe (VIEW_W x VIEW_H virtual viewport); external hosts
-    // may refuse to be framed, so they get a "preview disabled" screen. Loading waits a beat so
+    // may refuse to be framed, so they get a "preview disabled" screen (Cancel gets its public leaderboard).
+    // Loading waits a beat so
     // arrowing through the list doesn't spin up every page.
     let previewTimer = null;
+    let clearCancelPreview = null;
     function scalePreview() {
+        if (els.screen.classList.contains('is-cancel')) return 1;
         const r = els.preview.getBoundingClientRect();
         const k = Math.max(0.05, Math.min((r.width - 28) / VIEW_W, (r.height - 28) / VIEW_H));
         els.screen.style.transform = `translate(-50%, -50%) scale(${k})`;
@@ -199,6 +203,10 @@ const FEATURED = [
     }
     function renderPreview(o) {
         clearTimeout(previewTimer);
+        if (clearCancelPreview) { clearCancelPreview(); clearCancelPreview = null; }
+        const cancel = o.key === 'cancel' && !!window.CancelPreview;
+        els.preview.classList.toggle('is-cancel', cancel);
+        els.screen.classList.remove('is-cancel');
         els.screen.classList.remove('ready');
         // tylerirl.com is this page (framing it would recurse): spotlight what's new instead
         const home = o.key === HOME;
@@ -208,6 +216,14 @@ const FEATURED = [
         if (home) {
             els.screen.replaceChildren(); // unload the last framed page
             renderFeatured();
+            return;
+        }
+        if (cancel) {
+            els.previewTitle.textContent = 'Monthly Leaderboard';
+            els.screen.classList.remove('offline');
+            els.screen.classList.add('is-cancel');
+            els.screen.style.transform = '';
+            clearCancelPreview = window.CancelPreview.render(els.screen, els.previewMeta, o.url);
             return;
         }
         if (o.external) {
@@ -252,9 +268,12 @@ const FEATURED = [
     function renderFeatured() {
         const items = FEATURED.map((f) => ({ ...f, o: objects.find((x) => x.key === f.key) })).filter((f) => f.o);
         els.previewMeta.textContent = 'EXPLORE MORE IN RESULTS';
-        const artHtml = ({ art, round, sprites }) => sprites
+        // weserv caches KoL avatars by URL: an hourly key keeps outfit changes current
+        const artHtml = ({ art, round, sprites, badge }) => sprites
             ? `<span class="g-feat-art is-sprite"><img src="${spriteSrc(sprites[0][0])}" alt="" decoding="async" data-sprite></span>`
-            : `<span class="g-feat-art${round ? ' is-round' : ''}"><img src="${esc(art)}" alt="" decoding="async"></span>`;
+            : badge
+                ? `<span class="g-feat-art is-badge"><img src="${esc(art)}&amp;_=${Math.floor(Date.now() / 3600000)}" alt="" decoding="async"></span>`
+                : `<span class="g-feat-art${round ? ' is-round' : ''}"><img src="${esc(art)}" alt="" decoding="async"></span>`;
         els.featured.innerHTML = `<div class="g-feat-grid">${items.map((f) => `
                 <a class="g-feat g-spot" href="${esc(f.o.url)}"${openAttrs(f.o)} style="--feat: ${esc(f.accent)}">
                     <span class="g-feat-body">
@@ -327,7 +346,7 @@ const FEATURED = [
             b.setAttribute('aria-current', on);
             if (on && !opts.noScroll) b.scrollIntoView({ block: 'nearest' });
         });
-        remember(o);
+        if (!opts.quiet) remember(o); // ambient mode's tour stays out of Recently Viewed
     }
     function step(dir) {
         const list = visible();
@@ -428,6 +447,169 @@ const FEATURED = [
         });
         spotEvent = e;
     }, { passive: true });
+
+    // ---------- Ambient mode ----------
+    // For when this page is left up as an idle screen: after AMBIENT_AFTER ms with no input, run a
+    // random effect every 7-15 s (touring the live previews, hover effects playing on their own,
+    // titles re-decoding...). Any input ends it, undoes what's in flight and reselects what was showing.
+    const AMBIENT_AFTER = 90000;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const ambientTag = document.getElementById('g-ambient');
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const shown = (el) => el && el.getClientRects().length > 0;
+    const cleanups = new Set();
+    let lastInput = Date.now();
+    let ambient = false;
+    let ambientFrom = null;
+    let ambientTimer = null;
+    let lastEffect = '';
+
+    // Registers an undo for whatever an effect has in flight; returns a once-only finisher
+    function track(undo) {
+        const done = () => { if (cleanups.delete(done)) undo(); };
+        cleanups.add(done);
+        return done;
+    }
+    // Add a class for a while (the .is-ambient twins of the :hover rules in css/objects.css)
+    function hold(el, cls, ms) {
+        el.classList.add(cls);
+        setTimeout(track(() => el.classList.remove(cls)), ms);
+    }
+    // setTimeout that ending ambient mode cancels
+    function later(fn, ms) {
+        const t = setTimeout(() => { cancel(); fn(); }, ms);
+        const cancel = track(() => clearTimeout(t));
+    }
+    // Hold each element in turn
+    function cascade(list, gap, ms) {
+        list.forEach((el, i) => later(() => hold(el, 'is-ambient', ms), i * gap));
+    }
+    // Swap a text node through a terminal-style scramble back to the original
+    function scramble(node, chars = '!@#$%^&*_+-=|;:<>?/~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        const target = node.textContent;
+        let n = 0;
+        const done = track(() => { clearInterval(t); node.textContent = target; });
+        const t = setInterval(() => {
+            node.textContent = target.split('').map((c, i) => (/\s/.test(c) || i < n ? c : pick(chars))).join('');
+            n += 0.4;
+            if (n >= target.length) done();
+        }, 45);
+    }
+    const panelLabel = (title) => {
+        for (const c of title.childNodes) {
+            if (c.nodeType === 3 && c.textContent.trim()) return c;
+            if (c.nodeType === 1 && !c.classList.contains('g-meta') && c.firstChild) return c.firstChild;
+        }
+        return null;
+    };
+    const panels = () => Array.from(document.querySelectorAll('.g-rail > section, .g-side > section, .g-card, .g-objhead')).filter(shown);
+
+    const EFFECTS = {
+        // Step to the next page with a live preview (external hosts can't be framed), home included
+        tour() {
+            const list = objects.filter((o) => !o.external);
+            select(list[(list.indexOf(current) + 1) % list.length], { noScroll: true, quiet: true });
+        },
+        // The hover light drifts across a panel on its own
+        spot() {
+            const el = pick(panels().filter((p) => p.classList.contains('g-spot')));
+            if (!el) return;
+            const r = el.getBoundingClientRect();
+            const start = performance.now(), ms = 6000;
+            const phase = Math.random() * Math.PI * 2;
+            el.classList.add('is-ambient');
+            let frame = requestAnimationFrame(function move(now) {
+                const k = (now - start) / ms;
+                el.style.setProperty('--mx', `${r.width * (0.5 + 0.42 * Math.sin(phase + k * Math.PI * 2))}px`);
+                el.style.setProperty('--my', `${r.height * (0.5 + 0.38 * Math.sin(phase + k * Math.PI * 4))}px`);
+                if (k < 1) frame = requestAnimationFrame(move);
+                else done();
+            });
+            const done = track(() => { cancelAnimationFrame(frame); el.classList.remove('is-ambient'); });
+        },
+        // A scan line sweeps one panel
+        scan() {
+            const el = pick(panels());
+            if (el) hold(el, 'g-ambient-scan', 2600);
+        },
+        // A panel title decodes itself again
+        title() {
+            const labels = panels().map((p) => p.querySelector(':scope > .g-panel-title')).filter(Boolean).map(panelLabel).filter(Boolean);
+            if (labels.length) scramble(pick(labels));
+        },
+        // Comms channels light up left to right
+        comms() {
+            const chans = Array.from(document.querySelectorAll('.g-chan')).filter(shown);
+            cascade(chans, 260, 700);
+        },
+        // Dossier stats light up one by one, numbers re-rolling
+        dossier() {
+            const stats = Array.from(document.querySelectorAll('.g-op-stat')).filter(shown);
+            cascade(stats, 300, 900);
+            stats.forEach((s) => {
+                const b = s.querySelector('b');
+                if (b && b.firstChild && /\d/.test(b.textContent)) scramble(b.firstChild, '0123456789');
+            });
+        },
+        // The subject hologram glitches
+        holo() {
+            const el = document.querySelector('.g-home .hologram-container');
+            if (shown(el)) hold(el, 'is-ambient', 2500);
+        },
+        // Featured cards (while home is showing) take a turn each
+        featured() {
+            if (els.featured.hidden) return EFFECTS.tour();
+            cascade(Array.from(els.featured.querySelectorAll('.g-feat')), 700, 1400);
+        },
+        // The status-bar RadGotchi does something
+        pet() {
+            if (typeof RG === 'undefined') return;
+            const [mood, anim, status] = pick([
+                ['excited', 'rg-bounce', 'PERIMETER CLEAR'],
+                ['cool', 'rg-wiggle', 'HOLDING THE FORT'],
+                ['smart', 'rg-nod', 'INDEXING OBJECTS'],
+                ['look_l', 'rg-nod', 'SCANNING SECTOR'],
+                ['happy', 'rg-spin', 'STILL HERE']
+            ]);
+            RG.setMood(mood, { anim, status, duration: 3500 });
+        }
+    };
+    // The tour comes up more often than any one effect; reduced motion keeps only the calm ones
+    const BAG = ['tour', 'tour', 'tour', 'spot', 'spot', 'scan', 'title', 'comms', 'dossier', 'holo', 'featured', 'pet'];
+    const CALM = ['tour', 'pet'];
+
+    function nextEffect() {
+        const names = (reduced.matches ? CALM : BAG).filter((n) => n !== lastEffect);
+        lastEffect = pick(names);
+        EFFECTS[lastEffect]();
+        ambientTimer = setTimeout(nextEffect, 7000 + Math.random() * 8000);
+    }
+    function enterAmbient() {
+        ambient = true;
+        ambientFrom = current;
+        if (ambientTag) ambientTag.hidden = false;
+        ambientTimer = setTimeout(nextEffect, 1500);
+    }
+    function exitAmbient() {
+        ambient = false;
+        clearTimeout(ambientTimer);
+        if (ambientTag) ambientTag.hidden = true;
+        cleanups.forEach((done) => done());
+        if (ambientFrom && current !== ambientFrom) select(ambientFrom, { noScroll: true, quiet: true });
+    }
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((t) => window.addEventListener(t, (e) => {
+        if (!e.isTrusted) return;
+        lastInput = Date.now();
+        if (ambient) exitAmbient();
+    }, { capture: true, passive: true }));
+    setInterval(() => {
+        if (!ambient && !document.hidden && Date.now() - lastInput > AMBIENT_AFTER) enterAmbient();
+    }, 1000);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) return;
+        lastInput = Date.now();
+        if (ambient) exitAmbient();
+    });
 
     // ---------- Boot ----------
     refresh();

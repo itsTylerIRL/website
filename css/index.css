@@ -333,16 +333,19 @@
 }
 
 /* Hover intensifies the effect */
-.hologram-container:hover .hologram-image {
+.hologram-container:hover .hologram-image,
+.hologram-container.is-ambient .hologram-image {
     animation: hologramPhaseIntense 2s ease-in-out infinite, hologramGlitchIntense 3s step-end infinite;
     filter: contrast(1.3) saturate(1.6) brightness(1.2);
 }
 
-.hologram-container:hover .hologram-noise {
+.hologram-container:hover .hologram-noise,
+.hologram-container.is-ambient .hologram-noise {
     opacity: 0.25;
 }
 
-.hologram-container:hover .hologram-flicker {
+.hologram-container:hover .hologram-flicker,
+.hologram-container.is-ambient .hologram-flicker {
     animation: hologramFlickerIntense 0.08s infinite;
 }
 

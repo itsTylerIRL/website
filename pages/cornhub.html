@@ -9,20 +9,20 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tylerirl.com/cornhub">
+    <meta property="og:url" content="https://tylerirl.com/pages/cornhub.html">
     <meta property="og:title" content="CornHub - Tyler (in real life)">
-    <meta property="og:description" content="CornHub Intl Inc. - yet another shitcoin">
-    <meta property="og:image" content="https://tylerirl.com/assets/moeda.png">
-    
+    <meta property="og:description" content="CornHub Intl Inc. - yet another shitcoin. Buy $CORN on Arbitrum.">
+    <meta property="og:image" content="https://tylerirl.com/assets/featured/corn-coin.webp">
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tylerirl.com/cornhub">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/cornhub.html">
     <meta property="twitter:title" content="CornHub - Tyler (in real life)">
-    <meta property="twitter:description" content="CornHub Intl Inc. - yet another shitcoin">
-    <meta property="twitter:image" content="https://tylerirl.com/assets/moeda.png">
+    <meta property="twitter:description" content="CornHub Intl Inc. - yet another shitcoin. Buy $CORN on Arbitrum.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/featured/corn-coin.webp">
     <meta property="twitter:creator" content="@itsTylerIRL">
     <meta name="color-scheme" content="dark light">
     <meta name="supported-color-schemes" content="dark light">
@@ -31,159 +31,94 @@
     <!-- Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- External CSS -->
     <link rel="stylesheet" href="/css/styles.css?v=1.8">
-    
-    
-    <!-- Web3 Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    
-    <link rel="stylesheet" href="/css/cornhub.css?v=1.0">
     <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.3">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/cornhub.css?v=2.0">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
     <main class="main-content">
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- CornHub: one job, get people to the Uniswap page for $CORN on Arbitrum -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// CORNHUB</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Page</span><span class="sep">/</span>
+                <b>CornHub</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-    <!-- Project Write-up Section -->
-    <section class="project-writeup">
-        <h1 style="color: #8be9fd; margin-bottom: 0.5rem; font-size: 2.5rem;">
-            <span style="font-size: 3rem;">C</span>ORN <span style="font-size: 3rem;">H</span>UB
-        </h1>
-        <p style="color: #ff79c6; margin-bottom: 0.5rem;">CornHub Intl Inc. | cornhub.eth</p>
-        <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">yet another shitcoin</p>
-        
-        <blockquote style="text-align: center; color: #bdbdbd; font-style: italic; margin: 1.5rem 0; padding: 1rem; border-left: 3px solid #8be9fd;">
-            "God is just. Work is rewarded with blessing if not money.<br>
-            Luck is the most important thing, but really it's God."
-        </blockquote>
-        
-        <!-- Bitcoin Halving Countdown -->
-        <div class="countdown-box">
-            <h4>Bitcoin Halving Countdown</h4>
-            <div id="countdown"></div>
+        <div class="g-body is-single">
+            <section class="g-main" id="g-main">
+                <div class="g-objhead">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/cornhub.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PAGE &middot; ARBITRUM TOKEN</div>
+                            <h1>CornHub</h1>
+                        </div>
+                        <span class="g-chip tone-orange"><i class="g-dot tone-orange"></i>$CORN</span>
+                    </div>
+                    <p class="g-summary">CornHub Intl Inc. &middot; cornhub.eth &middot; yet another shitcoin.</p>
+                </div>
+
+                <section class="g-card corn-pane">
+                    <div class="g-panel-title">Kernel Exchange <span class="g-meta">ARBITRUM ONE &middot; UNISWAP</span></div>
+                    <div class="corn">
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                        <img class="corn-coin" src="/assets/featured/corn-coin.webp" alt="CornHub Kernel coin" width="480" height="480">
+                        <h2 class="corn-title"><span>C</span>ORN <span>H</span>UB</h2>
+                        <blockquote class="corn-quote">&ldquo;God is just. Work is rewarded with blessing if not money.
+                            Luck is the most important thing, but really it&rsquo;s God.&rdquo;</blockquote>
+                        <a class="g-btn corn-buy" href="https://app.uniswap.org/explore/tokens/arbitrum/0x872348f097cfa396edba3313b89aff9930d0b847" target="_blank" rel="noopener">BUY $CORN ON UNISWAP &nearr;</a>
+                        <button type="button" class="corn-ca" data-copy="0x872348f097cfa396edba3313b89aff9930d0b847" title="Copy the contract address">
+                            <span class="corn-ca-net">ARBITRUM</span><code>0x872348f097cfa396edba3313b89aff9930d0b847</code><span class="corn-ca-copy">COPY</span>
+                        </button>
+                        <a class="corn-scan" href="https://arbiscan.io/token/0x872348f097cfa396edba3313b89aff9930d0b847" target="_blank" rel="noopener">view on arbiscan &nearr;</a>
+                    </div>
+                </section>
+            </section>
         </div>
-        
-        <h2>Token Coins</h2>
-        <div class="token-coins">
-            <img src="/assets/moeda-bronze.png" alt="Bronze Kernel" title="Bronze Kernel - Burn 1 CORN">
-            <img src="/assets/moeda.png" alt="Silver Kernel" title="Silver Kernel - Burn 3 CORN">
-            <img src="/assets/moeda-gold.png" alt="Gold Kernel" title="Gold Kernel - Burn 5 CORN">
-        </div>
-        
-        <h2>Connect Wallet</h2>
-        <div style="text-align: center;">
-            <span id="wallet-status">
-                <p>Connect your wallet to see token balances and interact with the contracts.</p>
-                <button id="connect-button" class="connect-button" onclick="connectWallet()">Connect Wallet</button>
-            </span>
-            <div id="balance-info" class="balance-display" style="display: none;">
-                <p style="margin-bottom: 0.5rem;">Your CornHub Token Balances:</p>
-                <p style="margin: 0;">
-                    <span id="balance-display">0</span> CORN | 
-                    <span id="balance2-display">0</span> POPCORN | 
-                    <span id="balance3-display">0</span> BUTTER
-                </p>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span>ARBITRUM ONE &middot; $CORN</span>
+                <span id="g-clock"></span>
             </div>
-        </div>
-        
-        <div id="button-grid" class="button-grid" style="display: none;">
-            <button class="connect-button" onclick="approve()" style="width: 100%;">Approve Corn</button>
-            <button class="connect-button" onclick="approve2()" style="width: 100%;">Approve PopCorn</button>
-            <button id="burn-1-corn" class="connect-button" onclick="burncorn(1)" style="width: 100%;">Burn 1 Corn</button>
-            <button id="burn-3-corn" class="connect-button" onclick="burncorn(3)" style="width: 100%;">Burn 3 Corn</button>
-            <button id="burn-5-corn" class="connect-button" onclick="burncorn(5)" style="width: 100%;">Burn 5 Corn</button>
-            <button id="mint-bronze" class="connect-button" onclick="mintnft(1)" style="width: 100%;">Mint Bronze</button>
-            <button id="mint-silver" class="connect-button" onclick="mintnft(3)" style="width: 100%;">Mint Silver</button>
-            <button id="mint-gold" class="connect-button" onclick="mintnft(5)" style="width: 100%;">Mint Gold</button>
-        </div>
-        
-        <h2>Contract Addresses</h2>
-        <div style="text-align: center; margin: 1rem 0;">
-            <p style="margin-bottom: 0.5rem;">
-                <strong style="color: #8be9fd;">Arbitrum:</strong>
-                <code style="cursor: pointer;" onclick="copyToClipboard('0x872348f097cfa396edba3313b89aff9930d0b847')">0x872348f097cfa396edba3313b89aff9930d0b847</code>
-            </p>
-        </div>
-        
-        <div class="contract-links">
-            <a href="https://app.transporter.io/?from=polygon&tab=token&to=arbitrum" target="_blank">[BRIDGE]</a>
-            <a href="https://app.uniswap.org/explore/tokens/arbitrum/0x872348f097cfa396edba3313b89aff9930d0b847" target="_blank">[UNISWAP]</a>
-            <a href="https://arbiscan.io/address/0x872348f097cfa396edba3313b89aff9930d0b847" target="_blank">[ARBISCAN]</a>
-        </div>
-        
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #333;">
-        
-        <div class="prayer-text">
-            Our Father, which art in the blockchain, Hallowed be thy Node.<br>
-            Thy Moon will come. Thy hash will be done, on earth, As it is encrypted.<br>
-            Give us this day our daily coin. And forgive us our DDoSes, As we forgive them that DDoS against us.<br>
-            And lead us not into regulation, But deliver us from fiat currency inflation.<br>
-            For thine is the Ledger, The processing power, and the wattage.<br>
-            For ever and ever.<br>
-            Amen
-        </div>
-        
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #333;">
-        
-        <p style="text-align: center; color: #666; font-size: 0.9rem;">
-            Copyright © 2025 <strong style="color: #8be9fd;">CornHub Intl Inc.</strong><br>
-            <a href="https://twitter.com/itsTylerIRL" target="_blank">@itsTylerIRL</a>
-        </p>
-    </section>
-    
-    <!-- Floating Return Home Button -->
-    <a href="/" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="/assets/wee.gif" alt="Return home">
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
             </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
-            </div>
-        </div>
-    </a>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="g-statusbar is-standalone">
-        <div class="g-status-main">
-            <span><i class="g-dot tone-green"></i>CONNECTED</span>
-        </div>
-        <div class="g-pet" id="radgotchi-container">
-            <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
-            <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
-        </div>
-        <span class="g-copy">&copy; 2026 tyler</span>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/script.js?v=2.1"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.2"></script>
-    <script src="/js/background.js?v=1.3"></script>
-    <script src="/js/radgotchi.js"></script>
-    <script src="/js/cornhub-web3.js"></script>
-    
-    <script src="/js/cornhub.js?v=1.0"></script>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+    <script defer src="/js/cornhub.js?v=2.0"></script>
 </body>
 </html>
