@@ -41,9 +41,18 @@
                 if (big) big.textContent = clock(done);
             }
         } else if (state?.last) {
+            row();
             if (time) time.textContent = ago(state.last.start);
             if (big) big.textContent = ago(state.last.start);
         }
+    }
+
+    // The TIDAL row in Results (js/objects.js): the track playing, else the last one and when
+    function row() {
+        const t = state?.playing || state?.last;
+        if (!t || !window.ObjectsLive) return;
+        window.ObjectsLive('live-music', state.playing ? `♫ ${t.name} – ${t.artist}` : `last played ${t.name} – ${t.artist} · ${ago(t.start)}`,
+            state.playing ? 'cyan' : 'muted');
     }
 
     function render(j) {
@@ -76,6 +85,7 @@
         clearInterval(timer);
         timer = setInterval(tick, playing ? 1000 : 60000);
         window.tirlMusic = j.playing || null;
+        row();
         // For the status-bar ticker (js/ticker.js)
         (window.tirlFeed = window.tirlFeed || {}).music = [playing
             ? { text: `♫ now playing ${t.name} – ${t.artist}`, tone: 'cyan', href: t.url || PROFILE }

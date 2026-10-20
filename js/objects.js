@@ -3,7 +3,9 @@
    so instead of a preview it spotlights featured pages (FEATURED). The Host panel (#g-home) is static markup. */
 
 // ---------- Catalog (edit here to add / update pages) ----------
-// type: 'collection' | 'program' | 'tool' | 'page' | 'external'
+// type: 'collection' | 'program' | 'tool' | 'page' | 'live' | 'external'
+// live: a live connection (url: the profile); dossier: the Host dossier card it mirrors in the preview, and
+// its row's status line comes from that card's script (js/presence.js, js/music.js, js/socials.js, js/index.js)
 // workspace: true once the page is on the DEEPDISH workspace template (css/workspace.css)
 // icon: small icon from assets/object-icons/ (leave empty to show the name's initial)
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
@@ -24,10 +26,16 @@ const OBJECTS = [
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser' },
     { key: 'timer', name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser' },
     { key: 'markets', name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart' },
-    { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit' },
     { key: 'cornhub', hidden: true, name: 'CornHub', url: '/pages/cornhub.html', type: 'page', icon: '/assets/object-icons/cornhub.webp', desc: 'cornhub intl inc. - yet another shitcoin' },
+    { key: 'live-discord', name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen' },
+    { key: 'live-music', name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles' },
+    { key: 'live-steam', name: 'Steam', url: 'https://steamcommunity.com/id/11111x11111', type: 'live', dossier: 'steam', icon: '/assets/object-icons/live-steam.svg', desc: 'online or in-game, and recently played games with hours' },
+    { key: 'live-x', name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts' },
+    { key: 'live-github', name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days' },
+    { key: 'live-reminet', name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net' },
     { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star' },
-    { key: 'raddem', name: '~raddem-tidwyt', url: 'http://urbit.tylerirl.com', type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet' }
+    { key: 'raddem', name: '~raddem-tidwyt', url: 'http://urbit.tylerirl.com', type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet' },
+    { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit' }
 ];
 
 // ---------- Featured pages (shown while tylerirl.com is selected; edit here to change the spotlight) ----------
@@ -55,15 +63,17 @@ const FEATURED = [
         program: { name: 'Program', tone: 'green' },
         tool: { name: 'Tool', tone: 'orange' },
         page: { name: 'Page', tone: 'muted' },
+        live: { name: 'Live', tone: 'cyan' },
         external: { name: 'External', tone: 'red' }
     };
     const typeName = (t) => (TYPES[t] || {}).name || t;
     const toneOf = (t) => (TYPES[t] || {}).tone || 'muted';
     const HOME = 'home'; // this page: shows the hero instead of a live preview
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    // Virtual viewport the live preview renders pages at before scaling down
+    // Virtual viewport the live preview renders pages at before scaling down: always VIEW_W wide, and as
+    // tall as the panel's shape makes it (scalePreview), so the page fills the panel edge to edge
     const VIEW_W = 1440;
-    const VIEW_H = 900;
+    let viewH = 900;
 
     const els = {
         types: document.getElementById('g-types'),
@@ -85,7 +95,8 @@ const FEATURED = [
     };
 
     const objects = OBJECTS.map((o, i) => {
-        const external = o.type === 'external';
+        // Live connections open their profile on another site, like external hosts
+        const external = o.type === 'external' || o.type === 'live';
         let host = 'tylerirl.com';
         try { host = new URL(o.url, location.href).host.replace(/^www\./, '') || host; } catch (_) {}
         return {
@@ -93,7 +104,7 @@ const FEATURED = [
             id: 'OBJ-' + String(i + 1).padStart(4, '0'),
             external,
             host: external ? host : 'tylerirl.com',
-            format: external ? 'external' : (o.workspace ? 'workspace' : 'legacy')
+            format: o.type === 'live' ? 'live' : external ? 'external' : (o.workspace ? 'workspace' : 'legacy')
         };
     }).filter((o) => !o.hidden);
     const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t));
@@ -179,7 +190,7 @@ const FEATURED = [
         const list = visible();
         const idx = list.indexOf(o);
         const tone = toneOf(o.type);
-        const formatLabel = { workspace: 'DEEPDISH WORKSPACE', legacy: 'LEGACY TEMPLATE', external: 'EXTERNAL HOST' }[o.format];
+        const formatLabel = { workspace: 'DEEPDISH WORKSPACE', legacy: 'LEGACY TEMPLATE', live: 'LIVE CONNECTION', external: 'EXTERNAL HOST' }[o.format];
         header.innerHTML = `<div class="g-objrow">
                 <div class="g-objicon g-objicon-img">${iconHtml(o, 'g-objimg')}</div>
                 <div class="g-objtitle">
@@ -197,14 +208,14 @@ const FEATURED = [
             <p class="g-summary">${esc(o.desc)}</p>
             <div class="g-objmeta">
                 <span>PATH</span><b>${esc(o.url)}</b>
-                <span>FORMAT</span><b class="tone-${o.format === 'workspace' ? 'green' : o.format === 'legacy' ? 'orange' : 'red'} g-format">${formatLabel}</b>
+                <span>FORMAT</span><b class="tone-${o.format === 'workspace' ? 'green' : o.format === 'legacy' ? 'orange' : o.format === 'live' ? 'cyan' : 'red'} g-format">${formatLabel}</b>
                 <span>HOST</span><b>${esc(o.host)}</b>
             </div>`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
     }
 
     // ---------- Live preview ----------
-    // Internal pages render in a scaled-down iframe (VIEW_W x VIEW_H virtual viewport); external hosts
+    // Internal pages render in a scaled-down iframe (VIEW_W x viewH virtual viewport); external hosts
     // may refuse to be framed, so they get a "preview disabled" screen. Objects in NATIVE draw their own
     // readable preview instead (Cancel's leaderboard, KoL at a glance). Loading waits a beat so
     // arrowing through the list doesn't spin up every page.
@@ -212,12 +223,77 @@ const FEATURED = [
         cancel: { title: 'Monthly Leaderboard', renderer: () => window.CancelPreview },
         kol: { title: 'Today in the Kingdom', renderer: () => window.KolPreview }
     };
+    // Live connections preview their Host dossier card, enlarged and kept in step with it
+    objects.filter((o) => o.type === 'live').forEach((o) => {
+        NATIVE[o.key] = { title: 'Live Connection', renderer: () => ({ render: (screen, meta) => mirrorCard(o, screen, meta) }) };
+    });
+    // A copy of the dossier card that follows it: small changes (a ticking clock, a progress bar) are applied to
+    // the matching node in the copy, so images and animations aren't restarted; a full redraw of the card is
+    // copied whole, reusing the copy's images that are still there. Returns the cleanup.
+    function mirrorCard(o, screen, meta) {
+        const src = document.querySelector(`#g-dossier [data-slide="${o.dossier}"]`);
+        screen.innerHTML = `<div class="g-live-mirror">
+                <div class="g-live-mirror-card"></div>
+                <a class="g-btn g-visit" href="${esc(o.url)}" target="_blank" rel="noopener">OPEN ${esc(o.host)} &nearr;</a>
+            </div>`;
+        const slot = screen.querySelector('.g-live-mirror-card');
+        meta.textContent = 'LIVE · FROM THE HOST DOSSIER';
+        let copy = null;
+        function full() {
+            if (!src || src.hidden) {
+                copy = null;
+                slot.innerHTML = '<div class="g-preview-wait">WAITING FOR SIGNAL&hellip;</div>';
+                return;
+            }
+            const keep = new Map([...slot.querySelectorAll('img')].map((img) => [img.src, img]));
+            copy = src.cloneNode(true);
+            copy.removeAttribute('id');
+            copy.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+            copy.querySelectorAll('img').forEach((img) => {
+                const old = keep.get(img.src);
+                if (old) { img.replaceWith(old); keep.delete(img.src); }
+            });
+            slot.replaceChildren(copy);
+        }
+        const pathTo = (node) => {
+            const path = [];
+            while (node && node !== src) {
+                if (!node.parentNode) return null;
+                path.unshift(Array.prototype.indexOf.call(node.parentNode.childNodes, node));
+                node = node.parentNode;
+            }
+            return node === src ? path : null;
+        };
+        const twinOf = (node) => {
+            const path = pathTo(node);
+            return path && copy && path.reduce((n, i) => n && n.childNodes[i], copy);
+        };
+        const watch = new MutationObserver((list) => {
+            for (const m of list) {
+                if (!copy || (m.target === src && m.type === 'childList') || (m.target === src && m.attributeName === 'hidden')) return full();
+                const twin = twinOf(m.target);
+                if (!twin) return full();
+                if (m.type === 'characterData') twin.data = m.target.data;
+                else if (m.type === 'childList') twin.replaceChildren(...[...m.target.childNodes].map((n) => n.cloneNode(true)));
+                else if (m.attributeName !== 'id') {
+                    const v = m.target.getAttribute(m.attributeName);
+                    if (v === null) twin.removeAttribute(m.attributeName); else twin.setAttribute(m.attributeName, v);
+                }
+            }
+        });
+        if (src) watch.observe(src, { subtree: true, childList: true, characterData: true, attributes: true });
+        full();
+        return () => watch.disconnect();
+    }
     let previewTimer = null;
     let clearNativePreview = null;
     function scalePreview() {
         if (els.screen.classList.contains('is-native')) return 1;
         const r = els.preview.getBoundingClientRect();
-        const k = Math.max(0.05, Math.min((r.width - 28) / VIEW_W, (r.height - 28) / VIEW_H));
+        const k = Math.max(0.05, r.width / VIEW_W);
+        viewH = Math.max(1, Math.round(r.height / k));
+        els.screen.style.height = `${viewH}px`;
+        els.screen.style.setProperty('--view-h', `${viewH}px`);
         els.screen.style.transform = `translate(-50%, -50%) scale(${k})`;
         return k;
     }
@@ -244,6 +320,7 @@ const FEATURED = [
             els.screen.classList.remove('offline');
             els.screen.classList.add('is-native', 'is-' + o.key);
             els.screen.style.transform = '';
+            els.screen.style.height = '';
             clearNativePreview = native.renderer().render(els.screen, els.previewMeta, o.url);
             return;
         }
@@ -273,7 +350,7 @@ const FEATURED = [
             frame.addEventListener('load', () => {
                 if (current !== o) return;
                 els.screen.classList.add('ready');
-                els.previewMeta.textContent = `LIVE · ${VIEW_W}×${VIEW_H} @ ${Math.round(k * 100)}%`;
+                els.previewMeta.textContent = `LIVE · ${VIEW_W}×${viewH} @ ${Math.round(k * 100)}%`;
             });
             // The preview is look-only: a click anywhere opens the real page
             const open = document.createElement('a');
@@ -324,7 +401,7 @@ const FEATURED = [
     new ResizeObserver(() => {
         if (!current || current.key === HOME) return;
         const k = scalePreview();
-        if (els.screen.classList.contains('ready')) els.previewMeta.textContent = `LIVE · ${VIEW_W}×${VIEW_H} @ ${Math.round(k * 100)}%`;
+        if (els.screen.classList.contains('ready')) els.previewMeta.textContent = `LIVE · ${VIEW_W}×${viewH} @ ${Math.round(k * 100)}%`;
     }).observe(els.preview);
 
     // ---------- Recently viewed ----------

@@ -173,6 +173,7 @@
             seenLine.className = `g-op-seen tone-${tone}${gaming ? ' is-gaming' : ''}`;
             seenLine.hidden = false;
         }
+        resultRow(p, d, word, tone);
         card.href = d.href;
         // Keep the dossier carousel's is-active (js/index.js) across updates
         card.className = `g-presence is-${d.kind} tone-${tone}${card.classList.contains('is-active') ? ' is-active' : ''}`;
@@ -209,9 +210,21 @@
         else if (word === 'offline') { fetchSeen(); timer = setInterval(() => { fetchSeen(); freshen(); }, 60000); }
     }
 
+    // The Discord row in Results (js/objects.js): the game, the custom status, or the online state / last seen
+    function resultRow(p, d, word, tone) {
+        const where = ['desktop', 'mobile', 'web'].filter(k => p['active_on_discord_' + k]);
+        const game = (p.activities || []).find(a => a.type === 0);
+        const text = word === 'offline' ? (seen ? `last seen ${ago(seen)}` : 'offline · send a dm')
+            : game ? `playing ${game.name}`
+            : d.kind === 'custom' && d.sub ? `“${d.sub}” · ${word}`
+            : [word, ...where].join(' · ');
+        window.ObjectsLive?.('live-discord', text, game && word !== 'offline' ? 'purple' : tone);
+    }
+
     // Rewrite just the "ago" texts, so the minute tick doesn't rebuild the card and reload its images
     function freshen() {
         if (!seen) return;
+        if (presence) resultRow(presence, describe(presence), 'offline', 'muted');
         card.querySelectorAll('[data-ago]').forEach(el => { el.textContent = el.dataset.ago + ago(seen); });
         card.querySelectorAll('.is-ago b').forEach(el => { el.textContent = ago(seen); });
         if (seenLine?.dataset.ago) seenLine.textContent = seenLine.dataset.ago + ago(seen);

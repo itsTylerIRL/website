@@ -62,6 +62,7 @@
             // For the status-bar ticker (js/ticker.js): the post, cut short
             if (p) {
                 const text = p.text.replace(/\s+/g, ' ').trim();
+                window.ObjectsLive?.('live-x', `“${text}” · ${ago(p.at)}`, 'blue');
                 (window.tirlFeed = window.tirlFeed || {}).x = [{ text: () => `𝕏 “${text.length > 90 ? text.slice(0, 88).trimEnd() + '…' : text}” · ${ago(p.at)}`, tone: 'blue', href: p.url }];
             }
             xCard.hidden = false;
@@ -95,6 +96,9 @@
             steamCard.querySelectorAll('img').forEach(img => img.addEventListener('error', () => img.remove(), { once: true }));
             steamCard.hidden = false;
             if (steamTile) steamTile.textContent = g ? `playing ${g.name}` : label.toLowerCase();
+            // The Steam row in Results (js/objects.js): the game, else the status and what was played last
+            window.ObjectsLive?.('live-steam', g ? `in-game · ${g.name}` : [label.toLowerCase(), games[0] && `last played ${games[0].name}`].filter(Boolean).join(' · '),
+                g ? 'purple' : tone === 'green' ? 'green' : 'muted');
             // For the status-bar ticker (js/ticker.js)
             (window.tirlFeed = window.tirlFeed || {}).steam = g
                 ? [{ text: `in-game on steam · ${g.name}`, tone: 'purple', href: g.link || d.profile }]

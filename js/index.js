@@ -33,6 +33,8 @@ if ('serviceWorker' in navigator) {
                 if (typeof v === 'number') { el.textContent = fmt(v); any = true; }
             });
             if (any) {
+                // The RemiNET row in Results (js/objects.js)
+                if (typeof u.socialCredit === 'number') window.ObjectsLive?.('live-reminet', `${fmt(u.socialCredit)} social credit${typeof u.beetles === 'number' ? ` · ${fmt(u.beetles)} beetles` : ''}`, 'purple');
                 box.hidden = false;
                 requestAnimationFrame(() => box.classList.add('ready'));
             }
@@ -70,6 +72,8 @@ if ('serviceWorker' in navigator) {
             box.innerHTML = `<span class="g-gh-map"><span class="g-gh-grid">${cells.map((d) => `<i class="l${d.level}"></i>`).join('')}</span></span>`
                 + `<span class="g-gh-stats">${stat(sum(days), 'past year')}${stat(sum(days.slice(-84)), '12 weeks')}${stat(streak, 'day streak')}${stat(best, 'best streak')}${stat(active, 'active days')}</span>`;
             box.title = `${sum(days)} GitHub contributions in the past year`;
+            // The GitHub row in Results (js/objects.js)
+            window.ObjectsLive?.('live-github', `${sum(days).toLocaleString('en-US')} contributions this year${streak > 1 ? ` · ${streak}-day streak` : ''}`, 'green');
             // For the status-bar ticker (js/ticker.js)
             (window.tirlFeed = window.tirlFeed || {}).github = [
                 { text: `${sum(days).toLocaleString('en-US')} github contributions this year`, tone: 'green', href: 'https://github.com/itstylerirl' },

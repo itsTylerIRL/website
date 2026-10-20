@@ -352,6 +352,8 @@
 .tone-blue { --tone: var(--g-blue); --tone-bg: rgba(var(--g-blue-rgb), 0.12); }
 .tone-red { --tone: var(--g-red); --tone-bg: rgba(255, 85, 85, 0.1); }
 .tone-muted { --tone: var(--g-muted); --tone-bg: rgba(154, 175, 186, 0.08); }
+.tone-purple { --tone: rgb(189, 147, 249); --tone-bg: rgba(189, 147, 249, 0.1); }
+.tone-cyan { --tone: #33e1ed; --tone-bg: rgba(51, 225, 237, 0.1); }
 .g-dot[class*="tone-"] { background: var(--tone); }
 
 .g-chip {

@@ -4,6 +4,10 @@
    - Kingdom of Loathing: today's date and time to rollover (js/kol-calendar.js), every minute
    - the cancel is coming: this week's king of the hill (cancel-api, which only answers tylerirl.com), every 5 minutes
    - RadGotchi, DigiFlip: last push and stars from one GitHub call, cached for the session (GitHub allows 60 an hour)
+   - Things I Like: how many objects the likes page lists, and how many in each category, counted from its
+     #likes-data cards the way js/likes.js reads them; once
+   - ~nosfyl, ~raddem-tidwyt: online (and for how long) or offline (and when last seen) from ship-status on
+     cancel-api, which checks each ship every minute; every 2 minutes
    Anything that fails just leaves the row on its path. */
 (function () {
     'use strict';
@@ -44,6 +48,39 @@
             set('kol', `${t.monthName} ${t.date} · ${t.holiday || `rollover ${Math.floor(m / 60)}h ${m % 60}m`}`, t.holiday ? 'orange' : 'blue');
         });
     }
+
+    // Things I Like: the likes page's object count, biggest category first
+    (async () => {
+        try {
+            const r = await fetch('/pages/likes.html');
+            if (!r.ok) return;
+            const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+            const cards = [...doc.querySelectorAll('#likes-data .bento-item')].filter(a => (a.querySelector('.bento-content h3')?.textContent || '').trim());
+            if (!cards.length) return;
+            const cats = {};
+            cards.forEach(a => { const c = a.dataset.category || 'other'; cats[c] = (cats[c] || 0) + 1; });
+            const split = Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, n]) => `${n} ${c}`).join(' · ');
+            set('likes', `${cards.length} objects · ${split}`, 'blue');
+        } catch (_) {}
+    })();
+
+    // Urbit ships: up and for how long, or down and since when
+    const SHIPS = { nosfyl: '~nosfyl', raddem: '~raddem-tidwyt' };
+    const span = t => {
+        const m = Math.floor((Date.now() - t) / 60000);
+        return m < 60 ? `${Math.max(1, m)}m` : m < 1440 ? `${Math.floor(m / 60)}h` : `${Math.floor(m / 1440)}d`;
+    };
+    every(2 * 60000, async () => {
+        try {
+            const { ships } = await getJSON('https://cancel-api.tylerirl.com/ships');
+            Object.entries(SHIPS).forEach(([key, name]) => {
+                const s = ships && ships[name];
+                if (!s || s.online === null) return;
+                if (s.online) set(key, s.since ? `online · up ${span(s.since)}` : 'online', 'green');
+                else set(key, s.lastOnline ? `offline · last seen ${ago(s.lastOnline)}` : 'offline', 'red');
+            });
+        } catch (_) {}
+    });
 
     // the cancel is coming: who holds the crown this week
     every(FIVE_MIN, async () => {

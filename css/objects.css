@@ -394,6 +394,28 @@
 /* The artist rides on the title line where the compact layout drops the subtitle */
 .g-music-by { display: none; color: var(--g-muted); }
 
+/* Live connections in Results (js/objects.js, type 'live'): their icons are line art, so they get a little
+   room; selected, the preview shows the Host dossier card, enlarged, with a link out under it */
+.g-res-icon[src$=".svg"],
+.g-objimg[src$=".svg"] { padding: 4px; box-sizing: border-box; }
+.g-preview-screen.is-native .g-live-mirror {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 24px 18px;
+    box-sizing: border-box;
+}
+.g-live-mirror-card {
+    container: dossier / inline-size; /* the cards' own container queries */
+    width: min(100%, 560px);
+    zoom: 1.45;
+}
+.g-live-mirror-card > [data-slide] { margin: 0; }
+.g-live-mirror-card .g-preview-wait { position: static; }
+
 /* Status-bar ticker (js/ticker.js): takes most of the bar's free space on home (the status items shed from
    their end first), fades in and out at its edges, and crawls by transform */
 footer.g-statusbar .g-ticker {
@@ -416,8 +438,6 @@ footer.g-statusbar .g-ticker-item {
 footer.g-statusbar .g-ticker-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex: none; background: var(--tone, var(--sb-dim)); box-shadow: 0 0 6px var(--tone, transparent); }
 footer.g-statusbar .g-ticker-item::after { content: '◆'; margin: 0 16px; font-size: 7px; color: var(--sb-dim); }
 footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
-.g-ticker-item.tone-purple { --tone: rgb(189, 147, 249); }
-.g-ticker-item.tone-cyan { --tone: #33e1ed; }
 @media (max-width: 760px) {
     footer.g-statusbar .g-ticker { display: none; }
 }
@@ -627,7 +647,8 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 32px 32px;
 }
 .g-preview .g-reticle { position: absolute; z-index: 2; }
-/* The page renders at a fixed 1440x900 "screen" that js/objects.js scales to fit the panel */
+/* The page renders on a 1440px-wide "screen" that js/objects.js makes as tall as the panel's shape and
+   scales to fill it edge to edge (height and --view-h set there) */
 .g-preview-screen {
     position: absolute;
     left: 50%;
@@ -674,7 +695,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 }
 @keyframes g-preview-sweep {
     from { transform: translateY(-160px); }
-    to { transform: translateY(900px); }
+    to { transform: translateY(var(--view-h, 900px)); }
 }
 .g-preview-wait {
     position: absolute;
@@ -862,13 +883,15 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     filter: invert(1) sepia(1) saturate(6) hue-rotate(160deg) brightness(1.2)
             drop-shadow(0 0 4px rgba(var(--feat), 0.9)) drop-shadow(0 0 14px rgba(var(--feat), 0.45));
 }
-/* KoL avatar (100x100, black ink on white): the character fills x 5-55 and the "Kingdom of Loathing"
-   caption starts at x 62, so the image covers a 58x100 box from the left: the whole character, no caption.
+/* KoL avatar (100x100, black ink on white): the character sits in the left part (outfits can reach x 58, like
+   a merman's tail fin) and the "Kingdom of Loathing" caption starts at x 61, with any held items further
+   right, so the image covers a 60x100 box from the left: the whole character, and a blank column before
+   the caption so scaling never blends its first letter in.
    Inverted and tinted; #brightnessToAlpha (index.html) drops the inverted, now black, page */
 .g-feat-art.is-badge img {
     height: 100%;
     width: auto;
-    aspect-ratio: 58 / 100;
+    aspect-ratio: 60 / 100;
     object-fit: cover;
     object-position: 0 50%;
     filter: invert(1) sepia(1) saturate(5) hue-rotate(155deg) brightness(1.2) url(#brightnessToAlpha)
