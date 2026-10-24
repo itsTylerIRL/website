@@ -1,4 +1,4 @@
-// Speedcube timer — space-bar controlled, session stats saved in localStorage
+// Speedcube timer — space bar or tap-and-hold controlled, session stats saved in localStorage
 // Author: Tyler (in real life)
 
 (function () {
@@ -127,7 +127,7 @@
         const solves = currentSolves();
         const list = els.solveList;
         if (!solves.length) {
-            list.innerHTML = '<div class="solve-empty">no solves yet — press space to begin</div>';
+            list.innerHTML = '<div class="solve-empty">no solves yet — hold space or the timer to begin</div>';
             return;
         }
         const bestVal = Math.min(...solves.map(effective).filter(t => t !== Infinity));
@@ -237,7 +237,7 @@
         render();
     }
 
-    // ---- Keyboard control ----
+    // ---- Controls: space bar, or tap and hold the stage ----
     function onKeyDown(e) {
         if (e.code !== 'Space') return;
         // ignore when typing in inputs/selects
@@ -245,7 +245,10 @@
         if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
         e.preventDefault();
         if (e.repeat) return;
+        press();
+    }
 
+    function press() {
         if (state === 'running') {
             stopSolve();
             return;
@@ -288,7 +291,10 @@
         const tag = (e.target.tagName || '').toLowerCase();
         if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
         e.preventDefault();
+        release();
+    }
 
+    function release() {
         if (awaitingInspectionRelease) {
             // this keyup just ends the initial inspection-start press
             awaitingInspectionRelease = false;
@@ -446,10 +452,25 @@
             if (e.target === els.modal) closeSolveModal();
         });
 
-        // Tapping the stage also stops a running solve (touch/mouse support)
-        stage.addEventListener('pointerdown', () => {
-            if (state === 'running') stopSolve();
+        // Touch and mouse: holding the stage is holding space. One finger at a time; a cancelled
+        // touch (the browser took it) releases before the hold is ready, so it never starts a solve.
+        let pointer = null;
+        stage.addEventListener('pointerdown', e => {
+            if (pointer !== null || e.button !== 0 || e.target.closest('button')) return;
+            pointer = e.pointerId;
+            stage.setPointerCapture(e.pointerId);
+            e.preventDefault();
+            press();
         });
+        const lift = e => {
+            if (e.pointerId !== pointer) return;
+            pointer = null;
+            if (e.type === 'pointercancel' && state === 'ready') setState('holding');
+            release();
+        };
+        stage.addEventListener('pointerup', lift);
+        stage.addEventListener('pointercancel', lift);
+        stage.addEventListener('contextmenu', e => e.preventDefault());
 
         setState('idle');
         setDisplay('0.00');

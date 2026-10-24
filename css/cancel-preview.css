@@ -85,18 +85,21 @@
     cursor: pointer;
     overflow: hidden;
     isolation: isolate;
+    container-type: size;
 }
 .g-cancel-cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.65)); pointer-events: none; }
-.g-cancel-cell img { position: absolute; width: 375%; max-width: none; height: auto; left: -28.125%; top: -36.25%; }
+/* Portraits are sized off the cell's larger side and centred on the face, so non-square cells crop evenly
+   instead of sliding (top % follows the cell's height, width % its width). Share card face ≈ (250, 276) of 1200x630. */
+.g-cancel-cell > img { position: absolute; width: max(375cqw, 375cqh); max-width: none; height: auto; left: 50%; top: 50%; transform: translate(-20.83%, -43.8%); }
 .g-cancel-initial { position: absolute; inset: 0; display: grid; place-items: center; font-size: 16px; color: var(--g-blue); }
 /* A past king rebuilt from trait layers (js/cancel-preview.js): the 600x750 character, framed on the face */
-.g-cancel-look { position: absolute; left: -28%; top: -40%; width: 156%; aspect-ratio: 600 / 750; overflow: hidden; }
+.g-cancel-look { position: absolute; left: 50%; top: 50%; width: max(156cqw, 156cqh); aspect-ratio: 600 / 750; transform: translate(-50%, -46.15%); overflow: hidden; }
 .g-cancel-look img { position: absolute; max-width: none; }
 .g-cancel-cell.is-fell .g-cancel-look { filter: grayscale(0.65); opacity: 0.65; }
 .g-cancel-cell em { position: absolute; right: 4px; bottom: 2px; z-index: 1; font: 500 10px/1.2 var(--g-mono); text-shadow: 0 1px 3px #000, 0 0 4px #000; }
 .g-cancel-cell.is-king { border-color: rgba(255, 222, 23, 0.35); }
 .g-cancel-cell.is-king em { color: var(--cancel-gold); font-size: 17px; bottom: 0; }
-.g-cancel-cell.is-fell img { filter: grayscale(0.65); opacity: 0.65; }
+.g-cancel-cell.is-fell > img { filter: grayscale(0.65); opacity: 0.65; }
 .g-cancel-cell s { position: absolute; inset: 0; display: grid; place-items: center; color: #ff5555; font-size: 28px; line-height: 1; text-decoration: none; text-shadow: 0 0 5px #000; z-index: 1; }
 .g-cancel-cell.is-today { border-color: var(--g-green); }
 .g-cancel-cell.is-empty { background: rgba(139, 233, 253, 0.02); color: var(--g-dim); }

@@ -111,7 +111,7 @@
     color: var(--g-text);
     flex: none;
 }
-/* glow (assets/Glow.png) */
+/* brand icon (assets/T_Icon-96.webp, downscaled from T_Icon.png) */
 .g-brand img {
     width: 30px;
     height: 30px;

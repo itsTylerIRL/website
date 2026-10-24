@@ -504,11 +504,13 @@ const FEATURED = [
     document.addEventListener('click', logOpen);
     document.addEventListener('auxclick', (e) => { if (e.button === 1) logOpen(e); });
 
-    // The brand and the "tylerirl" crumb point at "/", which is this page: select home instead of reloading
-    document.querySelectorAll('.g-topbar a[href="/"]').forEach((a) => a.addEventListener('click', (e) => {
+    // The brand, the "tylerirl" crumb and the Host hologram point at "/", which is this page: select home
+    // instead of reloading (the hologram also brings the object header + featured cards into view)
+    document.querySelectorAll('.g-topbar a[href="/"], .g-home a[href="/"]').forEach((a) => a.addEventListener('click', (e) => {
         if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         select(objectByKey(HOME));
+        if (a.closest('.g-home')) header.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }));
 
     // ---------- Search + keyboard ----------

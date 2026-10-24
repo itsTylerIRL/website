@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.4">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/timer.css?v=2.6">
+    <link rel="stylesheet" href="/css/timer.css?v=2.7">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -50,7 +50,7 @@
     <div class="gotham" id="gotham">
         <header class="g-topbar">
             <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
-                <img src="/assets/Glow.png" alt="" width="30" height="30">
+                <img src="/assets/T_Icon-96.webp" alt="" width="30" height="30">
                 <span class="g-brand-name">TYLERIRL</span>
                 <span class="g-brand-sub">// SPEEDCUBE TIMER</span>
             </a>
@@ -96,9 +96,9 @@
                     <div class="g-panel-title">How To</div>
                     <div class="g-pane-body">
                         <table class="keys">
-                            <tr><td>hold <kbd>space</kbd></td><td>arm the timer (turns green)</td></tr>
+                            <tr><td>hold <kbd>space</kbd> or the timer</td><td>arm the timer (turns green)</td></tr>
                             <tr><td>release</td><td>start the solve</td></tr>
-                            <tr><td>any key</td><td>stop</td></tr>
+                            <tr><td><kbd>space</kbd> or tap</td><td>stop</td></tr>
                             <tr><td>click a time</td><td>+2, DNF or delete</td></tr>
                         </table>
                         <p class="panel-note">Sessions and times are saved in this browser.</p>
@@ -116,10 +116,10 @@
                         </div>
                         <span class="g-chip tone-orange"><i class="g-dot tone-orange"></i>Tool</span>
                     </div>
-                    <p class="g-summary">hold space, release to solve, tap to stop</p>
+                    <p class="g-summary">hold space or the timer, release to solve, tap to stop</p>
                 </div>
                 <section class="g-card g-timer-pane">
-                    <div class="g-panel-title">Timer <span class="g-meta">WCA STYLE &middot; SPACE BAR</span></div>
+                    <div class="g-panel-title">Timer <span class="g-meta">WCA STYLE &middot; SPACE BAR OR TAP</span></div>
                     <div class="timer-stage" id="timer-stage" tabindex="0">
                         <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
                         <div class="g-scramble-bar">
@@ -128,7 +128,7 @@
                             <button type="button" class="g-btn" id="g-new-scramble" title="New scramble" tabindex="-1">&#8635;</button>
                         </div>
                         <div class="timer-display" id="timer-display">0.00</div>
-                        <div class="timer-hint" id="timer-hint">press &amp; hold <kbd>space</kbd></div>
+                        <div class="timer-hint" id="timer-hint"><span class="on-keys">press &amp; hold <kbd>space</kbd></span><span class="on-touch">tap &amp; hold to arm</span></div>
                     </div>
                 </section>
                 <section class="g-card g-trend-pane">
@@ -175,7 +175,7 @@
                 <section class="g-times-pane">
                     <div class="g-panel-title">Times <span class="g-meta">click a time to edit</span></div>
                     <div class="solve-list" id="solve-list">
-                        <div class="solve-empty">no solves yet &mdash; press space to begin</div>
+                        <div class="solve-empty">no solves yet &mdash; hold space or the timer to begin</div>
                     </div>
                 </section>
             </aside>
@@ -220,7 +220,7 @@
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Speedcube timer -->
-    <script defer src="/js/timer.js?v=1.0"></script>
+    <script defer src="/js/timer.js?v=1.1"></script>
     <script defer src="/js/timer-ws.js?v=1.0"></script>
     <script defer src="/js/escape-home.js?v=1.0"></script>
 </body>
