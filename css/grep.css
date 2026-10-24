@@ -23,14 +23,14 @@
     pointer-events: none;
 }
 .hologram-container::before {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
+    background: url('../assets/remilio2.webp') center/contain no-repeat;
     mix-blend-mode: screen;
     opacity: 0.4;
     filter: hue-rotate(-30deg) saturate(1.5);
     animation: chromaShiftRed 3s ease-in-out infinite;
 }
 .hologram-container::after {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
+    background: url('../assets/remilio2.webp') center/contain no-repeat;
     mix-blend-mode: screen;
     opacity: 0.4;
     filter: hue-rotate(30deg) saturate(1.5);

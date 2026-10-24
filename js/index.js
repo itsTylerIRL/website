@@ -30,7 +30,8 @@ if ('serviceWorker' in navigator) {
             let any = false;
             box.querySelectorAll('[data-stat]').forEach((el) => {
                 const v = u[el.dataset.stat];
-                if (typeof v === 'number') { el.textContent = fmt(v); any = true; }
+                // Counts up from zero as it lands (js/arrive.js)
+                if (typeof v === 'number') { el.textContent = fmt(v); window.tirlArrive?.countUp(el); any = true; }
             });
             if (any) {
                 // The RemiNET row in Results (js/objects.js)

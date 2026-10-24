@@ -49,8 +49,14 @@
         });
     }
 
-    // Things I Like: the likes page's object count, biggest category first
+    // Things I Like: the likes page's object count, biggest category first. Counting means fetching the whole
+    // page, so the line is kept for an hour.
     (async () => {
+        const KEY = 'tirl_likes_line';
+        try {
+            const c = JSON.parse(localStorage.getItem(KEY));
+            if (c && Date.now() - c.at < 3600000) return set('likes', c.text, 'blue');
+        } catch (_) {}
         try {
             const r = await fetch('/pages/likes.html');
             if (!r.ok) return;
@@ -60,7 +66,9 @@
             const cats = {};
             cards.forEach(a => { const c = a.dataset.category || 'other'; cats[c] = (cats[c] || 0) + 1; });
             const split = Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, n]) => `${n} ${c}`).join(' · ');
-            set('likes', `${cards.length} objects · ${split}`, 'blue');
+            const text = `${cards.length} objects · ${split}`;
+            set('likes', text, 'blue');
+            try { localStorage.setItem(KEY, JSON.stringify({ at: Date.now(), text })); } catch (_) {}
         } catch (_) {}
     })();
 

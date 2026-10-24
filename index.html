@@ -6,7 +6,7 @@
     <title>Tyler (in real life)</title>
 
     <!-- Preload LCP hero image -->
-    <link rel="preload" as="image" href="/assets/remilio2.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/remilio2.webp" fetchpriority="high">
 
     <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -46,14 +46,14 @@
     <link rel="stylesheet" href="/css/styles.css?v=1.8">
     <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     <!-- Hologram hero + boot splash -->
-    <link rel="stylesheet" href="/css/index.css?v=2.2">
+    <link rel="stylesheet" href="/css/index.css?v=2.3">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.5">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/objects.css?v=6.20">
+    <link rel="stylesheet" href="/css/objects.css?v=6.23">
     <link rel="stylesheet" href="/css/cancel-preview.css?v=1.5">
     <link rel="stylesheet" href="/css/kol-preview.css?v=1.5">
 </head>
@@ -65,7 +65,8 @@
             <div class="boot-title"><span>tirl.sys // handshake</span><span class="boot-classif">UNCLASSIFIED // FOUO</span></div>
             <div class="boot-body">
                 <div class="boot-brand">
-                    <img src="/assets/object-icons/wee-brand.gif" alt="" width="46" height="46">
+                    <!-- data-src: loaded only when the boot screen plays (the script below), not on every reload -->
+                    <img data-src="/assets/object-icons/wee-brand.gif" alt="" width="46" height="46" id="boot-gif">
                     <div class="boot-brand-text"><span class="boot-name" id="boot-name">TYLERIRL</span><span class="boot-tag">(in real life)</span></div>
                 </div>
                 <div class="boot-log" id="boot-log"></div>
@@ -91,6 +92,20 @@
             if (overlay.parentNode) overlay.remove();
         }
 
+        // The workspace assembles panel by panel and the Host powers up (css/index.css, css/objects.css).
+        // The class comes off when the last of it, the hologram's scan line, has finished: animations only
+        // start once the page first paints, which a slow load can push back. 4 s at most.
+        function reveal() {
+            root.classList.add('boot-reveal');
+            const end = () => {
+                document.removeEventListener('animationend', onEnd);
+                root.classList.remove('boot-reveal');
+            };
+            const onEnd = (e) => { if (e.animationName === 'g-holo-line') end(); };
+            document.addEventListener('animationend', onEnd);
+            setTimeout(end, 4000);
+        }
+
         // Dissolve the panel and hand over to the workspace, which assembles panel by panel
         function exit(fast) {
             if (done) return;
@@ -101,8 +116,7 @@
             overlay.classList.add(fast ? 'exit-fast' : 'exit');
             setTimeout(() => {
                 root.classList.remove('booting');
-                root.classList.add('boot-reveal');
-                setTimeout(() => root.classList.remove('boot-reveal'), 1000);
+                reveal();
             }, fast ? 120 : 220);
             setTimeout(remove, 500);
         }
@@ -110,9 +124,13 @@
         if (seen || reduced) {
             done = true;
             remove();
+            // Reloads skip the boot screen but still assemble the workspace panel by panel
+            if (!reduced) reveal();
             return;
         }
 
+        const gif = document.getElementById('boot-gif');
+        if (gif) gif.src = gif.dataset.src;
         root.classList.add('booting');
         root.style.overflow = 'hidden';
         overlay.addEventListener('click', () => exit(true));
@@ -262,11 +280,12 @@
                         <figure class="g-op-subject">
                             <div class="g-op-scope" aria-hidden="true"><i class="g-op-sweep"></i><i class="g-op-ring r1"></i><i class="g-op-ring r2"></i><i class="g-op-ring r3"></i></div>
                             <div class="hologram-container">
-                                <img src="/assets/remilio2.png" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
+                                <img src="/assets/remilio2.webp" alt="Remilio" class="hologram-image" decoding="async" fetchpriority="high">
                                 <div class="hologram-scanlines"></div>
                                 <div class="hologram-flicker"></div>
                                 <div class="hologram-noise"></div>
                             </div>
+                            <i class="g-op-materialize" aria-hidden="true"></i>
                             <figcaption class="g-op-tag"><i class="g-dot tone-green" id="g-presence-dot"></i>SUBJECT &middot; TYLERIRL</figcaption>
                             <!-- Online state or last seen, under the tag (js/presence.js) -->
                             <span class="g-op-seen" id="g-presence-seen" hidden></span>
@@ -363,7 +382,7 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.3"></script>
+    <script defer src="/js/background.js?v=1.4"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/performance.js?v=1.2"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
@@ -374,14 +393,15 @@
     <script defer src="/js/cancel-preview.js?v=1.2"></script>
     <script defer src="/js/kol-calendar.js?v=1.0"></script>
     <script defer src="/js/kol-preview.js?v=1.6"></script>
-    <script defer src="/js/objects.js?v=4.17"></script>
+    <script defer src="/js/arrive.js?v=1.0"></script>
+    <script defer src="/js/objects.js?v=4.18"></script>
     <!-- Service worker registration -->
-    <script defer src="/js/index.js?v=1.14"></script>
+    <script defer src="/js/index.js?v=1.15"></script>
     <script defer src="/js/presence.js?v=1.9"></script>
     <script defer src="/js/music.js?v=1.3"></script>
     <script defer src="/js/ticker.js?v=1.0"></script>
     <script defer src="/js/sky.js?v=1.0"></script>
-    <script defer src="/js/live-rows.js?v=1.7"></script>
+    <script defer src="/js/live-rows.js?v=1.8"></script>
     <script defer src="/js/socials.js?v=1.4"></script>
 </body>
 </html>

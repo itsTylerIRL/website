@@ -107,7 +107,11 @@
     position: relative;
     margin: 0;
     justify-self: center;
-    width: calc(var(--holo) * 1.26); /* the scope rings reach ~1.22x the image height */
+    /* As wide as the scope rings (~1.22x the image height), or as the tag and status line under the image
+       when those are wider (a small hologram, "ONLINE · DESKTOP · MOBILE"): the column then makes room,
+       instead of them running into the comms and dossier */
+    width: max-content;
+    min-width: calc(var(--holo) * 1.26);
     display: grid;
     justify-items: center;
     gap: 6px;
@@ -179,6 +183,47 @@
 }
 .g-op-seen[hidden] { display: none; }
 .g-op-seen.is-gaming { --tone: rgb(189, 147, 249); }
+
+/* Power-up, while the workspace assembles (html.boot-reveal, index.html): the floor grid draws in from the
+   horizon toward the viewer, the beam makes one fast pass, the scope rings spin up into place, and the
+   hologram materialises bottom-up behind a bright scan line. The scan line ends last; the class comes off
+   when it does (index.html) and the usual loops carry on. */
+.g-op-materialize { display: none; }
+html.boot-reveal .g-op-floor { animation: g-floor-in 0.9s cubic-bezier(0.3, 0.6, 0.2, 1) 0.2s both; }
+@keyframes g-floor-in { from { clip-path: inset(0 0 100% 0); opacity: 0.4; } to { clip-path: inset(0); } }
+html.boot-reveal .g-op-beam { animation: g-op-beam-fast 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both; }
+@keyframes g-op-beam-fast { from { transform: translateX(-114%); } to { transform: translateX(500%); } }
+html.boot-reveal .g-op-stars { animation: g-stars-in 1.2s ease 0.4s both; }
+@keyframes g-stars-in { from { opacity: 0; } }
+html.boot-reveal .g-op-scope { animation: g-scope-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
+@keyframes g-scope-in { from { opacity: 0; transform: translate(-50%, -50%) scale(0.55) rotate(-90deg); } }
+html.boot-reveal .g-home .hologram-container { animation: g-holo-in 0.75s cubic-bezier(0.3, 0.6, 0.2, 1) 0.3s both; }
+@keyframes g-holo-in {
+    from { clip-path: inset(100% -25% -25% -25%); filter: brightness(2.2) saturate(0.4); }
+    70% { filter: brightness(1.35) saturate(0.8); }
+    to { clip-path: inset(-25%); filter: none; }
+}
+/* The scan line rides the wipe's edge: same timing and path, from the hologram's foot to just above its top */
+html.boot-reveal .g-op-materialize {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: calc(var(--holo) * 0.95);
+    height: 2px;
+    margin-left: calc(var(--holo) * -0.475);
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, rgba(var(--g-blue-rgb), 0.9) 20%, #fff 50%, rgba(var(--g-blue-rgb), 0.9) 80%, transparent);
+    box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.9), 0 0 28px rgba(var(--g-blue-rgb), 0.5);
+    z-index: 2;
+    pointer-events: none;
+    animation: g-holo-line 0.75s cubic-bezier(0.3, 0.6, 0.2, 1) 0.3s both;
+}
+@keyframes g-holo-line {
+    from { transform: translateY(var(--holo)); opacity: 1; }
+    85% { opacity: 1; }
+    to { transform: translateY(calc(var(--holo) * -0.25)); opacity: 0; }
+}
 
 /* Right side: labelled rows */
 .g-home-links {
@@ -359,6 +404,20 @@
 .g-op-stats.ready b { animation: g-op-in 0.8s ease-out; }
 @keyframes g-op-in { 0% { opacity: 0; filter: blur(4px); } 100% { opacity: 1; filter: none; } }
 .g-op-stats.offline b { color: var(--g-dim); text-shadow: none; }
+
+/* Waiting for a live source (js/objects.js Results rows, the RemiNET stats before they land): dim text with
+   a slow sheen passing through it. js/arrive.js then decodes or counts the real value in. */
+.g-acquire,
+.g-op-stats:not(.ready):not(.offline) b {
+    color: transparent;
+    text-shadow: none;
+    background: linear-gradient(90deg, var(--g-dim) 0%, var(--g-dim) 35%, var(--g-text) 50%, var(--g-dim) 65%, var(--g-dim) 100%) 0 0 / 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: g-acquire 2.2s linear infinite;
+}
+.g-acquire { font-style: italic; letter-spacing: 0.04em; }
+@keyframes g-acquire { from { background-position: 100% 0; } to { background-position: -150% 0; } }
 
 /* Presence: live Discord status beside the stats (js/presence.js). Art with a status pip, a small label row
    (LISTENING / PLAYING + time), title and subtitle; Spotify adds a progress bar along the bottom edge. */
@@ -1299,6 +1358,8 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-op-sweep,
     .g-op-ring,
     .g-op-stats.ready b { animation: none; }
+    .g-acquire,
+    .g-op-stats:not(.ready):not(.offline) b { animation: none; background-position: 50% 0; }
     .g-presence-status { animation: none !important; }
     .g-music-eq i { animation: none; transform: scaleY(0.6); }
     .g-presence-bar i { transition: none; }

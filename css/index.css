@@ -175,7 +175,7 @@
 }
 
 .hologram-container::before {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
+    background: url('../assets/remilio2.webp') center/contain no-repeat;
     mix-blend-mode: screen;
     opacity: 0.4;
     filter: hue-rotate(-30deg) saturate(1.5);
@@ -183,7 +183,7 @@
 }
 
 .hologram-container::after {
-    background: url('../assets/remilio2.png') center/contain no-repeat;
+    background: url('../assets/remilio2.webp') center/contain no-repeat;
     mix-blend-mode: screen;
     opacity: 0.4;
     filter: hue-rotate(30deg) saturate(1.5);

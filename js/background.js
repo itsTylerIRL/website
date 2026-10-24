@@ -300,6 +300,15 @@ void main() {
     let lastNow = null;
     let frameAvg = 16, frameCount = 0;
 
+    // Frame cap: the field drifts slowly, so 60 fps is plenty (high-refresh monitors would otherwise draw it
+    // 120-240 times a second), and 30 fps once nobody has touched the page for a minute, for screens left
+    // idling on it. Any input brings 60 back straight away.
+    const ACTIVE_MS = 1000 / 60, IDLE_MS = 1000 / 30, IDLE_AFTER = 60000;
+    let lastInput = performance.now();
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev =>
+        window.addEventListener(ev, () => { lastInput = performance.now(); }, { passive: true }));
+    let lastDraw = 0;
+
     function frame(now) {
         requestAnimationFrame(frame);
         if (window._bgPaused || document.body.classList.contains('animations-paused')) {
@@ -308,12 +317,22 @@ void main() {
         }
         if (gl.isContextLost()) return;
 
+        // Skip display refreshes until the next frame is due (1.5 ms early is close enough: timestamps wobble).
+        // Carrying the overshoot keeps the average on target when the refresh rate isn't a multiple of it
+        // (144 Hz); a long stall starts afresh.
+        const gap = now - lastInput > IDLE_AFTER ? IDLE_MS : ACTIVE_MS;
+        const since = now - lastDraw;
+        if (since < gap - 1.5) return;
+        const over = since - gap;
+        lastDraw = over > gap ? now : now - Math.max(0, over);
+
         const dt = lastNow === null ? 16 : Math.min(100, now - lastNow);
         lastNow = now;
         time += (dt / 1000) * speed;
 
-        // Adaptive quality: nudge resolution toward ~60fps
-        frameAvg += (dt - frameAvg) * 0.05;
+        // Adaptive quality: nudge resolution so frames keep up with the cap (frame time measured against the
+        // cap, so 30 fps by choice doesn't read as a slow GPU)
+        frameAvg += (dt * (ACTIVE_MS / gap) - frameAvg) * 0.05;
         if (++frameCount > 90) {
             frameCount = 0;
             if (frameAvg > 24 && renderScale > MIN_SCALE) { renderScale = Math.max(MIN_SCALE, renderScale - 0.1); resize(); }

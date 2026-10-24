@@ -44,10 +44,11 @@ const OBJECTS = [
 // badge: art is a KoL avatar (black ink on white), cropped to the character, tinted and refreshed hourly;
 // accent: r,g,b; cta: button label; blurb: the card's short subtext (the full desc stays in the header)
 // info: the card selects the object here (its info view, which links out) instead of opening it
+// live: the card's subtext shows the object's live telemetry (js/live-rows.js) once it lands, else the blurb
 const FEATURED = [
     { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'INFO', info: true, blurb: 'roguelite autobattler' },
     { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
-    { key: 'digiflip', art: '/assets/featured/digiflip.webp', accent: '255,85,85', cta: 'PLAY', blurb: 'flipper zero digimon' },
+    { key: 'raddem', art: '/assets/featured/raddem.webp', round: true, accent: '98,160,255', cta: 'VISIT', live: true, blurb: 'urbit planet' },
     { key: 'rocketry', art: '/assets/object-icons/rocketry.webp', accent: '255,184,108', cta: 'EXPLORE', blurb: 'high power rocketry' },
     { key: 'likes', art: '/assets/object-icons/likes-full.webp', accent: '189,147,249', cta: 'BROWSE', blurb: 'crypto, tech and fun' },
     { key: 'guest-book', art: '/assets/featured/guest-book.webp', round: true, accent: '80,250,123', cta: 'SIGN', blurb: 'leave a message' }
@@ -148,19 +149,36 @@ const FEATURED = [
     // ---------- Results ----------
     // Live telemetry per row (set by js/live-rows.js through window.ObjectsLive): key -> { text, tone }.
     // A live row shows it under the name in place of the path, which moves to the tooltip.
+    // Rows with a live source say "acquiring signal" until it answers (or for 10 s, then fall back to the
+    // path), and their first line decodes in (js/arrive.js)
     const live = {};
+    const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'nosfyl', 'raddem',
+        ...objects.filter((o) => o.type === 'live').map((o) => o.key)]);
+    const waiting = new Set(LIVE_KEYS);
+    setTimeout(() => {
+        const late = [...waiting];
+        waiting.clear();
+        late.forEach((key) => window.ObjectsLive(key, null));
+    }, 10000);
     const pathOf = (o) => (o.external ? o.host : o.url);
     const descHtml = (o) => live[o.key]
-        ? `<i class="g-live-dot tone-${esc(live[o.key].tone || 'green')}"></i>${esc(live[o.key].text)}`
-        : esc(pathOf(o));
+        ? `<i class="g-live-dot tone-${esc(live[o.key].tone || 'green')}"></i><span class="g-live-text">${esc(live[o.key].text)}</span>`
+        : waiting.has(o.key) ? '<span class="g-acquire">acquiring signal&hellip;</span>' : esc(pathOf(o));
     window.ObjectsLive = (key, text, tone) => {
         if (text) live[key] = { text, tone }; else delete live[key];
+        const first = !!text && waiting.delete(key);
         const desc = els.results.querySelector(`.g-res[data-key="${CSS.escape(key)}"] .g-res-desc`);
         const o = objects.find((x) => x.key === key);
         if (!desc || !o) return;
         desc.classList.toggle('is-live', !!live[key]);
         desc.innerHTML = descHtml(o);
+        if (first) window.tirlArrive?.arrive(desc.querySelector('.g-live-text'));
+        const featDesc = els.featured.querySelector(`.g-feat[data-live="${CSS.escape(key)}"] .g-feat-desc`);
+        if (featDesc) featDesc.innerHTML = featDescHtml(FEATURED.find((f) => f.key === key), o);
     };
+    const featDescHtml = (f, o) => f.live && live[o.key]
+        ? `<i class="g-live-dot tone-${esc(live[o.key].tone || 'green')}"></i>${esc(live[o.key].text)}`
+        : esc(f.blurb || o.desc);
     function renderResults() {
         const list = visible();
         els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
@@ -373,12 +391,12 @@ const FEATURED = [
                 ? `<span class="g-feat-art is-badge"><img src="${esc(art)}?_=${Math.floor(Date.now() / 3600000)}" alt="" decoding="async"></span>`
                 : `<span class="g-feat-art${round ? ' is-round' : ''}"><img src="${esc(art)}" alt="" decoding="async"></span>`;
         els.featured.innerHTML = `<div class="g-feat-grid">${items.map((f) => `
-                <a class="g-feat g-spot" ${f.info ? `href="/#${esc(f.o.key)}" data-key="${esc(f.o.key)}"` : `href="${esc(f.o.url)}"${openAttrs(f.o)}`} style="--feat: ${esc(f.accent)}">
+                <a class="g-feat g-spot" ${f.info ? `href="/#${esc(f.o.key)}" data-key="${esc(f.o.key)}"` : `href="${esc(f.o.url)}"${openAttrs(f.o)}`} style="--feat: ${esc(f.accent)}"${f.live ? ` data-live="${esc(f.o.key)}"` : ''}>
                     <span class="g-feat-body">
                         ${artHtml(f)}
                         <span class="g-feat-text">
                             <span class="g-feat-head"><strong class="g-feat-name">${esc(f.o.name)}</strong></span>
-                            <span class="g-feat-desc">${esc(f.blurb || f.o.desc)}</span>
+                            <span class="g-feat-desc">${featDescHtml(f, f.o)}</span>
                         </span>
                         <span class="g-btn g-feat-cta">${esc(f.cta)} ${f.o.external && !f.info ? '&nearr;' : '&rarr;'}</span>
                     </span>
