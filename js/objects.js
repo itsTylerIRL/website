@@ -13,6 +13,7 @@ const OBJECTS = [
     { key: 'home', name: 'Tyler (in real life)', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website' },
     { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer' },
     { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler' },
+    { key: 'network', name: 'the network is growing', url: 'https://clicker.tylerirl.com', type: 'external', icon: '/assets/object-icons/network.webp', desc: 'neochibi idle clicker, sibling to the cancel is coming' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud' },
     { key: 'kol', name: 'Kingdom of Loathing', url: '/pages/kol.html', type: 'collection', workspace: true, icon: '/assets/object-icons/kol.webp', desc: 'TylerIRL in the Kingdom: live moons and calendar, display case with mall prices and what\'s new in KoLmafia' },
     { key: 'rocketry', name: 'Missile Program', url: '/pages/rocketry.html', type: 'program', workspace: true, icon: '/assets/object-icons/rocketry.webp', desc: 'high power rocketry: vehicle builds, milestones, flight footage and launch status' },
@@ -47,9 +48,9 @@ const OBJECTS = [
 // live: the card's subtext shows the object's live telemetry (js/live-rows.js) once it lands, else the blurb
 const FEATURED = [
     { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'INFO', info: true, blurb: 'roguelite autobattler' },
-    { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
+    { key: 'network', art: '/assets/featured/network.webp', accent: '255,121,198', cta: 'PLAY', blurb: 'neochibi idle clicker' },
     { key: 'raddem', art: '/assets/featured/raddem.webp', round: true, accent: '98,160,255', cta: 'VISIT', live: true, blurb: 'urbit planet' },
-    { key: 'rocketry', art: '/assets/object-icons/rocketry.webp', accent: '255,184,108', cta: 'EXPLORE', blurb: 'high power rocketry' },
+    { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
     { key: 'likes', art: '/assets/object-icons/likes-full.webp', accent: '189,147,249', cta: 'BROWSE', blurb: 'crypto, tech and fun' },
     { key: 'guest-book', art: '/assets/featured/guest-book.webp', round: true, accent: '80,250,123', cta: 'SIGN', blurb: 'leave a message' }
 ];
