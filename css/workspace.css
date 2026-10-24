@@ -111,7 +111,7 @@
     color: var(--g-text);
     flex: none;
 }
-/* brand icon (assets/T_Icon-96.webp, downscaled from T_Icon.png) */
+/* brand icon (assets/object-icons/wee-brand.gif, the 64px wee.gif also used by the boot screen) */
 .g-brand img {
     width: 30px;
     height: 30px;
