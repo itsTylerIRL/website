@@ -2,7 +2,8 @@
    status, X, Steam, GitHub, the cancel crown, repo pushes), so the screen keeps changing while it idles.
    Sources write their items to window.tirlFeed[key] (load order doesn't matter; the ticker reads it each
    time it needs the next item): { text (a string, or a function so "ago"s stay current), tone, href }.
-   Status comes from the 'tirl:presence' event (js/presence.js).
+   Status comes from the 'tirl:presence' event (js/presence.js). window.tirlTicker.push(item) slots one-off news
+   (what just happened in the page embedded in the live preview, js/objects.js) in as the very next item.
    The crawl is one track moved by transform; an item that has left on the left is dropped and the next one
    in rotation joins on the right, so new data slides in without the line ever jumping. Hovering pauses it;
    reduced motion swaps one item at a time instead. */
@@ -32,10 +33,14 @@
     presence(window.tirlPresence);
     window.addEventListener('tirl:presence', e => presence(e.detail));
 
-    // The rotation: one item from each source in turn, so no single source floods the line
+    // The rotation: one item from each source in turn, so no single source floods the line; pushed news first
     let turn = 0;
     const depth = {};
+    const news = [];
+    let onNews = null;
+    window.tirlTicker = { push: (it) => { news.push(it); news.splice(0, news.length - 5); if (onNews) onNews(); } };
     function nextItem() {
+        if (news.length) return { ...news.shift(), news: true };
         const f = feed();
         const keys = ORDER.filter(k => f[k] && f[k].length);
         if (!keys.length) return null;
@@ -48,12 +53,14 @@
         el.className = `g-ticker-item${it.tone ? ' tone-' + it.tone : ''}`;
         if (it.href) { el.href = it.href; el.target = '_blank'; el.rel = 'noopener'; }
         el.textContent = typeof it.text === 'function' ? it.text() : it.text;
+        if (it.news) el.dataset.news = '';
         return el;
     }
 
     // Reduced motion: no crawl, one item at a time
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const swap = () => { const it = nextItem(); if (it) track.replaceChildren(build(it)); };
+        onNews = swap;
         swap();
         setInterval(swap, 8000);
         setTimeout(swap, 3000); // the sources' first answers
@@ -61,6 +68,11 @@
     }
 
     let x = 0, last = 0, paused = false;
+    // News cuts in: regular items queued past the right edge make way, so it's next to scroll into view
+    onNews = () => {
+        const right = box.getBoundingClientRect().right;
+        for (let el = track.lastElementChild; el && !('news' in el.dataset) && el.getBoundingClientRect().left > right; el = track.lastElementChild) el.remove();
+    };
     box.addEventListener('mouseenter', () => { paused = true; });
     box.addEventListener('mouseleave', () => { paused = false; });
     box.addEventListener('focusin', () => { paused = true; });

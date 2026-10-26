@@ -502,3 +502,11 @@ body.timing-active .timer-stage .g-reticle { display: none; }
     .timer-stage { min-height: 280px; }
     .solve-list { max-height: 50vh; }
 }
+
+/* ---------- Embedded in the home page's preview (js/embed.js) ----------
+   On the home page the times list scrolls in its own box, except in the one-screen layout (where the side
+   column sizes it). */
+.is-embed-side .solve-list { max-height: 320px; }
+@media (min-width: 1360px) and (min-height: 600px) {
+    .is-embed-side .solve-list { max-height: none; }
+}

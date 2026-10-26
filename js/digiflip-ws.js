@@ -42,6 +42,12 @@
         els.log.innerHTML = events.map((e) => `<li><i class="g-dot tone-${e.tone}"></i><div>
             <time>${e.t} &middot; ${e.kind}</time><span>${e.html}</span></div></li>`).join('');
         els.logMeta.textContent = `${events.length} event${events.length === 1 ? '' : 's'}`;
+        // Embedded on the home page (js/embed.js): the call light and device errors go to its ticker, and a call
+        // gets the pet's attention
+        if (window.TirlEmbed && (kind === 'CALL' || (kind === 'SYS' && tone === 'red'))) {
+            const call = kind === 'CALL' && tone === 'orange';
+            window.TirlEmbed.event(call ? { kind, html, tone, mood: 'sad', status: 'YOUR DIGIMON IS CALLING' } : { kind, html, tone });
+        }
     }
     function setBox(el, text, on) {
         if (!el) return;
@@ -94,6 +100,7 @@
             if (next === state) return;
             state = next;
             setBox(els.link, next.toUpperCase(), next === 'online');
+            if (window.TirlEmbed) window.TirlEmbed.status(`flipper zero · wasm ${next}`.toUpperCase());
             if (next === 'online') log('SYS', 'wasm module online &middot; save restored from IndexedDB', 'green');
             else if (next === 'error') log('SYS', els.status.textContent || 'device error', 'red');
             else log('SYS', 'loading wasm module&hellip;', 'muted');

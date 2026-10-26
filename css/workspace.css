@@ -895,3 +895,52 @@
 @media (prefers-reduced-motion: reduce) {
     .g-object { transition: none; }
 }
+
+/* ---------- Embed mode (js/embed.js) ----------
+   Framed in the home page's live preview with ?embed: the main panels fill the frame at full size and can
+   be used in place. Both columns' panels (data-embed="side" / "rail") are shown on the home page instead, so
+   only the main column stays, without the shell (top bar, status bar, corner brackets) or anything marked
+   data-embed="hide" (a static page header, a Recently Viewed: the home page has its own). From 900px wide
+   the page's one-screen layout applies (js/embed.js mirrors it); the home page's background shows through. */
+html.is-embed { background: transparent; }
+html.is-embed .corner-brackets,
+html.is-embed .g-topbar,
+html.is-embed .g-rail,
+html.is-embed .g-side,
+html.is-embed .g-statusbar,
+html.is-embed [data-embed="hide"] { display: none; }
+html.is-embed .bracket-content-area { inset: 0; }
+html.is-embed .gotham {
+    width: auto;
+    margin: 0;
+    padding: 10px;
+}
+html.is-embed .g-body { grid-template-columns: minmax(0, 1fr); }
+html.is-embed .g-main > :first-child,
+html.is-embed .g-main > [data-embed="hide"] + * { margin-top: 0; } /* the first visible panel */
+
+/* The handed-over column panels, on the home page: js/objects.js puts each column in a shadow root that loads
+   this page's stylesheets, wrapped in .gotham.is-embed-side > .g-side (or .g-rail). One column whatever the window. */
+.gotham.is-embed-side {
+    width: auto;
+    margin: 0;
+}
+.is-embed-side > :is(.g-side, .g-rail) {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+}
+/* Panels keep their own height here (the page's layout would squeeze some to nothing in a shorter column):
+   they grow into spare room, and the column scrolls when they don't fit */
+.is-embed-side > :is(.g-side, .g-rail) > section { flex-basis: auto; flex-shrink: 0; max-height: none; }
+.is-embed-side > :is(.g-side, .g-rail) > section > * { flex-basis: auto; }
+@media (min-width: 1360px) and (min-height: 600px) {
+    /* As tall as the panels, down to what the home page's column allows */
+    .gotham.is-embed-side { flex: 0 1 auto; min-height: 0; }
+    .is-embed-side > :is(.g-side, .g-rail) {
+        flex: 0 1 auto;
+        min-height: 0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
+    }
+}

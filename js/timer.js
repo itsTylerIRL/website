@@ -108,6 +108,12 @@
         renderSessions();
         renderSolves();
         renderStats();
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) {
+            const s = data.sessions[data.current];
+            const n = currentSolves().length;
+            window.TirlEmbed.status(`${s ? s.name : 'session'} · ${n} solve${n === 1 ? '' : 's'}`.toUpperCase());
+        }
     }
 
     function renderSessions() {
@@ -232,9 +238,20 @@
     }
 
     function addSolve(time, penalty) {
-        currentSolves().push({ time, penalty: penalty || 'ok', date: Date.now() });
+        const solves = currentSolves();
+        const valid = solves.map(effective).filter(t => t !== Infinity);
+        const solve = { time, penalty: penalty || 'ok', date: Date.now() };
+        solves.push(solve);
         saveData();
         render();
+        // Embedded on the home page: every solve goes to its ticker, and a new best gets the pet's attention
+        if (window.TirlEmbed) {
+            const t = effective(solve);
+            const pb = t !== Infinity && valid.length > 0 && t < Math.min(...valid);
+            window.TirlEmbed.event(pb
+                ? { kind: 'PB', html: `new PB ${fmt(t)}`, tone: 'green', mood: 'excited', status: `NEW PB · ${fmt(t)}` }
+                : { kind: 'SOLVE', html: `solve ${fmtSolve(solve)}`, tone: t === Infinity ? 'red' : 'blue' });
+        }
     }
 
     // ---- Controls: space bar, or tap and hold the stage ----

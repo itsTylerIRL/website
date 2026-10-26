@@ -39,7 +39,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/kol.css?v=1.1">
 </head>
@@ -80,18 +80,18 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="kol-today-pane">
+                <section class="kol-today-pane" data-embed="rail">
                     <div class="g-panel-title">Today <span class="g-meta" id="kol-today-meta"></span></div>
                     <div class="kol-today" id="kol-today"></div>
                 </section>
-                <section class="g-activity-pane kol-holidays-pane">
+                <section class="g-activity-pane kol-holidays-pane" data-embed="rail">
                     <div class="g-panel-title">Holidays <span class="g-meta">KOL + IRL</span></div>
                     <ol class="g-activity" id="kol-holidays"></ol>
                 </section>
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/kol.webp" alt=""></div>
                         <div class="g-objtitle">
@@ -138,15 +138,15 @@
             </section>
 
             <aside class="g-side">
-                <section class="kol-mafia-pane">
+                <section class="kol-mafia-pane" data-embed="side">
                     <div class="g-panel-title">KoLmafia <span class="g-meta" id="kol-mafia-meta">CONNECTING&hellip;</span></div>
                     <div class="kol-mafia" id="kol-mafia"><p class="kol-empty">Asking GitHub&hellip;</p></div>
                 </section>
-                <section class="kol-iotd-pane">
+                <section class="kol-iotd-pane" data-embed="side">
                     <div class="g-panel-title">Item of the Day <span class="g-meta" id="kol-iotd-meta"></span></div>
                     <div class="kol-iotd-body" id="kol-iotd"><p class="kol-empty">Reading KoLmafia&rsquo;s item list&hellip;</p></div>
                 </section>
-                <section class="kol-ticker-pane">
+                <section class="kol-ticker-pane" data-embed="side">
                     <div class="g-panel-title">Mall Ticker <span class="g-meta" id="kol-ticker-meta">CONNECTING&hellip;</span></div>
                     <ol class="kol-ticker" id="kol-ticker"></ol>
                 </section>
@@ -171,7 +171,8 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
@@ -180,6 +181,6 @@
     <!-- Kingdom of Loathing -->
     <script defer src="/js/kol-calendar.js?v=1.0"></script>
     <script defer src="/js/kol.js?v=1.2"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

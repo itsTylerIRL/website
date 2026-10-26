@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/gallery.css?v=2.5">
 </head>
@@ -72,18 +72,18 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-explorer" aria-label="Collections">
+                <section class="g-explorer" aria-label="Collections" data-embed="rail">
                     <div class="g-panel-title">Object Explorer</div>
                     <div class="g-tree">
                         <div class="g-tree-group"><span class="caret">&#9662;</span>Collection<span class="g-count" id="g-count">0</span></div>
                         <ul id="g-cols"></ul>
                     </div>
                 </section>
-                <section class="g-artists-pane">
+                <section class="g-artists-pane" data-embed="rail">
                     <div class="g-panel-title">Artists <span class="g-meta" id="g-artists-meta"></span></div>
                     <ul class="g-artists" id="g-artists"></ul>
                 </section>
-                <section class="g-activity-pane">
+                <section class="g-activity-pane" data-embed="hide">
                     <div class="g-panel-title">Recently Viewed</div>
                     <ol class="g-activity" id="g-activity"></ol>
                 </section>
@@ -108,7 +108,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-results-pane">
+                <section class="g-results-pane" data-embed="side">
                     <div class="g-panel-title">Results <span class="g-meta" id="g-results-meta"></span></div>
                     <ol class="g-thumbs" id="g-thumbs"></ol>
                 </section>
@@ -266,14 +266,15 @@
     </div>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- NFT gallery workspace: explorer, viewer (zoom & pan), results -->
-    <script defer src="/js/gallery.js?v=2.2"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/gallery.js?v=2.3"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

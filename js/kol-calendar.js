@@ -1,4 +1,4 @@
-/* The KoL calendar, shared by kol.html (js/kol.js) and the KoL preview on the home page (js/kol-preview.js):
+/* The KoL calendar, shared by kol.html (js/kol.js) and the home page's Results line (js/live-rows.js):
    calendar day, moons, stat days and holidays, all computed locally. */
 
 // ---------- KoL calendar (KoLmafia: persistence/HolidayDatabase.java, KoLmafia.KOL_TIME_ZONE) ----------

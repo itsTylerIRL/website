@@ -3,6 +3,7 @@
    - Tyler (in real life): the track playing (js/music.js), else the live status (js/presence.js), as they change
    - Kingdom of Loathing: today's date and time to rollover (js/kol-calendar.js), every minute
    - the cancel is coming: this week's king of the hill (cancel-api, which only answers tylerirl.com), every 5 minutes
+   - speedcube timer: best and solve count in the current session, from this browser's save; as it changes
    - RadGotchi, DigiFlip: last push and stars from one GitHub call, cached for the session (GitHub allows 60 an hour)
    - Things I Like: how many objects the likes page lists, and how many in each category, counted from its
      #likes-data cards the way js/likes.js reads them; once
@@ -48,6 +49,25 @@
             set('kol', `${t.monthName} ${t.date} · ${t.holiday || `rollover ${Math.floor(m / 60)}h ${m % 60}m`}`, t.holiday ? 'orange' : 'blue');
         });
     }
+
+    // speedcube timer: your best and solve count in the current session, from the timer's save in this
+    // browser (js/timer.js); the storage event brings in solves made in the live preview
+    function timer() {
+        let s = null;
+        try {
+            const data = JSON.parse(localStorage.getItem('cubeTimerData'));
+            s = data && data.sessions && data.sessions[data.current];
+        } catch (_) {}
+        const solves = (s && s.solves) || [];
+        if (!solves.length) return set('timer', 'no solves yet · hold space to begin', 'orange');
+        const times = solves.filter(x => x.penalty !== 'dnf').map(x => x.time + (x.penalty === 'plus2' ? 2000 : 0));
+        if (!times.length) return set('timer', `${solves.length} solves · all DNF`, 'red');
+        const sec = Math.floor(Math.min(...times) / 10) / 100; // centiseconds, cut like the timer's display
+        const pb = sec >= 60 ? `${Math.floor(sec / 60)}:${(sec % 60).toFixed(2).padStart(5, '0')}` : sec.toFixed(2);
+        set('timer', `PB ${pb} · ${solves.length} solve${solves.length === 1 ? '' : 's'}`, 'green');
+    }
+    timer();
+    window.addEventListener('storage', e => { if (e.key === 'cubeTimerData' || e.key === null) timer(); });
 
     // Things I Like: the likes page's object count, biggest category first. Counting means fetching the whole
     // page, so the line is kept for an hour.

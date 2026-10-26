@@ -1371,3 +1371,544 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-preview-open,
     .g-preview-open span { transition: none; }
 }
+
+/* ---------- Embedded pages (OBJECTS embed: true, js/embed.js) ----------
+   The page fills the preview unscaled and takes input, so no screen bezel, CRT lines or click-through
+   cover; the panel's grid shows through the page's glass. Its side panels sit under Results. */
+.g-preview-screen.is-embed {
+    inset: 0;
+    width: auto;
+    height: auto;
+    transform: none;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+.g-preview-screen.is-embed::before { display: none; }
+.g-preview-screen.is-embed iframe { pointer-events: auto; }
+.g-embed-side[hidden] { display: none; }
+.g-embed-side {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+}
+.g-embed-host {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.g-embed-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--g-dim);
+    text-transform: uppercase;
+}
+.g-embed-label b { color: var(--g-blue); font-weight: 400; }
+.g-embed-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--g-border-strong), transparent); }
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-embed-side { flex: 1.4 1 0; }
+    .g-embed-host { flex: 1 1 0; }
+    /* The page's left column is as tall as its panels (shrinking, and scrolling, only when they don't fit),
+       and Recently Viewed fills whatever is left, so it always starts right below them */
+    .g-embed-rail,
+    .g-embed-rail .g-embed-host { flex: 0 1 auto; min-height: 0; }
+    .g-rail:has(> .g-embed-rail:not([hidden])) .g-activity-pane { flex: 1 1 0; min-height: 110px; }
+}
+/* Below the one-screen layout nothing sizes the column, so long panels scroll in a box of their own */
+@media (max-width: 1359px) {
+    .g-embed-host {
+        max-height: 70vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
+    }
+}
+/* Two columns: both under Results in the rail (left column panels, then side panels), with recently viewed
+   pushed down. The page gets a taller frame, as it's laid out for a narrow window here and runs down rather
+   than across. */
+@media (min-width: 900px) and (max-width: 1359px) {
+    .g-preview.is-embed { min-height: min(760px, 80vh); }
+    .g-embed-side { grid-column: 1; grid-row: 4; }
+    .g-embed-rail { grid-row: 3; }
+    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto clamp(220px, 40vh, 480px) auto auto minmax(150px, 1fr); }
+    .g-body:has(.g-embed-side:not([hidden])) .g-activity-pane { grid-row: 5; }
+    .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 5; }
+}
+@media (max-width: 899px) {
+    .g-embed-side { order: 3; }
+    .g-embed-rail { order: 4; }
+    .g-preview.is-embed { height: min(130vw, 75vh); }
+}
+
+/* ---------- Channel change (js/objects.js tune / tuned) ----------
+   While the next object connects the screen shows static; when it's ready it switches on like a CRT: a bright
+   line that opens to the full picture. The side panels it hands over slide in with it. */
+.g-preview.is-tuning::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(0deg, rgba(var(--g-blue-rgb), 0.07) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 5px),
+        radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.08), transparent 70%);
+    animation: g-static 0.18s steps(3) infinite;
+}
+@keyframes g-static {
+    0% { background-position: 0 0, 0 0, 0 0; opacity: 0.9; }
+    50% { background-position: 0 1px, 3px 0, 0 0; opacity: 0.6; }
+    100% { background-position: 0 2px, -2px 0, 0 0; opacity: 1; }
+}
+.g-preview.is-on .g-preview-screen { animation: g-switch-on 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes g-switch-on {
+    0% { clip-path: inset(49.6% 8% 49.6% 8%); filter: brightness(3) saturate(0.4); }
+    35% { clip-path: inset(49.6% 0 49.6% 0); filter: brightness(2.4) saturate(0.6); }
+    100% { clip-path: inset(0); filter: none; }
+}
+.g-embed-side:not([hidden]) { animation: g-embed-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-embed-rail { --embed-from: -14px; } /* slides in from its own side */
+@keyframes g-embed-in {
+    from { opacity: 0; transform: translateX(var(--embed-from, 14px)); }
+    to { opacity: 1; transform: none; }
+}
+
+/* ---------- The preview as an instrument ----------
+   Live pages get no sweep band over their text. Corner marks frame the screen and light up, with a rim
+   glow, while the embedded page has the keyboard; the chip in the title bar says where keys go and hands
+   them over on a click. */
+.g-preview-screen.is-embed::after { display: none; }
+.g-preview .g-reticle {
+    width: 14px;
+    height: 14px;
+    border: 0 solid rgba(var(--g-blue-rgb), 0.45);
+    transition: border-color 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+}
+.g-preview .g-reticle.tl { top: 6px; left: 6px; border-top-width: 1px; border-left-width: 1px; }
+.g-preview .g-reticle.tr { top: 6px; right: 6px; border-top-width: 1px; border-right-width: 1px; }
+.g-preview .g-reticle.bl { bottom: 6px; left: 6px; border-bottom-width: 1px; border-left-width: 1px; }
+.g-preview .g-reticle.br { bottom: 6px; right: 6px; border-bottom-width: 1px; border-right-width: 1px; }
+.g-preview.has-keys .g-reticle {
+    border-color: var(--g-blue);
+    border-width: 2px 0 0 2px;
+    filter: drop-shadow(0 0 4px rgba(var(--g-blue-rgb), 0.8));
+}
+.g-preview.has-keys .g-reticle.tl { transform: translate(-2px, -2px); }
+.g-preview.has-keys .g-reticle.tr { border-width: 2px 2px 0 0; transform: translate(2px, -2px); }
+.g-preview.has-keys .g-reticle.bl { border-width: 0 0 2px 2px; transform: translate(-2px, 2px); }
+.g-preview.has-keys .g-reticle.br { border-width: 0 2px 2px 0; transform: translate(2px, 2px); }
+.g-preview { transition: box-shadow 0.3s ease; }
+.g-preview.has-keys { box-shadow: inset 0 0 0 1px rgba(var(--g-blue-rgb), 0.35), inset 0 0 28px rgba(var(--g-blue-rgb), 0.08); }
+.g-keys {
+    margin-left: auto;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--g-dim);
+    background: none;
+    border: 1px solid var(--g-border);
+    border-radius: 999px;
+    padding: 1px 8px;
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.g-keys[hidden] { display: none; }
+.g-keys:hover { color: var(--g-blue); border-color: var(--g-border-strong); }
+.g-keys[aria-pressed="true"] {
+    color: var(--g-blue);
+    border-color: var(--g-blue);
+    box-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.35);
+}
+
+/* A row in Results pings when its embedded page reports news (js/objects.js TirlEmbedHost.event) */
+.g-res.is-ping { animation: g-res-ping 2.4s ease-out; }
+.g-res.is-ping > .g-dot { animation: g-dot-ping 0.6s ease-out 3; }
+@keyframes g-res-ping {
+    0% { background: rgba(var(--g-blue-rgb), 0.28); box-shadow: inset 2px 0 0 var(--g-blue); }
+    100% { box-shadow: inset 2px 0 0 transparent; }
+}
+@keyframes g-dot-ping {
+    0% { box-shadow: 0 0 0 0 rgba(var(--g-blue-rgb), 0.7); }
+    100% { box-shadow: 0 0 0 7px transparent; }
+}
+
+/* ---------- Command palette (js/palette.js) ---------- */
+.g-search input { cursor: pointer; }
+.g-pal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: min(14vh, 120px) 16px 16px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    animation: g-pal-fade 0.16s ease-out;
+}
+.g-pal[hidden] { display: none; }
+@keyframes g-pal-fade { from { opacity: 0; } }
+.g-pal-box {
+    width: min(640px, 100%);
+    max-height: min(560px, 76vh);
+    display: flex;
+    flex-direction: column;
+    background: rgba(6, 10, 14, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--g-border-strong);
+    border-radius: 14px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(var(--g-blue-rgb), 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    animation: g-pal-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes g-pal-in { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+.g-pal-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--g-border);
+}
+.g-pal-search svg { width: 15px; height: 15px; fill: var(--g-blue); flex: none; }
+.g-pal-search input {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: 0;
+    outline: none;
+    color: var(--g-text);
+    font: inherit;
+    font-size: 15px;
+    caret-color: var(--g-blue);
+}
+.g-pal-search input::placeholder { color: var(--g-dim); }
+.g-pal kbd {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    color: var(--g-muted);
+    border: 1px solid var(--g-border-strong);
+    border-radius: 4px;
+    padding: 0 5px;
+    line-height: 16px;
+}
+.g-pal-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 14px;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--g-dim);
+    background: var(--g-panel-2);
+    border-bottom: 1px solid var(--g-border);
+}
+.g-pal-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--g-blue-rgb), 0.25) transparent;
+}
+.g-pal-item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: none;
+    border: 0;
+    border-left: 2px solid transparent;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+}
+[aria-selected="true"] > .g-pal-item {
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.16), transparent);
+    border-left-color: var(--g-blue);
+}
+.g-pal-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: grid;
+    place-items: center;
+    background: var(--g-well);
+    color: var(--g-blue);
+    font-family: var(--g-mono);
+}
+.g-pal-text { display: flex; flex-direction: column; min-width: 0; }
+.g-pal-name,
+.g-pal-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.g-pal-name { color: var(--g-text); font-size: 12.5px; }
+[aria-selected="true"] > .g-pal-item .g-pal-name { color: var(--g-blue); }
+.g-pal-name mark { background: none; color: var(--g-blue); text-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.6); }
+.g-pal-sub { color: var(--g-dim); font-size: 10.5px; }
+.g-pal-chip {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-muted);
+    border: 1px solid var(--g-border);
+    border-radius: 999px;
+    padding: 1px 8px;
+    white-space: nowrap;
+}
+.g-pal-empty {
+    padding: 28px 14px;
+    text-align: center;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--g-dim);
+}
+.g-pal-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    padding: 8px 14px;
+    border-top: 1px solid var(--g-border);
+    font-size: 10.5px;
+    color: var(--g-dim);
+}
+.g-pal-foot span { display: inline-flex; align-items: center; gap: 4px; }
+@media (max-width: 639px) {
+    .g-pal { padding-top: 12px; }
+    .g-pal-chip { display: none; }
+    .g-pal-foot { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .g-preview.is-tuning::after,
+    .g-preview.is-on .g-preview-screen,
+    .g-embed-side:not([hidden]),
+    .g-res.is-ping,
+    .g-res.is-ping > .g-dot,
+    .g-pal,
+    .g-pal-box { animation: none; }
+}
+
+/* ---------- Player link (js/player.js), on the home object ----------
+   Signed out: the games' two sign-ins, on the right of the header beside the description. Signed in: who you are
+   in the top bar (#g-whoami), and a card per game in its own color under the header's description. */
+.g-objsplit {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px 24px;
+}
+.g-objinfo { flex: 1 1 auto; min-width: 0; }
+.g-player-sso {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+.g-player-sso[hidden] { display: none; }
+.g-player-note { font-size: 10.5px; color: var(--g-red); }
+.g-player:empty { display: none; }
+.g-player {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--g-border);
+}
+.g-player-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+}
+.g-player-label {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--g-blue);
+}
+.g-player-head small { color: var(--g-dim); font-size: 10.5px; }
+/* Top bar, signed in: pushes the search box over */
+.g-whoami {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.g-whoami[hidden] { display: none; }
+.g-whoami:not([hidden]) + .g-search { margin-left: 0; }
+.g-whoami .g-btn { padding: 2px 8px; font-size: 10px; }
+.g-sso-row { display: flex; align-items: center; gap: 8px; }
+.g-sso-row > i { color: var(--g-dim); font-style: normal; font-size: 10.5px; }
+.g-sso {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+}
+.g-sso img,
+.g-sso svg { width: 15px; height: 15px; flex: none; }
+.g-sso:not(.ur):hover { border-color: rgba(255, 222, 23, 0.6); box-shadow: 0 0 12px rgba(255, 222, 23, 0.2); }
+.g-sso.ur { color: #6fb0ff; }
+.g-sso.ur:hover { border-color: rgba(111, 176, 255, 0.6); box-shadow: 0 0 12px rgba(111, 176, 255, 0.25); }
+/* The verified name: Remilia's mark in gold, Urbit's in blue, as on the games' boards */
+.g-ptag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 9px 1px 4px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 999px;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    text-decoration: none;
+}
+.g-ptag img,
+.g-ptag svg { width: 15px; height: 15px; }
+.g-ptag.rm { color: #ffde17; border-color: rgba(255, 222, 23, 0.35); }
+.g-ptag.ur { color: #6fb0ff; border-color: rgba(111, 176, 255, 0.4); }
+.g-ptag b { font-weight: 400; }
+.g-player-wait {
+    padding: 12px;
+    text-align: center;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--g-blue);
+    border: 1px dashed var(--g-border);
+    border-radius: 10px;
+    animation: g-wait 1.2s ease-in-out infinite;
+}
+.g-player-wait.is-error { color: var(--g-muted); animation: none; }
+.g-player-wait .g-btn { margin-left: 6px; }
+.g-games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+.g-game {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 12px 10px;
+    border: 1px solid rgba(var(--game), 0.25);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(var(--game), 0.07), transparent 60%), var(--g-well);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.g-game:hover {
+    border-color: rgba(var(--game), 0.6);
+    box-shadow: 0 0 18px rgba(var(--game), 0.15);
+    transform: translateY(-1px);
+}
+.g-game-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.g-game-head img { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; flex: none; }
+.g-game-head > b {
+    color: rgb(var(--game));
+    font-family: var(--g-mono);
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.g-game-head em {
+    font-style: normal;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    color: #ffde17;
+    border: 1px solid rgba(255, 222, 23, 0.45);
+    border-radius: 999px;
+    padding: 0 7px;
+    white-space: nowrap;
+}
+.g-game-go {
+    margin-left: auto;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--g-dim);
+    white-space: nowrap;
+}
+.g-game:hover .g-game-go { color: rgb(var(--game)); }
+.g-pstats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+.g-pstat {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.g-pstat b {
+    font-family: var(--g-mono);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--g-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+}
+.g-pstat.drip b { color: rgb(var(--game)); }
+.g-pstat small {
+    font-size: 9.5px;
+    color: var(--g-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.g-pstats .good,
+.g-game-last .good { color: var(--g-green); }
+.g-pstats .bad,
+.g-game-last .bad { color: var(--g-red); }
+.g-game-last {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 10.5px;
+    color: var(--g-muted);
+    min-width: 0;
+}
+.g-game-last > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.g-game-last b { color: var(--g-text); font-weight: 400; }
+.g-game-last i { margin-left: auto; font-style: normal; color: var(--g-dim); white-space: nowrap; }
+@media (max-width: 899px) {
+    .g-whoami { order: 2; }
+    .g-whoami .g-player-label { display: none; }
+}
+@media (max-width: 639px) {
+    .g-pstats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g-objsplit { flex-direction: column; align-items: stretch; }
+    .g-player-sso { align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .g-player-wait { animation: none; }
+    .g-game { transition: none; }
+}

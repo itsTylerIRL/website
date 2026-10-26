@@ -28,6 +28,8 @@
         els.log.innerHTML = events.map((e) => `<li><i class="g-dot tone-${e.tone}"></i><div>
             <time>${e.t} &middot; ${e.kind}</time><span>${e.html}</span></div></li>`).join('');
         els.logMeta.textContent = `${events.length} event${events.length === 1 ? '' : 's'}`;
+        // Embedded on the home page (js/embed.js): the uplink's news goes to its ticker
+        if (window.TirlEmbed && tone !== 'muted') window.TirlEmbed.event({ kind, html, tone });
     }
 
     // One state drives the chip, the uplink panel, the status bar and the overlay
@@ -48,6 +50,8 @@
         els.wait.hidden = !s.wait;
         els.wait.classList.toggle('is-error', key === 'timeout');
         frame.classList.toggle('ready', key === 'online');
+        // Embedded on the home page: the preview's status line
+        if (window.TirlEmbed) window.TirlEmbed.status(`~raddem-tidwyt · uplink ${s.label}`.toUpperCase());
     }
 
     function connect(first) {

@@ -179,6 +179,8 @@
         current = it;
         renderHeader(it);
         els.crumb.textContent = it.title;
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) window.TirlEmbed.status(`${it.title} · ${items.indexOf(it) + 1}/${items.length}`.toUpperCase());
         els.results.querySelectorAll('.g-res').forEach((b) => {
             const on = b.dataset.slug === it.slug;
             b.setAttribute('aria-current', on);

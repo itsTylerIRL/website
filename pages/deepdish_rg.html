@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/docs.css?v=1.3">
     <link rel="stylesheet" href="/css/deepdish_rg.css?v=2.7">
@@ -80,22 +80,22 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-toc-pane" aria-label="Contents">
+                <section class="g-toc-pane" aria-label="Contents" data-embed="rail">
                     <div class="g-panel-title">Contents <span class="g-meta" id="g-toc-meta"></span></div>
                     <ol class="g-toc" id="g-toc"></ol>
                 </section>
-                <section class="g-ranks-pane">
+                <section class="g-ranks-pane" data-embed="rail">
                     <div class="g-panel-title">Clearance <span class="g-meta">13 RANKS</span></div>
                     <ol class="g-ranks" id="g-ranks"></ol>
                 </section>
-                <section class="g-src-pane">
+                <section class="g-src-pane" data-embed="rail">
                     <div class="g-panel-title">Source Map <span class="g-meta">LINES / AREA</span></div>
                     <ol class="g-src" id="g-src" data-source='[["src/main",7804],["src/styles",5643],["src/chat",2760],["src/renderer",2310],["root",954],["src/web",680],["skills",637],["test",527],["src/settings",268]]'></ol>
                 </section>
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/radgotchi-shades.webp" alt=""></div>
                         <div class="g-objtitle">
@@ -523,7 +523,7 @@ npm install &amp;&amp; npm start</code></pre>
             </section>
 
             <aside class="g-side">
-                <section class="g-install-pane" aria-labelledby="g-install-title">
+                <section class="g-install-pane" data-embed="side" aria-labelledby="g-install-title">
                     <div class="g-panel-title"><span id="g-install-title">Deploy</span> <span class="g-meta">ONE-LINE INSTALL</span></div>
                     <div class="g-install">
                         <div class="g-install-tabs" role="tablist" aria-label="Operating system">
@@ -539,11 +539,11 @@ npm install &amp;&amp; npm start</code></pre>
                         <p class="g-install-note">Checks for git, Node and npm (offers to install them), clones or updates <code>~/radgotchi</code>, installs dependencies and offers a shortcut. Re-run it to update. <a href="/install_rg.sh" target="_blank" rel="noopener" id="g-install-src">Read the script &nearr;</a></p>
                     </div>
                 </section>
-                <section class="g-specimen-pane">
+                <section class="g-specimen-pane" data-embed="side">
                     <div class="g-panel-title">Specimen <span class="g-meta" id="g-specimen-meta"></span></div>
                     <div class="g-specimen" id="g-specimen"></div>
                 </section>
-                <section class="g-roster-pane">
+                <section class="g-roster-pane" data-embed="side">
                     <div class="g-panel-title">Sprite Roster <span class="g-meta">25 &middot; 144&times;44</span></div>
                     <ol class="g-roster" id="g-roster"></ol>
                 </section>
@@ -568,15 +568,16 @@ npm install &amp;&amp; npm start</code></pre>
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Docs (contents, search, source map) + RadGotchi sprites, routines and ranks -->
-    <script defer src="/js/docs.js?v=1.2"></script>
-    <script defer src="/js/rg-docs.js?v=1.2"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/docs.js?v=1.3"></script>
+    <script defer src="/js/rg-docs.js?v=1.3"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

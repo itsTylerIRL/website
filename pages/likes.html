@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/likes.css?v=2.6">
 </head>
@@ -72,18 +72,18 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-explorer" aria-label="Object explorer">
+                <section class="g-explorer" aria-label="Object explorer" data-embed="rail">
                     <div class="g-panel-title">Object Explorer</div>
                     <div class="g-tree">
                         <div class="g-tree-group"><span class="caret">&#9662;</span>Interest<span class="g-count" id="g-count">0</span></div>
                         <ul id="g-cats"></ul>
                     </div>
                 </section>
-                <section class="g-mix-pane">
+                <section class="g-mix-pane" data-embed="rail">
                     <div class="g-panel-title">Category Mix <span class="g-meta">filter</span></div>
                     <div class="g-mix" id="g-mix"></div>
                 </section>
-                <section class="g-activity-pane">
+                <section class="g-activity-pane" data-embed="hide">
                     <div class="g-panel-title">Recently Viewed</div>
                     <ol class="g-activity" id="g-activity"></ol>
                 </section>
@@ -102,7 +102,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-results-pane">
+                <section class="g-results-pane" data-embed="side">
                     <div class="g-panel-title">Results <span class="g-meta" id="g-results-meta"></span>
                         <button type="button" class="g-btn g-shuffle" id="g-shuffle" title="Shuffle results">&#10227;</button>
                     </div>
@@ -1414,14 +1414,15 @@
     </div>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- Things I like workspace + 3D icon cloud -->
-    <script defer src="/js/likes.js?v=2.1"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/likes.js?v=2.2"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

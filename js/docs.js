@@ -1,5 +1,6 @@
 /* DEEPDISH documentation pages (deepdish_ocs.html, deepdish_rg.html): contents with scroll-spy, docs search
-   (with text highlights where the browser supports them), [ / ] section keys and the source map.
+   (with text highlights where the browser supports them), [ / ] section keys, #<section id> links and the
+   source map.
    Works on #g-docs-scroll's .doc-sec sections; the source map reads JSON [[name, lines], ...] from
    #g-src's data-source attribute. */
 (function() {
@@ -27,11 +28,11 @@
         ? (window.bracketContentArea || document.scrollingElement)
         : scroller;
     const rootTop = (root) => root === document.scrollingElement ? 0 : root.getBoundingClientRect().top + root.clientTop;
-    function goTo(section) {
+    function goTo(section, instant) {
         const root = scrollRoot();
         const top = section.getBoundingClientRect().top - rootTop(root) + root.scrollTop - 6;
         const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        root.scrollTo({ top, behavior: reduced ? 'instant' : 'smooth' });
+        root.scrollTo({ top, behavior: reduced || instant ? 'instant' : 'smooth' });
         section.classList.remove('flash');
         void section.offsetWidth; // restart the flash animation
         section.classList.add('flash');
@@ -63,6 +64,8 @@
         revealInList(els.toc, tocItems[idx]);
         const s = sections[idx];
         els.docsMeta.textContent = `${s.querySelector('.doc-num').textContent} · ${s.dataset.title.toUpperCase()}`;
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) window.TirlEmbed.status(els.docsMeta.textContent);
     }
     let spyQueued = false;
     function scheduleSpy() {
@@ -138,6 +141,16 @@
         els.src.innerHTML = source.map(([name, n]) => `<li><span class="g-src-name">${name}</span>
             <span class="g-src-bar"><span style="width:${(n / maxLines * 100).toFixed(1)}%"></span></span>
             <span class="g-src-n">${n.toLocaleString('en-US')}</span></li>`).join('');
+    }
+
+    // #<section id> opens at that section (the home page's command palette links here); later changes scroll to it
+    const fromHash = () => sections.find((s) => s.id === decodeURIComponent(location.hash.slice(1)));
+    window.addEventListener('hashchange', () => { const s = fromHash(); if (s) goTo(s); });
+    // Opening at a section waits for the page's images, which move everything below them
+    const initial = fromHash();
+    if (initial) {
+        if (document.readyState === 'complete') goTo(initial, true);
+        else window.addEventListener('load', () => goTo(initial, true), { once: true });
     }
 
     spy();

@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/digimon.css?v=2.7">
 </head>
@@ -66,13 +66,13 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-about-pane">
+                <section class="g-about-pane" data-embed="rail">
                     <div class="g-panel-title">How It Works</div>
                     <div class="g-pane-body">
                         <p>Raise a Digimon from an egg in real time: feed it, train it, clean up after it, put it to bed and battle through the 100-round Colosseum. The pet lives on your clock, so time keeps passing while this tab is closed.</p>
                     </div>
                 </section>
-                <section class="g-care-pane">
+                <section class="g-care-pane" data-embed="rail">
                     <div class="g-panel-title">Care Guide <span class="g-meta">VER.20TH</span></div>
                     <ul class="g-care">
                         <li><b>hunger</b><span>feed meat to fill its hunger hearts</span></li>
@@ -84,7 +84,7 @@
                         <li><b>battle</b><span>fight through the Colosseum; patch injuries with medicine</span></li>
                     </ul>
                 </section>
-                <section class="g-device-actions">
+                <section class="g-device-actions" data-embed="rail">
                     <div class="g-panel-title">Device</div>
                     <div class="g-pane-body g-actions">
                         <button class="session-btn" id="digimon-sound">sound: on</button>
@@ -94,7 +94,7 @@
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/digiflip.webp" alt=""></div>
                         <div class="g-objtitle">
@@ -147,7 +147,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-telemetry-pane">
+                <section class="g-telemetry-pane" data-embed="side">
                     <div class="g-panel-title">Telemetry <span class="g-meta">LIVE</span></div>
                     <div class="g-telemetry">
                         <div class="stat-box"><div class="stat-label">uptime</div><div class="stat-value" id="t-uptime">0:00</div></div>
@@ -158,7 +158,7 @@
                         <div class="stat-box"><div class="stat-label">sound</div><div class="stat-value" id="t-sound">&mdash;</div></div>
                     </div>
                 </section>
-                <section class="g-events-pane">
+                <section class="g-events-pane" data-embed="side">
                     <div class="g-panel-title">Event Log <span class="g-meta" id="g-events-meta">0 events</span></div>
                     <ol class="g-activity g-events" id="g-events"></ol>
                 </section>
@@ -183,7 +183,8 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
@@ -191,7 +192,7 @@
 
     <!-- DigiFlip (WebAssembly build in js/digiflip/) -->
     <script defer src="/js/digimon.js?v=1.1"></script>
-    <script defer src="/js/digiflip-ws.js?v=1.0"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/digiflip-ws.js?v=1.1"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

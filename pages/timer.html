@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-embed-focus>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,9 +38,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/timer.css?v=2.7">
+    <link rel="stylesheet" href="/css/timer.css?v=2.9">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -66,7 +66,7 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-session-pane">
+                <section class="g-session-pane" data-embed="rail">
                     <div class="g-panel-title">Session</div>
                     <div class="g-pane-body session-bar">
                         <label class="session-label" for="session-select">active session</label>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="g-options-pane">
+                <section class="g-options-pane" data-embed="rail">
                     <div class="g-panel-title">Options</div>
                     <div class="g-pane-body options-bar">
                         <label class="toggle">
@@ -92,7 +92,7 @@
                         </label>
                     </div>
                 </section>
-                <section class="g-howto-pane">
+                <section class="g-howto-pane" data-embed="rail">
                     <div class="g-panel-title">How To</div>
                     <div class="g-pane-body">
                         <table class="keys">
@@ -107,7 +107,7 @@
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon"><span class="g-objimg g-noimg">&#9201;</span></div>
                         <div class="g-objtitle">
@@ -139,7 +139,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-stats-pane">
+                <section class="g-stats-pane" data-embed="side">
                     <div class="g-panel-title">Stats</div>
                     <div class="stats-grid">
                         <div class="stat-box accent-cyan">
@@ -172,7 +172,7 @@
                     <div class="g-panel-title">Session Report</div>
                     <dl class="g-props g-report" id="g-report"></dl>
                 </section>
-                <section class="g-times-pane">
+                <section class="g-times-pane" data-embed="side">
                     <div class="g-panel-title">Times <span class="g-meta">click a time to edit</span></div>
                     <div class="solve-list" id="solve-list">
                         <div class="solve-empty">no solves yet &mdash; hold space or the timer to begin</div>
@@ -213,15 +213,16 @@
     </div>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Speedcube timer -->
-    <script defer src="/js/timer.js?v=1.1"></script>
+    <script defer src="/js/timer.js?v=1.2"></script>
     <script defer src="/js/timer-ws.js?v=1.0"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

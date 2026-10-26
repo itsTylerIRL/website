@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/docs.css?v=1.3">
     <link rel="stylesheet" href="/css/deepdish_top.css?v=2.0">
@@ -68,18 +68,18 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-toc-pane" aria-label="Contents">
+                <section class="g-toc-pane" aria-label="Contents" data-embed="rail">
                     <div class="g-panel-title">Contents <span class="g-meta" id="g-toc-meta"></span></div>
                     <ol class="g-toc" id="g-toc"></ol>
                 </section>
-                <section class="g-src-pane">
+                <section class="g-src-pane" data-embed="rail">
                     <div class="g-panel-title">Source Map <span class="g-meta">DOCUMENTED LOC</span></div>
                     <ol class="g-src" id="g-src" data-source='[["backend",2017],["frontend",11553]]'></ol>
                 </section>
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/top.webp" alt=""></div>
                         <div class="g-objtitle">
@@ -469,14 +469,14 @@
             </section>
 
             <aside class="g-side">
-                <section class="top-preview-pane">
+                <section class="top-preview-pane" data-embed="side">
                     <div class="g-panel-title">Dashboard <span class="g-meta">CAPTURE</span></div>
                     <a class="top-screenshot" href="/assets/TOP/top.png" target="_blank" rel="noopener" aria-label="Open the full-size DeepDish TOP dashboard screenshot">
                         <img src="/assets/TOP/top.png" alt="DeepDish TOP dashboard with host metrics, cluster monitoring, OCS eye and service panels" width="1278" height="1384" decoding="async">
                         <span>VIEW FULL SIZE &nearr;</span>
                     </a>
                 </section>
-                <section class="top-runtime-pane">
+                <section class="top-runtime-pane" data-embed="side">
                     <div class="g-panel-title">Runtime <span class="g-meta">CONFIGURATION</span></div>
                     <dl class="g-props">
                         <dt>Host</dt><dd>DEEPDISH</dd>
@@ -487,7 +487,7 @@
                         <dt>Collection</dt><dd>2s &middot; parallel</dd>
                     </dl>
                 </section>
-                <section class="top-cluster-pane">
+                <section class="top-cluster-pane" data-embed="side">
                     <div class="g-panel-title">Cluster <span class="g-meta">6 EXPORTERS</span></div>
                     <ul class="top-hosts">
                         <li><b>MINI</b><code>mini.local:9100</code></li>
@@ -518,12 +518,13 @@
     </div>
     </main>
 
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
-    <script defer src="/js/docs.js?v=1.2"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/docs.js?v=1.3"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Native, readable previews (this one and css/kol-preview.css) rather than the scaled iframe used by internal pages. */
+/* Native, readable previews (like this one) rather than the scaled iframe used by internal pages. */
 .g-preview.is-native {
     container: native-preview / inline-size;
     overflow-y: auto;

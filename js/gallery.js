@@ -245,6 +245,8 @@
         current = p;
         renderHeader(p);
         showMedia(p);
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) window.TirlEmbed.status(`${p.name} · ${colName(p.collection)} · ${pieces.indexOf(p) + 1}/${pieces.length}`.toUpperCase());
         els.crumb.textContent = p.name;
         els.crumbCol.textContent = colName(p.collection);
         els.thumbs.querySelectorAll('.g-thumb').forEach((b) => {

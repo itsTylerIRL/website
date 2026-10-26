@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/rocketry.css?v=4.4">
 </head>
@@ -72,7 +72,7 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-explorer" aria-label="Object explorer">
+                <section class="g-explorer" aria-label="Object explorer" data-embed="rail">
                     <div class="g-panel-title">Object Explorer</div>
                     <div class="g-tree">
                         <div class="g-tree-group"><span class="caret">&#9662;</span>Vehicle<span class="g-count" id="g-count">0</span></div>
@@ -83,7 +83,7 @@
                         <div class="g-empty-hint">no flights logged</div>
                     </div>
                 </section>
-                <section class="g-activity-pane">
+                <section class="g-activity-pane" data-embed="rail">
                     <div class="g-panel-title">Activity <span class="g-meta">newest first</span></div>
                     <ol class="g-activity" id="g-activity"></ol>
                 </section>
@@ -94,11 +94,11 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-milestones-pane">
+                <section class="g-milestones-pane" data-embed="side">
                     <div class="g-panel-title">Build Milestones <span class="g-meta" id="g-ms-meta"></span></div>
                     <ol class="g-ms-list" id="g-milestones"></ol>
                 </section>
-                <section class="g-graph-pane">
+                <section class="g-graph-pane" data-embed="side">
                     <div class="g-panel-title">Link Analysis <span class="g-meta" id="g-graph-meta"></span></div>
                     <svg class="g-graph" id="g-graph" viewBox="0 0 300 244" role="img" aria-label="Linked objects"></svg>
                 </section>
@@ -124,14 +124,15 @@
 
     
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- Missile program workspace -->
-    <script defer src="/js/rocketry.js?v=2.7"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/rocketry.js?v=2.8"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

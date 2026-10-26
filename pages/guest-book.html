@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/guest-book.css?v=2.4">
 </head>
@@ -68,7 +68,7 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-channel-pane">
+                <section class="g-channel-pane" data-embed="rail">
                     <div class="g-panel-title">Channel</div>
                     <dl class="g-props">
                         <dt>ship</dt><dd>~raddem-tidwyt</dd>
@@ -78,14 +78,14 @@
                         <dt>via</dt><dd>https</dd>
                     </dl>
                 </section>
-                <section class="g-about-pane">
+                <section class="g-about-pane" data-embed="rail">
                     <div class="g-panel-title">How It Works</div>
                     <div class="g-pane-body">
                         <p>A comment board running on tyler's urbit planet, <b>~raddem-tidwyt</b>, shown live in the middle panel.</p>
                         <p>Write in the box and hit <b>comment</b>. Comments are stored on the ship, not on this website.</p>
                     </div>
                 </section>
-                <section class="g-urbit-pane">
+                <section class="g-urbit-pane" data-embed="rail">
                     <div class="g-panel-title">Get On Urbit</div>
                     <ul class="g-linklist">
                         <li><a href="https://urbit.org/get-on-the-network" target="_blank" rel="noopener"><i class="g-dot tone-green"></i><span><b>get urbit</b><small>urbit.org &middot; get on the network</small></span>&nearr;</a></li>
@@ -96,7 +96,7 @@
             </aside>
 
             <section class="g-main" id="g-main">
-                <div class="g-objhead">
+                <div class="g-objhead" data-embed="hide">
                     <div class="g-objrow">
                         <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/featured/guest-book.webp" alt=""></div>
                         <div class="g-objtitle">
@@ -122,7 +122,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-uplink-pane">
+                <section class="g-uplink-pane" data-embed="side">
                     <div class="g-panel-title">Uplink</div>
                     <dl class="g-props" id="g-uplink">
                         <dt>status</dt><dd id="u-status">connecting</dd>
@@ -131,7 +131,7 @@
                         <dt>reloads</dt><dd id="u-reloads">0</dd>
                     </dl>
                 </section>
-                <section class="g-network-pane">
+                <section class="g-network-pane" data-embed="side">
                     <div class="g-panel-title">Network</div>
                     <ol class="g-results">
                         <li><a class="g-res" href="http://urbit.tylerirl.com" target="_blank" rel="noopener">
@@ -144,7 +144,7 @@
                             <i class="g-dot tone-blue"></i></a></li>
                     </ol>
                 </section>
-                <section class="g-activity-pane">
+                <section class="g-activity-pane" data-embed="side">
                     <div class="g-panel-title">Uplink Log <span class="g-meta" id="g-log-meta"></span></div>
                     <ol class="g-activity" id="g-log"></ol>
                 </section>
@@ -169,14 +169,15 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Guest book uplink -->
-    <script defer src="/js/guest-book.js?v=1.0"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/guest-book.js?v=1.1"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

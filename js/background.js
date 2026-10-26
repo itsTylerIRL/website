@@ -9,6 +9,7 @@
 
 (function() {
     'use strict';
+    if (window.TirlEmbed) return; // embedded in the home page's preview (js/embed.js): its background shows through
 
     const MAX_RIPPLES = 8;
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

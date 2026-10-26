@@ -407,6 +407,11 @@ const VEHICLES = [
         const changed = index !== current;
         current = index;
         els.crumb.textContent = v.designation;
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) {
+            const p = progressOf(v);
+            window.TirlEmbed.status(`${v.designation} · ${p.done}/${p.total} milestones`.toUpperCase());
+        }
         renderExplorer();
         renderGraph(v, index);
         renderActivity(v);
@@ -453,8 +458,10 @@ const VEHICLES = [
             e.preventDefault();
             els.search.focus();
         } else if (!typing && e.key === 'ArrowLeft') {
+            e.preventDefault();
             step(-1);
         } else if (!typing && e.key === 'ArrowRight') {
+            e.preventDefault();
             step(1);
         }
     });

@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.4">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/markets.css?v=2.5">
 </head>
@@ -68,11 +68,11 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-explorer" aria-label="Collections">
+                <section class="g-explorer" aria-label="Collections" data-embed="rail">
                     <div class="g-panel-title">Collections <span class="g-meta" id="g-coll-meta"></span></div>
                     <ul class="g-colls" id="g-colls"></ul>
                 </section>
-                <section class="g-range-pane">
+                <section class="g-range-pane" data-embed="rail">
                     <div class="g-panel-title">Range</div>
                     <div class="g-pane-body">
                         <div class="g-range" id="g-range" role="group" aria-label="Time range">
@@ -83,7 +83,7 @@
                         <p class="g-range-note">volume, sales and average price use this window; &Delta; compares it with the next longer one</p>
                     </div>
                 </section>
-                <section class="g-activity-pane">
+                <section class="g-activity-pane" data-embed="rail">
                     <div class="g-panel-title">Feed Log <span class="g-meta" id="g-log-meta"></span></div>
                     <ol class="g-activity" id="g-log"></ol>
                 </section>
@@ -121,11 +121,11 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-props-pane">
+                <section class="g-props-pane" data-embed="side">
                     <div class="g-panel-title">Properties <span class="g-meta" id="g-props-meta"></span></div>
                     <dl class="g-props" id="g-props"></dl>
                 </section>
-                <section class="g-cult-pane">
+                <section class="g-cult-pane" data-embed="side">
                     <div class="g-panel-title">CULT <span class="g-meta">milady cult coin &middot; coingecko</span></div>
                     <div class="g-cult">
                         <gecko-coin-price-chart-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" coin-id="milady-cult-coin" initial-currency="usd"></gecko-coin-price-chart-widget>
@@ -152,7 +152,8 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/background.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
@@ -160,7 +161,7 @@
 
     <!-- Neochibi Markets -->
     <script defer src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
-    <script defer src="/js/markets.js?v=2.1"></script>
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <script defer src="/js/markets.js?v=2.2"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

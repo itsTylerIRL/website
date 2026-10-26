@@ -179,6 +179,8 @@ const COLLECTIONS = [
             ? `<video class="g-objimg" src="${esc(c.video)}" poster="${esc(c.logo)}" autoplay muted loop playsinline></video>`
             : logoHtml(c, 'g-objimg');
         const tone = { live: 'green', loading: 'muted', offline: 'red' }[state(c)];
+        // Embedded on the home page (js/embed.js): the preview's status line
+        if (window.TirlEmbed) window.TirlEmbed.status(`${c.name} · ${d ? `floor ${eth(d.floor)}` : state(c)}`.toUpperCase());
         header.innerHTML = `<div class="g-objrow">
                 <div class="g-objicon g-objicon-img">${art}</div>
                 <div class="g-objtitle">
@@ -278,6 +280,8 @@ const COLLECTIONS = [
         els.log.innerHTML = events.map((e) => `<li><i class="g-dot tone-${e.tone}"></i><div>
             <time>${e.t} &middot; ${e.kind}</time><span>${e.html}</span></div></li>`).join('');
         els.logMeta.textContent = `${events.length} event${events.length === 1 ? '' : 's'}`;
+        // Embedded on the home page (js/embed.js): syncs and errors go to its ticker
+        if (window.TirlEmbed && (kind === 'SYNC' || kind === 'ERR') && tone !== 'muted') window.TirlEmbed.event({ kind, html, tone });
     }
 
     // ---------- Fetch ----------
