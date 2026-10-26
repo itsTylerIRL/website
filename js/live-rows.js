@@ -9,7 +9,8 @@
      #likes-data cards the way js/likes.js reads them; once
    - ~nosfyl, ~raddem-tidwyt: online (and for how long) or offline (and when last seen) from ship-status on
      cancel-api, which checks each ship every minute; every 2 minutes
-   Anything that fails just leaves the row on its path. */
+   Anything that fails just leaves the row on its path. The crown, the likes count and the repos' last pushes also
+   go into the visit memory (js/now.js), so a return visit says what changed. */
 (function () {
     'use strict';
     const set = window.ObjectsLive;
@@ -71,11 +72,12 @@
 
     // Things I Like: the likes page's object count, biggest category first. Counting means fetching the whole
     // page, so the line is kept for an hour.
+    const likesSeen = (n) => window.tirlVisit?.seen('likes', n, (was, now) => now > was ? { text: `+${now - was} new likes`, tone: 'purple', key: 'likes' } : null);
     (async () => {
         const KEY = 'tirl_likes_line';
         try {
             const c = JSON.parse(localStorage.getItem(KEY));
-            if (c && Date.now() - c.at < 3600000) return set('likes', c.text, 'blue');
+            if (c && Date.now() - c.at < 3600000) { likesSeen(c.count); return set('likes', c.text, 'blue'); }
         } catch (_) {}
         try {
             const r = await fetch('/pages/likes.html');
@@ -88,7 +90,8 @@
             const split = Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, n]) => `${n} ${c}`).join(' · ');
             const text = `${cards.length} objects · ${split}`;
             set('likes', text, 'blue');
-            try { localStorage.setItem(KEY, JSON.stringify({ at: Date.now(), text })); } catch (_) {}
+            likesSeen(cards.length);
+            try { localStorage.setItem(KEY, JSON.stringify({ at: Date.now(), text, count: cards.length })); } catch (_) {}
         } catch (_) {}
     })();
 
@@ -115,11 +118,15 @@
         try {
             const { king } = await getJSON('https://cancel-api.tylerirl.com/api/king', { cache: 'no-store' });
             const feed = (window.tirlFeed = window.tirlFeed || {});
+            const crown = (who) => window.tirlVisit?.seen('king', who, (was, now) => was === now ? null
+                : now ? { text: `♛ new king ${now}`, tone: 'orange', key: 'cancel' } : { text: '♛ the throne went empty', tone: 'orange', key: 'cancel' });
             if (!king) {
+                crown('');
                 feed.cancel = [{ text: '♛ the cancel is coming: throne empty, take the crown', tone: 'orange', href: 'https://cancel.tylerirl.com' }];
                 return set('cancel', '♛ throne empty · take the crown', 'orange');
             }
             const who = king.handle ? (String(king.handle).startsWith('~') ? king.handle : '~' + king.handle) : king.name || 'anon';
+            crown(who);
             set('cancel', `♛ ${who} · ${king.score ?? 0} drip`, 'orange');
             feed.cancel = [{ text: `♛ ${who} holds the cancel crown · ${king.score ?? 0} drip`, tone: 'orange', href: 'https://cancel.tylerirl.com' }];
         } catch (_) {}
@@ -143,7 +150,9 @@
         }
         Object.entries(REPOS).forEach(([key, name]) => {
             const r = repos[name.toLowerCase()];
-            if (r) set(key, `pushed ${ago(new Date(r.pushed))}${r.stars ? ` · ★${r.stars}` : ''}`, 'green');
+            if (!r) return;
+            set(key, `pushed ${ago(new Date(r.pushed))}${r.stars ? ` · ★${r.stars}` : ''}`, 'green');
+            window.tirlVisit?.seen('pushed:' + key, r.pushed, (was, now) => now > was ? { text: `pushed to ${name}`, tone: 'green', key } : null);
         });
         // For the status-bar ticker (js/ticker.js)
         (window.tirlFeed = window.tirlFeed || {}).repos = Object.values(REPOS).filter(name => repos[name.toLowerCase()]).map(name => ({

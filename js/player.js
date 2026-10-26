@@ -9,7 +9,9 @@
    - POST /api/profile {session, data: {}}: the cancel's account sync. With nothing to add it changes nothing and
      answers with the account's record, DRIP, streak, all-time rank and last runs
    - GET /api/king?player=: weeks as king of the hill, kings slain, and whether you hold the hill now
-   - GET /api/net/profile?h=: the network: miladys, how far along, grass, where you stand on its boards (404: not started) */
+   - GET /api/net/profile?h=: the network: miladys, how far along, grass, where you stand on its boards (404: not started)
+   Your crown, DRIP and miladys go into the visit memory (js/now.js), so coming back says what changed (losing the
+   crown in particular). Who's signed in is window.TirlPlayer.user(), and a 'tirl:player' event says it changed. */
 (function () {
     'use strict';
     const API = 'https://cancel-api.tylerirl.com';
@@ -86,11 +88,27 @@
         if (acct && acct.status === 401) return signOut('your sign-in ran out: sign in again');
         stats = !acct || acct.ok === false ? { failed: true } : { acct, king: king && king.ok !== false ? king : null, net: net && net.ok !== false ? net : (net && net.status === 404 ? { started: false } : null), at: Date.now() };
         render(true);
-        if (welcome && !stats.failed) {
+        if (stats.failed) return;
+        remember();
+        if (welcome) {
             welcome = false;
             if (typeof RG !== 'undefined') RG.setMood('grateful', { anim: 'rg-bounce', status: `WELCOME ${user.name}`.toUpperCase().slice(0, 28), duration: 4000, priority: true });
-            window.tirlTicker?.push({ text: `player link up · ${isShip(user.handle) ? user.handle : '~' + user.handle}`, tone: 'green' });
+            const it = { text: `player link up · ${isShip(user.handle) ? user.handle : '~' + user.handle}`, tone: 'green' };
+            window.tirlTicker?.push(it);
+            window.tirlLog?.add({ ...it, src: 'player link' });
         }
+    }
+    // What changed in the games since your last visit (js/now.js): per account, so another sign-in starts fresh
+    function remember() {
+        const visit = window.tirlVisit;
+        if (!visit) return;
+        const id = (k) => `${k}:${user.player}`;
+        const k = stats.king || {}, n = stats.net || {};
+        if (stats.king) visit.seen(id('crown'), !!k.you, (was, now) => was && !now
+            ? { text: 'you lost the crown', tone: 'red', key: 'cancel', alert: { mood: 'sad', status: 'DETHRONED' } }
+            : !was && now ? { text: '👑 you hold the crown', tone: 'orange', key: 'cancel' } : null);
+        visit.seen(id('drip'), +(stats.acct.data || {}).drip || 0, (was, now) => now > was ? { text: `+${num(now - was)} drip`, tone: 'orange', key: 'cancel' } : null);
+        if (n.started !== false && stats.net) visit.seen(id('miladys'), +n.miladys || 0, (was, now) => now > was ? { text: `+${num(now - was)} miladys`, tone: 'purple', key: 'network' } : null);
     }
     function signOut(msg) {
         keep(null);
@@ -98,6 +116,7 @@
         stats = null;
         notice = msg || '';
         render();
+        window.dispatchEvent(new CustomEvent('tirl:player'));
     }
 
     // ---------- Render ----------
@@ -154,7 +173,7 @@
         if (slots.top) {
             slots.top.hidden = !user;
             if (user) {
-                slots.top.innerHTML = `<span class="g-player-label">PLAYER</span>${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button>`;
+                slots.top.innerHTML = `${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button>`;
                 slots.top.querySelector('[data-out]').addEventListener('click', () => signOut());
                 if (arrived) window.tirlArrive?.arrive(slots.top.querySelector('.g-ptag b'));
             } else slots.top.replaceChildren();
@@ -197,5 +216,10 @@
         render();
     });
 
-    window.TirlPlayer = { mount };
+    // For the boot screen (index.html)
+    window.dispatchEvent(new CustomEvent('tirl:boot', { detail: user
+        ? { id: 'player', status: (isShip(user.handle) ? user.handle : '~' + user.handle).toUpperCase() }
+        : { id: 'player', status: 'GUEST', tone: 'idle' } }));
+
+    window.TirlPlayer = { mount, user: () => user && { handle: user.handle, name: user.name } };
 })();

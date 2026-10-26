@@ -1901,7 +1901,6 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-game-last i { margin-left: auto; font-style: normal; color: var(--g-dim); white-space: nowrap; }
 @media (max-width: 899px) {
     .g-whoami { order: 2; }
-    .g-whoami .g-player-label { display: none; }
 }
 @media (max-width: 639px) {
     .g-pstats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1911,4 +1910,156 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 @media (prefers-reduced-motion: reduce) {
     .g-player-wait { animation: none; }
     .g-game { transition: none; }
+}
+
+/* ---------- NOW (js/now.js), on the home object ----------
+   A greeting and how long since your last visit, what changed since then (chips that select the object), and a
+   row of what's live this minute, each cell a Results live line. */
+.g-now:empty { display: none; }
+.g-now {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--g-border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.g-now-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+}
+.g-now-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--g-blue);
+}
+.g-now-label .g-dot { animation: g-live-pulse 2s ease-in-out infinite; }
+.g-now-hello { letter-spacing: 0.14em; color: var(--g-text); }
+.g-now-hello b { color: var(--g-green); font-weight: 400; letter-spacing: 0.04em; }
+.g-now-visit { margin-left: auto; color: var(--g-dim); letter-spacing: 0.06em; }
+.g-now-since[hidden] { display: none; }
+.g-now-since {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+.g-now-since-label {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--g-dim);
+    margin-right: 2px;
+}
+.g-since {
+    font: inherit;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 1px 9px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--tone, var(--g-blue)) 40%, transparent);
+    background: var(--tone-bg, transparent);
+    color: var(--tone, var(--g-blue));
+}
+button.g-since { cursor: pointer; }
+button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0 10px var(--tone-bg); }
+.g-now-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 6px;
+}
+.g-now-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 5px 9px 6px;
+    border: 1px solid var(--g-border);
+    border-radius: 8px;
+    background: var(--g-well);
+    color: var(--g-muted);
+    font: inherit;
+    font-size: 11px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+.g-now-cell:hover { border-color: var(--g-border-strong); background: rgba(var(--g-blue-rgb), 0.06); }
+.g-now-cell small {
+    font-family: var(--g-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--g-dim);
+}
+.g-now-cell > span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.g-now-cell b { font-weight: 400; color: #c5d1da; }
+
+/* ---------- Signal Log (js/signals.js), under Results ----------
+   The activity list's look: time, then the source (a link to the object) and what it said. */
+.g-signal-pane .g-meta { text-transform: lowercase; }
+.g-signal li > div { min-width: 0; overflow-wrap: anywhere; }
+.g-signal .g-sig-src {
+    display: inline;
+    margin-right: 6px;
+    font-weight: 500;
+    color: var(--g-text);
+}
+.g-signal button.g-sig-src:hover { color: var(--g-blue); }
+.g-sig-text { color: var(--g-muted); }
+.g-signal li.is-new { animation: g-sig-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-signal li.is-new .g-sig-text { animation: g-sig-flash 1.6s ease-out; }
+@keyframes g-sig-in { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes g-sig-flash { from { color: var(--g-blue); text-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.6); } }
+.g-sig-empty {
+    display: block !important;
+    color: var(--g-dim);
+    font-style: italic;
+}
+/* Three columns: it shares the side column with Results (and the previewed page's panels), scrolling inside */
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-signal-pane { flex: 0.8 1 0; min-height: 140px; contain: size; }
+    .g-signal { flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
+}
+@media (min-width: 1360px) and (max-height: 599px) {
+    .g-signal { max-height: 260px; overflow-y: auto; }
+}
+/* Two columns: the last row of the rail column, below Recently Viewed */
+@media (min-width: 900px) and (max-width: 1359px) {
+    .g-body { grid-template-rows: auto clamp(220px, 40vh, 480px) minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
+    .g-main { grid-row: 1 / span 4; }
+    .g-signal-pane { grid-column: 1; grid-row: 4; }
+    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto clamp(220px, 40vh, 480px) auto auto minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
+    .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 6; }
+    .g-body:has(.g-embed-side:not([hidden])) .g-signal-pane { grid-row: 6; }
+    .g-signal-pane {
+        contain: size;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+    }
+    .g-signal { flex: 1 1 0; min-height: 0; max-height: none; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
+}
+@media (max-width: 899px) {
+    .g-signal-pane { order: 8; }
+    .g-signal { max-height: 260px; overflow-y: auto; }
+    .g-now-visit { margin-left: 0; flex-basis: 100%; }
+    .g-now-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .g-now-label .g-dot,
+    .g-signal li.is-new,
+    .g-signal li.is-new .g-sig-text { animation: none; }
 }

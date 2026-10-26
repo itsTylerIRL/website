@@ -99,6 +99,8 @@
         fetch(SRC, { credentials: 'omit' })
             .then(r => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
             .then(j => {
+                // Visit memory (js/now.js): tracks played since you were last here
+                if (Number.isInteger(j.scrobbles)) window.tirlVisit?.seen('scrobbles', j.scrobbles, (was, now) => now > was ? { text: `♫ ${(now - was).toLocaleString('en-US')} tracks played`, tone: 'cyan', key: 'live-music' } : null);
                 const key = JSON.stringify([j.playing, j.last, j.scrobbles]);
                 if (key !== shown) { shown = key; render(j); }
             })

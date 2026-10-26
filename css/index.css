@@ -492,7 +492,7 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
     display: flex;
     flex-direction: column;
     gap: 5px;
-    min-height: calc(4 * 1.55em + 15px); /* reserve every row so nothing shifts */
+    min-height: calc(6 * 1.55em + 25px); /* reserve every row so nothing shifts */
     line-height: 1.55;
 }
 .boot-row {
@@ -521,11 +521,20 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
     border-radius: 4px;
     padding: 0 7px;
     min-width: 8em;
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-align: center;
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 .boot-row.ok .boot-dot { background: #50fa7b; box-shadow: 0 0 8px rgba(80, 250, 123, 0.8); }
 .boot-row.ok .boot-stat { color: #50fa7b; border-color: rgba(80, 250, 123, 0.45); background: rgba(80, 250, 123, 0.08); }
+/* Answered, nothing wrong but nothing to light up (a guest, offline): cyan. No answer yet, or a ship down: orange */
+.boot-row.idle .boot-dot { background: #8be9fd; box-shadow: 0 0 8px rgba(139, 233, 253, 0.6); }
+.boot-row.idle .boot-stat { background: rgba(139, 233, 253, 0.06); }
+.boot-row.warn .boot-dot { background: #ffb86c; box-shadow: 0 0 8px rgba(255, 184, 108, 0.7); }
+.boot-row.warn .boot-stat { color: #ffb86c; border-color: rgba(255, 184, 108, 0.45); background: rgba(255, 184, 108, 0.08); }
 
 .boot-progress {
     position: relative;
@@ -582,7 +591,7 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
 /* Hand-over: the workspace assembles, panel by panel */
 html.boot-reveal .g-topbar { animation: bootDrop 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 html.boot-reveal .g-statusbar { animation: bootRise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s both; }
-html.boot-reveal :is(.g-explorer, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-activity-pane) {
+html.boot-reveal :is(.g-explorer, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-activity-pane, .g-signal-pane) {
     animation: bootRise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 html.boot-reveal .g-explorer { animation-delay: 0.08s; }
@@ -590,6 +599,7 @@ html.boot-reveal .g-home-pane { animation-delay: 0.12s; }
 html.boot-reveal .g-results-pane { animation-delay: 0.16s; }
 html.boot-reveal .g-objhead { animation-delay: 0.2s; }
 html.boot-reveal .g-activity-pane { animation-delay: 0.24s; }
+html.boot-reveal .g-signal-pane { animation-delay: 0.26s; }
 html.boot-reveal .g-preview-pane { animation-delay: 0.28s; }
 @keyframes bootDrop { from { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
 @keyframes bootRise { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }

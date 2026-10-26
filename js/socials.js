@@ -63,6 +63,8 @@
             if (p) {
                 const text = p.text.replace(/\s+/g, ' ').trim();
                 window.ObjectsLive?.('live-x', `“${text}” · ${ago(p.at)}`, 'blue');
+                // Visit memory (js/now.js): a post since you were last here
+                window.tirlVisit?.seen('xpost', p.url, (was, now) => was !== now ? { text: 'new post on 𝕏', tone: 'blue', key: 'live-x' } : null);
                 (window.tirlFeed = window.tirlFeed || {}).x = [{ text: () => `𝕏 “${text.length > 90 ? text.slice(0, 88).trimEnd() + '…' : text}” · ${ago(p.at)}`, tone: 'blue', href: p.url }];
             }
             xCard.hidden = false;
