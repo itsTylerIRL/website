@@ -1472,12 +1472,74 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     35% { clip-path: inset(49.6% 0 49.6% 0); filter: brightness(2.4) saturate(0.6); }
     100% { clip-path: inset(0); filter: none; }
 }
-.g-embed-side:not([hidden]) { animation: g-embed-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
-.g-embed-rail { --embed-from: -14px; } /* slides in from its own side */
+/* Handed-over panels on a switch (js/objects.js leavePanels / mountPanels): the old ones slip out toward their
+   column's outer edge and dim; while the next page tunes in, the column keeps their room and shows the preview's
+   static; then the new ones slide in from the same edge as the column eases to their size. */
+.g-embed-side { --embed-from: 14px; }
+.g-embed-rail { --embed-from: -14px; }
+.g-embed-host.is-entering { animation: g-embed-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-embed-host.is-leaving { animation: g-embed-out 0.18s ease-in forwards; pointer-events: none; }
+.g-embed-host.is-pending { opacity: 0; pointer-events: none; }
 @keyframes g-embed-in {
-    from { opacity: 0; transform: translateX(var(--embed-from, 14px)); }
-    to { opacity: 1; transform: none; }
+    from { opacity: 0; transform: translateX(var(--embed-from)); filter: blur(3px); }
+    to { opacity: 1; transform: none; filter: none; }
 }
+@keyframes g-embed-out {
+    to { opacity: 0; transform: translateX(var(--embed-from)) scaleY(0.98); filter: blur(3px) brightness(1.6); }
+}
+.g-embed-side.is-holding { position: relative; overflow: hidden; }
+.g-embed-side.is-holding::after {
+    content: '';
+    position: absolute;
+    inset: 22px 0 0;
+    border: 1px solid var(--g-border);
+    border-radius: 14px;
+    background:
+        repeating-linear-gradient(0deg, rgba(var(--g-blue-rgb), 0.07) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 5px),
+        radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.08), transparent 70%),
+        var(--g-panel);
+    animation: g-static 0.18s steps(3) infinite, g-hold-in 0.25s ease-out;
+}
+/* A caption, and a scan line running down the room kept */
+.g-embed-side.is-holding::before {
+    content: 'TUNING \00B7  ACQUIRING PANELS';
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: calc(50% + 11px);
+    text-align: center;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    color: var(--g-orange);
+    opacity: 0.85;
+    animation: g-wait 1.2s ease-in-out infinite;
+}
+.g-embed-side.is-holding .g-embed-host {
+    position: absolute;
+    z-index: 2;
+    inset: 22px 0 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(var(--g-blue-rgb), 0.16) 48%, rgba(var(--g-blue-rgb), 0.4) 50%, transparent 52%) 0 -100% / 100% 200% no-repeat;
+    animation: g-hold-scan 1.4s linear infinite;
+    border-radius: 14px;
+}
+@keyframes g-hold-scan { to { background-position: 0 200%; } }
+@keyframes g-hold-in { from { opacity: 0; } }
+.g-embed-label.is-tuning .g-dot { background: var(--g-orange); box-shadow: 0 0 6px var(--g-orange); animation: g-live-pulse 0.8s ease-in-out infinite; }
+.g-embed-label.is-tuning b { color: var(--g-orange); }
+
+/* The object header on a switch: its rows rise in turn while it eases to its new height */
+.g-objhead.is-switch > * { animation: g-head-in 0.38s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+.g-objhead.is-switch > :nth-child(2) { animation-delay: 0.05s; }
+.g-objhead.is-switch > :nth-child(3) { animation-delay: 0.1s; }
+.g-objhead.is-switch > :nth-child(n + 4) { animation-delay: 0.15s; }
+@keyframes g-head-in { from { opacity: 0; transform: translateY(6px); filter: blur(2px); } }
+
+/* Featured cards deal in when home comes back */
+.g-feat-grid > .g-feat { animation: g-head-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--i, 0) * 45ms); }
 
 /* ---------- The preview as an instrument ----------
    Live pages get no sweep band over their text. Corner marks frame the screen and light up, with a rim
@@ -1694,7 +1756,14 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 @media (prefers-reduced-motion: reduce) {
     .g-preview.is-tuning::after,
     .g-preview.is-on .g-preview-screen,
-    .g-embed-side:not([hidden]),
+    .g-embed-host.is-entering,
+    .g-embed-host.is-leaving,
+    .g-embed-side.is-holding::after,
+    .g-embed-side.is-holding::before,
+    .g-embed-side.is-holding .g-embed-host,
+    .g-embed-label.is-tuning .g-dot,
+    .g-objhead.is-switch > *,
+    .g-feat-grid > .g-feat,
     .g-res.is-ping,
     .g-res.is-ping > .g-dot,
     .g-pal,
@@ -2062,4 +2131,424 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     .g-now-label .g-dot,
     .g-signal li.is-new,
     .g-signal li.is-new .g-sig-text { animation: none; }
+}
+
+/* ---------- Directional switches: stepping brings the next object in from the side it lies on ---------- */
+.g-objhead.is-switch[data-from="next"] > * { animation-name: g-head-in-next; }
+.g-objhead.is-switch[data-from="prev"] > * { animation-name: g-head-in-prev; }
+@keyframes g-head-in-next { from { opacity: 0; transform: translateX(28px); filter: blur(2px); } }
+@keyframes g-head-in-prev { from { opacity: 0; transform: translateX(-28px); filter: blur(2px); } }
+
+/* ---------- Swipe (js/objects.js, touch screens) ----------
+   The header's contents follow the finger and dim; the neighbour's name slides in at the edge it'll come from.
+   Let go short of the threshold and they spring back. */
+.g-objhead { touch-action: pan-y; }
+.g-objhead > :not(.g-swipe-edges) { transition: transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.32s ease; }
+.g-objhead.is-swiping { overflow: hidden; }
+.g-objhead.is-swiping > :not(.g-swipe-edges) {
+    transition: none;
+    transform: translateX(var(--swipe-x, 0));
+    opacity: calc(1 - 0.6 * (var(--swipe-prev, 0) + var(--swipe-next, 0)));
+}
+.g-swipe-edges {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-blue);
+}
+.g-swipe-edges span {
+    position: absolute;
+    top: 50%;
+    max-width: 45%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.6);
+}
+.g-swipe-edges .prev { left: 14px; opacity: var(--swipe-prev, 0); transform: translate(calc(-24px + 24px * var(--swipe-prev, 0)), -50%); }
+.g-swipe-edges .next { right: 14px; opacity: var(--swipe-next, 0); transform: translate(calc(24px - 24px * var(--swipe-next, 0)), -50%); }
+.g-swipe-hint {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--g-blue);
+    padding: 2px 8px;
+    border: 1px dashed var(--g-border-strong);
+    border-radius: 999px;
+    animation: g-swipe-nudge 2.4s ease-in-out infinite;
+}
+@keyframes g-swipe-nudge {
+    0%, 100% { transform: none; }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    55% { transform: none; }
+}
+
+/* ---------- SYS settings (js/sys.js) ---------- */
+.g-sys-btn {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid var(--g-border);
+    border-radius: 8px;
+    background: var(--g-well);
+    color: var(--g-muted);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.g-sys-btn svg { width: 16px; height: 16px; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-sys-btn:hover,
+.g-sys-btn[aria-expanded="true"] { color: var(--g-blue); border-color: var(--g-blue); box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.25); }
+.g-sys-btn:hover svg,
+.g-sys-btn[aria-expanded="true"] svg { transform: rotate(60deg); }
+.g-sys[hidden] { display: none; }
+.g-sys {
+    position: fixed; /* placed under the gear by js/sys.js */
+    z-index: 60;
+    top: 64px;
+    right: 16px;
+    width: min(380px, calc(100vw - 32px));
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding: 0 0 12px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 14px;
+    background: rgba(6, 12, 16, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(var(--g-blue-rgb), 0.05), 0 0 30px rgba(var(--g-blue-rgb), 0.08);
+    animation: g-sys-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-origin: top right;
+}
+@keyframes g-sys-in { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+.g-sys-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 10px 9px 14px;
+    border-bottom: 1px solid var(--g-border);
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--g-blue);
+}
+.g-sys-head > span { display: inline-flex; align-items: center; gap: 8px; }
+.g-sys-x {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--g-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+.g-sys-x:hover { color: var(--g-text); background: rgba(var(--g-blue-rgb), 0.1); }
+.g-sys-read {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    padding: 10px 12px 2px;
+}
+.g-sys-read span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 4px;
+    border: 1px solid var(--g-border);
+    border-radius: 8px;
+    background: var(--g-well);
+}
+.g-sys-read b { font-family: var(--g-mono); font-weight: 400; font-size: 14px; color: var(--g-blue); }
+.g-sys-read small { font-size: 9px; letter-spacing: 0.12em; color: var(--g-dim); text-transform: uppercase; }
+.g-sys-group { padding: 10px 14px 0; }
+.g-sys-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    color: var(--g-dim);
+}
+.g-sys-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--g-border-strong), transparent); }
+.g-sys-label span { letter-spacing: 0.06em; text-transform: none; font-size: 10px; }
+.g-sys-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+}
+.g-sys-row + .g-sys-row { border-top: 1px dashed rgba(var(--g-blue-rgb), 0.08); }
+.g-sys-text { display: flex; flex-direction: column; min-width: 0; }
+.g-sys-text b { font-weight: 500; font-size: 12px; color: var(--g-text); }
+.g-sys-text small { font-size: 10.5px; color: var(--g-dim); }
+/* On/off switch: a track with a knob, lit when on */
+.g-switch {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--g-dim);
+    cursor: pointer;
+}
+.g-switch i {
+    position: relative;
+    width: 32px;
+    height: 16px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 999px;
+    background: var(--g-well);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+.g-switch i::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--g-muted);
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease;
+}
+.g-switch span { width: 2.4em; text-align: left; }
+.g-switch[aria-checked="true"] { color: var(--g-green); }
+.g-switch[aria-checked="true"] i { border-color: rgba(80, 250, 123, 0.5); background: rgba(80, 250, 123, 0.12); }
+.g-switch[aria-checked="true"] i::after { transform: translateX(16px); background: var(--g-green); box-shadow: 0 0 8px var(--g-green); }
+.g-switch:focus-visible i,
+.g-seg button:focus-visible { outline: 1px solid var(--g-blue); outline-offset: 2px; }
+/* Segmented choice */
+.g-seg {
+    flex: none;
+    display: inline-flex;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 7px;
+    overflow: hidden;
+}
+.g-seg button {
+    padding: 3px 8px;
+    border: none;
+    background: none;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    color: var(--g-dim);
+    cursor: pointer;
+}
+.g-seg button + button { border-left: 1px solid var(--g-border); }
+.g-seg button[aria-checked="true"] { background: rgba(var(--g-blue-rgb), 0.16); color: var(--g-blue); }
+.g-sys-forget { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 4px; }
+.g-sys-forget .g-btn { height: auto; padding: 5px 9px; font-size: 10.5px; }
+.g-sys-forget .g-btn.is-armed { border-color: var(--g-red); color: var(--g-red); background: rgba(255, 85, 85, 0.08); }
+
+/* What the settings switch */
+html.sys-bg-off #bg3d-canvas { display: none !important; }
+html.sys-bg-off body { background: #000; }
+html.sys-no-ticker .g-ticker { visibility: hidden; }
+html.sys-no-pet .g-pet { display: none; }
+html.sys-calm *,
+html.sys-calm *::before,
+html.sys-calm *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001ms !important;
+}
+
+/* Phones: the gear sits beside the classification chip; the panel takes the width */
+@media (max-width: 899px) {
+    .g-sys-btn { order: 2; margin-left: auto; }
+    .g-whoami:not([hidden]) ~ .g-sys-btn { margin-left: 0; }
+    .g-sys-btn ~ .g-classif { margin-left: 0; }
+    .g-sys { top: 10px; right: 10px; left: 10px; width: auto; max-height: calc(100vh - 20px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .g-sys,
+    .g-swipe-hint { animation: none; }
+}
+
+/* ---------- Phones: comfort ----------
+   A dock in thumb reach for switching objects, embedded pages behind a tap so scrolling never gets stuck in them,
+   lists at full length (no boxes scrolling inside the page), a shorter Host panel and touch-sized targets. */
+.g-dock,
+.g-embed-cover,
+.g-embed-done,
+.g-signal > li.g-sig-more { display: none; }
+@media (max-width: 899px) {
+    .gotham { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+    .g-dock {
+        position: fixed;
+        z-index: 40;
+        left: calc(10px + env(safe-area-inset-left));
+        right: calc(10px + env(safe-area-inset-right));
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px;
+        border: 1px solid var(--g-border-strong);
+        border-radius: 16px;
+        background: rgba(6, 12, 16, 0.86);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(var(--g-blue-rgb), 0.08);
+        transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    /* Out of the way while the palette or the settings are open */
+    .gotham:has(.g-pal:not([hidden]), .g-sys:not([hidden])) .g-dock { opacity: 0; transform: translateY(24px); pointer-events: none; }
+    .g-dock button { -webkit-tap-highlight-color: transparent; }
+    .g-dock-step {
+        flex: none;
+        width: 46px;
+        height: 46px;
+        border: 1px solid var(--g-border);
+        border-radius: 12px;
+        background: var(--g-well);
+        color: var(--g-blue);
+        font-size: 24px;
+        line-height: 1;
+    }
+    .g-dock-step:active { background: rgba(var(--g-blue-rgb), 0.18); border-color: var(--g-blue); }
+    .g-dock-cur {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 10px 0 6px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        background: none;
+        color: var(--g-text);
+        text-align: left;
+        overflow: hidden;
+    }
+    .g-dock-cur:active { border-color: var(--g-border-strong); background: rgba(var(--g-blue-rgb), 0.08); }
+    .g-dock-icon { flex: none; width: 30px; height: 30px; border-radius: 8px; object-fit: cover; }
+    .g-dock-icon.g-noimg { display: grid; place-items: center; background: var(--g-well); color: var(--g-blue); }
+    .g-dock-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+    .g-dock-text b { font-weight: 500; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .g-dock-text small { font-family: var(--g-mono); font-size: 9.5px; letter-spacing: 0.1em; color: var(--g-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+    .g-dock-find { flex: none; width: 15px; height: 15px; fill: var(--g-dim); }
+    .g-dock-cur.is-switch > :not(.g-dock-find) { animation: g-head-in 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+    .g-dock-cur.is-switch[data-from="next"] > :not(.g-dock-find) { animation-name: g-head-in-next; }
+    .g-dock-cur.is-switch[data-from="prev"] > :not(.g-dock-find) { animation-name: g-head-in-prev; }
+    /* Stepping from the dock scrolls the header to just under the sticky top bar */
+    .g-objhead { scroll-margin-top: 120px; }
+
+    /* Lists run at full length; the Signal Log shows its latest few with a button for the rest */
+    .g-results { max-height: none; overflow: visible; }
+    .g-signal { max-height: none; overflow: visible; }
+    .g-signal:not(.is-open) > li:nth-child(n + 6):not(.g-sig-more) { display: none; }
+    .g-signal > li.g-sig-more { display: block; padding: 4px 12px 2px; }
+    .g-sig-more::before { display: none; }
+    .g-sig-more .g-btn { width: 100%; height: 36px; font-family: var(--g-mono); font-size: 10.5px; letter-spacing: 0.16em; color: var(--g-blue); }
+}
+/* Tap to use: the cover lets scrolls pass over the page until it's tapped */
+@media (max-width: 899px) and (pointer: coarse) {
+    .g-embed-cover {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0 0 16px;
+        border: none;
+        background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55));
+        touch-action: pan-y;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .g-embed-cover[hidden] { display: none; }
+    .g-embed-cover-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border: 1px solid var(--g-border-strong);
+        border-radius: 999px;
+        background: rgba(6, 12, 16, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        font-family: var(--g-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        color: var(--g-blue);
+        box-shadow: 0 0 18px rgba(var(--g-blue-rgb), 0.18);
+    }
+    .g-embed-done {
+        position: absolute;
+        z-index: 4;
+        top: 10px;
+        right: 10px;
+        display: block;
+        min-width: 64px;
+        height: 34px;
+        border: 1px solid var(--g-green);
+        border-radius: 999px;
+        background: rgba(6, 16, 10, 0.88);
+        font-family: var(--g-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        color: var(--g-green);
+        box-shadow: 0 0 14px rgba(80, 250, 123, 0.25);
+    }
+    .g-embed-done[hidden] { display: none; }
+    /* In use: the preview's corners light up, as when it has the keyboard on a desktop */
+    .g-preview.is-touch-live .g-reticle { border-color: var(--g-green); filter: drop-shadow(0 0 6px rgba(80, 250, 123, 0.6)); }
+}
+/* A shorter Host panel: the hologram a size down and the comms on one row, so the object starts sooner */
+@media (max-width: 639px) {
+    .g-home { --holo: 128px; gap: 10px; padding: 12px 10px; }
+    .g-chans { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+    .g-chan,
+    .g-chan:nth-child(n + 4) { grid-column: auto; padding: 7px 2px 6px; gap: 3px; }
+    .g-chan-text small { display: none; }
+    .g-chan-text b { font-size: 10.5px; }
+}
+/* Touch-sized targets */
+@media (pointer: coarse) {
+    .g-keys { display: none !important; } /* where the keyboard goes means nothing without one */
+    .g-objnav .g-btn { min-width: 38px; height: 38px; font-size: 17px; }
+    .g-sso { min-height: 38px; }
+    .g-whoami .g-btn { height: 32px; }
+    .g-sys-btn { width: 36px; height: 36px; }
+    .g-dossier-dots { gap: 0; }
+    .g-dossier-dots button {
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 0;
+        background: radial-gradient(circle, transparent 0 2.5px, rgba(var(--g-blue-rgb), 0.55) 2.5px 3.5px, transparent 4px);
+    }
+    .g-dossier-dots button[aria-selected="true"] { background: radial-gradient(circle, var(--g-blue) 0 3.5px, transparent 4px); box-shadow: none; }
+    .g-signal .g-sig-src { padding-block: 3px; }
+    .g-switch i { width: 38px; height: 20px; }
+    .g-switch i::after { width: 14px; height: 14px; }
+    .g-switch[aria-checked="true"] i::after { transform: translateX(18px); }
+    .g-seg button { padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .g-dock-cur.is-switch > * { animation: none; }
 }

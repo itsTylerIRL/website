@@ -5,6 +5,7 @@
    - window.tirlLog.add({ key, text, tone }) logs anything else: what happens in an embedded page
      (js/objects.js TirlEmbedHost.event), the player link (js/player.js), the greeting (js/now.js).
    The log lasts the session (sessionStorage), so a reload keeps it. A logged object's name selects it.
+   Phones show the latest few with a button for the rest (css/objects.css), instead of a box scrolling inside the page.
    Load it before the live sources. */
 (function () {
     'use strict';
@@ -34,10 +35,13 @@
         return `<li${fresh ? ' class="is-new"' : ''}><i class="g-dot tone-${esc(it.tone || 'muted')}"></i><div>
                 <time>${stamp(it.t)}</time>${src}<span class="g-sig-text">${esc(it.text)}</span></div></li>`;
     }
+    const FEW = 5;
     function render(fresh) {
-        list.innerHTML = state.items.length
+        const more = state.items.length - FEW;
+        list.innerHTML = (state.items.length
             ? state.items.map((it, i) => itemHtml(it, fresh && i === 0)).join('')
-            : '<li class="g-sig-empty">listening&hellip;</li>';
+            : '<li class="g-sig-empty">listening&hellip;</li>')
+            + (more > 0 ? `<li class="g-sig-more"><button type="button" class="g-btn" data-more aria-expanded="${list.classList.contains('is-open')}">${list.classList.contains('is-open') ? 'SHOW FEWER' : `SHOW ${more} MORE`}</button></li>` : '');
         if (meta) meta.textContent = `${state.items.length} signal${state.items.length === 1 ? '' : 's'}`;
     }
     function add(it) {
@@ -57,6 +61,11 @@
         add({ key, text, tone });
     });
     list.addEventListener('click', (e) => {
+        if (e.target.closest('[data-more]')) {
+            list.classList.toggle('is-open');
+            render(false);
+            return;
+        }
         const b = e.target.closest('[data-key]');
         if (b) window.TirlObjects?.select(b.dataset.key);
     });

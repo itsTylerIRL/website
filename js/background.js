@@ -312,7 +312,8 @@ void main() {
 
     function frame(now) {
         requestAnimationFrame(frame);
-        if (window._bgPaused || document.body.classList.contains('animations-paused')) {
+        // Paused: a hidden tab, the blackout toggle, or switched off in the home page's SYS settings (js/sys.js)
+        if (window._bgPaused || document.body.classList.contains('animations-paused') || document.documentElement.classList.contains('sys-bg-off')) {
             lastNow = null;
             return;
         }

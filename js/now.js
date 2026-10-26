@@ -55,13 +55,15 @@
         if (typeof d === 'string') d = { text: d };
         if (d) since.set(id, d); else if (!since.delete(id)) return;
         renderSince(true);
-        if (d && d.alert && !alerted.has(id)) {
+        if (d && d.alert && !alerted.has(id) && !quiet()) {
             alerted.add(id);
             if (typeof RG !== 'undefined') RG.setMood(d.alert.mood || 'intense', { anim: 'rg-shake', status: d.alert.status, duration: 5000, priority: true });
             tell({ text: d.text, tone: d.tone || 'red', key: d.key });
         }
     }
     window.tirlVisit = { seen };
+    // Greetings switched off in the SYS settings (js/sys.js)
+    function quiet() { return document.documentElement.classList.contains('sys-no-greet'); }
     // For the boot screen (index.html)
     window.dispatchEvent(new CustomEvent('tirl:boot', { detail: prev.at
         ? { id: 'visit', status: ago(prev.at).toUpperCase() }
@@ -148,6 +150,7 @@
     try { greeted = sessionStorage.getItem('tirl_greeted') === '1'; } catch (_) {}
     if (!greeted && (!prev.at || Date.now() - prev.at > 20 * 60000)) {
         setTimeout(() => {
+            if (quiet()) return;
             try { sessionStorage.setItem('tirl_greeted', '1'); } catch (_) {}
             const u = player();
             const name = u ? handle(u) : '';

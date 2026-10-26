@@ -99,6 +99,7 @@ const FEATURED = [
         // Where an embedded page's column panels go: its side column under Results, its left column (rail)
         // between the explorer and Recently Viewed
         embedSlots: { side: document.getElementById('g-embed-side'), rail: document.getElementById('g-embed-rail') },
+        dock: document.getElementById('g-dock'),
         statusObjects: document.getElementById('g-status-objects'),
         statusFilter: document.getElementById('g-status-filter'),
         clock: document.getElementById('g-clock')
@@ -233,6 +234,7 @@ const FEATURED = [
                 </div>
                 <span class="g-chip tone-${tone}"><i class="g-dot tone-${tone}"></i>${esc(typeName(o.type))}</span>
                 <div class="g-objnav">
+                    ${swipeHint() ? '<span class="g-swipe-hint" aria-hidden="true">&lsaquo; swipe &rsaquo;</span>' : ''}
                     <button type="button" class="g-btn" data-step="-1" aria-label="Previous object" ${list.length < 2 ? 'disabled' : ''}>&lsaquo;</button>
                     <span>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length}</span>
                     <button type="button" class="g-btn" data-step="1" aria-label="Next object" ${list.length < 2 ? 'disabled' : ''}>&rsaquo;</button>
@@ -358,6 +360,7 @@ const FEATURED = [
         els.preview.classList.remove(...nativeClasses, 'is-embed');
         els.screen.classList.remove(...nativeClasses, 'is-embed', 'ready');
         if (native) els.preview.classList.add('is-native', 'is-' + o.key);
+        leavePanels(o);
         embedEl = null;
         embedStatus = '';
         keys();
@@ -442,18 +445,21 @@ const FEATURED = [
     // An embedded page is live: no click-through cover, it can take the keyboard, and once it has loaded its
     // side panels move under Results. This page's cursor stands aside over it while the page draws its own.
     function embedFrame(o, frame) {
-        let unmount = null;
+        let mounted = false;
+        let uncover = () => {};
         const cursor = document.querySelector('.custom-cursor');
         const showCursor = (on) => { if (cursor) cursor.style.opacity = on ? '1' : '0'; };
         frame.addEventListener('pointerenter', () => showCursor(false));
         frame.addEventListener('pointerleave', () => showCursor(true));
         frame.addEventListener('load', () => {
-            if (current !== o || unmount) return;
+            if (current !== o || mounted) return;
+            mounted = true;
             els.screen.classList.add('ready');
             els.previewMeta.textContent = embedStatus || 'LIVE · IN PLACE';
             tuned();
             keys();
-            unmount = mountPanels(o, frame) || (() => {});
+            mountPanels(o, frame);
+            uncover = coverEmbed(o, frame);
             // Pages that ask for it take the keyboard straight away (space arms the timer) unless you're typing
             // here; ← → / and Escape still reach this page from inside them (js/embed.js)
             const el = document.activeElement;
@@ -462,7 +468,7 @@ const FEATURED = [
             if (wants && !ambient && !(el && el.closest('input, textarea, select, [contenteditable="true"]'))) frame.contentWindow.focus();
         });
         clearNativePreview = () => {
-            if (unmount) unmount();
+            uncover();
             if (frame.matches(':hover')) showCursor(true); // switched away with the pointer still over it
         };
     }
@@ -488,38 +494,125 @@ const FEATURED = [
     });
     // The embedded page's column panels, moved (not copied) into shadow roots in this page's columns: its scripts
     // keep the elements they hold, and its stylesheets, loaded in each shadow root, style them without reaching
-    // this page (css/workspace.css, .is-embed-side). Shown once those have loaded. Returns the cleanup.
+    // this page (css/workspace.css, .is-embed-side).
+    // Switching (css/objects.css): the panels showing fade out toward their edge (leavePanels). If the next
+    // object is a page that may hand over panels of its own, the column keeps their room while it tunes in
+    // (static, like the preview), so nothing below jumps; otherwise it closes, the panels under it easing up.
+    // When the new panels' styles have loaded, the column eases from the room it kept to theirs as they slide in
+    // (mountPanels). Each change bumps the slot's gen, so a later switch overrides anything still in flight.
+    const slots = Object.values(els.embedSlots);
+    const slotState = new Map(slots.map((slot) => [slot, { gen: 0, holding: false, timer: null }]));
+    const hostOf = (slot) => slot.querySelector('.g-embed-host');
+    const LEAVE_MS = 180;
+    function release(slot) {
+        const st = slotState.get(slot);
+        st.holding = false;
+        clearTimeout(st.timer);
+        slot.style.height = '';
+        slot.style.flex = '';
+        slot.classList.remove('is-holding');
+    }
+    function collapse(slot) {
+        tweenHeight(slot, () => {
+            release(slot);
+            slot.hidden = true;
+            hostOf(slot).shadowRoot?.replaceChildren();
+        });
+    }
+    function leavePanels(next) {
+        const hold = !!next.embed && !next.external;
+        slots.forEach((slot) => {
+            const st = slotState.get(slot);
+            const gen = ++st.gen;
+            if (slot.hidden) return;
+            const host = hostOf(slot);
+            const label = slot.querySelector('.g-embed-label');
+            label.classList.toggle('is-tuning', hold);
+            if (hold) {
+                label.querySelector('b').textContent = next.name;
+                window.tirlArrive?.arrive(label.querySelector('b'));
+            }
+            host.classList.remove('is-entering', 'is-pending');
+            host.classList.add('is-leaving');
+            setTimeout(() => {
+                if (st.gen !== gen) return;
+                host.classList.remove('is-leaving');
+                if (!hold) return collapse(slot);
+                if (!st.holding) {
+                    slot.style.height = `${slot.getBoundingClientRect().height}px`; // measured before it's emptied
+                    slot.style.flex = 'none';
+                    slot.classList.add('is-holding');
+                    st.holding = true;
+                }
+                host.shadowRoot?.replaceChildren();
+                // A page that never loads (or never hands anything over) doesn't keep the room for long
+                clearTimeout(st.timer);
+                st.timer = setTimeout(() => { if (st.gen === gen) collapse(slot); }, 8000);
+            }, reducedMotion() ? 0 : LEAVE_MS);
+        });
+    }
     function mountPanels(o, frame) {
         let api = null;
         try { api = frame.contentWindow.TirlEmbed; } catch (_) {}
-        if (!api) return null;
-        let live = true;
-        const filled = Object.entries(els.embedSlots).filter(([col]) => api[col] && api[col].length).map(([col, slot]) => {
-            const host = slot.querySelector('.g-embed-host');
+        Object.entries(els.embedSlots).forEach(([col, slot]) => {
+            const st = slotState.get(slot);
+            const gen = ++st.gen;
+            const panels = api && api[col] && api[col].length ? api[col] : null;
+            if (!panels) {
+                if (!slot.hidden) collapse(slot);
+                return;
+            }
+            const host = hostOf(slot);
             const root = host.shadowRoot || host.attachShadow({ mode: 'open' });
             const links = api.styles.map((href) => Object.assign(document.createElement('link'), { rel: 'stylesheet', href }));
             const wrap = document.createElement('div');
             wrap.className = 'gotham is-embed-side';
             const column = document.createElement('aside');
             column.className = col === 'rail' ? 'g-rail' : 'g-side';
-            column.append(...api[col]);
+            column.append(...panels);
             wrap.append(column);
+            // Unseen until its styles are in (the column may be holding room, so it's on screen)
+            host.classList.remove('is-leaving', 'is-entering');
+            host.classList.add('is-pending');
             root.replaceChildren(...links, wrap);
-            const label = slot.querySelector('.g-embed-label b');
-            label.textContent = o.name;
-            // Shown with the switch-on: the panels slide in and their titles decode (js/arrive.js)
+            const label = slot.querySelector('.g-embed-label');
             Promise.all(links.map((l) => new Promise((done) => { l.onload = l.onerror = done; }))).then(() => {
-                if (!live) return;
-                slot.hidden = false;
-                window.tirlArrive?.arrive(label);
+                if (st.gen !== gen) return;
+                tweenHeight(slot, () => {
+                    release(slot);
+                    slot.hidden = false;
+                    host.classList.remove('is-pending');
+                    host.classList.add('is-entering');
+                });
+                // The titles decode as the panels slide in (js/arrive.js)
+                const was = label.querySelector('b').textContent;
+                label.classList.remove('is-tuning');
+                label.querySelector('b').textContent = o.name;
+                if (was !== o.name) window.tirlArrive?.arrive(label.querySelector('b'));
                 column.querySelectorAll('.g-panel-title').forEach((t) => window.tirlArrive?.arrive(t));
             });
-            return { slot, root };
         });
-        return () => {
-            live = false;
-            filled.forEach(({ slot, root }) => { slot.hidden = true; root.replaceChildren(); });
-        };
+    }
+    // Eases el's height from what it is now to what change() leaves it at (0 if it hides el), so what's around it
+    // follows frame by frame instead of jumping. A tween already running on el is taken over from where it got to.
+    // In a flex column the box gives up its gap as it closes, so the panels below land exactly.
+    // The system's reduced motion, or Calm motion in the SYS settings (js/sys.js)
+    const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('sys-calm');
+    function tweenHeight(el, change, ms = 300) {
+        const from = el.hidden ? 0 : el.getBoundingClientRect().height;
+        el.getAnimations().forEach((a) => { if (a.id === 'g-tween') a.cancel(); });
+        change();
+        const hide = el.hidden;
+        if (reducedMotion()) return;
+        if (hide) el.hidden = false;
+        const to = hide ? 0 : el.getBoundingClientRect().height;
+        if (Math.abs(to - from) < 1) { el.hidden = hide; return; }
+        const parent = el.parentElement && getComputedStyle(el.parentElement);
+        const gap = parent && parent.display === 'flex' && parent.flexDirection === 'column' ? parseFloat(parent.rowGap) || 0 : 0;
+        const frame = (h, shut) => ({ height: `${h}px`, flex: 'none', minHeight: '0px', overflow: 'hidden', marginBottom: shut ? `${-gap}px` : '0px' });
+        const a = el.animate([frame(from, from === 0), frame(to, hide)], { duration: ms, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
+        a.id = 'g-tween';
+        if (hide) a.finished.then(() => { el.hidden = true; }, () => {});
     }
     const spriteSrc = (name) => `/assets/rg/sprites/${name.toUpperCase()}.png`;
     let spriteTimer = null;
@@ -532,8 +625,8 @@ const FEATURED = [
             : badge
                 ? `<span class="g-feat-art is-badge"><img src="${esc(art)}?_=${Math.floor(Date.now() / 3600000)}" alt="" decoding="async"></span>`
                 : `<span class="g-feat-art${round ? ' is-round' : ''}"><img src="${esc(art)}" alt="" decoding="async"></span>`;
-        els.featured.innerHTML = `<div class="g-feat-grid">${items.map((f) => `
-                <a class="g-feat g-spot" ${f.info ? `href="/#${esc(f.o.key)}" data-key="${esc(f.o.key)}"` : `href="${esc(f.o.url)}"${openAttrs(f.o)}`} style="--feat: ${esc(f.accent)}"${f.live ? ` data-live="${esc(f.o.key)}"` : ''}>
+        els.featured.innerHTML = `<div class="g-feat-grid">${items.map((f, i) => `
+                <a class="g-feat g-spot" ${f.info ? `href="/#${esc(f.o.key)}" data-key="${esc(f.o.key)}"` : `href="${esc(f.o.url)}"${openAttrs(f.o)}`} style="--feat: ${esc(f.accent)}; --i: ${i}"${f.live ? ` data-live="${esc(f.o.key)}"` : ''}>
                     <span class="g-feat-body">
                         ${artHtml(f)}
                         <span class="g-feat-text">
@@ -547,7 +640,7 @@ const FEATURED = [
         // Animated sprite cards step through their frames while the spotlight is showing
         clearInterval(spriteTimer);
         const anim = items.filter((f) => f.sprites);
-        if (!anim.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!anim.length || reducedMotion()) return;
         anim.forEach((f) => f.sprites[0].forEach((n) => { new Image().src = spriteSrc(n); })); // preload
         let step = 0;
         const imgs = els.featured.querySelectorAll('[data-sprite]');
@@ -604,9 +697,18 @@ const FEATURED = [
     function select(o, opts = {}) {
         if (!o) return;
         const changed = o !== current;
+        const first = !current;
         current = o;
         deepHash = opts.hash || null;
-        renderHeader(o);
+        // A switch eases the header to its new height (the preview below follows) and its rows rise in turn, or
+        // come in from the side when stepping (← →, the header's buttons, a swipe)
+        if (changed && !first) {
+            header.dataset.from = opts.dir > 0 ? 'next' : opts.dir < 0 ? 'prev' : '';
+            tweenHeight(header, () => renderHeader(o), 280);
+            header.classList.remove('is-switch');
+            void header.offsetWidth;
+            header.classList.add('is-switch');
+        } else renderHeader(o);
         if (changed) renderPreview(o);
         else if (deepHash && embedEl) {
             try {
@@ -617,6 +719,7 @@ const FEATURED = [
         }
         els.crumb.textContent = o.name;
         els.crumbType.textContent = typeName(o.type);
+        renderDock(o, changed && !first ? opts.dir || 0 : null);
         els.results.querySelectorAll('.g-res').forEach((b) => {
             const on = b.dataset.key === o.key;
             b.setAttribute('aria-current', on);
@@ -628,8 +731,136 @@ const FEATURED = [
         const list = visible();
         if (!list.length) return;
         const i = list.indexOf(current);
-        select(list[(i + dir + list.length) % list.length]);
+        select(list[(i + dir + list.length) % list.length], { dir });
     }
+
+    // ---------- Dock (phones) ----------
+    // A bar along the bottom in thumb reach (css/objects.css shows it under 900px): ‹ and › step through the
+    // objects, and the middle (what's showing) opens the command palette, which lists every object and what's in
+    // them. Stepping from the dock brings the object's header into view if it's scrolled away.
+    const phone = () => matchMedia('(max-width: 899px)').matches;
+    function renderDock(o, dir) {
+        if (!els.dock) return;
+        const list = visible();
+        const idx = list.indexOf(o);
+        const cur = els.dock.querySelector('.g-dock-cur');
+        cur.innerHTML = `${iconHtml(o, 'g-dock-icon')}<span class="g-dock-text"><b>${esc(o.name)}</b>
+            <small>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length} &middot; ${esc(typeName(o.type))}</small></span>
+            <svg class="g-dock-find" viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>`;
+        cur.setAttribute('aria-label', `${o.name}: search everything`);
+        if (dir === null) return;
+        cur.dataset.from = dir > 0 ? 'next' : dir < 0 ? 'prev' : '';
+        cur.classList.remove('is-switch');
+        void cur.offsetWidth;
+        cur.classList.add('is-switch');
+    }
+    els.dock?.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-dock]');
+        if (!b) return;
+        if (b.dataset.dock === 'search') return openPalette();
+        step(+b.dataset.dock);
+        const r = header.getBoundingClientRect();
+        if (r.top < 90 || r.top > innerHeight * 0.55) header.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    });
+
+    // ---------- Tap to use (phones) ----------
+    // A page embedded in the preview would take every touch that lands on it, so scrolling down the page could get
+    // stuck in it. On touch screens it starts behind a cover: scrolling passes over it, a tap hands it the touch
+    // (DONE, or scrolling it mostly out of view, covers it again).
+    function coverEmbed(o, frame) {
+        if (!phone() || !matchMedia('(pointer: coarse)').matches) return () => {};
+        const cover = document.createElement('button');
+        cover.type = 'button';
+        cover.className = 'g-embed-cover';
+        cover.innerHTML = `<span class="g-embed-cover-pill"><i class="g-dot tone-green"></i>TAP TO USE &middot; ${esc((o.screen || o.name).toUpperCase())}</span>`;
+        const done = document.createElement('button');
+        done.type = 'button';
+        done.className = 'g-embed-done';
+        done.hidden = true;
+        done.textContent = 'DONE';
+        const lock = (on) => {
+            cover.hidden = !on;
+            done.hidden = on;
+            els.preview.classList.toggle('is-touch-live', !on);
+        };
+        cover.addEventListener('click', () => lock(false));
+        done.addEventListener('click', () => lock(true));
+        els.screen.append(cover, done);
+        const io = new IntersectionObserver(([en]) => { if (en.intersectionRatio < 0.35 && cover.hidden) lock(true); }, { threshold: [0, 0.35] });
+        io.observe(els.preview);
+        return () => { io.disconnect(); els.preview.classList.remove('is-touch-live'); };
+    }
+
+    // ---------- Swipe (touch) ----------
+    // On a touch screen, swiping the object header sideways steps to the previous / next object, as ← → do: the
+    // header follows the finger (with some resistance) as the neighbour's name slides in at the edge it's coming
+    // from, and past a quarter of the width, or with a flick, it switches. Anything less springs back. Vertical
+    // drags stay the page's scroll (css/objects.css: touch-action: pan-y). Phones get a "swipe" hint in the
+    // header until the first swipe.
+    const SWIPED = 'tirl_swiped';
+    function swipeHint() {
+        if (!matchMedia('(pointer: coarse)').matches) return false;
+        try { return !localStorage.getItem(SWIPED); } catch (_) { return false; }
+    }
+    (function swipe() {
+        let id = null, on = false, x0 = 0, y0 = 0, t0 = 0, dx = 0, edges = null, quietUntil = 0;
+        const neighbour = (dir) => {
+            const list = visible();
+            const i = list.indexOf(current);
+            return list.length > 1 ? list[(i + dir + list.length) % list.length] : null;
+        };
+        header.addEventListener('pointerdown', (e) => {
+            if (e.pointerType !== 'touch' || id !== null) return;
+            id = e.pointerId;
+            x0 = e.clientX;
+            y0 = e.clientY;
+            t0 = performance.now();
+            dx = 0;
+            on = false;
+        });
+        header.addEventListener('pointermove', (e) => {
+            if (e.pointerId !== id) return;
+            const mx = e.clientX - x0, my = e.clientY - y0;
+            if (!on) {
+                if (Math.abs(my) > 10 && Math.abs(my) > Math.abs(mx)) { id = null; return; } // scrolling
+                if (Math.abs(mx) < 10) return;
+                on = true;
+                try { header.setPointerCapture(id); } catch (_) {}
+                const prev = neighbour(-1), next = neighbour(1);
+                edges = document.createElement('div');
+                edges.className = 'g-swipe-edges';
+                edges.setAttribute('aria-hidden', 'true');
+                edges.innerHTML = `<span class="prev">&lsaquo; ${esc(prev ? prev.name : '')}</span><span class="next">${esc(next ? next.name : '')} &rsaquo;</span>`;
+                header.append(edges);
+                header.classList.add('is-swiping');
+            }
+            dx = mx;
+            const k = Math.max(-1, Math.min(1, dx / (header.offsetWidth * 0.25)));
+            header.style.setProperty('--swipe-x', `${(dx * 0.55).toFixed(1)}px`);
+            header.style.setProperty('--swipe-prev', Math.max(0, k).toFixed(3));
+            header.style.setProperty('--swipe-next', Math.max(0, -k).toFixed(3));
+        });
+        function end(e) {
+            if (e.pointerId !== id) return;
+            id = null;
+            if (!on) return;
+            on = false;
+            const flick = Math.abs(dx) / Math.max(1, performance.now() - t0) > 0.5 && Math.abs(dx) > 40;
+            const go = e.type === 'pointerup' && (Math.abs(dx) > header.offsetWidth * 0.25 || flick);
+            header.classList.remove('is-swiping');
+            ['--swipe-x', '--swipe-prev', '--swipe-next'].forEach((v) => header.style.removeProperty(v));
+            if (edges) { edges.remove(); edges = null; }
+            quietUntil = Date.now() + 400; // the lift-off isn't a tap on whatever was under the finger
+            if (!go) return;
+            try { localStorage.setItem(SWIPED, '1'); } catch (_) {}
+            step(dx < 0 ? 1 : -1);
+        }
+        header.addEventListener('pointerup', end);
+        header.addEventListener('pointercancel', end);
+        header.addEventListener('click', (e) => {
+            if (Date.now() < quietUntil) { e.preventDefault(); e.stopPropagation(); }
+        }, true);
+    })();
     // Deep links (/#gallery) select an object once, then the hash is dropped so a later visit opens on home
     function fromHash() {
         const o = objects.find((x) => x.key === location.hash.slice(1));
@@ -728,7 +959,6 @@ const FEATURED = [
     // random effect every 7-15 s (touring the live previews, hover effects playing on their own,
     // titles re-decoding...). Any input ends it, undoes what's in flight and reselects what was showing.
     const AMBIENT_AFTER = 90000;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const ambientTag = document.getElementById('g-ambient');
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
     const shown = (el) => el && el.getClientRects().length > 0;
@@ -854,7 +1084,7 @@ const FEATURED = [
     const CALM = ['tour', 'pet'];
 
     function nextEffect() {
-        const names = (reduced.matches ? CALM : BAG).filter((n) => n !== lastEffect);
+        const names = (reducedMotion() ? CALM : BAG).filter((n) => n !== lastEffect);
         lastEffect = pick(names);
         EFFECTS[lastEffect]();
         ambientTimer = setTimeout(nextEffect, 7000 + Math.random() * 8000);
@@ -920,7 +1150,8 @@ const FEATURED = [
         select: (key, hash) => { const o = objectByKey(key); if (o) select(o, { hash }); }
     };
     setInterval(() => {
-        if (!ambient && !document.hidden && Date.now() - lastInput > AMBIENT_AFTER) enterAmbient();
+        // Ambient mode can be switched off in the SYS settings (js/sys.js)
+        if (!ambient && !document.hidden && Date.now() - lastInput > AMBIENT_AFTER && !document.documentElement.classList.contains('sys-no-ambient')) enterAmbient();
     }, 1000);
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) return;
