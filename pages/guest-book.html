@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/guest-book.css?v=2.4">
+    <link rel="stylesheet" href="/css/guest-book.css?v=2.5">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -74,7 +74,7 @@
                         <dt>ship</dt><dd>~raddem-tidwyt</dd>
                         <dt>class</dt><dd>planet</dd>
                         <dt>host</dt><dd>urbit.tylerirl.com</dd>
-                        <dt>path</dt><dd>/~~/radbro/</dd>
+                        <dt>path</dt><dd>/guestbook</dd>
                         <dt>via</dt><dd>https</dd>
                     </dl>
                 </section>
@@ -106,16 +106,16 @@
                         <span class="g-chip tone-muted" id="g-link-chip"><i class="g-dot tone-muted"></i>Connecting</span>
                         <div class="g-objnav">
                             <button type="button" class="g-btn g-visit" id="g-reload" title="Reload the channel">RELOAD &#8635;</button>
-                            <a class="g-btn g-visit" href="https://urbit.tylerirl.com/~~/radbro/" target="_blank" rel="noopener">OPEN &nearr;</a>
+                            <a class="g-btn g-visit" href="https://urbit.tylerirl.com/guestbook" target="_blank" rel="noopener">OPEN &nearr;</a>
                         </div>
                     </div>
                     <p class="g-summary">leave a message and connect via urbit</p>
                 </div>
                 <section class="g-card g-chat-pane">
-                    <div class="g-panel-title">Live Channel <span class="g-meta" id="g-chat-meta">~raddem-tidwyt &middot; radbro</span></div>
+                    <div class="g-panel-title">Live Channel <span class="g-meta" id="g-chat-meta">~raddem-tidwyt &middot; %guestbook</span></div>
                     <div class="g-chat" id="g-chat">
                         <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
-                        <iframe id="g-frame" src="https://urbit.tylerirl.com/~~/radbro/" title="Guest book: urbit comment board on ~raddem-tidwyt" loading="lazy"></iframe>
+                        <iframe id="g-frame" src="https://urbit.tylerirl.com/guestbook" title="Guest book: urbit comment board on ~raddem-tidwyt" loading="lazy"></iframe>
                         <div class="g-chat-wait" id="g-chat-wait">ESTABLISHING UPLINK&hellip;</div>
                     </div>
                 </section>
@@ -177,7 +177,7 @@
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Guest book uplink -->
-    <script defer src="/js/guest-book.js?v=1.1"></script>
+    <script defer src="/js/guest-book.js?v=1.2"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>
