@@ -78,6 +78,15 @@
         frame.src = frame.src;
     });
 
+    // The guest book (%guestbook on the ship) reports what happens inside it
+    const ORIGIN = new URL(frame.src).origin;
+    window.addEventListener('message', (e) => {
+        if (e.origin !== ORIGIN || !e.data || e.data.source !== 'guestbook') return;
+        const n = Number(e.data.count) || 0;
+        if (e.data.type === 'ready') log('BOOK', `${n.toLocaleString('en-US')} message${n === 1 ? '' : 's'} on the board`, 'muted');
+        if (e.data.type === 'posted') log('BOOK', `new message posted · ${n.toLocaleString('en-US')} total`, 'green');
+    });
+
     // Session length
     const tick = () => {
         const s = Math.floor((Date.now() - started) / 1000);
