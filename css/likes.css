@@ -85,9 +85,90 @@
     display: block;
     width: 100%;
     height: 100%;
-    /* Drags rotate the cloud instead of scrolling the page */
+    cursor: grab;
+    /* Drags spin the cloud instead of scrolling the page; on touch screens only sideways drags do, so vertical
+       swipes still scroll (js/likes.js) */
     touch-action: none;
 }
+@media (pointer: coarse) {
+    .icon-cloud-canvas { touch-action: pan-y; }
+    .g-cloud-pane .g-panel-title .g-meta { font-size: 0; }
+    .g-cloud-pane .g-panel-title .g-meta::after { content: 'swipe sideways to spin \00b7  tap to inspect'; font-size: 10px; }
+}
+
+/* Selection overlay (top left): only when embedded on the home page, where the header above is hidden */
+.g-cloud-hud { display: none; }
+html.is-embed .g-cloud-hud {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 6px 10px;
+    align-items: center;
+    width: min(300px, calc(100% - 90px));
+    padding: 9px 10px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+.g-hud-icon { width: 34px; height: 34px; border-radius: 7px; object-fit: contain; background: rgba(0, 0, 0, 0.4); }
+.g-hud-icon.g-noimg { display: grid; place-items: center; color: var(--g-blue); }
+.g-hud-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.g-hud-text b { font-size: 13.5px; font-weight: 500; text-transform: lowercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-hud-text small { display: flex; align-items: center; gap: 5px; font: 400 10.5px/1.35 var(--g-mono); color: var(--g-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-hud-nav { grid-column: 1 / -1; display: flex; align-items: center; gap: 4px; font: 400 10.5px/1 var(--g-mono); color: var(--g-muted); }
+.g-hud-nav .g-btn { height: 24px; min-width: 24px; padding: 0 6px; }
+.g-hud-nav .g-visit { margin-left: auto; text-decoration: none; }
+
+/* Legend: a category key that also filters (bottom left); controls: recenter + pause (top right) */
+.g-cloud-legend {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: calc(100% - 20px);
+}
+.g-cloud-legend button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border: 1px solid rgba(var(--c), 0.25);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    font: 400 10.5px/1.4 var(--g-mono);
+    letter-spacing: 0.06em;
+    color: var(--g-muted);
+    cursor: pointer;
+}
+.g-cloud-legend button i { width: 7px; height: 7px; border-radius: 50%; background: rgb(var(--c)); box-shadow: 0 0 6px rgba(var(--c), 0.8); }
+.g-cloud-legend button small { color: var(--g-dim); font-size: 9.5px; }
+.g-cloud-legend button:hover { color: var(--g-text); border-color: rgba(var(--c), 0.6); }
+.g-cloud-legend button[aria-pressed="true"] { color: rgb(var(--c)); border-color: rgb(var(--c)); background: rgba(var(--c), 0.12); }
+.g-cloud-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+}
+.g-cloud-controls .g-btn {
+    min-width: 28px;
+    height: 26px;
+    padding: 0 7px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.55);
+}
+.g-cloud-controls .g-btn[aria-pressed="true"] { color: var(--g-blue); border-color: rgba(var(--g-blue-rgb), 0.45); }
+.g-cloud-controls .g-btn:disabled { opacity: 0.4; cursor: default; }
 
 .icon-tooltip {
     position: fixed;
@@ -95,7 +176,7 @@
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(139, 233, 253, 0.35);
+    border: 1px solid var(--tone, rgba(139, 233, 253, 0.35));
     border-radius: 8px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(139, 233, 253, 0.15);
     color: #eaeaea;
@@ -148,8 +229,9 @@
 @media (max-width: 899px) {
     .g-results-pane { order: 3; }
     .g-mix-pane { order: 4; }
-    /* The 3D cloud is a desktop toy; on phones the results list is the browser */
-    .g-cloud-pane { display: none; }
+    /* Phones: a smaller cloud (swipe sideways to spin; the Results list stays the main way through) */
+    .icon-cloud-container { height: min(78vw, 360px); }
+    .icon-tooltip { display: none; }
     .g-results { max-height: 60vh; }
     .g-objmeta b { margin-right: 6px; }
 }

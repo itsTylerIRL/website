@@ -9,23 +9,28 @@
 // workspace: true once the page is on the DEEPDISH workspace template (css/workspace.css)
 // embed: the live preview frames the page in embed mode (js/embed.js): it's used in place at full size and
 // its data-embed="side" panels show under Results (the page has to load js/embed.js first)
+// page: an external object's own workspace page on this site (embed: true frames it in the preview); url, the
+// OPEN button and the featured card still go to the external host
 // icon: small icon from assets/object-icons/ (leave empty to show the name's initial)
 // screen: the live preview pane's title while the object is showing (else 'Live Preview')
 // tag: the Results subtitle when there's no live line for the object (js/live-rows.js); the path moves to its tooltip
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
+// parent: a project listed on another object's page (DeepDish's directory) rather than in Results and the counts.
+// It can still be opened by link (/#key), the command palette and the idle tour; while it's showing, its parent's
+// row stays lit and the header offers a way back.
 const OBJECTS = [
     { key: 'home', name: 'Tyler (in real life)', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website', tag: 'you are here · home base' },
-    { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer', screen: 'Vault Viewer', tag: 'pfps, schizoposters + remilia · zoom in close' },
-    { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler', screen: 'Crown Leaderboard', tag: 'neochibi roguelite · fight for the crown' },
-    { key: 'network', name: 'the network is growing', url: 'https://clicker.tylerirl.com', type: 'external', icon: '/assets/object-icons/network.webp', desc: 'neochibi idle clicker, sibling to the cancel is coming', screen: 'Clicker Uplink', tag: 'click, grow, repeat · it never stops growing' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud', screen: 'Signal Cloud', tag: 'a spinning cloud of good taste' },
+    { key: 'gallery', name: 'NFT Gallery', url: '/pages/gallery.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/oh-ive-seen.webp', desc: 'non fungible tylers: PFPs, schizoposters and remilia pieces with a zoomable viewer', screen: 'Vault Viewer', tag: 'pfps, schizoposters + remilia · zoom in close' },
+    { key: 'cancel', name: 'the cancel is coming', url: 'https://cancel.tylerirl.com', page: '/pages/cancel.html', embed: true, type: 'external', icon: '/assets/object-icons/cancel.webp', desc: 'neochibi roguelite autobattler, with its companion idle clicker the network is growing: crowns, hall of fame, runs and both games\' leaderboards', screen: 'Crown Uplink', tag: 'neochibi roguelite · fight for the crown' },
+    { key: 'network', hidden: true, name: 'the network is growing', url: 'https://clicker.tylerirl.com', type: 'external', icon: '/assets/object-icons/network.webp', desc: 'neochibi idle clicker, sibling to the cancel is coming', screen: 'Clicker Uplink', tag: 'click, grow, repeat · it never stops growing' }, // now a section of the cancel's page
     { key: 'kol', name: 'Kingdom of Loathing', url: '/pages/kol.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/kol.webp', desc: 'TylerIRL in the Kingdom: live moons and calendar, display case with mall prices and what\'s new in KoLmafia', screen: 'Kingdom Uplink', tag: 'radbro of the kingdom since 2005' },
     { key: 'rocketry', name: 'Missile Program', url: '/pages/rocketry.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/rocketry.webp', desc: 'high power rocketry: vehicle builds, milestones, flight footage and launch status', screen: 'Range Control', tag: 'builds, burns + flight footage · go for launch' },
-    { key: 'deepdish', hidden: true, name: 'DeepDish', url: '/pages/deepdish.html', type: 'program', icon: '/assets/object-icons/deepdish.webp', desc: 'custom computer build, monitoring and the projects that run on it' },
-    { key: 'ocs', name: 'DeepDish OCS', url: '/pages/deepdish_ocs.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/ocs-sentinel.webp', desc: 'optical control system: a face-tracking animated eye for the Gakken Worldeye, with technical docs', screen: 'Optic Feed', tag: 'a robot eye that watches you back' },
+    { key: 'deepdish', name: 'DeepDish', url: '/pages/deepdish.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/deepdish-rack.webp', desc: 'the homelab: a custom-built machine and what\'s built on it, OCS, TOP, RADactedBot, RadGotchi and DigiFlip, plus the Urbit apps %sextant, %chibi and %iron', screen: 'Rack Directory', tag: 'the homelab' },
+    { key: 'ocs', parent: 'deepdish', name: 'DeepDish OCS', url: '/pages/deepdish_ocs.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/ocs-sentinel.webp', desc: 'optical control system: a face-tracking animated eye for the Gakken Worldeye, with technical docs', screen: 'Optic Feed', tag: 'a robot eye that watches you back' },
     { key: 'ocs-demo', hidden: true, name: 'OCS Web UI Demo', url: '/pages/OCS-web-ui-demo.html', type: 'program', icon: '/assets/object-icons/ocs-demo.webp', desc: 'interactive demo of the DeepDish OCS web interface' },
-    { key: 'top', name: 'DeepDish TOP', url: '/pages/deepdish_top.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/top.webp', desc: 'terminal operations panel: host and cluster monitoring, Docker, OCS and a technical reference', screen: 'Ops Console', tag: 'host + cluster telemetry · all systems nominal' },
-    { key: 'sin', name: 'RADactedBot', url: '/pages/deepdish_sin.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/sin-defcon4.webp', desc: 'Discord and Telegram bot: economy, games, relays, LLM agents and moderation', screen: 'Bot Intel', tag: 'economy, games + llm agents · discord / telegram' },
+    { key: 'top', parent: 'deepdish', name: 'DeepDish TOP', url: '/pages/deepdish_top.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/top.webp', desc: 'terminal operations panel: host and cluster monitoring, Docker, OCS and a technical reference', screen: 'Ops Console', tag: 'host + cluster telemetry · all systems nominal' },
+    { key: 'sin', parent: 'deepdish', name: 'RADactedBot', url: '/pages/deepdish_sin.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/sin-defcon4.webp', desc: 'Discord and Telegram bot: economy, games, relays, LLM agents and moderation', screen: 'Bot Intel', tag: 'economy, games + llm agents · discord / telegram' },
     { key: 'radgotchi', name: 'RadGotchi', url: '/pages/deepdish_rg.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/radgotchi-shades.webp', desc: 'desktop + web pixel-art companion: system telemetry, local-AI chat with tools, XP and a LAN mesh, with technical docs', screen: 'Companion Link', tag: 'a pixel radbro that lives on your desktop' },
     { key: 'grep', hidden: true, name: 'grep dojo', url: '/pages/grep.html', type: 'tool', icon: '/assets/object-icons/grep.webp', desc: 'master grep through interactive terminal challenges' },
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser', screen: 'Device Bay', tag: 'digimon v20th for the flipper zero · now in wasm' },
@@ -38,8 +43,8 @@ const OBJECTS = [
     { key: 'live-x', name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts', screen: 'Broadcast Feed', tag: 'posting through it' },
     { key: 'live-github', name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days', screen: 'Commit Feed', tag: 'commits, streaks + green squares' },
     { key: 'live-reminet', name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net', screen: 'Credit Feed', tag: 'social credit, frens + beetles' },
-    { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star', screen: 'Star Relay', tag: 'urbit star · the galaxy\'s middle child' },
-    { key: 'raddem', name: '~raddem-tidwyt', url: 'http://urbit.tylerirl.com', type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet', screen: 'Planet Relay', tag: 'urbit planet · home ship' },
+    { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', page: '/pages/nosfyl.html', embed: true, type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star', screen: 'Star Relay', tag: 'urbit star · the galaxy\'s middle child' },
+    { key: 'raddem', name: '~raddem-tidwyt', url: 'https://urbit.tylerirl.com', page: '/pages/raddem.html', embed: true, type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet', screen: 'Planet Relay', tag: 'urbit planet · home ship' },
     { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, embed: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit', screen: 'Comms Relay', tag: 'sign the book · uplink via urbit' }
 ];
 
@@ -52,10 +57,10 @@ const OBJECTS = [
 // live: the card's subtext shows the object's live telemetry (js/live-rows.js) once it lands, else the blurb
 const FEATURED = [
     { key: 'cancel', art: '/assets/featured/cancel.webp', accent: '255,222,23', cta: 'INFO', info: true, blurb: 'roguelite autobattler' },
-    { key: 'network', art: '/assets/featured/network.webp', accent: '255,121,198', cta: 'PLAY', blurb: 'neochibi idle clicker' },
-    { key: 'raddem', art: '/assets/featured/raddem.webp', round: true, accent: '98,160,255', cta: 'VISIT', live: true, blurb: 'urbit planet' },
+    { key: 'deepdish', art: '/assets/featured/deepdish.webp', accent: '255,85,85', cta: 'INFO', info: true, blurb: 'the homelab' },
+    { key: 'raddem', art: '/assets/featured/raddem.webp', round: true, accent: '98,160,255', cta: 'INFO', info: true, live: true, blurb: 'urbit planet' },
     { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
-    { key: 'likes', art: '/assets/object-icons/likes-full.webp', accent: '189,147,249', cta: 'BROWSE', blurb: 'crypto, tech and fun' },
+    { key: 'nosfyl', art: '/assets/featured/nosfyl.webp', round: true, accent: '189,147,249', cta: 'INFO', info: true, live: true, blurb: 'urbit star' },
     { key: 'guest-book', art: '/assets/featured/guest-book.webp', round: true, accent: '80,250,123', cta: 'SIGN', blurb: 'leave a message' }
 ];
 
@@ -135,8 +140,11 @@ const FEATURED = [
         viewed.length = Math.min(viewed.length, HISTORY_MAX);
     } catch (_) {}
 
-    const visible = () => objects.filter((o) => type === 'all' || o.type === type);
-    const countOf = (t) => t === 'all' ? objects.length : objects.filter((o) => o.type === t).length;
+    const listed = objects.filter((o) => !o.parent);
+    const visible = () => listed.filter((o) => type === 'all' || o.type === type);
+    const countOf = (t) => t === 'all' ? listed.length : listed.filter((o) => o.type === t).length;
+    const parentOf = (o) => o && o.parent ? objects.find((x) => x.key === o.parent) : null;
+    const rowOf = (o) => parentOf(o) || o; // the Results row that stands for it
     const iconHtml = (o, cls) => o.icon
         ? `<img class="${cls}" src="${esc(o.icon)}" alt="" loading="lazy" decoding="async">`
         : `<span class="${cls} g-noimg">${esc(o.name.charAt(0).toUpperCase())}</span>`;
@@ -145,7 +153,7 @@ const FEATURED = [
     function renderTypes() {
         els.types.innerHTML = ['all', ...types].map((t) => `<li><button type="button" class="g-obj-btn" data-type="${t}" aria-current="${t === type}">
             <i class="g-dot tone-${t === 'all' ? 'muted' : toneOf(t)}"></i><span>${t === 'all' ? 'All' : typeName(t)}</span><span class="g-id">${countOf(t)}</span></button></li>`).join('');
-        els.count.textContent = objects.length;
+        els.count.textContent = listed.length;
     }
     els.types.addEventListener('click', (e) => {
         const b = e.target.closest('[data-type]');
@@ -160,6 +168,10 @@ const FEATURED = [
     // Rows with a live source say "acquiring signal" until it answers (or for 10 s, then fall back to the
     // tag), and their first line decodes in (js/arrive.js)
     const live = {};
+    // Lines whose words changed (not just their numbers ticking: a countdown, an uptime): key -> when. Ambient
+    // mode's tour visits these first (tourNext)
+    const fresh = new Map();
+    const gist = (t) => String(t || '').replace(/[\d.,:]+/g, '#').replace(/\s+/g, ' ').trim();
     const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'timer', 'nosfyl', 'raddem',
         ...objects.filter((o) => o.type === 'live').map((o) => o.key)]);
     const waiting = new Set(LIVE_KEYS);
@@ -175,6 +187,8 @@ const FEATURED = [
     // Each line is also announced as 'tirl:live' (the home object's NOW strip, js/now.js; the Signal Log,
     // js/signals.js; the boot screen in index.html)
     window.ObjectsLive = (key, text, tone) => {
+        const was = live[key] && live[key].text;
+        if (was && text && gist(was) !== gist(text)) fresh.set(key, Date.now());
         if (text) live[key] = { text, tone }; else delete live[key];
         const first = !!text && waiting.delete(key);
         window.dispatchEvent(new CustomEvent('tirl:live', { detail: { key, text: text || null, tone } }));
@@ -193,7 +207,7 @@ const FEATURED = [
     function renderResults() {
         const list = visible();
         els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
-        els.results.innerHTML = list.length ? list.map((o) => `<li><button type="button" class="g-res" data-key="${o.key}" aria-current="${o === current}">
+        els.results.innerHTML = list.length ? list.map((o) => `<li><button type="button" class="g-res" data-key="${o.key}" aria-current="${o === rowOf(current)}">
                 ${iconHtml(o, 'g-res-icon')}
                 <span class="g-res-text"><span class="g-res-title">${esc(o.name)}</span>
                     <span class="g-res-desc${live[o.key] ? ' is-live' : ''}" title="${esc(pathOf(o))}">${descHtml(o)}</span></span>
@@ -215,9 +229,12 @@ const FEATURED = [
 
     // ---------- Object header ----------
     const openAttrs = (o) => o.external ? ' target="_blank" rel="noopener"' : '';
+    // Framed live in the preview: an embed page here, or an external object's own page here (OBJECTS page)
+    const embeds = (o) => !!o.embed && (!o.external || !!o.page);
     function renderHeader(o) {
         const list = visible();
-        const idx = list.indexOf(o);
+        const parent = parentOf(o);
+        const idx = list.indexOf(rowOf(o));
         const tone = toneOf(o.type);
         const formatLabel = { workspace: 'DEEPDISH WORKSPACE', legacy: 'LEGACY TEMPLATE', live: 'LIVE CONNECTION', external: 'EXTERNAL HOST' }[o.format];
         const info = `<p class="g-summary">${esc(o.desc)}</p>
@@ -229,12 +246,13 @@ const FEATURED = [
         header.innerHTML = `<div class="g-objrow">
                 <div class="g-objicon g-objicon-img">${iconHtml(o, 'g-objimg')}</div>
                 <div class="g-objtitle">
-                    <div class="g-objtype">OBJECT &middot; ${esc(typeName(o.type).toUpperCase())} &middot; ${o.id}</div>
+                    <div class="g-objtype">OBJECT &middot; ${esc(typeName(o.type).toUpperCase())} &middot; ${o.id}${parent ? ` &middot; <span class="g-objparent">IN ${esc(parent.name.toUpperCase())}</span>` : ''}</div>
                     <h1>${esc(o.name)}</h1>
                 </div>
                 <span class="g-chip tone-${tone}"><i class="g-dot tone-${tone}"></i>${esc(typeName(o.type))}</span>
                 <div class="g-objnav">
                     ${swipeHint() ? '<span class="g-swipe-hint" aria-hidden="true">&lsaquo; swipe &rsaquo;</span>' : ''}
+                    ${parent ? `<button type="button" class="g-btn g-up" data-up="${esc(parent.key)}" title="Back to ${esc(parent.name)}">&#8624; ${esc(parent.name.toUpperCase())}</button>` : ''}
                     <button type="button" class="g-btn" data-step="-1" aria-label="Previous object" ${list.length < 2 ? 'disabled' : ''}>&lsaquo;</button>
                     <span>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length}</span>
                     <button type="button" class="g-btn" data-step="1" aria-label="Next object" ${list.length < 2 ? 'disabled' : ''}>&rsaquo;</button>
@@ -245,6 +263,7 @@ const FEATURED = [
             <div class="g-now" id="g-now"></div>
             <div class="g-player" id="g-player"></div>` : info}`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
+        header.querySelector('[data-up]')?.addEventListener('click', (e) => select(objectByKey(e.currentTarget.dataset.up), { dir: -1 }));
         // Home: the player link to the games (js/player.js): sign-in beside the description, stats under it; and
         // between them, what's live right now and what changed since your last visit (js/now.js)
         if (o.key === HOME) {
@@ -256,12 +275,11 @@ const FEATURED = [
     // ---------- Live preview ----------
     // Internal pages render in a scaled-down iframe (VIEW_W x viewH virtual viewport); external hosts
     // may refuse to be framed, so they get a "preview disabled" screen. Objects in NATIVE draw their own
-    // readable preview instead (Cancel's leaderboard). Embed pages (OBJECTS embed: true)
+    // readable preview instead (the live connections' cards). Embed pages (OBJECTS embed: true, including external
+    // objects with a page of their own here)
     // load unscaled and live, and hand their column panels over (mountPanels). Loading waits a beat so
     // arrowing through the list doesn't spin up every page.
-    const NATIVE = {
-        cancel: { title: 'Monthly Leaderboard', renderer: () => window.CancelPreview }
-    };
+    const NATIVE = {};
     // Live connections preview their Host dossier card, enlarged and kept in step with it
     objects.filter((o) => o.type === 'live').forEach((o) => {
         NATIVE[o.key] = { title: 'Live Connection', renderer: () => ({ render: (screen, meta) => mirrorCard(o, screen, meta) }) };
@@ -365,7 +383,7 @@ const FEATURED = [
         embedStatus = '';
         keys();
         tune();
-        const embed = !!o.embed && !o.external;
+        const embed = embeds(o);
         if (embed) {
             els.preview.classList.add('is-embed');
             els.screen.classList.add('is-embed');
@@ -397,7 +415,7 @@ const FEATURED = [
             tuned();
             return;
         }
-        if (o.external) {
+        if (o.external && !embed) {
             els.screen.classList.add('offline');
             els.screen.innerHTML = `<div class="g-preview-off">
                     ${iconHtml(o, 'g-preview-off-icon')}
@@ -417,7 +435,7 @@ const FEATURED = [
         previewTimer = setTimeout(() => {
             if (current !== o) return;
             const frame = document.createElement('iframe');
-            frame.src = embed ? `${o.url}?embed${deepHash ? '#' + encodeURIComponent(deepHash) : ''}` : o.url;
+            frame.src = embed ? `${o.page || o.url}?embed${deepHash ? '#' + encodeURIComponent(deepHash) : ''}` : o.url;
             frame.title = `${o.name} preview`;
             if (embed) {
                 embedFrame(o, frame);
@@ -460,6 +478,8 @@ const FEATURED = [
             keys();
             mountPanels(o, frame);
             uncover = coverEmbed(o, frame);
+            // Touring: the page runs its own little demo while it's showing (js/embed.js, js/display.js)
+            if (ambient) onDisplay(frame, true);
             // Pages that ask for it take the keyboard straight away (space arms the timer) unless you're typing
             // here; ← → / and Escape still reach this page from inside them (js/embed.js)
             const el = document.activeElement;
@@ -468,6 +488,7 @@ const FEATURED = [
             if (wants && !ambient && !(el && el.closest('input, textarea, select, [contenteditable="true"]'))) frame.contentWindow.focus();
         });
         clearNativePreview = () => {
+            onDisplay(frame, false);
             uncover();
             if (frame.matches(':hover')) showCursor(true); // switched away with the pointer still over it
         };
@@ -520,7 +541,7 @@ const FEATURED = [
         });
     }
     function leavePanels(next) {
-        const hold = !!next.embed && !next.external;
+        const hold = embeds(next);
         slots.forEach((slot) => {
             const st = slotState.get(slot);
             const gen = ++st.gen;
@@ -721,7 +742,7 @@ const FEATURED = [
         els.crumbType.textContent = typeName(o.type);
         renderDock(o, changed && !first ? opts.dir || 0 : null);
         els.results.querySelectorAll('.g-res').forEach((b) => {
-            const on = b.dataset.key === o.key;
+            const on = b.dataset.key === rowOf(o).key;
             b.setAttribute('aria-current', on);
             if (on && !opts.noScroll) b.scrollIntoView({ block: 'nearest' });
         });
@@ -730,7 +751,7 @@ const FEATURED = [
     function step(dir) {
         const list = visible();
         if (!list.length) return;
-        const i = list.indexOf(current);
+        const i = list.indexOf(rowOf(current)); // from a project, on from its parent's place
         select(list[(i + dir + list.length) % list.length], { dir });
     }
 
@@ -742,7 +763,7 @@ const FEATURED = [
     function renderDock(o, dir) {
         if (!els.dock) return;
         const list = visible();
-        const idx = list.indexOf(o);
+        const idx = list.indexOf(rowOf(o));
         const cur = els.dock.querySelector('.g-dock-cur');
         cur.innerHTML = `${iconHtml(o, 'g-dock-icon')}<span class="g-dock-text"><b>${esc(o.name)}</b>
             <small>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length} &middot; ${esc(typeName(o.type))}</small></span>
@@ -806,7 +827,7 @@ const FEATURED = [
         let id = null, on = false, x0 = 0, y0 = 0, t0 = 0, dx = 0, edges = null, quietUntil = 0;
         const neighbour = (dir) => {
             const list = visible();
-            const i = list.indexOf(current);
+            const i = list.indexOf(rowOf(current));
             return list.length > 1 ? list[(i + dir + list.length) % list.length] : null;
         };
         header.addEventListener('pointerdown', (e) => {
@@ -924,7 +945,7 @@ const FEATURED = [
 
     // ---------- Status bar ----------
     function updateStatus() {
-        els.statusObjects.textContent = `${objects.length} OBJECTS`;
+        els.statusObjects.textContent = `${listed.length} OBJECTS`;
         els.statusFilter.textContent = `TYPE: ${(type === 'all' ? 'ALL' : typeName(type)).toUpperCase()} · ${visible().length} SHOWN`;
     }
     const tick = () => {
@@ -957,11 +978,23 @@ const FEATURED = [
     // ---------- Ambient mode ----------
     // For when this page is left up as an idle screen: after AMBIENT_AFTER ms with no input, run a
     // random effect every 7-15 s (touring the live previews, hover effects playing on their own,
-    // titles re-decoding...). Any input ends it, undoes what's in flight and reselects what was showing.
+    // titles re-decoding, a target lock gliding between things...). Any input ends it, undoes what's in flight and
+    // reselects what was showing. While it's on, html.g-ambient-on and tirl:ambient let js/micro.js look after the
+    // screen (a few pixels' drift).
     const AMBIENT_AFTER = 90000;
     const ambientTag = document.getElementById('g-ambient');
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
     const shown = (el) => el && el.getClientRects().length > 0;
+    // In the viewport and not scrolled out of its list
+    const onScreen = (el) => {
+        if (!shown(el)) return false;
+        const r = el.getBoundingClientRect();
+        if (r.width < 8 || r.top < 0 || r.left < 0 || r.bottom > innerHeight || r.right > innerWidth) return false;
+        const box = el.closest('.g-results, .g-activity');
+        if (!box) return true;
+        const b = box.getBoundingClientRect();
+        return r.top >= b.top && r.bottom <= b.bottom;
+    };
     const cleanups = new Set();
     let lastInput = Date.now();
     let ambient = false;
@@ -1010,11 +1043,6 @@ const FEATURED = [
     const panels = () => Array.from(document.querySelectorAll('.g-rail > section, .g-side > section, .g-card, .g-objhead')).filter(shown);
 
     const EFFECTS = {
-        // Step to the next page with a live preview (external hosts can't be framed), home included
-        tour() {
-            const list = objects.filter((o) => !o.external);
-            select(list[(list.indexOf(current) + 1) % list.length], { noScroll: true, quiet: true });
-        },
         // The hover light drifts across a panel on its own
         spot() {
             const el = pick(panels().filter((p) => p.classList.contains('g-spot')));
@@ -1063,8 +1091,73 @@ const FEATURED = [
         },
         // Featured cards (while home is showing) take a turn each
         featured() {
-            if (els.featured.hidden) return EFFECTS.tour();
+            if (els.featured.hidden) return EFFECTS.pet();
             cascade(Array.from(els.featured.querySelectorAll('.g-feat')), 700, 1400);
+        },
+        // Target lock: brackets glide to something on screen and tag it, then on to the next (css/micro.css)
+        lock() {
+            const targets = [
+                ...Array.from(document.querySelectorAll('.g-chan')).map((el) => [el, el.querySelector('.g-chan-text b')?.textContent]),
+                ...Array.from(els.featured.querySelectorAll('.g-feat')).map((el) => [el, el.querySelector('.g-feat-name')?.textContent]),
+                ...Array.from(document.querySelectorAll('.g-op-stat')).map((el) => [el, el.querySelector('small')?.textContent]),
+                ...Array.from(els.results.querySelectorAll('.g-res')).map((el) => [el, el.querySelector('.g-res-title')?.textContent]),
+                [document.querySelector('.g-home .hologram-container'), 'subject · tylerirl']
+            ].filter(([el, name]) => name && onScreen(el));
+            if (!targets.length) return;
+            let box = document.querySelector('.g-lockon');
+            if (!box) {
+                box = document.createElement('div');
+                box.className = 'g-lockon';
+                box.setAttribute('aria-hidden', 'true');
+                box.innerHTML = '<i></i><i></i><i></i><i></i><span></span>';
+                (document.getElementById('gotham') || document.body).append(box); // inside, for the theme's variables
+            }
+            const hops = 2 + Math.floor(Math.random() * 2);
+            const visit = (n) => {
+                const [el, name] = pick(targets);
+                const r = el.getBoundingClientRect();
+                box.classList.remove('is-locked');
+                box.style.translate = `${r.left - 5}px ${r.top - 5}px`;
+                box.style.width = `${r.width + 10}px`;
+                box.style.height = `${r.height + 10}px`;
+                box.classList.add('is-on');
+                later(() => {
+                    box.querySelector('span').textContent = `TRACKING · ${name.trim().toUpperCase()}`;
+                    box.classList.add('is-locked');
+                    if (n > 1) later(() => visit(n - 1), 1800);
+                    else later(() => box.classList.remove('is-on', 'is-locked'), 2200);
+                }, 950);
+            };
+            track(() => box.classList.remove('is-on', 'is-locked'));
+            visit(hops);
+        },
+        // A point of light runs once around a panel's edge
+        trace() {
+            const el = pick(panels());
+            if (!el) return;
+            const line = document.createElement('i');
+            line.className = 'g-trace';
+            el.classList.add('g-traced');
+            el.append(line);
+            const done = track(() => { line.remove(); el.classList.remove('g-traced'); });
+            later(done, 3300);
+        },
+        // The Results status dots ping top to bottom, like a sweep
+        sonar() {
+            const rows = Array.from(els.results.querySelectorAll('.g-res')).filter(onScreen);
+            rows.forEach((row, i) => later(() => hold(row, 'is-sonar', 700), i * 90));
+        },
+        // A packet of light runs along the status bar
+        packet() {
+            const bar = document.querySelector('.g-statusbar');
+            if (!shown(bar)) return;
+            const dot = document.createElement('i');
+            dot.className = 'g-packet';
+            dot.style.setProperty('--run', `${bar.clientWidth + 60}px`);
+            bar.classList.add('g-has-packet');
+            bar.append(dot);
+            const done = track(() => { dot.remove(); bar.classList.remove('g-has-packet'); });
+            later(done, 2700);
         },
         // The status-bar RadGotchi does something
         pet() {
@@ -1080,8 +1173,76 @@ const FEATURED = [
         }
     };
     // The tour comes up more often than any one effect; reduced motion keeps only the calm ones
-    const BAG = ['tour', 'tour', 'tour', 'spot', 'spot', 'scan', 'title', 'comms', 'dossier', 'holo', 'featured', 'pet'];
-    const CALM = ['tour', 'pet'];
+    const BAG = ['spot', 'spot', 'scan', 'title', 'comms', 'dossier', 'holo', 'featured', 'pet', 'lock', 'lock', 'trace', 'sonar', 'packet'];
+    const CALM = ['pet'];
+
+    // ---------- The tour ----------
+    // Its own clock (the effects above play in between): every TOUR_MS the Results highlight sweeps down to the
+    // next page and it's selected. Pages whose live line just changed go first (fresh); the rest in turn, home
+    // included. Each embedded page runs a demo of itself while it's up (onDisplay). The Tour panel in the left
+    // column says what's on, its live line, how long until the next and what that is.
+    const TOUR_MS = 25000;
+    const tourable = () => objects.filter((o) => !o.external || o.page);
+    let tourTimer = null;
+    let upNext = null;
+    function tourNext() {
+        const list = tourable();
+        const news = [...fresh.entries()].sort((a, b) => a[1] - b[1]).map(([k]) => list.find((o) => o.key === k)).find((o) => o && o !== current);
+        if (news) return { o: news, news: true };
+        return { o: list[(list.indexOf(current) + 1) % list.length], news: false };
+    }
+    function onDisplay(frame, on) {
+        try { frame.contentWindow?.TirlEmbed?.display?.(on); } catch (_) {}
+    }
+    // The Results highlight runs from the row showing to the next one (at most ~10 steps), keeping it in view
+    function seek(from, to, done) {
+        const rows = Array.from(els.results.querySelectorAll('.g-res'));
+        const a = rows.findIndex((r) => r.dataset.key === (from && from.key));
+        const b = rows.findIndex((r) => r.dataset.key === to.key);
+        if (b === -1 || reducedMotion()) return done();
+        const start = a === -1 ? b : a;
+        const span = b - start;
+        const steps = Math.min(10, Math.abs(span));
+        const path = Array.from({ length: steps + 1 }, (_, i) => rows[start + Math.round((span * i) / (steps || 1))]);
+        const box = els.results;
+        path.forEach((row, i) => later(() => {
+            const r = row.getBoundingClientRect(), bx = box.getBoundingClientRect();
+            if (r.top < bx.top) box.scrollTop -= bx.top - r.top + 4;
+            else if (r.bottom > bx.bottom) box.scrollTop += r.bottom - bx.bottom + 4;
+            hold(row, 'is-seek', 260);
+            if (i === path.length - 1) later(done, 220);
+        }, i * 75));
+    }
+    function tourStep() {
+        const { o, news } = upNext || tourNext();
+        upNext = null;
+        seek(current, o, () => {
+            fresh.delete(o.key);
+            select(o, { noScroll: true, quiet: true });
+            upNext = tourNext();
+            renderTour(news);
+        });
+        tourTimer = setTimeout(tourStep, TOUR_MS);
+    }
+    const tourEl = document.getElementById('g-tour');
+    function renderTour(news) {
+        if (!tourEl || !current) return;
+        const list = tourable();
+        const line = live[current.key];
+        const n = upNext && upNext.o;
+        tourEl.querySelector('#g-tour-meta').textContent = `STOP ${list.indexOf(current) + 1} / ${list.length}`;
+        tourEl.querySelector('#g-tour-now').innerHTML = `${iconHtml(current, 'g-tour-icon')}
+            <span class="g-tour-text"><span class="g-tour-name">${esc(current.name)}${news ? ' <b class="g-tour-new">NEW</b>' : ''}</span>
+            <span class="g-tour-line">${line ? `<i class="g-live-dot tone-${esc(line.tone || 'green')}"></i>${esc(line.text)}` : esc(current.tag || current.desc)}</span></span>`;
+        tourEl.querySelector('#g-tour-next').innerHTML = n ? `<span>UP NEXT</span>${iconHtml(n, 'g-tour-icon is-small')}<b>${esc(n.name)}</b>${upNext.news ? '<b class="g-tour-new">NEW</b>' : ''}` : '';
+        const fill = tourEl.querySelector('#g-tour-fill');
+        fill.style.setProperty('--tour-ms', `${TOUR_MS}ms`);
+        fill.classList.remove('is-run');
+        void fill.offsetWidth;
+        fill.classList.add('is-run');
+    }
+    // The current line updates while it's up
+    window.addEventListener('tirl:live', (e) => { if (ambient && current && e.detail.key === current.key) renderTour(false); });
 
     function nextEffect() {
         const names = (reducedMotion() ? CALM : BAG).filter((n) => n !== lastEffect);
@@ -1093,12 +1254,26 @@ const FEATURED = [
         ambient = true;
         ambientFrom = current;
         if (ambientTag) ambientTag.hidden = false;
-        ambientTimer = setTimeout(nextEffect, 1500);
+        document.documentElement.classList.add('g-ambient-on');
+        window.dispatchEvent(new CustomEvent('tirl:ambient', { detail: { on: true } })); // screen care (js/micro.js)
+        ambientTimer = setTimeout(nextEffect, 9000);
+        // The tour starts with whatever is showing: its demo plays, the panel slides in, the clock starts
+        if (embedEl) onDisplay(embedEl, true);
+        upNext = tourNext();
+        if (tourEl) tweenHeight(tourEl, () => { tourEl.hidden = false; });
+        renderTour(false);
+        tourTimer = setTimeout(tourStep, TOUR_MS);
     }
     function exitAmbient() {
         ambient = false;
         clearTimeout(ambientTimer);
+        clearTimeout(tourTimer);
+        upNext = null;
+        if (embedEl) onDisplay(embedEl, false);
+        if (tourEl && !tourEl.hidden) tweenHeight(tourEl, () => { tourEl.hidden = true; });
         if (ambientTag) ambientTag.hidden = true;
+        document.documentElement.classList.remove('g-ambient-on');
+        window.dispatchEvent(new CustomEvent('tirl:ambient', { detail: { on: false } }));
         cleanups.forEach((done) => done());
         if (ambientFrom && current !== ambientFrom) select(ambientFrom, { noScroll: true, quiet: true });
     }

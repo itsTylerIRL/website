@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the cancel is coming - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/pages/cancel.html">
+    <meta property="og:title" content="the cancel is coming - Tyler (in real life)">
+    <meta property="og:description" content="A neochibi roguelite autobattler. 9 days. 3 bosses. One timeline. Live crown, hall of fame and run feed, plus its companion idle clicker, the network is growing.">
+    <meta property="og:image" content="https://cancel.tylerirl.com/assets/preview.png?v=2">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/cancel.html">
+    <meta property="twitter:title" content="the cancel is coming - Tyler (in real life)">
+    <meta property="twitter:description" content="A neochibi roguelite autobattler. 9 days. 3 bosses. One timeline. Live crown, hall of fame and run feed, plus its companion idle clicker, the network is growing.">
+    <meta property="twitter:image" content="https://cancel.tylerirl.com/assets/preview.png?v=2">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    <meta name="description" content="A neochibi roguelite autobattler. 9 days. 3 bosses. One timeline. Live crown, hall of fame and run feed, plus its companion idle clicker, the network is growing.">
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.8">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/cancel-preview.css?v=1.7">
+    <link rel="stylesheet" href="/css/uplink.css?v=1.3">
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+    <!-- the cancel is coming: live from the game's service (cancel-api.tylerirl.com), rendered by js/cancel.js;
+         the crown and hall of fame by js/cancel-preview.js -->
+    <div class="gotham" id="gotham" style="--accent: 255, 222, 23">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// THE CANCEL</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>External</span><span class="sep">/</span>
+                <b>the cancel is coming</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
+
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-tribes-pane" data-embed="rail">
+                    <div class="g-panel-title">Tribes <span class="g-meta">win rate &middot; runs</span></div>
+                    <ol class="g-bars" id="c-tribes"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+                <section class="g-days-pane" data-embed="rail">
+                    <div class="g-panel-title">Where Runs End <span class="g-meta">by day</span></div>
+                    <div class="g-cols" id="c-days" aria-label="Runs that ended on each day"></div>
+                    <div class="g-col-axis" id="c-days-axis"></div>
+                    <p class="g-note" id="c-days-note"></p>
+                </section>
+                <section class="g-killers-pane g-fill" data-embed="rail">
+                    <div class="g-panel-title">Most Wanted <span class="g-meta">what ends runs</span></div>
+                    <ol class="g-bars g-scroll" id="c-killers" style="--bar: 255, 85, 85"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main">
+                <div class="g-objhead" data-embed="hide">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/cancel.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; EXTERNAL &middot; GAME</div>
+                            <h1>the cancel is coming</h1>
+                        </div>
+                        <span class="g-chip tone-red"><i class="g-dot tone-red"></i>External</span>
+                        <div class="g-objnav">
+                            <a class="g-btn g-visit g-play" href="https://cancel.tylerirl.com" target="_blank" rel="noopener">PLAY &nearr;</a>
+                        </div>
+                    </div>
+                    <p class="g-summary">neochibi roguelite autobattler</p>
+                </div>
+
+                <section class="g-card">
+                    <div class="g-hero">
+                        <a class="g-hero-art" href="https://cancel.tylerirl.com" target="_blank" rel="noopener" aria-label="Play the cancel is coming">
+                            <img src="https://cancel.tylerirl.com/assets/preview.png?v=2" alt="" width="1200" height="630" decoding="async">
+                        </a>
+                        <div class="g-hero-text">
+                            <h2>Survive the cancel.</h2>
+                            <p>You're a Milady (or a Remilio) dropped into a maze with a hundred $CULT and a bad feeling. Loot by day, find a campfire by night. Something comes for you on day 3, and on day 6. On day 9 it's <b class="g-accent">THE CANCEL</b>.</p>
+                            <p>Fights play themselves. Your job is everything before the fight.</p>
+                            <div class="g-hero-actions">
+                                <a class="g-btn g-play" href="https://cancel.tylerirl.com" target="_blank" rel="noopener">PLAY THE CANCEL &nearr;</a>
+                                <a class="g-btn" href="https://clicker.tylerirl.com" target="_blank" rel="noopener" title="the network is growing: the companion idle clicker">PLAY THE NETWORK &nearr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="g-card">
+                    <div class="g-panel-title">Crown &amp; Hall of Fame <span class="g-meta" id="c-hall-meta">CONNECTING&hellip;</span></div>
+                    <div class="g-hall-host" id="c-hall"></div>
+                </section>
+
+                <section class="g-card">
+                    <div class="g-panel-title">Recent Runs <span class="g-meta" id="c-runs-meta"></span></div>
+                    <ol class="g-feed is-capped" id="c-runs"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+
+                <!-- the network is growing, the companion idle clicker (js/network.js) -->
+                <section class="g-card" style="--accent: 255, 121, 198">
+                    <div class="g-panel-title">Network Leaderboards <span class="g-meta" id="n-board-meta">CONNECTING&hellip;</span></div>
+                    <div class="g-tabs" role="tablist" aria-label="Boards" id="n-tabs">
+                        <button type="button" role="tab" data-board="grass" aria-selected="true">grass</button>
+                        <button type="button" role="tab" data-board="fastest" aria-selected="false">fastest</button>
+                        <button type="button" role="tab" data-board="network" aria-selected="false">biggest</button>
+                        <button type="button" role="tab" data-board="uptime" aria-selected="false">uptime</button>
+                        <button type="button" role="tab" data-board="online" aria-selected="false">first online</button>
+                    </div>
+                    <p class="g-tab-blurb" id="n-blurb"></p>
+                    <ol class="g-feed" id="n-board" role="tabpanel"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-pulse-pane" data-embed="side">
+                    <div class="g-panel-title">Pulse
+                        <span class="g-seg" role="group" aria-label="Range" id="c-range">
+                            <button type="button" data-range="today" aria-pressed="false">today</button>
+                            <button type="button" data-range="week" aria-pressed="true">7d</button>
+                            <button type="button" data-range="lifetime" aria-pressed="false">all</button>
+                        </span>
+                    </div>
+                    <div class="g-stats" id="c-pulse" style="--cols: 2">
+                        <div class="g-stat"><b data-k="games">&mdash;</b><small>runs</small></div>
+                        <div class="g-stat"><b data-k="wins" class="is-hot">&mdash;</b><small>timelines saved</small></div>
+                        <div class="g-stat"><b data-k="rate">&mdash;</b><small>win rate</small></div>
+                        <div class="g-stat"><b data-k="kills">&mdash;</b><small>kills</small></div>
+                    </div>
+                    <p class="g-note" id="c-pulse-note"></p>
+                </section>
+                <section class="g-relics-pane" data-embed="side">
+                    <div class="g-panel-title">Loadout Meta <span class="g-meta">relics held at the end</span></div>
+                    <ol class="g-bars" id="c-relics" style="--bar: 189, 147, 249"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+                <section class="g-winners-pane" data-embed="side">
+                    <div class="g-panel-title">Winners vs. the Fallen <span class="g-meta">avg final stats</span></div>
+                    <ol class="g-bars" id="c-final"><li class="g-wait">LOADING&hellip;</li></ol>
+                    <p class="g-note">Bars are winners (gold) against the fallen (red), as a share of whichever is bigger.</p>
+                </section>
+                <section class="g-census-pane" data-embed="side" style="--accent: 255, 121, 198">
+                    <div class="g-panel-title">The Network <span class="g-meta">census &middot; every synced network</span></div>
+                    <div class="g-stats" id="n-census" style="--cols: 2">
+                        <div class="g-stat"><b data-k="networks">&mdash;</b><small>networks</small></div>
+                        <div class="g-stat"><b data-k="grass" class="is-hot">&mdash;</b><small>grass touched</small></div>
+                        <div class="g-stat"><b data-k="peak">&mdash;</b><small>biggest network</small></div>
+                        <div class="g-stat"><b data-k="epoch">&mdash;</b><small>furthest epoch</small></div>
+                    </div>
+                    <p class="g-note" id="n-census-note"></p>
+                </section>
+                <section class="g-netfeed-pane g-fill" data-embed="side" style="--accent: 255, 121, 198">
+                    <div class="g-panel-title">Network Feed <span class="g-meta" id="n-feed-meta"></span></div>
+                    <ol class="g-feed is-plain g-scroll" id="n-feed"><li class="g-wait">LOADING&hellip;</li></ol>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-muted" id="g-feed-dot"></i><span id="g-feed">CONNECTING</span></span>
+                <span>HOST: CANCEL.TYLERIRL.COM</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">live from the games' leaderboard service &middot; the cancel + the network</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
+    </main>
+
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/embed.js?v=1.2"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+
+    <script defer src="/js/cancel-preview.js?v=1.3"></script>
+    <script defer src="/js/cancel.js?v=1.2"></script>
+    <script defer src="/js/network.js?v=1.1"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
+</body>
+</html>

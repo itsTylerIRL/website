@@ -9,225 +9,256 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tylerirl.com/deepdish">
+    <meta property="og:url" content="https://tylerirl.com/pages/deepdish.html">
     <meta property="og:title" content="DeepDish - Tyler (in real life)">
-    <meta property="og:description" content="DeepDish - Custom computer build, monitoring, and projects">
-    <meta property="og:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
-    
+    <meta property="og:description" content="The homelab: a custom-built machine and the projects on it, OCS, TOP, RADactedBot, RadGotchi and DigiFlip, plus the Urbit apps %sextant, %chibi and %iron.">
+    <meta property="og:image" content="https://tylerirl.com/assets/featured/deepdish.webp">
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tylerirl.com/deepdish">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/deepdish.html">
     <meta property="twitter:title" content="DeepDish - Tyler (in real life)">
-    <meta property="twitter:description" content="DeepDish - Custom computer build, monitoring, and projects">
-    <meta property="twitter:image" content="https://tylerirl.com/assets/OCS/computer.jpg">
+    <meta property="twitter:description" content="The homelab: a custom-built machine and the projects on it, OCS, TOP, RADactedBot, RadGotchi and DigiFlip, plus the Urbit apps %sextant, %chibi and %iron.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/featured/deepdish.webp">
     <meta property="twitter:creator" content="@itsTylerIRL">
+    <meta name="description" content="The homelab: a custom-built machine and the projects on it, OCS, TOP, RADactedBot, RadGotchi and DigiFlip, plus the Urbit apps %sextant, %chibi and %iron.">
     <meta name="color-scheme" content="dark light">
-    <meta name="supported-color-schemes" content="dark light">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
-    <!-- Safari specific -->
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- External CSS -->
     <link rel="stylesheet" href="/css/styles.css?v=1.8">
     <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
-    
-    
-    <link rel="stylesheet" href="/css/bento.css?v=1.0">
-    <link rel="stylesheet" href="/css/deepdish.css?v=1.2">
-    <link rel="stylesheet" href="/css/rg-installer.css?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=2.8">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/uplink.css?v=1.3">
+    <link rel="stylesheet" href="/css/deepdish-dir.css?v=1.1">
 </head>
 <body>
     <!-- Corner Brackets Border -->
     <div class="corner-brackets"><div class="bottom"></div></div>
-    <!-- SVG filter for bento-refract (glass distortion on hover) -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-        <defs>
-            <filter id="bento-refract" x="-20%" y="-20%" width="140%" height="140%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise">
-                    <animate attributeName="baseFrequency" dur="22s" values="0.012 0.018;0.018 0.012;0.012 0.018" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-        </defs>
-    </svg>
-
     <main class="main-content">
+    <!-- DeepDish: the homelab and a directory of the projects on it. Each project opens in the home page's preview
+         (/#ocs, /#top, /#sin; they're listed here rather than in its Results: js/objects.js parent) -->
+    <div class="gotham" id="gotham" style="--accent: 255, 85, 85">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+                <span class="g-brand-sub">// DEEPDISH</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <a href="/">tylerirl</a><span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Program</span><span class="sep">/</span>
+                <b>DeepDish</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero" style="margin-bottom: 0; padding-bottom: 0;">
-        <div class="container">
-            <div style="text-align: center; margin: 0.3rem 0;">
-                <div class="hologram-container">
-                    <img src="/assets/remilio2.webp" alt="Remilio" class="hologram-image">
-                    <div class="hologram-scanlines"></div>
-                    <div class="hologram-flicker"></div>
-                    <div class="hologram-noise"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-machine-pane" data-embed="rail">
+                    <div class="g-panel-title">Machine</div>
+                    <dl class="g-props">
+                        <dt>name</dt><dd>DeepDish</dd>
+                        <dt>role</dt><dd>homelab</dd>
+                        <dt>build</dt><dd>custom</dd>
+                        <dt>projects</dt><dd>5 + 3 urbit apps</dd>
+                        <dt>deploys</dt><dd>docker</dd>
+                        <dt>watched by</dt><dd>TOP + prometheus</dd>
+                    </dl>
+                </section>
+                <section class="g-stack-pane g-fill" data-embed="rail">
+                    <div class="g-panel-title">Stack</div>
+                    <div class="g-scroll">
+                        <ul class="dd-chips">
+                            <li>python</li><li>flask</li><li>docker</li><li>prometheus</li><li>grafana</li>
+                            <li>home assistant</li><li>yolo</li><li>discord</li><li>telegram</li><li>llm agents</li>
+                            <li>hoon</li><li>urbit</li><li>azimuth</li><li>electron</li><li>c</li><li>webassembly</li>
+                        </ul>
+                        <p class="g-note">What the projects are built on, from their docs and repos.</p>
+                    </div>
+                </section>
+            </aside>
 
-    <!-- DeepDish Header -->
-    <section style="padding-top: 0.5rem; padding-bottom: 0;">
-        <div class="container">
-            <div class="deepdish-hero">
-                <h1>DeepDish</h1>
-                <p>Custom computer projects &amp; utilities</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Project Cards -->
-    <section>
-        <div class="container">
-            <div class="bento-grid deepdish-grid">
-                <!-- OCS -->
-                <a href="/pages/deepdish_ocs.html" class="bento-item" data-accent="139,233,253">
-                    <div class="bento-image">
-                        <img src="/assets/OCS/webui2.png" alt="OCS" decoding="async">
-                    </div>
-                    <div class="bento-content">
-                        <h3>OCS</h3>
-                        <p>ocular control system — custom monitoring hmi</p>
-                    </div>
-                </a>
-
-                <!-- TOP -->
-                <a href="/pages/deepdish_top.html" class="bento-item" data-accent="80,250,123">
-                    <div class="bento-image">
-                        <img src="/assets/TOP/top.png" alt="TOP" decoding="async">
-                    </div>
-                    <div class="bento-content">
-                        <h3>TOP</h3>
-                        <p>terminal operations panel — real-time infrastructure monitoring</p>
-                    </div>
-                </a>
-
-                <!-- RADactedBot -->
-                <a href="/pages/deepdish_sin.html" class="bento-item" data-accent="255,121,198">
-                    <div class="bento-image">
-                        <img src="/assets/redacted/chat.png" alt="RADactedBot" decoding="async">
-                    </div>
-                    <div class="bento-content">
-                        <h3>RADactedBot</h3>
-                        <p>discord + telegram bot system</p>
-                    </div>
-                </a>
-
-                <!-- Radgotchi Installer -->
-                <div class="bento-item bento-radgotchi" data-accent="139,233,253">
-                    <div class="install-links">
-                        <a href="https://github.com/itsTylerIRL/radgotchi" target="_blank" class="install-link" title="GitHub" aria-label="Radgotchi on GitHub">
-                            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                        </a>
-                        <a href="/pages/deepdish_rg.html" class="install-link" title="Docs" aria-label="Radgotchi docs">
-                            <svg viewBox="0 0 16 16"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 000 2.5v11a.5.5 0 00.707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 00.78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0016 13.5v-11a.5.5 0 00-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/></svg>
-                        </a>
-                    </div>
-                    <div class="bento-gotchi">
-                        <div id="radgotchi-container">
-                            <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face" loading="lazy" decoding="async">
-                            <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+            <section class="g-main" id="g-main">
+                <div class="g-objhead" data-embed="hide">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/deepdish-rack.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PROGRAM &middot; DIRECTORY</div>
+                            <h1>DeepDish</h1>
                         </div>
+                        <span class="g-chip tone-green"><i class="g-dot tone-green"></i>Program</span>
                     </div>
-                    <div class="bento-content">
-                        <h3 id="install-title">radgotchi installer</h3>
-                        <div class="install-commands-area">
-                            <div class="install-tabs">
-                                <div class="install-tab active" onclick="switchInstallTab('bash', this)" tabindex="0" role="button">Linux / macOS</div>
-                                <div class="install-tab" onclick="switchInstallTab('ps', this)" tabindex="0" role="button">Windows</div>
-                            </div>
-                            <div class="install-command" id="install-bash" data-cmd="curl -fsSL https://tylerirl.com/install_rg.sh | bash" onclick="copyInstallCommand(this)" title="Click to copy" tabindex="0" role="button">
-                                curl -fsSL https://tylerirl.com/install_rg.sh | bash
-                            </div>
-                            <div class="install-command" id="install-ps" data-cmd="irm https://tylerirl.com/install_rg.ps1 | iex" onclick="copyInstallCommand(this)" title="Click to copy" hidden tabindex="0" role="button">
-                                irm https://tylerirl.com/install_rg.ps1 | iex
-                            </div>
-                        </div>
-                    </div>
+                    <p class="g-summary">the homelab: a custom-built machine and the projects that run on it</p>
                 </div>
 
-                <!-- Grep Dojo -->
-                <a href="/pages/grep.html" class="bento-item" data-accent="255,184,108">
-                    <div class="bento-image">
-                        <img src="/assets/grep_dojo.png" alt="Grep Dojo" decoding="async">
+                <section class="g-card">
+                    <div class="dd-hero">
+                        <div class="dd-rack">
+                            <img src="/assets/featured/deepdish.webp" alt="DeepDish: a server rack" width="408" height="420" decoding="async">
+                            <!-- Drive lights over the art's six bays (css/deepdish-dir.css) -->
+                            <i class="dd-led" style="--x: 38.9%; --y: 22.8%; --d: 0s"></i><i class="dd-led" style="--x: 64%; --y: 23.3%; --d: 1.3s"></i>
+                            <i class="dd-led" style="--x: 39%; --y: 34.4%; --d: 0.6s"></i><i class="dd-led" style="--x: 64%; --y: 34.4%; --d: 2.1s"></i>
+                            <i class="dd-led" style="--x: 38.9%; --y: 46.1%; --d: 1.7s"></i><i class="dd-led" style="--x: 64%; --y: 46.3%; --d: 0.9s"></i>
+                        </div>
+                        <div class="dd-hero-text">
+                            <div class="dd-kicker">HOMELAB &middot; DIRECTORY</div>
+                            <h2>DeepDish</h2>
+                            <p>A custom-built machine and what's built on it: five projects with their own workspaces, and three Urbit apps.</p>
+                            <p>Pick a project to open it here, or install an app on your ship.</p>
+                        </div>
                     </div>
-                    <div class="bento-content">
-                        <h3>GREP</h3>
-                        <p>grep dojo — interactive terminal training game</p>
-                    </div>
-                </a>
+                </section>
 
-                <!-- DigiFlip -->
-                <a href="/pages/digimon.html" class="bento-item" data-accent="255,85,85">
-                    <div class="bento-image">
-                        <img src="/assets/digiflip.png" alt="DigiFlip" decoding="async">
-                    </div>
-                    <div class="bento-content">
-                        <h3>DIGI</h3>
-                        <p>digiflip — digimon ver.20th virtual pet for flipper zero, in your browser</p>
-                    </div>
-                </a>
+                <section class="g-card">
+                    <div class="g-panel-title">Projects <span class="g-meta">5 on the rack &middot; open one to view it</span></div>
+                    <ul class="dd-projects">
+                        <li><a class="dd-project" href="/#ocs" style="--p: 139, 233, 253">
+                            <span class="dd-shot"><img src="/assets/deepdish/ocs.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/object-icons/ocs-sentinel.webp" alt="" width="28" height="28"><b>OCS</b><small>optical control system</small></span>
+                                <span class="dd-project-desc">A face-tracking animated eye for the Gakken Worldeye: tracking, a browser control panel, sound and speech, and Prometheus metrics. With technical docs.</span>
+                                <span class="dd-tags"><i>python</i><i>flask</i><i>yolo</i><i>docker</i></span>
+                            </span>
+                            <span class="dd-go">OPEN &rarr;</span>
+                        </a></li>
+                        <li><a class="dd-project" href="/#top" style="--p: 80, 250, 123">
+                            <span class="dd-shot"><img src="/assets/deepdish/top.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/object-icons/top.webp" alt="" width="28" height="28"><b>TOP</b><small>terminal operations panel</small></span>
+                                <span class="dd-project-desc">Host and cluster monitoring for the rack: system health, Docker containers, OCS status and a technical reference.</span>
+                                <span class="dd-tags"><i>docker</i><i>prometheus</i><i>home assistant</i></span>
+                            </span>
+                            <span class="dd-go">OPEN &rarr;</span>
+                        </a></li>
+                        <li><a class="dd-project" href="/#sin" style="--p: 255, 121, 198">
+                            <span class="dd-shot"><img src="/assets/deepdish/sin.webp" alt="" width="488" height="305" loading="lazy" decoding="async"></span>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/object-icons/sin-defcon4.webp" alt="" width="28" height="28"><b>RADactedBot</b><small>discord + telegram bot</small></span>
+                                <span class="dd-project-desc">An economy, games, relays between chats, LLM agents and moderation, across Discord and Telegram.</span>
+                                <span class="dd-tags"><i>python</i><i>discord</i><i>telegram</i><i>llm agents</i></span>
+                            </span>
+                            <span class="dd-go">OPEN &rarr;</span>
+                        </a></li>
+                        <li><a class="dd-project" href="/#radgotchi" style="--p: 139, 233, 253">
+                            <span class="dd-shot"><img src="/assets/deepdish/radgotchi.webp" alt="" width="497" height="311" loading="lazy" decoding="async"></span>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/object-icons/radgotchi-shades.webp" alt="" width="28" height="28"><b>RadGotchi</b><small>desktop companion</small></span>
+                                <span class="dd-project-desc">A pixel-art radbro that lives on your desktop and in the browser: system telemetry, local-AI chat with tools, XP and a LAN mesh. With technical docs.</span>
+                                <span class="dd-tags"><i>electron</i><i>javascript</i><i>local ai</i></span>
+                            </span>
+                            <span class="dd-go">OPEN &rarr;</span>
+                        </a></li>
+                        <li><a class="dd-project" href="/#digiflip" style="--p: 255, 85, 85">
+                            <span class="dd-shot"><img src="/assets/deepdish/digiflip.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/object-icons/digiflip.webp" alt="" width="28" height="28"><b>DigiFlip</b><small>flipper zero virtual pet</small></span>
+                                <span class="dd-project-desc">The Digimon Ver.20th virtual pet for the Flipper Zero: 15 eggs, 134 Digimon and the 100-round Colosseum. Compiled to WebAssembly, so it runs here too.</span>
+                                <span class="dd-tags"><i>c</i><i>flipper zero</i><i>webassembly</i></span>
+                            </span>
+                            <span class="dd-go">OPEN &rarr;</span>
+                        </a></li>
+                    </ul>
+                </section>
 
-                <!-- the cancel is coming -->
-                <a href="https://cancel.tylerirl.com" target="_blank" class="bento-item" data-accent="255,222,23">
-                    <div class="bento-image">
-                        <img src="/assets/remilia_logo.png" alt="the cancel is coming" decoding="async">
-                    </div>
-                    <div class="bento-content">
-                        <h3>CANCEL</h3>
-                        <p>the cancel is coming — neochibi roguelite autobattler</p>
-                    </div>
-                </a>
-            </div>
+                <!-- Urbit apps: no workspace page here, so each has its install line (from ~nosfyl) and its repo -->
+                <section class="g-card">
+                    <div class="g-panel-title">Urbit Apps <span class="g-meta">3 desks &middot; |install from ~nosfyl</span></div>
+                    <ul class="dd-projects" id="dd-apps">
+                        <li><div class="dd-project is-app" style="--p: 255, 184, 108">
+                            <a class="dd-shot" href="https://github.com/itsTylerIRL/sextant" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/sextant.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/urbit-apps/sextant.webp" alt="" width="28" height="28"><b>%sextant</b><small>live network map</small></span>
+                                <span class="dd-project-desc">A live map of the Urbit network: every galaxy, star and planet drawn under the ship that sponsors it right now, with pals, connection checks and the apps each ship publishes.</span>
+                                <span class="dd-tags"><i>hoon</i><i>azimuth</i><i>urbit</i></span>
+                                <span class="dd-install"><code>|install ~nosfyl %sextant</code><button type="button" class="dd-copy" data-cmd="|install ~nosfyl %sextant" aria-label="Copy |install ~nosfyl %sextant">COPY</button></span>
+                            </span>
+                            <a class="dd-go" href="https://github.com/itsTylerIRL/sextant" target="_blank" rel="noopener">GITHUB &nearr;</a>
+                        </div></li>
+                        <li><div class="dd-project is-app" style="--p: 255, 222, 23">
+                            <a class="dd-shot" href="https://github.com/itsTylerIRL/chibi" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/chibi.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/urbit-apps/chibi.webp" alt="" width="28" height="28"><b>%chibi</b><small>remilia on-chain feed</small></span>
+                                <span class="dd-project-desc">Live on-chain activity for Remilia collections: sales with real prices, Blend loans, transfers, and which Urbit IDs are trading.</span>
+                                <span class="dd-tags"><i>hoon</i><i>ethereum</i><i>urbit</i></span>
+                                <span class="dd-install"><code>|install ~nosfyl %chibi</code><button type="button" class="dd-copy" data-cmd="|install ~nosfyl %chibi" aria-label="Copy |install ~nosfyl %chibi">COPY</button></span>
+                            </span>
+                            <a class="dd-go" href="https://github.com/itsTylerIRL/chibi" target="_blank" rel="noopener">GITHUB &nearr;</a>
+                        </div></li>
+                        <li><div class="dd-project is-app" style="--p: 189, 147, 249">
+                            <a class="dd-shot" href="https://github.com/itsTylerIRL/iron" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/iron.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
+                            <span class="dd-project-text">
+                                <span class="dd-project-head"><img src="/assets/urbit-apps/iron.webp" alt="" width="28" height="28"><b>%iron</b><small>dumbbell workout tracker</small></span>
+                                <span class="dd-project-desc">A dumbbell workout tracker: one pair of adjustable dumbbells, a 5-day split that cycles, move guides, progress charts, streaks and bodyweight.</span>
+                                <span class="dd-tags"><i>hoon</i><i>urbit</i></span>
+                                <span class="dd-install"><code>|install ~nosfyl %iron</code><button type="button" class="dd-copy" data-cmd="|install ~nosfyl %iron" aria-label="Copy |install ~nosfyl %iron">COPY</button></span>
+                            </span>
+                            <a class="dd-go" href="https://github.com/itsTylerIRL/iron" target="_blank" rel="noopener">GITHUB &nearr;</a>
+                        </div></li>
+                    </ul>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-dir-pane" data-embed="side">
+                    <div class="g-panel-title">Directory <span class="g-meta">deepdish /</span></div>
+                    <ol class="g-results">
+                        <li><a class="g-res" href="/#ocs"><img class="g-res-icon" src="/assets/object-icons/ocs-sentinel.webp" alt=""><span class="g-res-text"><span class="g-res-title">DeepDish OCS</span><span class="g-res-desc">a robot eye that watches you back</span></span><i class="g-dot tone-green"></i></a></li>
+                        <li><a class="g-res" href="/#top"><img class="g-res-icon" src="/assets/object-icons/top.webp" alt=""><span class="g-res-text"><span class="g-res-title">DeepDish TOP</span><span class="g-res-desc">host + cluster telemetry</span></span><i class="g-dot tone-green"></i></a></li>
+                        <li><a class="g-res" href="/#sin"><img class="g-res-icon" src="/assets/object-icons/sin-defcon4.webp" alt=""><span class="g-res-text"><span class="g-res-title">RADactedBot</span><span class="g-res-desc">economy, games + llm agents</span></span><i class="g-dot tone-green"></i></a></li>
+                        <li><a class="g-res" href="/#radgotchi"><img class="g-res-icon" src="/assets/object-icons/radgotchi-shades.webp" alt=""><span class="g-res-text"><span class="g-res-title">RadGotchi</span><span class="g-res-desc">a pixel radbro on your desktop</span></span><i class="g-dot tone-green"></i></a></li>
+                        <li><a class="g-res" href="/#digiflip"><img class="g-res-icon" src="/assets/object-icons/digiflip.webp" alt=""><span class="g-res-text"><span class="g-res-title">DigiFlip</span><span class="g-res-desc">digimon v20th for the flipper zero</span></span><i class="g-dot tone-orange"></i></a></li>
+                        <li><a class="g-res" href="https://github.com/itsTylerIRL/sextant" target="_blank" rel="noopener"><img class="g-res-icon" src="/assets/urbit-apps/sextant.webp" alt=""><span class="g-res-text"><span class="g-res-title">%sextant</span><span class="g-res-desc">urbit app &middot; live network map</span></span><i class="g-dot tone-blue"></i></a></li>
+                        <li><a class="g-res" href="https://github.com/itsTylerIRL/chibi" target="_blank" rel="noopener"><img class="g-res-icon" src="/assets/urbit-apps/chibi.webp" alt=""><span class="g-res-text"><span class="g-res-title">%chibi</span><span class="g-res-desc">urbit app &middot; remilia on-chain feed</span></span><i class="g-dot tone-blue"></i></a></li>
+                        <li><a class="g-res" href="https://github.com/itsTylerIRL/iron" target="_blank" rel="noopener"><img class="g-res-icon" src="/assets/urbit-apps/iron.webp" alt=""><span class="g-res-text"><span class="g-res-title">%iron</span><span class="g-res-desc">urbit app &middot; workout tracker</span></span><i class="g-dot tone-blue"></i></a></li>
+                    </ol>
+                </section>
+                <section class="g-elsewhere-pane" data-embed="side">
+                    <div class="g-panel-title">Elsewhere</div>
+                    <ul class="g-linklist">
+                        <li><a href="/#nosfyl"><i class="g-dot tone-purple"></i><span><b>~nosfyl</b><small>the star the urbit apps install from</small></span>&rarr;</a></li>
+                        <li><a href="https://github.com/itsTylerIRL" target="_blank" rel="noopener"><i class="g-dot tone-blue"></i><span><b>github</b><small>github.com/itsTylerIRL</small></span>&nearr;</a></li>
+                    </ul>
+                </section>
+            </aside>
         </div>
-    </section>
 
-    <!-- Floating Return Home Button -->
-    <a href="/" class="floating-home">
-        <div class="floating-home-content">
-            <div class="floating-home-icon">
-                <img src="/assets/wee.gif" alt="Return home">
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>DIRECTORY</span>
+                <span>5 PROJECTS &middot; 3 URBIT APPS</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">open a project to view it in the workspace</span>
             </div>
-            <div class="floating-home-text">
-                <h4>Return Home</h4>
-                <p>Back to main page</p>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
             </div>
-        </div>
-    </a>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="g-statusbar is-standalone">
-        <div class="g-status-main">
-            <span><i class="g-dot tone-green"></i>CONNECTED</span>
-        </div>
-        <div class="g-pet">
-            <span class="radgotchi-status">SIGINT NOMINAL</span>
-            <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face">
-        </div>
-        <span class="g-copy">&copy; 2026 tyler</span>
-    </footer>
-    
-    <!-- External JavaScript -->
-    <script src="/js/background.js?v=1.4"></script>
-    <script src="/js/script.js?v=2.1"></script>
-    <script src="/js/performance.js?v=1.2"></script>
-    <script src="/js/interactions.js?v=1.2"></script>
-    <script src="/js/sounds.js?v=1.1"></script>
-    <script src="/js/radgotchi.js"></script>
-    <script src="/js/rg-installer.js?v=1.0"></script>
-    
-    <!-- Bento card effects (tilt, glow, reveal) -->
-    <script src="/js/bento.js?v=1.0"></script>
-    
-    <script defer src="/js/escape-home.js?v=1.0"></script>
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/embed.js?v=1.2"></script>
+    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+    <script defer src="/js/deepdish-dir.js?v=1.0"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

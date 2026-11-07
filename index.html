@@ -48,7 +48,7 @@
     try {
         const sys = JSON.parse(localStorage.getItem('tirl_sys')) || {};
         const on = { 'sys-bg-off': sys.bg === false, 'sys-calm': sys.calm === true, 'sys-mute': sys.sound === false, 'sys-no-ambient': sys.ambient === false,
-            'sys-no-ticker': sys.ticker === false, 'sys-no-pet': sys.pet === false, 'sys-no-greet': sys.greet === false };
+            'sys-no-ticker': sys.ticker === false, 'sys-no-pet': sys.pet === false, 'sys-no-greet': sys.greet === false, 'sys-no-saver': sys.saver === false };
         Object.keys(on).forEach((c) => { if (on[c]) document.documentElement.classList.add(c); });
     } catch (_) {}
     </script>
@@ -62,8 +62,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.8">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/objects.css?v=6.33">
+    <link rel="stylesheet" href="/css/objects.css?v=6.34">
     <link rel="stylesheet" href="/css/cancel-preview.css?v=1.6">
+    <!-- Hover touches, live-value flashes, ambient effects' markup, screen care (js/micro.js) -->
+    <link rel="stylesheet" href="/css/micro.css?v=1.2">
 </head>
 <body>
     <!-- Boot splash (first visit per session): a glass handshake panel over the live background -->
@@ -327,6 +329,13 @@
                     <div class="g-embed-label"><i class="g-dot tone-green"></i>IN PREVIEW &middot; <b></b></div>
                     <div class="g-embed-host"></div>
                 </div>
+                <!-- While idle: the tour's stop, its live line, time to the next and what's up next (js/objects.js) -->
+                <section class="g-tour-pane" id="g-tour" hidden aria-live="polite">
+                    <div class="g-panel-title">Tour <span class="g-meta" id="g-tour-meta"></span></div>
+                    <div class="g-tour-now" id="g-tour-now"></div>
+                    <div class="g-tour-bar" aria-hidden="true"><i id="g-tour-fill"></i></div>
+                    <div class="g-tour-next" id="g-tour-next"></div>
+                </section>
                 <section class="g-activity-pane">
                     <div class="g-panel-title">Recently Viewed</div>
                     <ol class="g-activity" id="g-activity"></ol>
@@ -469,16 +478,15 @@
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- Objects index workspace -->
-    <script defer src="/js/cancel-preview.js?v=1.2"></script>
     <script defer src="/js/kol-calendar.js?v=1.0"></script>
     <script defer src="/js/arrive.js?v=1.0"></script>
     <!-- Before objects.js: it takes the #rn= sign-in back off the address before objects.js reads the #fragment -->
     <script defer src="/js/signals.js?v=1.1"></script>
     <script defer src="/js/now.js?v=1.1"></script>
-    <script defer src="/js/player.js?v=1.3"></script>
-    <script defer src="/js/objects.js?v=4.29"></script>
+    <script defer src="/js/player.js?v=1.4"></script>
+    <script defer src="/js/objects.js?v=4.37"></script>
     <script defer src="/js/palette.js?v=1.0"></script>
-    <script defer src="/js/sys.js?v=1.0"></script>
+    <script defer src="/js/sys.js?v=1.1"></script>
     <!-- Service worker registration -->
     <script defer src="/js/index.js?v=1.15"></script>
     <script defer src="/js/presence.js?v=1.9"></script>
@@ -487,5 +495,6 @@
     <script defer src="/js/sky.js?v=1.0"></script>
     <script defer src="/js/live-rows.js?v=2.0"></script>
     <script defer src="/js/socials.js?v=1.5"></script>
+    <script defer src="/js/micro.js?v=1.1"></script>
 </body>
 </html>

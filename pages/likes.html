@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=2.7">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/likes.css?v=2.6">
+    <link rel="stylesheet" href="/css/likes.css?v=2.7">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -90,13 +90,21 @@
             </aside>
 
             <section class="g-main" id="g-main" aria-live="polite">
-                <div class="g-objhead" id="g-objhead">
+                <div class="g-objhead" id="g-objhead" data-embed="hide">
                     <noscript><p>This workspace needs JavaScript to load its objects.</p></noscript>
                 </div>
                 <section class="g-card g-cloud-pane">
-                    <div class="g-panel-title">Link Analysis <span class="g-meta">drag to rotate &middot; click to inspect</span></div>
+                    <div class="g-panel-title">Link Analysis <span class="g-meta">drag to spin &middot; click to inspect &middot; double-click to recenter</span></div>
                     <div class="icon-cloud-container" id="iconCloudContainer">
-                        <canvas class="icon-cloud-canvas" id="iconCloudCanvas"></canvas>
+                        <!-- Embedded on the home page, the selection shows here instead of the header above (js/likes.js) -->
+                        <div class="g-cloud-hud" id="g-cloud-hud" aria-live="polite"></div>
+                        <canvas class="icon-cloud-canvas" id="iconCloudCanvas" role="img" aria-label="A rotating cloud of things I like; the Results list has the same items"></canvas>
+                        <!-- Legend (filters by category) and controls, over the cloud (js/likes.js) -->
+                        <div class="g-cloud-legend" id="g-cloud-legend" role="group" aria-label="Filter by category"></div>
+                        <div class="g-cloud-controls" id="g-cloud-controls" role="group" aria-label="Cloud controls">
+                            <button type="button" class="g-btn" data-cloud="center" title="Turn to the selected item (or double-click the cloud)">&#8982;</button>
+                            <button type="button" class="g-btn" data-cloud="spin" id="g-cloud-spin" aria-pressed="true" title="Pause the drift">&#10074;&#10074;</button>
+                        </div>
                     </div>
                 </section>
             </section>
@@ -1414,7 +1422,7 @@
     </div>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.1"></script>
+    <script defer src="/js/embed.js?v=1.2"></script>
     <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
@@ -1422,7 +1430,7 @@
     <script defer src="/js/radgotchi.js"></script>
 
     <!-- Things I like workspace + 3D icon cloud -->
-    <script defer src="/js/likes.js?v=2.2"></script>
+    <script defer src="/js/likes.js?v=2.3"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

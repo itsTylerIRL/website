@@ -15,10 +15,12 @@
 
     // Shared run cards already contain the equipped character. Crop their portrait
     // instead of loading the game's compositor, trait index and hundreds of relics.
+    // The service publishes its cards under games.tylerirl.com (its public name); older ones point at cancel-api
+    const CARD_ORIGINS = [API, 'https://games.tylerirl.com'];
     const cardURL = e => {
         try {
             const url = new URL(e.image);
-            if (url.origin === API && /^\/api\/card\/[a-z0-9]{8}\.png$/.test(url.pathname)) return url.href;
+            if (CARD_ORIGINS.includes(url.origin) && /^\/api\/card\/[a-z0-9]{8}\.png$/.test(url.pathname)) return url.href;
         } catch (_) {}
         return '';
     };
@@ -190,5 +192,7 @@
         const refresh = setInterval(() => { if (!document.hidden) load(); }, 60000);
         return () => { active = false; controller?.abort(); clearTimeout(timeout); clearInterval(refresh); };
     }
-    window.CancelPreview = { render };
+    // look/portrait/who are shared with the game pages (js/cancel.js, js/network.js): a player's face from their
+    // character's trait layers, which both games draw from the same art
+    window.CancelPreview = { render, look: lookHtml, portrait, who };
 })();

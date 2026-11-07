@@ -108,7 +108,7 @@
             ? { text: 'you lost the crown', tone: 'red', key: 'cancel', alert: { mood: 'sad', status: 'DETHRONED' } }
             : !was && now ? { text: '👑 you hold the crown', tone: 'orange', key: 'cancel' } : null);
         visit.seen(id('drip'), +(stats.acct.data || {}).drip || 0, (was, now) => now > was ? { text: `+${num(now - was)} drip`, tone: 'orange', key: 'cancel' } : null);
-        if (n.started !== false && stats.net) visit.seen(id('miladys'), +n.miladys || 0, (was, now) => now > was ? { text: `+${num(now - was)} miladys`, tone: 'purple', key: 'network' } : null);
+        if (n.started !== false && stats.net) visit.seen(id('miladys'), +n.miladys || 0, (was, now) => now > was ? { text: `+${num(now - was)} miladys`, tone: 'purple', key: 'cancel' } : null);
     }
     function signOut(msg) {
         keep(null);
