@@ -23,8 +23,10 @@
         crumb: document.getElementById('g-crumb'),
         statusObjects: document.getElementById('g-status-objects'),
         statusFilter: document.getElementById('g-status-filter'),
-        clock: document.getElementById('g-clock')
+        clock: document.getElementById('g-clock'),
+        hud: document.getElementById('g-cloud-hud')
     };
+    if (els.hud) els.hud.addEventListener('click', (e) => { const b = e.target.closest('[data-step]'); if (b) step(+b.dataset.step); });
 
     // ---------- Items (same order the icon cloud reads them in) ----------
     const seen = new Set();
@@ -101,6 +103,7 @@
         if (query && window.searchIconCloud) window.searchIconCloud(query);
         updateStatus();
     }
+    window.likesSetFilter = setFilter; // the cloud's legend
     els.cats.addEventListener('click', (e) => { const b = e.target.closest('[data-cat]'); if (b) setFilter(b.dataset.cat); });
     els.mix.addEventListener('click', (e) => { const b = e.target.closest('[data-cat]'); if (b) setFilter(b.dataset.cat); });
 
@@ -160,6 +163,17 @@
                 <span>CATEGORY SHARE</span><b>${countOf(it.category)} / ${items.length}</b>
             </div>`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
+        // The same, compact, over the cloud (shown when embedded, where the header is hidden)
+        if (els.hud) {
+            els.hud.innerHTML = `${iconHtml(it, 'g-hud-icon')}
+                <div class="g-hud-text"><b>${esc(it.title)}</b><small><i class="g-dot tone-${tone}"></i>${esc(it.category)} &middot; ${esc(it.desc || it.host)}</small></div>
+                <div class="g-hud-nav">
+                    <button type="button" class="g-btn" data-step="-1" aria-label="Previous object">&lsaquo;</button>
+                    <span>${idx === -1 ? '&ndash;' : idx + 1}/${list.length}</span>
+                    <button type="button" class="g-btn" data-step="1" aria-label="Next object">&rsaquo;</button>
+                    <a class="g-btn g-visit" href="${esc(it.href)}"${it.external ? ' target="_blank" rel="noopener"' : ''}>VISIT &nearr;</a>
+                </div>`;
+        }
     }
 
     // ---------- Recently viewed ----------
@@ -194,6 +208,8 @@
         viewed.length = Math.min(viewed.length, 12);
         renderHistory();
         if (location.hash !== '#' + it.slug) history.replaceState(null, '', '#' + it.slug);
+        window.likesCurrent = it; // the cloud picks this up when it boots
+        if (window.likesCloudFocus) window.likesCloudFocus(it); // the cloud turns to it and locks on
     }
     function step(dir) {
         const list = visible();
@@ -264,604 +280,501 @@
     select(fromHash || order[0], { noScroll: !fromHash });
 })();
 
+/* The 3D icon cloud ("Link Analysis"): every item on a sphere, in step with the workspace above.
+   - Selecting an item anywhere (results, arrows, search Enter, the hash) turns the sphere to bring it to the front
+     and locks a reticle on it (window.likesCloudFocus, called by select()); clicking an icon selects it there.
+   - Filtering lays the remaining icons out over the whole sphere again (they glide to their new places);
+     searching dims what doesn't match and turns the first match to the front.
+   - Drag (or swipe sideways on a phone) to spin, with momentum; it drifts on its own after a few seconds idle,
+     unless motion is reduced (prefers-reduced-motion, SYS calm) or the spin is paused.
+   - Sizes come from the panel, not the window (ResizeObserver), so it reads at any size, embedded included.
+   - Each icon is drawn once into a small sprite when it loads; frames only blit sprites. Only runs while on screen. */
 (function() {
     const canvas = document.getElementById('iconCloudCanvas');
     const container = document.getElementById('iconCloudContainer');
     const tooltip = document.getElementById('iconTooltip');
-    
     if (!canvas || !container) return;
-    
     const ctx = canvas.getContext('2d');
-    let width, height;
+
+    const COLORS = { crypto: [139, 233, 253], tech: [80, 250, 123], fun: [255, 184, 108] };
+    const rgb = (cat) => COLORS[cat] || [139, 233, 253];
+    const rgba = (cat, a) => `rgba(${rgb(cat).join(',')},${a})`;
+    const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('sys-calm');
+    const TAU = Math.PI * 2;
+    const PITCH_MAX = 1.15;
+
+    let W = 0, H = 0, dpr = 1;
+    let radius = 100, iconSize = 32, persp = 400;
     let icons = [];
-    let isDragging = false;
-    let lastMouseX = 0, lastMouseY = 0;
-    let rotationX = 0, rotationY = 0;
-    let targetRotationX = 0, targetRotationY = 0;
-    let autoRotate = true;
-    let hoveredIcon = null;
-    let animationId = null;
-    let cloudInited = false;
-    let cloudVisible = false;
-    
-    // Color palette
-    const categoryColors = {
-        personal: '#ff79c6',
-        crypto: '#8be9fd',
-        tech: '#50fa7b',
-        fun: '#ffb86c',
-        art: '#bd93f9'
-    };
-    
-    // Collect items from the item cards (#likes-data)
-    function collectItems() {
-        const bentoItems = document.querySelectorAll('.bento-item');
-        const items = [];
-        
-        bentoItems.forEach((item, i) => {
-            const img = item.querySelector('.bento-image img');
-            const title = item.querySelector('.bento-content h3');
-            const desc = item.querySelector('.bento-content p');
-            const category = item.dataset.category;
-            
-            if (img && title) {
-                items.push({
-                    src: img.src,
-                    title: title.textContent,
-                    desc: desc ? desc.textContent : '',
-                    category: category,
-                    href: item.href || '#',
-                    target: item.target || '_self',
-                    imgStyle: img.getAttribute('style') || '',
-                    image: null,
-                    loaded: false
-                });
-            }
-        });
-        
-        return items;
-    }
-    
-    // Create 3D positions for icons (sphere distribution)
-    function initIcons() {
-        const itemData = collectItems();
-        icons = [];
-        
-        // Adjust radius and icon size based on screen size
-        const isMobile = width < 600;
-        const isTablet = width < 900;
-        const radius = Math.min(width, height) * (isMobile ? 0.38 : 0.35);
-        const iconSize = isMobile ? 28 : (isTablet ? 34 : 40);
-        const count = itemData.length;
-        
-        // Fibonacci sphere distribution for even spacing
-        const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-        
-        itemData.forEach((data, i) => {
-            const y = 1 - (i / (count - 1)) * 2; // y goes from 1 to -1
-            const radiusAtY = Math.sqrt(1 - y * y);
-            const theta = goldenAngle * i;
-            
-            const x = Math.cos(theta) * radiusAtY;
-            const z = Math.sin(theta) * radiusAtY;
-            
-            const icon = {
-                ...data,
-                baseX: x * radius,
-                baseY: y * radius,
-                baseZ: z * radius,
-                x: 0,
-                y: 0,
-                z: 0,
-                projX: 0,
-                projY: 0,
-                scale: 1,
-                opacity: 1,
-                size: iconSize,
-                hovered: false,
-                pulsePhase: Math.random() * Math.PI * 2
+    let edges = [];
+    let yaw = 0, pitch = -0.25;            // current
+    let vYaw = 0, vPitch = 0;              // momentum (rad / frame)
+    let goal = null;                       // { yaw, pitch } while turning to an icon
+    let spinning = !calm();
+    let lastInput = 0;                     // ms; the drift waits a moment after you let go
+    let drag = null;                       // { id, x, y, moved, t }
+    let hovered = null, selected = null, pendingFocus = null;
+    let visible = false, inited = false, raf = null;
+
+    // ---------- Items ----------
+    function collect() {
+        return Array.from(document.querySelectorAll('#likes-data .bento-item')).map((a) => {
+            const img = a.querySelector('.bento-image img');
+            const title = (a.querySelector('.bento-content h3')?.textContent || '').trim();
+            if (!title) return null;
+            return {
+                title,
+                desc: (a.querySelector('.bento-content p')?.textContent || '').trim(),
+                category: a.dataset.category || 'other',
+                href: a.href,
+                src: img ? img.getAttribute('src') : '',
+                invert: !!(img && /invert\(1\)/.test(img.getAttribute('style') || '')),
+                sprite: null,
+                // unit-sphere position: current (x,y,z) glides toward the target (tx,ty,tz)
+                x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0,
+                alpha: 0, show: true, dim: false, dimA: 0,
+                px: 0, py: 0, s: 1, depth: 0
             };
-            
-            icons.push(icon);
-            
-            // Load image. No crossOrigin needed: the canvas only draws icons and never
-            // reads pixels back, so a tainted canvas is fine (and most hosts lack CORS headers).
+        }).filter(Boolean);
+    }
+
+    // A round sprite per icon, drawn once (and again only if the device pixel ratio changes)
+    const SPRITE = 96;
+    function makeSprite(icon, img) {
+        const c = document.createElement('canvas');
+        c.width = c.height = SPRITE;
+        const g = c.getContext('2d');
+        g.beginPath();
+        g.arc(SPRITE / 2, SPRITE / 2, SPRITE / 2, 0, TAU);
+        g.clip();
+        if (icon.invert) g.filter = 'invert(1)';
+        // contain, centred
+        const k = Math.min(SPRITE / img.naturalWidth, SPRITE / img.naturalHeight) || 1;
+        const w = img.naturalWidth * k, h = img.naturalHeight * k;
+        try { g.drawImage(img, (SPRITE - w) / 2, (SPRITE - h) / 2, w, h); } catch (_) { return null; }
+        return c;
+    }
+    function letterSprite(icon) {
+        const c = document.createElement('canvas');
+        c.width = c.height = SPRITE;
+        const g = c.getContext('2d');
+        g.fillStyle = rgba(icon.category, 1);
+        g.beginPath();
+        g.arc(SPRITE / 2, SPRITE / 2, SPRITE * 0.42, 0, TAU);
+        g.fill();
+        g.fillStyle = '#05080a';
+        g.font = `bold ${SPRITE * 0.48}px "Share Tech Mono", monospace`;
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(icon.title.charAt(0).toUpperCase(), SPRITE / 2, SPRITE / 2 + 2);
+        return c;
+    }
+    function loadSprites() {
+        icons.forEach((icon) => {
+            if (!icon.src) { icon.sprite = letterSprite(icon); return; }
             const img = new Image();
-            img.onload = () => {
-                icon.image = img;
-                icon.loaded = true;
-            };
-            img.onerror = () => {
-                // Fallback - mark as loaded but no image
-                icon.loaded = true;
-                icon.fallbackLetter = data.title ? data.title.charAt(0).toUpperCase() : '?';
-            };
-            img.src = data.src;
+            img.decoding = 'async';
+            img.onload = () => { icon.sprite = makeSprite(icon, img) || letterSprite(icon); };
+            img.onerror = () => { icon.sprite = letterSprite(icon); };
+            img.src = icon.src;
         });
     }
-    
-    // Resize handler
+
+    // ---------- Layout ----------
+    // The icons that are showing spread evenly over the whole sphere (Fibonacci), in a stable order
+    function layout(first) {
+        const shown = icons.filter((i) => i.show);
+        const n = shown.length;
+        const golden = Math.PI * (3 - Math.sqrt(5));
+        shown.forEach((icon, i) => {
+            const y = n === 1 ? 0 : 1 - (i / (n - 1)) * 2;
+            const r = Math.sqrt(1 - y * y);
+            const t = golden * i;
+            icon.tx = Math.cos(t) * r; icon.ty = y; icon.tz = Math.sin(t) * r;
+            if (first) { icon.x = icon.tx; icon.y = icon.ty; icon.z = icon.tz; }
+        });
+        sizeIcons();
+        linkNeighbours(shown);
+    }
+    // Icon size from the room each one gets on the sphere
+    function sizeIcons() {
+        const n = Math.max(1, icons.filter((i) => i.show).length);
+        const room = Math.sqrt((4 * Math.PI * radius * radius) / n);
+        iconSize = Math.max(16, Math.min(46, room * 0.72)); // the front swells with perspective, so leave a gap
+    }
+    // Constellation lines: each icon to its two nearest neighbours of the same category, in 3D (so front and back
+    // never join across the middle)
+    function linkNeighbours(shown) {
+        const seen = new Set();
+        edges = [];
+        shown.forEach((a, i) => {
+            shown.map((b, j) => [j, (a.tx - b.tx) ** 2 + (a.ty - b.ty) ** 2 + (a.tz - b.tz) ** 2, b])
+                .filter(([j, , b]) => j !== i && b.category === a.category)
+                .sort((p, q) => p[1] - q[1]).slice(0, 2)
+                .forEach(([j]) => {
+                    const k = i < j ? `${i}-${j}` : `${j}-${i}`;
+                    if (!seen.has(k)) { seen.add(k); edges.push([a, shown[j]]); }
+                });
+        });
+    }
+
+    // ---------- Size ----------
     function resize() {
-        if (!cloudInited) return;
-        const rect = container.getBoundingClientRect();
-        width = rect.width;
-        height = rect.height;
-        canvas.width = width * window.devicePixelRatio;
-        canvas.height = height * window.devicePixelRatio;
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-        
-        // Update exclusion zone for background particles
-        updateExclusionZone();
-        
-        // Reinitialize icons with new dimensions
-        if (icons.length > 0) {
-            const isMobile = width < 600;
-            const isTablet = width < 900;
-            const radius = Math.min(width, height) * (isMobile ? 0.38 : 0.35);
-            const iconSize = isMobile ? 28 : (isTablet ? 34 : 40);
-            const count = icons.length;
-            const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-            
-            icons.forEach((icon, i) => {
-                const y = 1 - (i / (count - 1)) * 2;
-                const radiusAtY = Math.sqrt(1 - y * y);
-                const theta = goldenAngle * i;
-                
-                const x = Math.cos(theta) * radiusAtY;
-                const z = Math.sin(theta) * radiusAtY;
-                
-                icon.baseX = x * radius;
-                icon.baseY = y * radius;
-                icon.baseZ = z * radius;
-                icon.size = iconSize;
-            });
+        const r = container.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        W = r.width; H = r.height;
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        // Leave room around the sphere for the lock label and the legend
+        radius = Math.max(60, Math.min(W * 0.4, (H - 56) * 0.45));
+        persp = radius * 3.2;
+        if (inited) sizeIcons();
+        exclusion();
+    }
+    function exclusion() {
+        if (!window.setExclusionZone || !container.offsetParent) return;
+        const r = container.getBoundingClientRect();
+        window.setExclusionZone('iconCloud', r.left + r.width / 2, r.top + r.height / 2, radius * 1.15);
+    }
+
+    // ---------- Turning ----------
+    // yaw then pitch, as rotate() applies them; returns the angles that bring a unit point to the front
+    function anglesFor(icon) {
+        const R = Math.hypot(icon.tx, icon.tz) || 1e-6;
+        let y = Math.atan2(-icon.tx, -icon.tz);
+        y += Math.round((yaw - y) / TAU) * TAU; // the nearest way round
+        const p = Math.max(-PITCH_MAX, Math.min(PITCH_MAX, Math.atan2(-icon.ty, R)));
+        return { yaw: y, pitch: p };
+    }
+    function focus(icon) {
+        if (!icon) return;
+        goal = anglesFor(icon);
+        vYaw = vPitch = 0;
+        if (calm()) { yaw = goal.yaw; pitch = goal.pitch; goal = null; }
+        lastInput = performance.now();
+        wake();
+    }
+    function rotate(x, y, z) {
+        const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+        const x1 = x * cy - z * sy, z1 = x * sy + z * cy;
+        return [x1, y * cp - z1 * sp, y * sp + z1 * cp];
+    }
+
+    // ---------- Frame ----------
+    function step(now) {
+        // Turning to a selection
+        if (goal) {
+            yaw += (goal.yaw - yaw) * 0.12;
+            pitch += (goal.pitch - pitch) * 0.12;
+            if (Math.abs(goal.yaw - yaw) < 0.001 && Math.abs(goal.pitch - pitch) < 0.001) goal = null;
+        } else if (!drag) {
+            // Momentum, then the slow drift once you've left it alone for a bit
+            yaw += vYaw; pitch += vPitch;
+            vYaw *= 0.94; vPitch *= 0.9;
+            if (spinning && !calm() && now - lastInput > 2500 && !hovered) vYaw += (0.0022 - vYaw) * 0.02;
         }
+        pitch = Math.max(-PITCH_MAX, Math.min(PITCH_MAX, pitch));
+
+        // Glide to layout targets, fade in/out, project
+        icons.forEach((i) => {
+            i.x += (i.tx - i.x) * 0.1; i.y += (i.ty - i.y) * 0.1; i.z += (i.tz - i.z) * 0.1;
+            i.alpha += ((i.show ? 1 : 0) - i.alpha) * 0.12;
+            i.dimA += ((i.dim ? 1 : 0) - i.dimA) * 0.15;
+            const [x, y, z] = rotate(i.x * radius, i.y * radius, i.z * radius);
+            const s = persp / (persp + z);
+            i.px = W / 2 + x * s;
+            i.py = H / 2 + y * s;
+            i.s = s;
+            i.depth = (z / radius + 1) / 2; // 0 front .. 1 back
+        });
     }
-    
-    // Update exclusion zone for the icon cloud
-    function updateExclusionZone() {
-        if (window.setExclusionZone && container.offsetParent !== null) {
-            const rect = container.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const radius = Math.min(rect.width, rect.height) * 0.45; // Slightly larger than visual cloud
-            window.setExclusionZone('iconCloud', centerX, centerY, radius);
-        }
-    }
-    
-    // Rotate point around Y axis then X axis
-    function rotatePoint(x, y, z, rx, ry) {
-        // Rotate around Y
-        let cosY = Math.cos(ry);
-        let sinY = Math.sin(ry);
-        let tempX = x * cosY - z * sinY;
-        let tempZ = x * sinY + z * cosY;
-        
-        // Rotate around X
-        let cosX = Math.cos(rx);
-        let sinX = Math.sin(rx);
-        let tempY = y * cosX - tempZ * sinX;
-        tempZ = y * sinX + tempZ * cosX;
-        
-        return { x: tempX, y: tempY, z: tempZ };
-    }
-    
-    // Project 3D to 2D
-    function project(icon) {
-        const perspective = 600;
-        const centerX = width / 2;
-        const centerY = height / 2;
-        
-        const rotated = rotatePoint(icon.baseX, icon.baseY, icon.baseZ, rotationX, rotationY);
-        icon.x = rotated.x;
-        icon.y = rotated.y;
-        icon.z = rotated.z;
-        
-        const scale = perspective / (perspective + rotated.z);
-        icon.projX = centerX + rotated.x * scale;
-        icon.projY = centerY + rotated.y * scale;
-        icon.scale = scale;
-        icon.opacity = Math.max(0.3, Math.min(1, (scale - 0.5) * 2));
-    }
-    
-    // Draw connection lines between nearby icons (desktop only)
-    function drawConnections(visibleIcons) {
-        // Skip connection lines on mobile for cleaner look
-        if (width < 600) return;
-        
-        const iconList = visibleIcons || icons;
-        const maxDist = width < 900 ? 100 : 150; // Shorter lines on tablet
-        
-        ctx.lineCap = 'round';
-        
-        for (let i = 0; i < iconList.length; i++) {
-            for (let j = i + 1; j < iconList.length; j++) {
-                const a = iconList[i];
-                const b = iconList[j];
-                
-                const dx = a.projX - b.projX;
-                const dy = a.projY - b.projY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < maxDist) {
-                    const alpha = (1 - dist / maxDist) * 0.15 * Math.min(a.opacity, b.opacity);
-                    // Use category color if both icons share a category, otherwise neutral
-                    let lineColor;
-                    if (a.category === b.category) {
-                        const c = categoryColors[a.category] || '#8be9fd';
-                        const lr = parseInt(c.slice(1,3), 16);
-                        const lg = parseInt(c.slice(3,5), 16);
-                        const lb = parseInt(c.slice(5,7), 16);
-                        lineColor = `rgba(${lr}, ${lg}, ${lb}, ${alpha})`;
-                    } else {
-                        lineColor = `rgba(139, 233, 253, ${alpha * 0.5})`;
-                    }
-                    ctx.beginPath();
-                    ctx.strokeStyle = lineColor;
-                    ctx.lineWidth = 1;
-                    ctx.moveTo(a.projX, a.projY);
-                    ctx.lineTo(b.projX, b.projY);
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-    
-    // Draw a single icon
-    function drawIcon(icon, time) {
-        const size = icon.size * icon.scale * (icon.hovered ? 1.5 : 1);
-        const x = icon.projX;
-        const y = icon.projY;
-        
-        ctx.save();
-        ctx.globalAlpha = icon.searchDimmed ? icon.opacity * 0.12 : icon.opacity;
-        
-        // Glow effect for hovered
-        if (icon.hovered && !icon.searchDimmed) {
-            const color = categoryColors[icon.category] || '#8be9fd';
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 25;
-        }
-        
-        // Draw hexagonal frame
-        const pulse = Math.sin(time * 0.003 + icon.pulsePhase) * 0.1 + 1;
-        const frameSize = size * 0.6 * pulse;
-        
+
+    function hex(x, y, r) {
         ctx.beginPath();
-        for (let i = 0; i < 6; i++) {
-            const angle = (Math.PI / 3) * i - Math.PI / 6;
-            const px = x + Math.cos(angle) * frameSize;
-            const py = y + Math.sin(angle) * frameSize;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+        for (let k = 0; k < 6; k++) {
+            const a = (Math.PI / 3) * k - Math.PI / 6;
+            k ? ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r) : ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
         }
         ctx.closePath();
-        
-        // Fill with semi-transparent dark
-        ctx.fillStyle = icon.hovered 
-            ? 'rgba(20, 20, 30, 0.9)' 
-            : 'rgba(10, 10, 15, 0.6)';
-        ctx.fill();
-        
-        // Stroke - always use category color
-        const color = categoryColors[icon.category] || '#8be9fd';
-        // Parse hex to RGB for alpha support
-        const r = parseInt(color.slice(1,3), 16);
-        const g = parseInt(color.slice(3,5), 16);
-        const b = parseInt(color.slice(5,7), 16);
-        ctx.strokeStyle = icon.hovered 
-            ? color 
-            : `rgba(${r}, ${g}, ${b}, ${0.4 * icon.opacity})`;
-        ctx.lineWidth = icon.hovered ? 2 : 1;
-        ctx.stroke();
-        
-        // Draw image
-        if (icon.image && icon.loaded) {
-            const imgSize = size * 0.7;
-            ctx.save();
-            
-            // Clip to circle
+    }
+    function vis(i) { return i.alpha * (1 - i.depth * 0.72) * (1 - i.dimA * 0.85); }
+
+    function draw(now) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+
+        // Sphere: a faint equator and meridian so the shape reads even with few icons showing
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(139,233,253,0.06)';
+        ctx.beginPath(); ctx.arc(W / 2, H / 2, radius, 0, TAU); ctx.stroke();
+        [[0, 1, 0], [1, 0, 0]].forEach(([ax]) => {
             ctx.beginPath();
-            ctx.arc(x, y, imgSize * 0.5, 0, Math.PI * 2);
-            ctx.clip();
-            
-            // Check for invert filter
-            if (icon.imgStyle && icon.imgStyle.includes('invert(1)')) {
-                ctx.filter = 'invert(1)';
+            for (let k = 0; k <= 48; k++) {
+                const t = (k / 48) * TAU;
+                const [x, y, z] = ax ? rotate(0, Math.cos(t) * radius, Math.sin(t) * radius) : rotate(Math.cos(t) * radius, 0, Math.sin(t) * radius);
+                const s = persp / (persp + z);
+                k ? ctx.lineTo(W / 2 + x * s, H / 2 + y * s) : ctx.moveTo(W / 2 + x * s, H / 2 + y * s);
             }
-            
-            ctx.drawImage(
-                icon.image,
-                x - imgSize / 2,
-                y - imgSize / 2,
-                imgSize,
-                imgSize
-            );
-            ctx.restore();
-        } else {
-            // Fallback: draw colored circle with letter
-            const fallbackSize = size * 0.35;
-            ctx.beginPath();
-            ctx.arc(x, y, fallbackSize, 0, Math.PI * 2);
-            const fallbackColor = categoryColors[icon.category] || '#8be9fd';
-            ctx.fillStyle = fallbackColor;
+            ctx.stroke();
+        });
+
+        // Constellation lines
+        edges.forEach(([a, b]) => {
+            const al = Math.min(vis(a), vis(b)) * 0.22;
+            if (al < 0.01) return;
+            ctx.strokeStyle = rgba(a.category, al);
+            ctx.beginPath(); ctx.moveTo(a.px, a.py); ctx.lineTo(b.px, b.py); ctx.stroke();
+        });
+
+        // Icons, back to front
+        const order = icons.filter((i) => i.alpha > 0.02).sort((a, b) => b.depth - a.depth);
+        order.forEach((i) => {
+            const on = i === hovered || i === selected;
+            const size = iconSize * i.s * (i === hovered ? 1.35 : 1);
+            const a = vis(i);
+            ctx.globalAlpha = on ? Math.max(a, 0.95) : a;
+            hex(i.px, i.py, size * 0.6);
+            ctx.fillStyle = on ? 'rgba(14,20,26,0.95)' : 'rgba(8,10,14,0.75)';
             ctx.fill();
-            
-            // Draw letter
-            if (icon.fallbackLetter) {
-                ctx.fillStyle = '#000';
-                ctx.font = `bold ${fallbackSize * 1.2}px monospace`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(icon.fallbackLetter, x, y);
-            }
+            ctx.lineWidth = on ? 1.6 : 1;
+            ctx.strokeStyle = rgba(i.category, on ? 1 : 0.45);
+            ctx.stroke();
+            const d = size * 0.72;
+            if (i.sprite) ctx.drawImage(i.sprite, i.px - d / 2, i.py - d / 2, d, d);
+        });
+        ctx.globalAlpha = 1;
+
+        if (selected && selected.alpha > 0.3) lock(selected, now);
+        if (hovered && hovered !== selected) tag(hovered, rgba(hovered.category, 0.9), false);
+    }
+
+    // Reticle on the selection: four rotating corner brackets and a name tag
+    function lock(i, now) {
+        const r = iconSize * i.s * 0.78 + 4;
+        const spin = calm() ? 0 : now * 0.0012;
+        ctx.save();
+        ctx.translate(i.px, i.py);
+        ctx.rotate(spin);
+        ctx.strokeStyle = rgba(i.category, 0.95);
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = rgba(i.category, 0.8);
+        ctx.shadowBlur = 8;
+        for (let k = 0; k < 4; k++) {
+            ctx.rotate(Math.PI / 2);
+            ctx.beginPath();
+            ctx.moveTo(r, r * 0.45); ctx.lineTo(r, r); ctx.lineTo(r * 0.45, r);
+            ctx.stroke();
         }
-        
         ctx.restore();
+        tag(i, rgba(i.category, 1), true);
     }
-    
-    // Main render loop
-    function render(time) {
-        // Stop cleanly when the cloud is hidden (grid view / mobile / scrolled away)
-        if (!cloudVisible) { animationId = null; return; }
-        ctx.clearRect(0, 0, width, height);
-        
-        // Update exclusion zone position (for scrolling)
-        updateExclusionZone();
-        
-        // Auto rotation
-        if (autoRotate && !isDragging) {
-            targetRotationY += 0.002;
-        }
-        
-        // Smooth rotation
-        rotationX += (targetRotationX - rotationX) * 0.05;
-        rotationY += (targetRotationY - rotationY) * 0.05;
-        
-        // Filter visible icons
-        const visibleIcons = icons.filter(icon => icon.visible !== false);
-        
-        // Update projections
-        visibleIcons.forEach(icon => project(icon));
-        
-        // Sort by Z for proper depth ordering (back to front)
-        visibleIcons.sort((a, b) => b.z - a.z);
-        
-        // Draw connections first (only visible icons)
-        drawConnections(visibleIcons);
-        
-        // Draw icons
-        visibleIcons.forEach(icon => drawIcon(icon, time));
-        
-        animationId = requestAnimationFrame(render);
-    }
-    
-    // Mouse/touch handlers
-    function getMousePos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
-        };
-    }
-    
-    function onPointerDown(e) {
-        isDragging = true;
-        autoRotate = false;
-        const pos = getMousePos(e);
-        lastMouseX = pos.x;
-        lastMouseY = pos.y;
-    }
-    
-    function onPointerMove(e) {
-        const pos = getMousePos(e);
-        
-        if (isDragging) {
-            const dx = pos.x - lastMouseX;
-            const dy = pos.y - lastMouseY;
-            
-            targetRotationY += dx * 0.005;
-            targetRotationX += dy * 0.005;
-            
-            // Clamp X rotation
-            targetRotationX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, targetRotationX));
-            
-            lastMouseX = pos.x;
-            lastMouseY = pos.y;
-        } else {
-            // Check hover
-            let found = null;
-            const sortedByDistance = [...icons].sort((a, b) => {
-                const distA = Math.sqrt(Math.pow(a.projX - pos.x, 2) + Math.pow(a.projY - pos.y, 2));
-                const distB = Math.sqrt(Math.pow(b.projX - pos.x, 2) + Math.pow(b.projY - pos.y, 2));
-                return distA - distB;
-            });
-            
-            for (const icon of sortedByDistance) {
-                const size = icon.size * icon.scale;
-                const dist = Math.sqrt(Math.pow(icon.projX - pos.x, 2) + Math.pow(icon.projY - pos.y, 2));
-                
-                if (dist < size * 0.6 && icon.opacity > 0.5) {
-                    found = icon;
-                    break;
-                }
-            }
-            
-            icons.forEach(icon => icon.hovered = false);
-            
-            if (found) {
-                found.hovered = true;
-                hoveredIcon = found;
-                canvas.style.cursor = 'pointer';
-                
-                // Show tooltip
-                tooltip.querySelector('.tooltip-title').textContent = found.title;
-                tooltip.querySelector('.tooltip-desc').textContent = found.desc;
-                tooltip.style.left = (e.clientX + 15) + 'px';
-                tooltip.style.top = (e.clientY + 15) + 'px';
-                tooltip.classList.add('visible');
-                
-                // Show in spotlight
-                if (window.showIconInSpotlight) {
-                    window.showIconInSpotlight(found);
-                }
-            } else {
-                if (hoveredIcon) {
-                    // Was hovering, now not - restore spotlight
-                    if (window.restoreSpotlight) {
-                        window.restoreSpotlight();
-                    }
-                }
-                hoveredIcon = null;
-                canvas.style.cursor = 'grab';
-                tooltip.classList.remove('visible');
-            }
-        }
-    }
-    
-    function onPointerUp(e) {
-        if (isDragging) {
-            isDragging = false;
-            // Resume auto rotation after a delay
-            setTimeout(() => { autoRotate = true; }, 3000);
-        }
-    }
-    
-    function onClick(e) {
-        if (hoveredIcon) {
-            // Inspect it in the workspace instead of navigating
-            if (window.inspectLike) {
-                window.inspectLike(hoveredIcon);
-            }
-        }
-    }
-    
-    // Touch tap handler for mobile
-    let touchStartPos = null;
-    let touchStartTime = 0;
-    
-    function onTouchStart(e) {
-        touchStartPos = getMousePos(e);
-        touchStartTime = Date.now();
-        onPointerDown(e);
-    }
-    
-    function onTouchEnd(e) {
-        const touchDuration = Date.now() - touchStartTime;
-        const wasTap = touchDuration < 300;
-        
-        if (wasTap && touchStartPos) {
-            // Check if tap was on an icon
-            const visibleIcons = icons.filter(icon => icon.visible !== false);
-            for (const icon of visibleIcons) {
-                const size = icon.size * icon.scale;
-                const dist = Math.sqrt(Math.pow(icon.projX - touchStartPos.x, 2) + Math.pow(icon.projY - touchStartPos.y, 2));
-                
-                if (dist < size * 0.7 && icon.opacity > 0.5) {
-                    // Tapped on icon - inspect it in the workspace
-                    if (window.inspectLike) {
-                        window.inspectLike(icon);
-                    }
-                    break;
-                }
-            }
-        }
-        
-        touchStartPos = null;
-        onPointerUp(e);
-    }
-    
-    function onPointerLeave() {
-        isDragging = false;
-        icons.forEach(icon => icon.hovered = false);
-        hoveredIcon = null;
-        tooltip.classList.remove('visible');
-        autoRotate = true;
-        
-        // Restore spotlight rotation
-        if (window.restoreSpotlight) {
-            window.restoreSpotlight();
-        }
-    }
-    
-    // Filter handler
-    window.filterIconCloud = function(category) {
-        icons.forEach(icon => {
-            icon.visible = category === 'all' || icon.category === category;
-        });
-    };
-    
-    // Search handler - filter by title/desc matching query
-    window.searchIconCloud = function(query) {
-        const q = query.toLowerCase().trim();
-        icons.forEach(icon => {
-            if (!q) {
-                // Reset to current category filter
-                const cat = window.likesFilter || 'all';
-                icon.visible = cat === 'all' || icon.category === cat;
-                icon.searchDimmed = false;
-            } else {
-                const cat = window.likesFilter || 'all';
-                const matches = icon.title.toLowerCase().includes(q) || icon.desc.toLowerCase().includes(q) || icon.category.toLowerCase().includes(q);
-                icon.visible = cat === 'all' || icon.category === cat; // keep the category filter, dim non-matches
-                icon.searchDimmed = !matches;
-            }
-        });
-    };
-    
-    // Init — lazy: the cloud only initializes (including loading its ~100
-    // icon images) and renders while its container is actually visible.
-    // On mobile the container is display:none, so none of that work happens.
-    function startLoop() {
-        if (animationId === null) animationId = requestAnimationFrame(render);
+    // A label beside an icon, on whichever side has room, joined by a leader line
+    function tag(i, color, locked) {
+        const text = i.title;
+        ctx.font = `${locked ? 12 : 11}px "Share Tech Mono", monospace`;
+        const tw = ctx.measureText(text).width;
+        const pad = 6, h = 20;
+        const r = iconSize * i.s * 0.75 + 8;
+        const right = i.px + r + 14 + tw + pad * 2 < W - 6;
+        const x0 = right ? i.px + r : i.px - r;
+        const bx = right ? x0 + 14 : x0 - 14 - tw - pad * 2;
+        const by = Math.max(4, Math.min(H - h - 4, i.py - r * 0.6 - h / 2));
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(right ? i.px + r * 0.7 : i.px - r * 0.7, i.py - r * 0.4);
+        ctx.lineTo(right ? bx : bx + tw + pad * 2, by + h / 2);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(4,8,10,0.88)';
+        ctx.fillRect(bx, by, tw + pad * 2, h);
+        ctx.strokeRect(bx + 0.5, by + 0.5, tw + pad * 2 - 1, h - 1);
+        ctx.fillStyle = locked ? color : '#eaeaea';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, bx + pad, by + h / 2 + 1);
     }
 
-    function bootCloud() {
-        if (cloudInited) return;
-        cloudInited = true;
+    function frame(now) {
+        raf = null;
+        if (!visible || document.hidden) return;
+        step(now);
+        draw(now);
+        // Stay awake while anything moves; otherwise sleep until input wakes it
+        const busy = goal || drag || Math.abs(vYaw) > 1e-5 || Math.abs(vPitch) > 1e-5 || (spinning && !calm())
+            || icons.some((i) => Math.abs(i.tx - i.x) > 1e-3 || Math.abs((i.show ? 1 : 0) - i.alpha) > 0.01 || Math.abs((i.dim ? 1 : 0) - i.dimA) > 0.01)
+            || (selected && !calm()); // the reticle turns
+        if (busy) raf = requestAnimationFrame(frame);
+    }
+    function wake() { if (raf === null && visible && inited) raf = requestAnimationFrame(frame); }
+
+    // ---------- Input ----------
+    const local = (e) => { const r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    // The front-most icon under the point (back-half icons can't be picked)
+    function pick(x, y, slop = 1) {
+        let best = null;
+        icons.forEach((i) => {
+            if (i.alpha < 0.5 || i.depth > 0.62 || i.dimA > 0.5) return;
+            const r = iconSize * i.s * 0.6 * slop;
+            if ((i.px - x) ** 2 + (i.py - y) ** 2 <= r * r && (!best || i.depth < best.depth)) best = i;
+        });
+        return best;
+    }
+    function setHover(i, e) {
+        if (i === hovered) { if (i && e) placeTip(e); return; }
+        hovered = i;
+        canvas.style.cursor = drag ? 'grabbing' : i ? 'pointer' : 'grab';
+        if (!tooltip) return;
+        if (i) {
+            tooltip.querySelector('.tooltip-title').textContent = i.title;
+            tooltip.querySelector('.tooltip-desc').textContent = [i.desc, i.category].filter(Boolean).join(' · ');
+            tooltip.style.setProperty('--tone', rgba(i.category, 0.6));
+            placeTip(e);
+            tooltip.classList.add('visible');
+        } else tooltip.classList.remove('visible');
+        wake();
+    }
+    function placeTip(e) {
+        if (!e || !tooltip) return;
+        const tw = tooltip.offsetWidth || 160;
+        const left = e.clientX + 16 + tw > window.innerWidth ? e.clientX - tw - 12 : e.clientX + 16;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = (e.clientY + 16) + 'px';
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+        if (e.button) return;
+        const [x, y] = local(e);
+        drag = { id: e.pointerId, x, y, sx: x, sy: y, moved: false, t: performance.now(), touch: e.pointerType !== 'mouse' };
+        goal = null;
+        vYaw = vPitch = 0;
+        lastInput = performance.now();
+        wake();
+    });
+    canvas.addEventListener('pointermove', (e) => {
+        const [x, y] = local(e);
+        if (drag && drag.id === e.pointerId) {
+            const dx = x - drag.x, dy = y - drag.y;
+            if (!drag.moved && Math.hypot(x - drag.sx, y - drag.sy) > 5) {
+                drag.moved = true;
+                try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+                setHover(null);
+                canvas.style.cursor = 'grabbing';
+            }
+            if (drag.moved) {
+                const k = 1 / radius;
+                vYaw = dx * k * 0.9;
+                vPitch = drag.touch ? 0 : dy * k * 0.9; // phones: sideways only, so vertical swipes still scroll
+                yaw += vYaw; pitch += vPitch;
+            }
+            drag.x = x; drag.y = y;
+            lastInput = performance.now();
+            return;
+        }
+        if (e.pointerType === 'mouse') setHover(pick(x, y), e);
+    });
+    function endDrag(e) {
+        if (!drag || drag.id !== e.pointerId) return;
+        const tap = !drag.moved;
+        drag = null;
+        lastInput = performance.now();
+        canvas.style.cursor = hovered ? 'pointer' : 'grab';
+        if (tap && e.type === 'pointerup') {
+            const [x, y] = local(e);
+            const hit = pick(x, y, e.pointerType === 'mouse' ? 1 : 1.5);
+            if (hit && window.inspectLike) window.inspectLike(hit);
+        }
+        wake();
+    }
+    canvas.addEventListener('pointerup', endDrag);
+    canvas.addEventListener('pointercancel', endDrag);
+    canvas.addEventListener('pointerleave', (e) => { if (!drag && e.pointerType === 'mouse') setHover(null); });
+    // Double click: back to the selection
+    canvas.addEventListener('dblclick', () => focus(selected));
+
+    // ---------- Controls (spin / recenter) + legend ----------
+    const controls = document.getElementById('g-cloud-controls');
+    const spinBtn = document.getElementById('g-cloud-spin');
+    function syncSpin() {
+        if (!spinBtn) return;
+        spinBtn.setAttribute('aria-pressed', String(spinning && !calm()));
+        spinBtn.textContent = spinning && !calm() ? '❚❚' : '▶';
+        spinBtn.title = spinning && !calm() ? 'Pause the drift' : calm() ? 'Motion is reduced (SYS calm / system setting)' : 'Let it drift';
+        spinBtn.disabled = calm();
+    }
+    if (controls) controls.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-cloud]');
+        if (!b) return;
+        if (b.dataset.cloud === 'spin') { spinning = !spinning; lastInput = 0; syncSpin(); wake(); }
+        else if (b.dataset.cloud === 'center') focus(selected);
+    });
+    const legend = document.getElementById('g-cloud-legend');
+    function renderLegend() {
+        if (!legend) return;
+        const cats = [...new Set(icons.map((i) => i.category))];
+        const f = window.likesFilter || 'all';
+        legend.innerHTML = cats.map((c) => `<button type="button" data-cat="${c}" aria-pressed="${f === c}" style="--c:${rgb(c).join(',')}">
+            <i></i>${c}<small>${icons.filter((i) => i.category === c).length}</small></button>`).join('');
+    }
+    if (legend) legend.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-cat]');
+        if (b && window.likesSetFilter) window.likesSetFilter(b.dataset.cat);
+    });
+
+    // ---------- API for the workspace (js/likes.js above) ----------
+    const find = (it) => it && icons.find((i) => i.title === it.title && i.href === it.href) || icons.find((i) => i.title === (it && it.title));
+    window.likesCloudFocus = (it) => {
+        if (!inited) { pendingFocus = it; return; }
+        selected = find(it) || null;
+        if (selected && selected.show) focus(selected);
+        wake();
+    };
+    window.filterIconCloud = (category) => {
+        if (!inited) return;
+        icons.forEach((i) => { i.show = category === 'all' || i.category === category; });
+        layout(false);
+        renderLegend();
+        if (selected && selected.show) setTimeout(() => focus(selected), 60);
+        wake();
+    };
+    window.searchIconCloud = (query) => {
+        if (!inited) return;
+        const q = (query || '').toLowerCase().trim();
+        let first = null;
+        icons.forEach((i) => {
+            const hit = !q || [i.title, i.desc, i.category].some((f) => f.toLowerCase().includes(q));
+            i.dim = !hit;
+            if (q && hit && i.show && !first) first = i;
+        });
+        if (first) focus(first);
+        wake();
+    };
+
+    // ---------- Boot: only once the panel is on screen ----------
+    function boot() {
+        if (inited) return;
         resize();
-        initIcons();
+        if (!W) return;
+        icons = collect();
+        const f = window.likesFilter || 'all';
+        icons.forEach((i) => { i.show = f === 'all' || i.category === f; i.alpha = i.show ? 1 : 0; });
+        layout(true);
+        loadSprites();
+        inited = true;
+        renderLegend();
+        syncSpin();
+        canvas.setAttribute('aria-label', `A rotating cloud of ${icons.length} things I like; the Results list has the same items`);
+        const first = pendingFocus || window.likesCurrent; // selected before the cloud was up
+        pendingFocus = null;
+        if (first) window.likesCloudFocus(first);
     }
-
-    function init() {
-        canvas.addEventListener('mousedown', onPointerDown);
-        canvas.addEventListener('mousemove', onPointerMove);
-        canvas.addEventListener('mouseup', onPointerUp);
-        canvas.addEventListener('mouseleave', onPointerLeave);
-        canvas.addEventListener('click', onClick);
-        
-        canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-        canvas.addEventListener('touchmove', onPointerMove, { passive: true });
-        canvas.addEventListener('touchend', onTouchEnd);
-        
-        window.addEventListener('resize', resize);
-
-        if ('IntersectionObserver' in window) {
-            const io = new IntersectionObserver((entries) => {
-                cloudVisible = entries[0].isIntersecting;
-                if (cloudVisible) {
-                    bootCloud();
-                    startLoop();
-                } else if (window.removeExclusionZone) {
-                    window.removeExclusionZone('iconCloud');
-                }
-            });
-            io.observe(container);
-        } else {
-            cloudVisible = true;
-            bootCloud();
-            startLoop();
-        }
-    }
-    
-    // Wait for DOM
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    new ResizeObserver(() => { resize(); wake(); }).observe(container);
+    new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        if (visible) { boot(); wake(); exclusion(); }
+        else if (window.removeExclusionZone) window.removeExclusionZone('iconCloud');
+    }).observe(container);
+    document.addEventListener('visibilitychange', wake);
+    // SYS calm toggles live (js/sys.js sets the class on <html>)
+    new MutationObserver(() => { syncSpin(); wake(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('scroll', exclusion, { passive: true, capture: true });
 })();

@@ -8,6 +8,7 @@
    - sys-no-ambient: the page doesn't start touring on its own when left idle (js/objects.js)
    - sys-no-ticker / sys-no-pet: the status bar's live feed crawl / RadGotchi hidden
    - sys-no-greet: no welcome back or alerts from the visit memory (js/now.js)
+   - sys-no-saver: no screen care while idle, the few pixels' drift (js/micro.js)
    boot ('session' | 'always' | 'never') is read by the boot screen script in index.html. */
 (function () {
     'use strict';
@@ -16,7 +17,7 @@
     if (!btn || !host) return;
     const KEY = 'tirl_sys';
     const root = document.documentElement;
-    const DEFAULTS = { bg: true, calm: false, sound: true, ambient: true, ticker: true, pet: true, greet: true, boot: 'session' };
+    const DEFAULTS = { bg: true, calm: false, sound: true, ambient: true, ticker: true, pet: true, greet: true, saver: true, boot: 'session' };
     let sys = { ...DEFAULTS };
     try { sys = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch (_) {}
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -30,6 +31,7 @@
         root.classList.toggle('sys-no-ticker', !sys.ticker);
         root.classList.toggle('sys-no-pet', !sys.pet);
         root.classList.toggle('sys-no-greet', !sys.greet);
+        root.classList.toggle('sys-no-saver', !sys.saver);
         if (window.SoundFX) Object.values(window.SoundFX.sounds).forEach((a) => { a.muted = !sys.sound; });
     }
     function save() {
@@ -43,6 +45,7 @@
         ['DISPLAY', [
             ['bg', 'Background', 'the drifting isoline field behind everything'],
             ['calm', 'Calm motion', 'cut animations to a minimum (panels, decodes, pulses)'],
+            ['saver', 'Screen care', 'while idle, drift the layout a few pixels now and then'],
             ['boot', 'Boot screen', 'the handshake splash before the workspace', [['session', 'ONCE'], ['always', 'ALWAYS'], ['never', 'NEVER']]]
         ]],
         ['BEHAVIOUR', [

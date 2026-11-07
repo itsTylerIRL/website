@@ -1,0 +1,205 @@
+/* Small things the home page does (js/micro.js, and the ambient effects in js/objects.js that have their own
+   markup): hover touches, a flash on live values that change, and screen care while it's left idle.
+   Everything that moves stands still with reduced motion or SYS calm. */
+
+/* ---------- Featured cards tilt toward the pointer, the art floating a little ---------- */
+.g-feat.is-tilt {
+    transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-2px);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.12s linear;
+}
+.g-feat .g-feat-art { transition: translate 0.4s ease; }
+.g-feat.is-tilt .g-feat-art { translate: var(--px, 0) var(--py, 0); transition: translate 0.12s linear; }
+
+/* ---------- Comms icons lean toward the pointer ---------- */
+.g-chan .g-chan-icon { transition: translate 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease; }
+.g-chan.is-magnet .g-chan-icon { translate: var(--gx, 0) var(--gy, 0); transition: translate 0.15s ease-out, box-shadow 0.25s ease, background 0.25s ease; }
+
+/* ---------- The Host hologram turns toward the pointer ---------- */
+.g-home .g-op-subject { transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; }
+.g-home.is-turn .g-op-subject {
+    transform: perspective(700px) rotateX(var(--hx, 0deg)) rotateY(var(--hy, 0deg));
+    transition: transform 0.25s ease-out;
+}
+
+/* ---------- Results: a row's status dot pings when hovered ---------- */
+@media (hover: hover) {
+    .g-res:hover > .g-dot { animation: g-dot-ping 0.6s ease-out; }
+}
+
+/* ---------- Live values flash when they change in place ---------- */
+.g-blip { animation: g-blip 1.4s ease-out; }
+@keyframes g-blip {
+    0% { color: #fff; text-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.95); }
+    100% { text-shadow: 0 0 0 transparent; }
+}
+
+/* ================= Ambient effects (js/objects.js EFFECTS) ================= */
+
+/* Target lock: brackets that glide between elements and tag what they land on */
+.g-lockon {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 900;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease, translate 0.9s cubic-bezier(0.6, 0, 0.2, 1), width 0.9s cubic-bezier(0.6, 0, 0.2, 1), height 0.9s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.g-lockon.is-on { opacity: 1; }
+.g-lockon i {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 0 solid var(--g-blue);
+    filter: drop-shadow(0 0 4px rgba(var(--g-blue-rgb), 0.9));
+}
+.g-lockon i:nth-child(1) { left: 0; top: 0; border-width: 2px 0 0 2px; }
+.g-lockon i:nth-child(2) { right: 0; top: 0; border-width: 2px 2px 0 0; }
+.g-lockon i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 2px 2px; }
+.g-lockon i:nth-child(4) { right: 0; bottom: 0; border-width: 0 2px 2px 0; }
+.g-lockon.is-locked i { animation: g-lock-snap 0.35s ease-out; }
+@keyframes g-lock-snap { 50% { translate: var(--snap, 0); } }
+.g-lockon i:nth-child(1) { --snap: -4px -4px; }
+.g-lockon i:nth-child(2) { --snap: 4px -4px; }
+.g-lockon i:nth-child(3) { --snap: -4px 4px; }
+.g-lockon i:nth-child(4) { --snap: 4px 4px; }
+.g-lockon span {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 5px);
+    padding: 2px 6px;
+    border: 1px solid rgba(var(--g-blue-rgb), 0.6);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.75);
+    font: 400 9.5px/1.4 var(--g-mono);
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    color: var(--g-blue);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.g-lockon.is-locked span { opacity: 1; }
+
+/* Border trace: a point of light runs once around a panel's edge */
+@property --g-trace-a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+.g-traced { position: relative; }
+.g-trace {
+    position: absolute;
+    inset: 0; /* inside the edge: panels clip what overflows */
+    z-index: 2;
+    border-radius: inherit;
+    padding: 1.5px;
+    pointer-events: none;
+    background: conic-gradient(from var(--g-trace-a), transparent 0deg, transparent 260deg, rgba(var(--g-blue-rgb), 0.25) 320deg, rgba(var(--g-blue-rgb), 1) 358deg, transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    filter: drop-shadow(0 0 5px rgba(var(--g-blue-rgb), 0.9));
+    animation: g-trace 3.2s cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+@keyframes g-trace {
+    0% { --g-trace-a: 0deg; opacity: 0; }
+    8% { opacity: 1; }
+    92% { opacity: 1; }
+    100% { --g-trace-a: 360deg; opacity: 0; }
+}
+
+/* Sonar: the Results status dots ping top to bottom */
+.g-res.is-sonar > .g-dot { animation: g-dot-ping 0.7s ease-out; }
+
+/* Packet: a light runs along the status bar */
+.g-statusbar.g-has-packet { position: relative; }
+.g-packet {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 60px;
+    height: 2px;
+    border-radius: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(var(--g-blue-rgb), 0.9), #fff);
+    filter: drop-shadow(0 0 4px rgba(var(--g-blue-rgb), 0.9));
+    animation: g-packet 2.6s cubic-bezier(0.5, 0, 0.5, 1) both;
+}
+@keyframes g-packet {
+    0% { translate: -60px 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { translate: calc(var(--run, 1000px)) 0; opacity: 0; }
+}
+
+/* ---------- Tour (ambient mode): the panel in the left column, and the Results sweep to the next stop ---------- */
+/* Only during the tour: the column layout's display: flex on its sections would otherwise beat [hidden] */
+.g-tour-pane[hidden] { display: none !important; }
+.g-tour-now {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px 8px;
+}
+.g-tour-icon { width: 34px; height: 34px; border-radius: 7px; object-fit: contain; background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 0 1px var(--g-border); }
+.g-tour-icon.is-small { width: 18px; height: 18px; border-radius: 4px; }
+.g-tour-icon.g-noimg { display: grid; place-items: center; color: var(--g-blue); font: 400 14px/1 var(--g-mono); }
+.g-tour-text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.g-tour-name { font-size: 13px; color: var(--g-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-tour-line { display: flex; align-items: center; gap: 6px; font: 400 10.5px/1.35 var(--g-mono); color: var(--g-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-tour-new {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 5px;
+    border: 1px solid var(--g-orange);
+    border-radius: 3px;
+    font: 400 9px/1.5 var(--g-mono);
+    letter-spacing: 0.12em;
+    color: var(--g-orange);
+    vertical-align: 1px;
+}
+.g-tour-bar { height: 2px; margin: 0 14px; background: rgba(var(--g-blue-rgb), 0.1); border-radius: 2px; overflow: hidden; }
+.g-tour-bar i { display: block; height: 100%; width: 100%; background: var(--g-blue); box-shadow: 0 0 6px var(--g-blue); transform-origin: left; transform: scaleX(0); }
+.g-tour-bar i.is-run { animation: g-tour-fill var(--tour-ms, 25s) linear both; }
+@keyframes g-tour-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.g-tour-next {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px 10px;
+    font: 400 10.5px/1.3 var(--g-mono);
+    color: var(--g-muted);
+    min-width: 0;
+}
+.g-tour-next > span { font-size: 9.5px; letter-spacing: 0.12em; color: var(--g-dim); flex: none; }
+.g-tour-next > b:not(.g-tour-new) { font-weight: 400; color: var(--g-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-tour-next .g-tour-new { margin-left: 0; flex: none; }
+@media (min-width: 1360px) and (min-height: 600px) { .g-tour-pane { flex: none; } }
+
+.g-res { transition: background 0.2s ease, box-shadow 0.2s ease; }
+.g-res.is-seek { background: rgba(var(--g-blue-rgb), 0.12); box-shadow: inset 2px 0 0 var(--g-blue); }
+
+/* ---------- Screen care (idle): a few pixels' drift ---------- */
+/* Only while ambient mode is on: a translate makes these the containing block for anything fixed inside them */
+html.g-ambient-on .gotham > :is(.g-topbar, .g-body, .g-statusbar) {
+    translate: var(--saver-x, 0) var(--saver-y, 0);
+    transition: translate 8s ease-in-out;
+}
+
+/* ---------- Calm ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .g-feat.is-tilt { transform: translateY(-2px); }
+    .g-feat.is-tilt .g-feat-art,
+    .g-chan.is-magnet .g-chan-icon { translate: none; }
+    .g-home.is-turn .g-op-subject { transform: none; }
+    .g-blip, .g-trace, .g-packet, .g-res.is-sonar > .g-dot, .g-lockon.is-locked i { animation: none; }
+    .g-tour-bar i.is-run { animation-name: g-tour-fill; } /* a progress bar, not decoration: kept */
+    .g-lockon { transition: opacity 0.4s ease; }
+    html.g-ambient-on .gotham > :is(.g-topbar, .g-body, .g-statusbar) { transition: none; }
+}
+html.sys-calm .g-feat.is-tilt { transform: translateY(-2px); }
+html.sys-calm .g-feat.is-tilt .g-feat-art,
+html.sys-calm .g-chan.is-magnet .g-chan-icon { translate: none; }
+html.sys-calm .g-home.is-turn .g-op-subject { transform: none; }
+html.sys-calm :is(.g-blip, .g-trace, .g-packet, .g-res.is-sonar > .g-dot) { animation: none; }

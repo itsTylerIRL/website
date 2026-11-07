@@ -107,6 +107,18 @@
         focus: root.hasAttribute('data-embed-focus'),
         key: (k) => host.key(k),
         status: (text) => host.status(window, text),
-        event: (e) => host.event(window, e)
+        event: (e) => host.event(window, e),
+        // display(on): the home page's idle tour has this page up (or has moved on). The first time, js/display.js is
+        // loaded, which runs a small demo of the page from its own controls; 'tirl:display' says when to start and stop.
+        display(on) {
+            window.__tirlDisplay = !!on;
+            if (on && !document.getElementById('tirl-display')) {
+                const s = document.createElement('script');
+                s.id = 'tirl-display';
+                s.src = '/js/display.js?v=1.0';
+                document.head.append(s);
+            }
+            window.dispatchEvent(new CustomEvent('tirl:display', { detail: { on: !!on } }));
+        }
     };
 })();
