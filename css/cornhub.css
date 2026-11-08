@@ -80,7 +80,7 @@
     color: #1a1300;
     background: linear-gradient(180deg, #ffe08a, #ffc23a);
     border: 1px solid #ffe08a;
-    border-radius: 10px;
+    border-radius: var(--g-r-ctl);
     box-shadow: 0 0 0 4px rgba(var(--corn), 0.12), 0 0 32px rgba(var(--corn), 0.45);
     animation: corn-pulse 2.6s ease-in-out infinite;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -104,7 +104,7 @@
     max-width: 100%;
     padding: 7px 10px;
     border: 1px solid var(--g-border-strong);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     background: rgba(0, 0, 0, 0.45);
     font-family: var(--g-mono);
     cursor: pointer;

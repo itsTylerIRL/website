@@ -90,7 +90,7 @@
     line-height: 1;
     padding: 0.3rem 0.9rem;
     border: 1px solid rgba(189, 147, 249, 0.45);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     background: radial-gradient(circle at 50% 0%, rgba(189, 147, 249, 0.22), rgba(189, 147, 249, 0.05));
     box-shadow: 0 0 18px rgba(189, 147, 249, 0.3), inset 0 0 10px rgba(189, 147, 249, 0.12);
 }
@@ -413,7 +413,7 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
     border: 1px solid rgba(139, 233, 253, 0.28);
     border-top-color: rgba(255, 255, 255, 0.16);
     border-left-color: rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    border-radius: var(--g-r-panel);
     box-shadow:
         0 8px 40px rgba(0, 0, 0, 0.5),
         0 0 40px rgba(139, 233, 253, 0.07),
@@ -453,7 +453,7 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
     letter-spacing: 0.16em;
     color: #50fa7b;
     border: 1px solid rgba(80, 250, 123, 0.45);
-    border-radius: 999px;
+    border-radius: var(--g-r-pill);
     padding: 1px 9px;
     white-space: nowrap;
 }

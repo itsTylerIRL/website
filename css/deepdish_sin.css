@@ -133,7 +133,7 @@ html.doc-rv .cell:not(.is-in) .sin-streak li { transform: scaleY(0); }
     overflow: hidden;
     background: rgba(0, 0, 0, 0.35);
     border: 1px solid var(--g-border);
-    border-radius: var(--card-r, 6px);
+    border-radius: var(--card-r, var(--g-r-box));
     transition: border-color 0.2s ease, transform 0.25s ease;
 }
 .sin-game:hover { border-color: rgba(var(--g-blue-rgb), 0.5); transform: translateY(-2px); }
@@ -166,7 +166,7 @@ html.doc-rv .doc.is-dense .sin-game { transition: opacity 0.5s ease var(--d, 0s)
     color: var(--g-text);
     background: var(--g-well);
     border: 1px solid var(--g-border-strong);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
 }
 .sin-relay-end:first-child { border-color: rgba(114, 137, 218, 0.6); box-shadow: 0 0 10px rgba(114, 137, 218, 0.25); }
 .sin-relay-end:nth-child(3) { border-color: rgba(42, 171, 238, 0.6); box-shadow: 0 0 10px rgba(42, 171, 238, 0.25); }

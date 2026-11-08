@@ -55,7 +55,7 @@
     gap: 6px;
     padding: 10px 4px 8px;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     background: radial-gradient(ellipse at 50% 30%, rgba(var(--g-blue-rgb), 0.08), transparent 70%), rgba(0, 0, 0, 0.3);
 }
 .kol-moon img { width: 48px; height: 48px; image-rendering: pixelated; }
@@ -125,7 +125,7 @@
     min-width: 0;
     padding: 6px 8px;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.3);
     color: inherit;
     text-decoration: none;

@@ -49,8 +49,8 @@
     border-bottom: none;
     cursor: pointer;
 }
-.g-install-tab:first-child { border-radius: 6px 0 0 0; }
-.g-install-tab:last-child { border-radius: 0 6px 0 0; border-left: none; }
+.g-install-tab:first-child { border-radius: var(--g-r-ctl) 0 0 0; }
+.g-install-tab:last-child { border-radius: 0 var(--g-r-ctl) 0 0; border-left: none; }
 .g-install-tab:hover { color: var(--g-muted); }
 .g-install-tab[aria-selected="true"] {
     color: var(--g-text);
@@ -66,7 +66,7 @@
     text-align: left;
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid color-mix(in srgb, var(--rg) 50%, transparent);
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 var(--g-r-ctl) var(--g-r-ctl);
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
@@ -147,7 +147,7 @@
         radial-gradient(ellipse at center, color-mix(in srgb, var(--rg) 14%, transparent) 0%, transparent 65%),
         linear-gradient(rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 24px 24px,
         linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 24px 24px;
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
 }
 .g-specimen-stage .g-reticle { position: absolute; }
 .g-sprite-big {
@@ -204,7 +204,7 @@
     color: var(--g-text);
     background: var(--g-well);
     border: 1px solid var(--g-border-strong);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     padding: 0 6px;
 }
 .g-specimen-controls select option { background: #0c1218; }
@@ -228,7 +228,7 @@
     padding: 8px 6px 5px;
     background: rgba(0, 0, 0, 0.35);
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 .g-roster-item span {
@@ -266,7 +266,7 @@
         linear-gradient(rgba(var(--g-blue-rgb), 0.04) 1px, transparent 1px) 0 0 / 20px 20px,
         linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.04) 1px, transparent 1px) 0 0 / 20px 20px,
         rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
 }
 .rg-chamber { cursor: pointer; transition: box-shadow 0.2s ease; }
 .rg-chamber:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rg) 35%, transparent); }
@@ -332,7 +332,7 @@
     text-align: left;
     background: rgba(0, 0, 0, 0.35);
     border: 1px solid var(--g-border);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -393,7 +393,7 @@
     padding: 8px 10px;
     background: linear-gradient(160deg, color-mix(in srgb, var(--rg) 10%, transparent), transparent 60%), rgba(0, 0, 0, 0.35);
     border: 1px solid color-mix(in srgb, var(--rg) 28%, transparent);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
 }
 .rg-item b { font: 400 10.5px/1.3 var(--g-mono); letter-spacing: 0.08em; color: var(--g-text); }
 .rg-item span { font-size: 11px; color: var(--g-muted); }

@@ -99,7 +99,7 @@
 .g-shot {
     margin: 0;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     overflow: hidden;
     background: rgba(0, 0, 0, 0.4);
 }
@@ -129,7 +129,7 @@
     min-height: 180px;
     margin: 10px;
     border: 1px dashed rgba(139, 233, 253, 0.2);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -406,7 +406,7 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--g-border-strong);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     padding: 6px 9px;
     font-size: 12px;

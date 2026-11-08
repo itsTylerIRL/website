@@ -18,7 +18,7 @@
     padding: 4px 6px;
     background: none;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     text-align: left;
 }
 .g-mix-row:hover { background: rgba(var(--g-blue-rgb), 0.05); }
@@ -110,7 +110,7 @@ html.is-embed .g-cloud-hud {
     width: min(300px, calc(100% - 90px));
     padding: 9px 10px;
     border: 1px solid var(--g-border-strong);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.6);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -177,7 +177,7 @@ html.is-embed .g-cloud-hud {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--tone, rgba(139, 233, 253, 0.35));
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(139, 233, 253, 0.15);
     color: #eaeaea;
     font-size: 12px;
