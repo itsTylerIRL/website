@@ -63,19 +63,13 @@
         $('c-range').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
         drawPulse();
     });
-    let lastGames = null;
     every(60000, async () => {
         try {
             pulse = await get('/api/pulse');
             drawPulse();
             const today = pulse.today || {};
             feed(true, `LIVE · ${num(today.games)} run${today.games === 1 ? '' : 's'} today`);
-            // A new run since the last look goes to the home page's ticker
-            const total = (pulse.lifetime || {}).games;
-            if (lastGames !== null && total > lastGames && window.TirlEmbed) {
-                window.TirlEmbed.event({ kind: 'RUN', html: `${total - lastGames} new run${total - lastGames === 1 ? '' : 's'} on the cancel`, tone: 'orange' });
-            }
-            lastGames = total;
+            // (new runs reach the home page's ticker from its own watch on the game, js/live-rows.js)
         } catch (_) {
             feed(false, 'SERVICE UNREACHABLE');
         }

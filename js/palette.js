@@ -22,7 +22,22 @@
             return { n, slug };
         });
     }
-    const urlOf = (key) => (api.objects.find((o) => o.key === key) || {}).url;
+    // The page to read: an external object's own page here (OBJECTS page), else its url
+    const urlOf = (key) => { const o = api.objects.find((x) => x.key === key) || {}; return o.page || o.url; };
+    // Parts of a page marked data-anchor (js/embed.js lands #name on them): named by data-anchor-name or their
+    // panel title, with data-anchor-sub or the title's meta under it. Cards with an object of their own (DeepDish's
+    // OCS, TOP...) carry no name, so they aren't listed twice.
+    const title = (el) => {
+        const t = el.querySelector(':scope > .g-panel-title');
+        if (!t) return ['', ''];
+        const meta = t.querySelector('.g-meta');
+        const name = Array.from(t.childNodes).filter((n) => n !== meta).map((n) => n.textContent).join('').replace(/\s+/g, ' ').trim();
+        return [name, meta ? meta.textContent.replace(/\s+/g, ' ').trim() : ''];
+    };
+    const anchors = (doc) => Array.from(doc.querySelectorAll('[data-anchor]'), (el) => {
+        const [name, meta] = title(el);
+        return { hash: el.dataset.anchor, name: el.dataset.anchorName || name, sub: el.dataset.anchorSub || meta, kind: el.dataset.anchorKind || 'section' };
+    }).filter((x) => x.name);
 
     // ---------- Index ----------
     // key: the object; kind: what its items are; url: what to read (text: true reads it as text, not a page);
@@ -41,9 +56,11 @@
             Array.from(src.matchAll(/key: '([a-z0-9-]+)',\s*designation: '([^']+)'/g), ([, hash, name]) => ({ hash, name, sub: 'high power rocket' })) },
         // Docs pages: their .doc-sec sections (js/docs.js opens #<section id>)
         ...['ocs', 'top', 'sin', 'radgotchi'].map((key) => ({ key, kind: 'section', read: (doc) =>
-            Array.from(doc.querySelectorAll('.doc-sec[id]'), (s) => ({ hash: s.id, name: s.dataset.title || s.id, sub: s.querySelector('.doc-num')?.textContent || '' })) }))
+            Array.from(doc.querySelectorAll('.doc-sec[id]'), (s) => ({ hash: s.id, name: s.dataset.title || s.id, sub: s.querySelector('.doc-num')?.textContent || '' })) })),
+        // Pages that mark their parts (projects, apps, sections)
+        ...['deepdish', 'cancel', 'nosfyl', 'raddem', 'kol', 'markets'].map((key) => ({ key, kind: 'section', read: anchors }))
     ];
-    const CACHE = 'tirl_palette_index';
+    const CACHE = 'tirl_palette_index_2';
     let index = null;
     let loading = null;
     function load() {
@@ -59,7 +76,7 @@
                 if (!r.ok) return [];
                 const text = await r.text();
                 const items = src.read(src.text ? text : new DOMParser().parseFromString(text, 'text/html'));
-                return items.map((it) => ({ key: src.key, kind: src.kind, ...it }));
+                return items.map((it) => ({ key: src.key, kind: it.kind || src.kind, ...it }));
             } catch (_) { return []; }
         })).then((lists) => {
             index = lists.flat();
@@ -96,7 +113,7 @@
     el.innerHTML = `<div class="g-pal-box" role="dialog" aria-modal="true" aria-label="Command palette">
             <label class="g-pal-search">
                 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.6 3.6 1.4-1.4-3.6-3.6zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
-                <input type="text" placeholder="Search objects, pieces, likes, docs&hellip;" autocomplete="off" spellcheck="false"
+                <input type="text" placeholder="Search objects, projects, pieces, likes, docs&hellip;" autocomplete="off" spellcheck="false"
                     role="combobox" aria-expanded="true" aria-controls="g-pal-list" aria-label="Search everything">
                 <kbd>esc</kbd>
             </label>
@@ -148,8 +165,8 @@
         const o = api.objects.find((x) => x.key === r.key);
         close();
         if (full) {
-            const url = o.url + (r.hash ? '#' + encodeURIComponent(r.hash) : '');
-            if (o.external) window.open(url, '_blank', 'noopener');
+            const url = (r.hash && o.page ? o.page : o.url) + (r.hash ? '#' + encodeURIComponent(r.hash) : '');
+            if (o.external && !(r.hash && o.page)) window.open(url, '_blank', 'noopener');
             else location.href = url;
             return;
         }

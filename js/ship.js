@@ -151,7 +151,7 @@
         $('g-feed').textContent = state === 'up' ? `ONLINE${s.since ? ' · UP ' + span(at - s.since).toUpperCase() : ''}` : state === 'down' ? 'OFFLINE' : 'NO SIGNAL';
         if (window.TirlEmbed) window.TirlEmbed.status(`${NAME} · ${$('g-feed').textContent}`);
         if (was !== null && was !== state) {
-            if (window.TirlEmbed) window.TirlEmbed.event({ kind: 'SHIP', html: `${esc(NAME)} went ${state === 'up' ? 'online' : 'offline'}`, tone: state === 'up' ? 'green' : 'red', mood: state === 'up' ? 'happy' : 'sad', status: `${NAME} ${state === 'up' ? 'BACK' : 'DOWN'}` });
+            // (the home page hears about it from its own watch on ship-status, js/live-rows.js)
             note(at, `went <b>${state === 'up' ? 'online' : 'offline'}</b>`, state === 'up' ? 'green' : 'red');
         }
         was = state;

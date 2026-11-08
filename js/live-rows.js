@@ -9,12 +9,21 @@
      #likes-data cards the way js/likes.js reads them; once
    - ~nosfyl, ~raddem-tidwyt: online (and for how long) or offline (and when last seen) from ship-status on
      cancel-api, which checks each ship every minute; every 2 minutes
+   - DeepDish: its newest push across the project repos (the same GitHub call); NFT Gallery: pieces and artists,
+     and Missile Program: the vehicles and their status, read from the pages once an hour; Neochibi Markets: the
+     milady floor from OpenSea, every 10 minutes
    Anything that fails just leaves the row on its path. The crown, the likes count and the repos' last pushes also
-   go into the visit memory (js/now.js), so a return visit says what changed. */
+   go into the visit memory (js/now.js), so a return visit says what changed.
+   News: this page watches the services behind the pages itself, so the ticker hears about it whichever page is
+   showing, and the idle tour goes to look (window.ObjectsNews): new runs, a new king, posts to the network's feed,
+   ships going down or coming back. The first look at each only sets where things stand. */
 (function () {
     'use strict';
     const set = window.ObjectsLive;
     if (!set) return;
+    const news = (e) => window.ObjectsNews?.(e);
+    const num = (n) => Number(n || 0).toLocaleString('en-US');
+    const API = 'https://cancel-api.tylerirl.com';
     const FIVE_MIN = 5 * 60000;
     const ago = t => {
         const m = Math.max(0, Math.round((Date.now() - t) / 60000));
@@ -101,19 +110,35 @@
         const m = Math.floor((Date.now() - t) / 60000);
         return m < 60 ? `${Math.max(1, m)}m` : m < 1440 ? `${Math.floor(m / 60)}h` : `${Math.floor(m / 1440)}d`;
     };
-    every(2 * 60000, async () => {
+    // hours: [hour start, checks up, checks, avg ms] for each hour ship-status has kept
+    const upPct = (hours) => {
+        const [up, all] = hours.reduce((a, h) => [a[0] + h[1], a[1] + h[2]], [0, 0]);
+        return all ? Math.floor(up / all * 1000) / 10 : null;
+    };
+    const shipWas = {};
+    every(60000, async () => {
         try {
-            const { ships } = await getJSON('https://cancel-api.tylerirl.com/ships');
+            const { ships } = await getJSON(`${API}/ships?history=1`);
             Object.entries(SHIPS).forEach(([key, name]) => {
                 const s = ships && ships[name];
                 if (!s || s.online === null) return;
-                if (s.online) set(key, s.since ? `online · up ${span(s.since)}` : 'online', 'green');
+                const day = (s.hours || []).slice(-24);
+                const pct = upPct(day);
+                const share = pct === null ? '' : ` · ${pct}% 24h`;
+                if (s.online) set(key, s.since ? `online · up ${span(s.since)}${share}` : `online${share}`, 'green');
                 else set(key, s.lastOnline ? `offline · last seen ${ago(s.lastOnline)}` : 'offline', 'red');
+                // Up or down since the last look
+                if (key in shipWas && shipWas[key] !== s.online) {
+                    news({ key, text: `${name} ${s.online ? 'is back online' : 'went offline'}`, tone: s.online ? 'green' : 'red', hash: 'uptime',
+                        mood: s.online ? 'happy' : 'sad', status: `${name.toUpperCase()} ${s.online ? 'BACK' : 'DOWN'}` });
+                }
+                shipWas[key] = s.online;
             });
         } catch (_) {}
     });
 
     // the cancel is coming: who holds the crown this week
+    let lastKing = null;
     every(FIVE_MIN, async () => {
         try {
             const { king } = await getJSON('https://cancel-api.tylerirl.com/api/king', { cache: 'no-store' });
@@ -127,8 +152,88 @@
             }
             const who = king.handle ? (String(king.handle).startsWith('~') ? king.handle : '~' + king.handle) : king.name || 'anon';
             crown(who);
+            if (lastKing !== null && lastKing !== who) news({ key: 'cancel', text: `♛ ${who} took the crown`, tone: 'orange', hash: 'hall', mood: 'excited', status: 'NEW KING' });
+            lastKing = who;
             set('cancel', `♛ ${who} · ${king.score ?? 0} drip`, 'orange');
             feed.cancel = [{ text: `♛ ${who} holds the cancel crown · ${king.score ?? 0} drip`, tone: 'orange', href: 'https://cancel.tylerirl.com' }];
+        } catch (_) {}
+    });
+
+    // the cancel is coming: new runs since the last look
+    let lastGames = null;
+    every(60000, async () => {
+        try {
+            const p = await getJSON(`${API}/api/pulse`, { cache: 'no-store' });
+            const t = p.today || {};
+            const total = (p.lifetime || {}).games;
+            if (lastGames !== null && total > lastGames) {
+                const n = total - lastGames;
+                news({ key: 'cancel', text: `${n} new run${n === 1 ? '' : 's'}${t.wins ? ` · ${t.wins} saved the timeline today` : ''}`, tone: 'orange', hash: 'runs' });
+            }
+            if (typeof total === 'number') lastGames = total;
+        } catch (_) {}
+    });
+    // the network is growing (on the cancel's page): what's new in its feed
+    let netNewest = null;
+    const netWho = (h) => h ? (String(h).startsWith('~') ? h : '~' + h) : 'anon';
+    const netLine = (r) => {
+        const d = r.detail || {};
+        if (r.kind === 'run') return `touched grass${d.ch ? ` (challenge ${String(d.ch).replace(/_/g, ' ')})` : ''}`;
+        if (r.kind === 'epoch') return `grew the new internet to epoch ${num(d.e)}`;
+        if (r.kind === 'online') return 'turned the new internet on';
+        if (r.kind === 'challenge') return `beat a challenge${d.ch ? `: ${String(d.ch).replace(/_/g, ' ')}` : ''}`;
+        return String(r.kind || 'posted').replace(/_/g, ' ');
+    };
+    every(2 * 60000, async () => {
+        try {
+            const { rows = [] } = await getJSON(`${API}/api/net/recent?limit=10`, { cache: 'no-store' });
+            const fresh = netNewest === null ? [] : rows.filter((r) => r.at > netNewest);
+            if (fresh.length) {
+                const top = fresh[0];
+                news({ key: 'cancel', text: `the network · ${netWho(top.handle)} ${netLine(top)}${fresh.length > 1 ? ` (+${fresh.length - 1} more)` : ''}`, tone: 'purple', hash: 'network' });
+            }
+            if (rows[0]) netNewest = Math.max(netNewest || 0, rows[0].at);
+            else if (netNewest === null) netNewest = 0;
+        } catch (_) {}
+    });
+
+    // NFT Gallery and Missile Program: what's in them, read from the pages (kept for an hour)
+    async function counted(key, url, read) {
+        const KEY = `tirl_count_${key}`;
+        try {
+            const c = JSON.parse(localStorage.getItem(KEY));
+            if (c && Date.now() - c.at < 3600000) return set(key, c.text, c.tone);
+        } catch (_) {}
+        try {
+            const r = await fetch(url);
+            if (!r.ok) return;
+            const out = read(await r.text());
+            if (!out) return;
+            set(key, out.text, out.tone);
+            try { localStorage.setItem(KEY, JSON.stringify({ at: Date.now(), ...out })); } catch (_) {}
+        } catch (_) {}
+    }
+    counted('gallery', '/pages/gallery.html', (html) => {
+        const cards = [...new DOMParser().parseFromString(html, 'text/html').querySelectorAll('#gallery-data .pfp-card')];
+        if (!cards.length) return null;
+        const artists = new Set(cards.map((c) => c.dataset.artist).filter(Boolean)).size;
+        return { text: `${cards.length} pieces${artists ? ` · ${artists} artists` : ''}`, tone: 'blue' };
+    });
+    counted('rocketry', '/js/rocketry.js', (src) => {
+        const v = Array.from(src.matchAll(/designation: '([^']+)'[\s\S]*?status: '([^']+)'/g), ([, name, status]) => [name, status.toLowerCase()]);
+        if (!v.length) return null;
+        const building = v.find(([, st]) => st !== 'build complete');
+        return { text: `${v.length} vehicle${v.length === 1 ? '' : 's'}${building ? ` · ${building[0]} ${building[1]}` : ''}`, tone: building ? 'orange' : 'green' };
+    });
+
+    // Neochibi Markets: the milady floor (OpenSea, the same key js/markets.js uses)
+    every(10 * 60000, async () => {
+        try {
+            const d = await getJSON('https://api.opensea.io/api/v2/collections/milady/stats', { headers: { 'X-API-KEY': '5a79fc7192de4ababec6b822f0ca4635', Accept: 'application/json' } });
+            const floor = d.total && d.total.floor_price;
+            const day = (d.intervals || []).find((i) => i.interval === 'one_day');
+            if (!floor) return;
+            set('markets', `milady floor ${Number(floor).toFixed(2)} Ξ${day && day.volume ? ` · 24h vol ${Number(day.volume).toFixed(1)} Ξ` : ''}`, 'green');
         } catch (_) {}
     });
 
@@ -147,6 +252,13 @@
                 repos = Object.fromEntries(list.map(r => [r.name.toLowerCase(), { pushed: r.pushed_at, stars: r.stargazers_count }]));
                 try { sessionStorage.setItem(KEY, JSON.stringify({ at: Date.now(), repos })); } catch (_) {}
             } catch (_) { return; }
+        }
+        // DeepDish: the newest push across what's on the rack
+        const RACK = ['radgotchi', 'digiflip', 'middle-management', 'sextant', 'chibi', 'iron'];
+        const rack = RACK.filter((n) => repos[n]).sort((a, b) => new Date(repos[b].pushed) - new Date(repos[a].pushed));
+        if (rack.length) {
+            const n = rack[0];
+            set('deepdish', `pushed ${n} ${ago(new Date(repos[n].pushed))}`, 'green');
         }
         Object.entries(REPOS).forEach(([key, name]) => {
             const r = repos[name.toLowerCase()];

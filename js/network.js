@@ -122,7 +122,6 @@
     every(2 * 60000, census);
 
     // ---------- Network feed ----------
-    let newest = null;
     function line(r) {
         const d = r.detail || {};
         if (r.kind === 'run') {
@@ -149,11 +148,6 @@
                 <span class="g-row-text"><span class="g-row-who">${esc(who(r.handle))}</span><span class="g-row-what">${what} · ${ago(r.at)}</span></span>
                 <span class="g-row-val">${esc(v)}<small>${unit}</small></span></a></li>`;
         }).join('') || '<li class="g-note">nothing yet. go post.</li>';
-        // Something new since the last look goes to the home page's ticker
-        const top = rows[0];
-        if (top && newest !== null && top.at > newest && window.TirlEmbed) {
-            window.TirlEmbed.event({ kind: 'NET', html: `${esc(who(top.handle))} · ${line(top)[0]}`, tone: 'purple' });
-        }
-        if (top) newest = top.at;
+        // (what's new reaches the home page's ticker from its own watch on the feed, js/live-rows.js)
     });
 })();

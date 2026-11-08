@@ -15,9 +15,13 @@
 // screen: the live preview pane's title while the object is showing (else 'Live Preview')
 // tag: the Results subtitle when there's no live line for the object (js/live-rows.js); the path moves to its tooltip
 // hidden: true keeps an entry archived here but out of results, search, navigation and counts.
+// onHost: a live connection the Host panel already shows (its comms tile and dossier card), kept out of Results
+// and the counts like a parent's projects; the NOW strip, the Signal Log and the command palette still open it.
 // parent: a project listed on another object's page (DeepDish's directory) rather than in Results and the counts.
 // It can still be opened by link (/#key), the command palette and the idle tour; while it's showing, its parent's
 // row stays lit and the header offers a way back.
+// Links: /#key selects an object, /#key/part also takes its page to a part of it (a card or section the page
+// marks with data-anchor, or whatever the page's own #hash means: a gallery piece, a like, a docs section).
 const OBJECTS = [
     { key: 'home', name: 'Tyler (in real life)', url: '/', type: 'page', workspace: true, icon: '/assets/object-icons/vip.webp', desc: 'home base: welcome to my personal website', tag: 'you are here · home base' },
     { key: 'likes', name: 'Things I Like', url: '/pages/likes.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/likes-full.webp', desc: 'crypto, tech and fun, catalogued around a 3D icon cloud', screen: 'Signal Cloud', tag: 'a spinning cloud of good taste' },
@@ -38,11 +42,11 @@ const OBJECTS = [
     { key: 'markets', name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart', screen: 'Market Terminal', tag: 'neochibi floors, volume + the CULT chart' },
     { key: 'cornhub', hidden: true, name: 'CornHub', url: '/pages/cornhub.html', type: 'page', icon: '/assets/object-icons/cornhub.webp', desc: 'cornhub intl inc. - yet another shitcoin' },
     { key: 'live-discord', name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen', screen: 'Comms Channel', tag: 'dm open · say hi' },
-    { key: 'live-music', name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles', screen: 'Audio Feed', tag: 'what\'s in the headphones' },
-    { key: 'live-steam', name: 'Steam', url: 'https://steamcommunity.com/id/11111x11111', type: 'live', dossier: 'steam', icon: '/assets/object-icons/live-steam.svg', desc: 'online or in-game, and recently played games with hours', screen: 'Game Feed', tag: 'what\'s on the second monitor' },
-    { key: 'live-x', name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts', screen: 'Broadcast Feed', tag: 'posting through it' },
-    { key: 'live-github', name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days', screen: 'Commit Feed', tag: 'commits, streaks + green squares' },
-    { key: 'live-reminet', name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net', screen: 'Credit Feed', tag: 'social credit, frens + beetles' },
+    { key: 'live-music', onHost: true, name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles', screen: 'Audio Feed', tag: 'what\'s in the headphones' },
+    { key: 'live-steam', onHost: true, name: 'Steam', url: 'https://steamcommunity.com/id/11111x11111', type: 'live', dossier: 'steam', icon: '/assets/object-icons/live-steam.svg', desc: 'online or in-game, and recently played games with hours', screen: 'Game Feed', tag: 'what\'s on the second monitor' },
+    { key: 'live-x', onHost: true, name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts', screen: 'Broadcast Feed', tag: 'posting through it' },
+    { key: 'live-github', onHost: true, name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days', screen: 'Commit Feed', tag: 'commits, streaks + green squares' },
+    { key: 'live-reminet', onHost: true, name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net', screen: 'Credit Feed', tag: 'social credit, frens + beetles' },
     { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', page: '/pages/nosfyl.html', embed: true, type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star', screen: 'Star Relay', tag: 'urbit star · the galaxy\'s middle child' },
     { key: 'raddem', name: '~raddem-tidwyt', url: 'https://urbit.tylerirl.com', page: '/pages/raddem.html', embed: true, type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet', screen: 'Planet Relay', tag: 'urbit planet · home ship' },
     { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, embed: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit', screen: 'Comms Relay', tag: 'sign the book · uplink via urbit' }
@@ -123,7 +127,7 @@ const FEATURED = [
             format: o.type === 'live' ? 'live' : external ? 'external' : (o.workspace ? 'workspace' : 'legacy')
         };
     }).filter((o) => !o.hidden);
-    const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t));
+    const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t && !o.parent && !o.onHost));
 
     let type = 'all';
     let current = null;
@@ -140,7 +144,7 @@ const FEATURED = [
         viewed.length = Math.min(viewed.length, HISTORY_MAX);
     } catch (_) {}
 
-    const listed = objects.filter((o) => !o.parent);
+    const listed = objects.filter((o) => !o.parent && !o.onHost);
     const visible = () => listed.filter((o) => type === 'all' || o.type === type);
     const countOf = (t) => t === 'all' ? listed.length : listed.filter((o) => o.type === t).length;
     const parentOf = (o) => o && o.parent ? objects.find((x) => x.key === o.parent) : null;
@@ -171,8 +175,9 @@ const FEATURED = [
     // Lines whose words changed (not just their numbers ticking: a countdown, an uptime): key -> when. Ambient
     // mode's tour visits these first (tourNext)
     const fresh = new Map();
+    const freshHash = new Map(); // and where in the page the news is (a part to open it at)
     const gist = (t) => String(t || '').replace(/[\d.,:]+/g, '#').replace(/\s+/g, ' ').trim();
-    const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'timer', 'nosfyl', 'raddem',
+    const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'timer', 'nosfyl', 'raddem', 'deepdish', 'gallery', 'rocketry', 'markets',
         ...objects.filter((o) => o.type === 'live').map((o) => o.key)]);
     const waiting = new Set(LIVE_KEYS);
     setTimeout(() => {
@@ -882,16 +887,49 @@ const FEATURED = [
             if (Date.now() < quietUntil) { e.preventDefault(); e.stopPropagation(); }
         }, true);
     })();
-    // Deep links (/#gallery) select an object once, then the hash is dropped so a later visit opens on home
+    // Deep links (/#gallery, /#deepdish/middle-management) select an object, and take its page to the part
+    // after the slash, once; then the hash is dropped so a later visit opens on home
+    function parseHash(hash) {
+        let h = String(hash || '').replace(/^#/, '');
+        try { h = decodeURIComponent(h); } catch (_) {}
+        const at = h.indexOf('/');
+        const o = objectByKey(at === -1 ? h : h.slice(0, at));
+        return o ? { o, part: at === -1 ? null : h.slice(at + 1) || null } : null;
+    }
     function fromHash() {
-        const o = objects.find((x) => x.key === location.hash.slice(1));
+        const hit = parseHash(location.hash);
         if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-        return o;
+        return hit;
     }
     window.addEventListener('hashchange', () => {
-        const o = fromHash();
-        if (o && o !== current) select(o);
+        const hit = fromHash();
+        if (hit && (hit.o !== current || hit.part)) select(hit.o, { hash: hit.part });
     });
+    // Where a link goes, if it's somewhere in the workspace: this page with an object's hash, or an object's own
+    // page (its #hash becomes the part). Links an embedded page follows come here first (js/embed.js), so moving
+    // between pages swaps the preview instead of reloading everything.
+    const pathKey = new Map();
+    objects.forEach((o) => [o.page, o.external ? null : o.url].forEach((u) => {
+        if (u && u !== '/') pathKey.set(new URL(u, location.href).pathname.replace(/\.html$/, ''), o);
+    }));
+    function route(href) {
+        let u;
+        try { u = new URL(href, location.href); } catch (_) { return null; }
+        if (u.origin !== location.origin) return null;
+        if (u.pathname === '/' || u.pathname === '/index.html') return u.hash ? parseHash(u.hash) : { o: objectByKey(HOME), part: null };
+        const o = pathKey.get(u.pathname.replace(/\.html$/, ''));
+        if (!o) return null;
+        let part = u.hash.slice(1) || null;
+        try { part = part && decodeURIComponent(part); } catch (_) {}
+        return { o, part };
+    }
+    function go(href) {
+        const hit = route(href);
+        if (!hit) return false;
+        select(hit.o, { hash: hit.part });
+        header.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' });
+        return true;
+    }
     // Back/forward cache restores the page as it was left: reset to home
     window.addEventListener('pageshow', (e) => {
         if (e.persisted) select(objectByKey(HOME));
@@ -1188,8 +1226,24 @@ const FEATURED = [
     function tourNext() {
         const list = tourable();
         const news = [...fresh.entries()].sort((a, b) => a[1] - b[1]).map(([k]) => list.find((o) => o.key === k)).find((o) => o && o !== current);
-        if (news) return { o: news, news: true };
+        if (news) return { o: news, news: true, hash: freshHash.get(news.key) || null };
         return { o: list[(list.indexOf(current) + 1) % list.length], news: false };
+    }
+    // News while touring: the tour heads there next, once the stop showing has had TOUR_MIN on screen
+    const TOUR_MIN = 8000;
+    let stopAt = 0;
+    function tourToward(o, hash) {
+        if (!ambient || !tourable().includes(o)) return;
+        if (o === current) {
+            if (hash && embedEl) select(o, { noScroll: true, quiet: true, hash });
+            fresh.delete(o.key);
+            freshHash.delete(o.key);
+            return;
+        }
+        upNext = { o, news: true, hash };
+        renderTour(false, true);
+        clearTimeout(tourTimer);
+        tourTimer = setTimeout(tourStep, Math.max(2500, stopAt + TOUR_MIN - Date.now()));
     }
     function onDisplay(frame, on) {
         try { frame.contentWindow?.TirlEmbed?.display?.(on); } catch (_) {}
@@ -1214,18 +1268,20 @@ const FEATURED = [
         }, i * 75));
     }
     function tourStep() {
-        const { o, news } = upNext || tourNext();
+        const { o, news, hash } = upNext || tourNext();
         upNext = null;
         seek(current, o, () => {
             fresh.delete(o.key);
-            select(o, { noScroll: true, quiet: true });
+            freshHash.delete(o.key);
+            stopAt = Date.now();
+            select(o, { noScroll: true, quiet: true, hash: hash || null });
             upNext = tourNext();
             renderTour(news);
         });
         tourTimer = setTimeout(tourStep, TOUR_MS);
     }
     const tourEl = document.getElementById('g-tour');
-    function renderTour(news) {
+    function renderTour(news, keepClock) {
         if (!tourEl || !current) return;
         const list = tourable();
         const line = live[current.key];
@@ -1235,6 +1291,7 @@ const FEATURED = [
             <span class="g-tour-text"><span class="g-tour-name">${esc(current.name)}${news ? ' <b class="g-tour-new">NEW</b>' : ''}</span>
             <span class="g-tour-line">${line ? `<i class="g-live-dot tone-${esc(line.tone || 'green')}"></i>${esc(line.text)}` : esc(current.tag || current.desc)}</span></span>`;
         tourEl.querySelector('#g-tour-next').innerHTML = n ? `<span>UP NEXT</span>${iconHtml(n, 'g-tour-icon is-small')}<b>${esc(n.name)}</b>${upNext.news ? '<b class="g-tour-new">NEW</b>' : ''}` : '';
+        if (keepClock) return; // only UP NEXT changed
         const fill = tourEl.querySelector('#g-tour-fill');
         fill.style.setProperty('--tour-ms', `${TOUR_MS}ms`);
         fill.classList.remove('is-run');
@@ -1260,6 +1317,7 @@ const FEATURED = [
         // The tour starts with whatever is showing: its demo plays, the panel slides in, the clock starts
         if (embedEl) onDisplay(embedEl, true);
         upNext = tourNext();
+        stopAt = Date.now();
         if (tourEl) tweenHeight(tourEl, () => { tourEl.hidden = false; });
         renderTour(false);
         tourTimer = setTimeout(tourStep, TOUR_MS);
@@ -1302,19 +1360,36 @@ const FEATURED = [
         event(win, e) {
             if (!fromShowing(win) || !e) return;
             const text = new DOMParser().parseFromString(String(e.html || ''), 'text/html').body.textContent.replace(/\s+/g, ' ').trim();
-            if (!text) return;
-            window.tirlTicker?.push({ text: `${current.name} · ${text}`, tone: e.tone });
-            window.tirlLog?.add({ key: current.key, text, tone: e.tone });
-            const row = els.results.querySelector(`.g-res[data-key="${CSS.escape(current.key)}"]`);
-            if (row) {
-                row.classList.remove('is-ping');
-                void row.offsetWidth; // restart the ping
-                row.classList.add('is-ping');
-            }
-            // priority: the pet's own reactions (to the keys that made the news) don't talk over it
-            if (e.mood && typeof RG !== 'undefined') RG.setMood(e.mood, { anim: 'rg-bounce', status: e.status, duration: 4000, priority: true });
-        }
+            news({ ...e, key: current.key, text, tour: false });
+        },
+        // A link followed inside the embedded page: true if it's somewhere in the workspace and is now showing
+        go: (win, href) => fromShowing(win) && go(href)
     };
+    // Something happened on an object: from the page showing (event above), or from this page's own watch on the
+    // services behind them (js/live-rows.js: new runs, network posts, a new king, ships going up or down), so news
+    // reaches the ticker whichever page is up. It goes to the ticker and the Signal Log, pings the object's row,
+    // and marks it fresh, so the idle tour goes there next (with hash, to the part of the page it's about).
+    // { key, text, tone, hash, mood, status, tour }
+    function news(e) {
+        const o = e && objectByKey(e.key);
+        const text = String((e && e.text) || '').trim();
+        if (!o || !text) return;
+        window.tirlTicker?.push({ text: `${o.name} · ${text}`, tone: e.tone });
+        window.tirlLog?.add({ key: o.key, text, tone: e.tone });
+        const row = els.results.querySelector(`.g-res[data-key="${CSS.escape(rowOf(o).key)}"]`);
+        if (row) {
+            row.classList.remove('is-ping');
+            void row.offsetWidth; // restart the ping
+            row.classList.add('is-ping');
+        }
+        // priority: the pet's own reactions (to the keys that made the news) don't talk over it
+        if (e.mood && typeof RG !== 'undefined') RG.setMood(e.mood, { anim: 'rg-bounce', status: e.status, duration: 4000, priority: true });
+        if (e.tour === false) return;
+        fresh.set(o.key, Date.now());
+        if (e.hash) freshHash.set(o.key, e.hash); else freshHash.delete(o.key);
+        tourToward(o, e.hash || null);
+    }
+    window.ObjectsNews = news;
     // For the command palette (js/palette.js), the Signal Log (js/signals.js)
     // and the NOW strip (js/now.js)
     window.TirlObjects = {
@@ -1337,6 +1412,6 @@ const FEATURED = [
     // ---------- Boot ----------
     refresh();
     const initial = fromHash();
-    select(initial || objectByKey(HOME), { noScroll: !initial });
+    select(initial ? initial.o : objectByKey(HOME), { noScroll: !initial, hash: initial && initial.part });
     window.dispatchEvent(new CustomEvent('tirl:boot', { detail: { id: 'objects', status: `${objects.length} MOUNTED` } }));
 })();
