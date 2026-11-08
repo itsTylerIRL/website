@@ -1,6 +1,7 @@
-/* DEEPDISH documentation pages (deepdish_ocs.html, deepdish_rg.html): contents with scroll-spy, docs search
-   (with text highlights where the browser supports them), [ / ] section keys, #<section id> links and the
-   source map.
+/* DEEPDISH documentation pages (deepdish_ocs.html, deepdish_top.html, deepdish_rg.html, deepdish_sin.html):
+   contents with scroll-spy, docs search (with text highlights where the browser supports them), [ / ] section
+   keys, #<section id> links, the source map, a copy button on every code block, and for the dense layout (.doc.is-dense, css/docs.css) cells easing
+   up as they scroll into view and tiles counting up to their b[data-count].
    Works on #g-docs-scroll's .doc-sec sections; the source map reads JSON [[name, lines], ...] from
    #g-src's data-source attribute. */
 (function() {
@@ -133,6 +134,74 @@
         else if (e.key === ']') goTo(sections[Math.min(sections.length - 1, currentIdx + 1)]);
         else if (e.key === '[') goTo(sections[Math.max(0, currentIdx - 1)]);
     });
+
+    // ---------- Code blocks: a copy button on each ----------
+    function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).catch(() => legacyCopy(text));
+        return legacyCopy(text);
+    }
+    // Non-secure contexts, or the clipboard API refusing: a temporary textarea + execCommand
+    function legacyCopy(text) {
+        const ta = Object.assign(document.createElement('textarea'), { value: text });
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = (() => { try { return document.execCommand('copy'); } catch (_) { return false; } })();
+        ta.remove();
+        return ok ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+    }
+    scroller.querySelectorAll('pre.doc-code').forEach((pre) => {
+        const code = pre.querySelector('code') || pre;
+        const btn = Object.assign(document.createElement('button'), { type: 'button', className: 'doc-copy', textContent: 'COPY' });
+        btn.setAttribute('aria-label', 'Copy this code');
+        btn.addEventListener('click', () => {
+            copyText(code.textContent).then(() => {
+                btn.textContent = 'COPIED';
+                btn.classList.add('is-done');
+            }, () => { btn.textContent = 'FAILED'; }).finally(() => {
+                clearTimeout(btn._t);
+                btn._t = setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('is-done'); }, 1500);
+            });
+        });
+        // A wrapper holds the button in place while the code scrolls sideways under it
+        const wrap = Object.assign(document.createElement('div'), { className: 'doc-code-wrap' });
+        pre.replaceWith(wrap);
+        wrap.append(pre, btn);
+    });
+
+    // ---------- Dense layout: cells ease up, tiles count up as they scroll into view ----------
+    // .cell and .doc-tile, plus whatever the .doc lists in data-reveal (OCS: its preset and expression cards)
+    const doc = scroller.querySelector('.doc.is-dense');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('sys-calm');
+    if (doc && !calm && 'IntersectionObserver' in window) {
+        const items = Array.from(doc.querySelectorAll(['.cell, .doc-tile', doc.dataset.reveal].filter(Boolean).join(', ')));
+        // Siblings stagger a little
+        items.forEach((el) => {
+            const at = Array.prototype.indexOf.call(el.parentElement.children, el);
+            el.style.setProperty('--d', `${Math.min(at, 10) * 0.035}s`);
+        });
+        const count = (b) => {
+            const to = +b.dataset.count;
+            const text = b.textContent;
+            const start = performance.now();
+            const step = (t) => {
+                const k = Math.min(1, (t - start) / 900);
+                b.textContent = text.replace(/[\d,]+/, Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString('en-US'));
+                if (k < 1) requestAnimationFrame(step); else b.textContent = text;
+            };
+            requestAnimationFrame(step);
+        };
+        // Desktop layouts scroll the docs panel; phones scroll the page
+        const io = new IntersectionObserver((list) => list.forEach((en) => {
+            if (!en.isIntersecting) return;
+            en.target.classList.add('is-in');
+            io.unobserve(en.target);
+            const b = en.target.matches('.doc-tile') && en.target.querySelector('b[data-count]');
+            if (b) count(b);
+        }), { root: getComputedStyle(scroller).overflowY !== 'visible' ? scroller : null, rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+        document.documentElement.classList.add('doc-rv');
+        items.forEach((el) => io.observe(el));
+    }
 
     // ---------- Source map ----------
     if (els.src && els.src.dataset.source) {

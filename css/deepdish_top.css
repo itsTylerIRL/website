@@ -1,37 +1,46 @@
-/* DeepDish TOP technical reference. Shell: workspace.css and statusbar.css;
-   documentation, contents and search: docs.css and js/docs.js. */
+/* Page styles for deepdish_top.html: DeepDish TOP technical reference.
+   Shell: css/workspace.css and css/statusbar.css; contents, search, documentation typography and the dense
+   layout (.doc.is-dense, .dz, .cell, sticky section titles, scroll-in): css/docs.css and js/docs.js.
+   This file adds the side panels and TOP's own pieces of the docs: the hero, cluster nodes, integrations, the
+   dashboard wireframe and themes, the topology diagram, sprites and expressions, event levels and polling bars. */
 
-/* Snapshot labels and compact side panels */
-.top-reference-label {
-    margin: 14px 0 8px;
-    font-family: var(--g-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--g-dim);
-}
-.top-screenshot {
-    display: flex;
-    flex-direction: column;
+/* ---------- Side panels: cadence, runtime, cluster ---------- */
+/* Cadence: one bar per polling loop, filling over its real interval */
+.top-cadence { list-style: none; margin: 0; padding: 6px 0; }
+.top-cadence li {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 2px 10px;
     align-items: center;
-    gap: 8px;
-    padding: 12px;
-    text-decoration: none;
-    background: radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.06), transparent 75%);
-}
-.top-screenshot img {
-    display: block;
-    width: 100%;
-    max-height: 250px;
-    object-fit: contain;
-    border-radius: 6px;
-}
-.top-screenshot span {
+    padding: 5px 12px;
     font-family: var(--g-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--g-blue);
 }
-.top-screenshot:hover { background-color: rgba(var(--g-blue-rgb), 0.05); }
+.top-cadence li + li { border-top: 1px solid rgba(var(--g-blue-rgb), 0.06); }
+.top-cadence b { font-weight: 400; font-size: 10.5px; color: var(--g-blue); }
+.top-cadence small { grid-column: 2; font-size: 9.5px; color: var(--g-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-tick { position: relative; height: 5px; border-radius: 3px; overflow: hidden; background: rgba(var(--g-blue-rgb), 0.1); }
+.top-tick i {
+    position: absolute;
+    inset: 0;
+    transform-origin: left;
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.35), var(--g-blue));
+    box-shadow: 0 0 6px rgba(var(--g-blue-rgb), 0.5);
+    animation: top-fill var(--ms) linear infinite;
+}
+@keyframes top-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* The core telemetry poll: threat red, and the label blinks as each poll fires */
+.top-cadence .is-core b { color: #ff5566; animation: top-fire 2000ms steps(1, end) infinite; }
+.top-cadence .is-core .top-tick { background: rgba(255, 10, 30, 0.12); }
+.top-cadence .is-core .top-tick i { background: linear-gradient(90deg, rgba(255, 10, 30, 0.35), #ff3344); box-shadow: 0 0 6px rgba(255, 10, 30, 0.6); }
+@keyframes top-fire { 0% { text-shadow: 0 0 8px #ff0a1e; } 10% { text-shadow: none; } }
+/* Every frame: a shimmer rather than a fill */
+.top-cadence .is-raf .top-tick i {
+    transform: none;
+    background: repeating-linear-gradient(90deg, rgba(80, 250, 123, 0.7) 0 3px, transparent 3px 6px);
+    animation: top-raf 0.5s linear infinite;
+}
+@keyframes top-raf { to { background-position: 12px 0; } }
+.top-cadence .is-raf b { color: var(--g-green); }
 .top-hosts {
     list-style: none;
     margin: 0;
@@ -51,113 +60,239 @@
 .top-hosts b { color: var(--g-text); font-weight: 400; letter-spacing: 0.08em; }
 .top-hosts code { color: var(--g-dim); overflow-wrap: anywhere; }
 
-/* Technical tables scroll inside the document rather than stretching its column. */
-.top-table-wrap {
-    min-width: 0;
-    max-width: 100%;
-    overflow-x: auto;
-    margin: 4px 0 16px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(var(--g-blue-rgb), 0.3) transparent;
+/* ---------- §01 hero: the dashboard itself ---------- */
+/* Layout, lede and tag type: the shared hero (css/docs.css .doc-hero) */
+.top-hero {
+    background: radial-gradient(ellipse at 12% 50%, rgba(255, 10, 30, 0.13), transparent 55%), var(--g-well);
 }
-.top-table-wrap:focus-visible { outline: 1px solid var(--g-blue); outline-offset: 2px; }
-.top-table-wrap .doc-table { margin: 0; display: table; overflow: visible; }
-.top-table-wrap .doc-table .top-key { color: var(--g-blue); }
-.top-table-wrap td code { overflow-wrap: anywhere; }
+.top-hero-shot { position: relative; display: block; padding: 10px; text-decoration: none; }
+.top-hero-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 0 34px rgba(255, 10, 30, 0.25), 0 0 0 1px rgba(255, 51, 68, 0.3);
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s ease;
+}
+.top-hero-shot:hover img { transform: translateY(-2px); box-shadow: 0 0 44px rgba(255, 10, 30, 0.4), 0 0 0 1px rgba(255, 51, 68, 0.5); }
+.top-hero-shot .g-reticle { position: absolute; width: 14px; height: 14px; border: 0 solid #ff3344; opacity: 0.7; }
+.top-hero-shot .g-reticle.tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.top-hero-shot .g-reticle.tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.top-hero-shot .g-reticle.bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.top-hero-shot .g-reticle.br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+.top-hero-tag {
+    display: block;
+    margin-top: 8px;
+    color: #ff5566;
+}
+.top-hero-tag::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: #ff0a1e; box-shadow: 0 0 6px #ff0a1e; animation: top-rec 1.6s steps(2, jump-none) infinite; }
+@keyframes top-rec { 50% { opacity: 0.2; } }
+.top-hero .doc-chips { margin: 0 0 8px; }
+.top-hero .g-callout { margin-top: 0; }
 
-/* Deployment layers: a fluid pipeline with an explicit reading order. */
-.top-pipeline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
+
+/* ---------- Tables ---------- */
+.doc.is-dense .top-fns td:first-child { width: 168px; font-family: var(--g-mono); font-size: 10.5px; color: var(--g-blue); }
+.doc.is-dense .top-mounts td:first-child,
+.doc.is-dense .top-svcs td:first-child { color: var(--g-blue); }
+.doc.is-dense .top-deps td:nth-child(2) { font-family: var(--g-mono); font-size: 10.5px; color: var(--g-orange); white-space: nowrap; }
+.doc.is-dense .top-api td:nth-child(3) { color: var(--g-muted); }
+.doc.is-dense .top-api td:nth-child(4) { font-family: var(--g-mono); font-size: 10px; color: var(--g-green); white-space: nowrap; text-align: right; }
+.doc.is-dense .doc-api td:nth-child(3) { font-size: 11px; color: var(--g-muted); }
+.doc.is-dense .top-ntypes td:first-child { font-family: var(--g-mono); font-size: 10.5px; color: var(--g-blue); }
+.doc.is-dense .top-react td:first-child,
+.doc.is-dense .top-perf td:first-child { width: 112px; }
+.doc.is-dense .top-react td:last-child { color: var(--g-orange); font-family: var(--g-mono); font-size: 10.5px; }
+
+/* ---------- §03 cluster nodes and integrations ---------- */
+.top-nodes {
     list-style: none;
-    padding: 0;
-    margin: 14px 0 18px;
-}
-.top-pipeline li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--g-mono);
-    font-size: 10.5px;
-    color: var(--g-blue);
-}
-.top-pipeline li:not(:last-child)::after { content: '→'; color: var(--g-dim); }
-
-/* Notes and module maps retain the write-up's grouping in workspace glass. */
-.top-integrations,
-.top-column-map {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-    gap: 10px;
-    margin: 8px 0 14px;
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    gap: 6px;
+    margin: 0;
+    padding: 0;
 }
-.top-column-map { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
-.top-note {
+.top-nodes li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px 8px 22px;
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.08), rgba(0, 0, 0, 0.25));
+    border: 1px solid var(--g-border);
+    border-radius: 6px;
+}
+/* A rack unit's port light: decoration, not live status */
+.top-nodes li::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: rgba(var(--g-blue-rgb), 0.55);
+    box-shadow: 0 0 6px rgba(var(--g-blue-rgb), 0.5);
+}
+.top-nodes b { font: 400 11px/1.2 var(--g-mono); letter-spacing: 0.1em; color: var(--g-text); }
+.top-nodes code { font-size: 10px; color: var(--g-dim); background: none; border: none; padding: 0; }
+.top-ints {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+    gap: 8px;
+}
+.top-int {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     min-width: 0;
-    padding: 10px 12px;
-    margin: 6px 0 12px;
-    background: var(--g-well);
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--g-border);
     border-left: 2px solid var(--g-blue);
-    border-radius: 8px;
+    border-radius: 6px;
 }
-.top-integrations .top-note,
-.top-column-map .top-note { margin: 0; }
-.top-note-title {
-    margin-bottom: 6px;
-    font-family: var(--g-mono);
-    font-size: 10.5px;
+.top-int b { font: 400 11.5px/1.3 var(--g-mono); color: var(--g-blue); letter-spacing: 0.04em; }
+.top-int small { font-size: 10px; color: var(--g-dim); }
+.top-int code { align-self: start; margin: 3px 0; font-size: 10px; overflow-wrap: anywhere; }
+.doc.is-dense .top-int p { margin: 0; font-size: 11px; line-height: 1.45; color: var(--g-muted); }
+
+/* ---------- §05 dashboard: column wireframe, themes, shortcuts ---------- */
+.top-wire {
+    display: grid;
+    grid-template-columns: 26fr 54fr 32fr;
+    gap: 6px;
+    padding: 6px;
+    background: repeating-linear-gradient(0deg, rgba(255, 10, 30, 0.035) 0 1px, transparent 1px 3px), rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 51, 68, 0.25);
+    border-radius: 6px;
+}
+.top-wire > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.top-wire em {
+    font: 400 9px/1.4 var(--g-mono);
+    font-style: normal;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--g-blue);
-}
-.top-note p:last-child { margin-bottom: 0; }
-.top-caution { border-left-color: var(--g-orange); }
-.top-muted { color: var(--g-muted); font-size: 11.5px; }
-.top-footnotes {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid var(--g-border);
-    font-size: 10.5px;
     color: var(--g-dim);
 }
-.doc ul { padding-left: 20px; margin: 6px 0 12px; }
-.doc li { margin-bottom: 4px; }
-.doc strong { color: var(--g-text); }
-.doc .redacted {
-    color: var(--g-muted);
-    background: rgba(var(--g-blue-rgb), 0.1);
+.top-wire i {
+    padding: 3px 6px;
+    font: 400 9.5px/1.4 var(--g-mono);
+    font-style: normal;
+    letter-spacing: 0.06em;
+    color: #ffb3ba;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: rgba(255, 10, 30, 0.07);
+    border: 1px solid rgba(255, 51, 68, 0.22);
+    border-left: 2px solid rgba(255, 10, 30, 0.7);
     border-radius: 3px;
-    padding: 0 3px;
 }
-.doc .top-pipeline { padding: 0; }
-.doc .top-pipeline li { margin: 0; }
-
-/* Cluster membership is a reference list, not a simulated live status feed. */
-.top-cluster-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
-    gap: 8px;
-    margin: 12px 0 18px;
-}
-.top-cluster-node {
+.top-wire i.is-big { padding-block: 10px; }
+.top-themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 6px; }
+.top-theme {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
     padding: 8px 10px;
-    background: var(--g-well);
-    border: 1px solid var(--g-border);
-    border-radius: 8px;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--t) 14%, transparent), transparent 60%), rgba(0, 0, 0, 0.4);
+    border: 1px solid color-mix(in srgb, var(--t) 40%, transparent);
+    border-radius: 6px;
 }
-.top-node-name {
-    font-family: var(--g-mono);
-    color: var(--g-text);
-    font-size: 11px;
-    letter-spacing: 0.1em;
+.top-theme b { font: 400 10px/1.4 var(--g-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--t); }
+.top-theme span { display: flex; align-items: center; gap: 6px; font: 400 10px/1.4 var(--g-mono); color: var(--g-muted); }
+.top-theme span i { flex: none; width: 10px; height: 10px; border-radius: 2px; background: var(--c); box-shadow: 0 0 6px var(--c); }
+.top-shortcuts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 12px;
+    margin: 0;
+    font-size: 11.5px;
 }
-.top-node-host { color: var(--g-dim); font-size: 10.5px; overflow-wrap: anywhere; }
+.top-shortcuts dt,
+.top-shortcuts dd { margin: 0; min-width: 0; }
+.top-shortcuts kbd { font-family: var(--g-mono); color: var(--g-blue); }
 
-/* Recording is paused initially, with accessible native playback controls. */
-.top-recording { max-width: 100%; }
+/* ---------- §06 topology ---------- */
+.top-topo-cell { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, rgba(var(--g-blue-rgb), 0.08), transparent 65%), var(--g-well); }
+.top-topo { display: block; width: 100%; max-width: 440px; height: auto; overflow: visible; }
+.top-topo text { font: 400 9px var(--g-mono); fill: var(--g-muted); letter-spacing: 0.04em; }
+.top-topo .tt-hub { fill: #ff5566; letter-spacing: 0.14em; }
+.top-topo .tr-ring { fill: none; stroke: rgba(var(--g-blue-rgb), 0.12); stroke-dasharray: 2 4; }
+.top-topo line { stroke-width: 1; stroke-dasharray: 3 7; animation: top-flow 2.4s linear infinite; animation-delay: calc(var(--k) * -0.3s); }
+.top-topo .tl-in { stroke: rgba(80, 250, 123, 0.55); }
+.top-topo .tl-out { stroke: rgba(var(--g-blue-rgb), 0.45); animation-duration: 3.6s; }
+@keyframes top-flow { to { stroke-dashoffset: -20; } }
+.top-topo .tn-in { fill: #07130c; stroke: var(--g-green); stroke-width: 1.2; }
+.top-topo .tn-out { fill: #06121a; stroke: var(--g-blue); stroke-width: 1.2; }
+.top-topo .tn-hub { fill: rgba(255, 10, 30, 0.25); stroke: #ff3344; stroke-width: 1.5; filter: drop-shadow(0 0 5px rgba(255, 10, 30, 0.8)); }
+
+/* ---------- §07 RadGotchi sprites, §08 OCS expressions ---------- */
+.top-sprites,
+.top-exprs { display: grid; gap: 6px; }
+.top-sprites { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+.top-exprs { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+.top-sprites figure,
+.top-expr {
+    margin: 0;
+    padding: 6px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--g-border);
+    border-radius: var(--card-r, 6px);
+    transition: border-color 0.2s ease, transform 0.25s ease;
+}
+.top-sprites figure:hover,
+.top-expr:hover { border-color: rgba(var(--g-blue-rgb), 0.5); transform: translateY(-2px); }
+.top-sprites img {
+    display: block;
+    width: 100%;
+    max-width: 72px;
+    height: auto;
+    margin: 0 auto;
+    image-rendering: pixelated;
+    /* The sprites are black line art: tinted the way the status bar's pet is (css/radgotchi.css) */
+    filter: invert(1) sepia(1) saturate(6) hue-rotate(160deg) brightness(1.2) drop-shadow(0 0 4px rgba(139, 233, 253, 0.5));
+}
+.top-expr img { display: block; width: 100%; height: auto; border-radius: 50%; }
+.top-sprites figcaption,
+.top-expr figcaption { margin-top: 4px; font: 400 9.5px/1.2 var(--g-mono); color: var(--g-muted); }
+
+/* ---------- §09 event levels, §10 polling ---------- */
+.top-levels { display: flex; flex-wrap: wrap; gap: 6px; }
+:is(.top-levels, .top-events) i {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font: 400 10px/1.6 var(--g-mono);
+    font-style: normal;
+    letter-spacing: 0.1em;
+    color: var(--lv);
+}
+.top-levels i { padding: 1px 8px; border: 1px solid color-mix(in srgb, var(--lv) 45%, transparent); border-radius: 4px; background: color-mix(in srgb, var(--lv) 10%, transparent); }
+:is(.top-levels, .top-events) i::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--lv); box-shadow: 0 0 6px var(--lv); }
+.lv-crit { --lv: var(--g-red); }
+.lv-warn { --lv: var(--g-orange); }
+.lv-info { --lv: var(--g-blue); }
+.lv-ok { --lv: var(--g-green); }
+.doc.is-dense .top-events td:last-child { width: 96px; }
+.top-ms {
+    display: block;
+    width: 100%;
+    min-width: 60px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--g-blue) calc(var(--v) * 100%), rgba(var(--g-blue-rgb), 0.1) 0);
+    box-shadow: 0 0 6px rgba(var(--g-blue-rgb), 0.25);
+}
+.doc.is-dense .top-polls td { vertical-align: middle; }
+.doc.is-dense .top-polls td:first-child { width: 76px; font-family: var(--g-mono); font-size: 10.5px; color: var(--g-blue); }
+.doc.is-dense .top-polls td:nth-child(2) { width: 22%; }
+.doc.is-dense .top-polls td:last-child { color: var(--g-muted); }
+
+/* ---------- §11 recording, §13 security, §14 footnotes ---------- */
 .top-recording video {
     display: block;
     width: 100%;
@@ -166,34 +301,55 @@
     background: #000;
     object-fit: contain;
 }
-.top-shortcuts {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 6px 12px;
-    margin: 8px 0 14px;
+.top-risks { margin: 0; padding-left: 16px; }
+.top-risks li { margin-bottom: 4px; }
+.top-risks li::marker { color: var(--g-orange); }
+.top-classified {
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 6px, transparent 6px 12px), var(--g-well);
+    color: var(--g-muted);
     font-size: 11.5px;
 }
-.top-shortcuts dt,
-.top-shortcuts dd { margin: 0; min-width: 0; }
-.top-shortcuts kbd { font-family: var(--g-mono); color: var(--g-blue); }
+.top-classified > b { display: block; margin-bottom: 4px; font: 400 10px/1.5 var(--g-mono); letter-spacing: 0.2em; color: var(--g-red); }
+.doc .redacted {
+    color: var(--g-muted);
+    background: rgba(var(--g-blue-rgb), 0.1);
+    border-radius: 3px;
+    padding: 0 3px;
+}
+.doc strong { color: var(--g-text); }
+.top-footnotes {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--g-border);
+    font-size: 10.5px;
+    color: var(--g-dim);
+}
+.doc.is-dense .top-footnotes p { margin: 0 0 2px; }
 
-/* Respect the shared three/two/one-column breakpoints: 1360px and 900px. */
+@media (prefers-reduced-motion: reduce) {
+    .top-topo line, .top-hero-tag::before, .top-tick i, .top-cadence .is-core b { animation: none; }
+    .top-hero-shot img, .top-sprites figure, .top-expr { transition: none; }
+}
+html.sys-calm :is(.top-topo line, .top-hero-tag::before, .top-tick i, .top-cadence .is-core b) { animation: none; }
+
+/* ---------- One-screen layout (desktop): this page's side panels ---------- */
 @media (min-width: 1360px) and (min-height: 600px) {
-    .top-preview-pane,
+    .top-cadence-pane,
     .top-runtime-pane { flex: none; }
     .top-cluster-pane { flex: 1 1 0; min-height: 100px; }
     .top-hosts { min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 }
 @media (min-width: 1360px) and (min-height: 600px) and (max-height: 860px) {
-    .top-screenshot { padding: 8px 12px; gap: 5px; }
-    .top-screenshot img { max-height: 160px; }
+    .top-cadence li { padding-block: 3px; }
     .top-hosts li { padding-block: 4px; }
 }
+
+/* ---------- Responsive ---------- */
 @media (max-width: 899px) {
-    .top-preview-pane { order: 3; }
+    .top-cadence-pane { order: 3; }
     .top-runtime-pane { order: 4; }
     .top-cluster-pane { order: 5; }
-    .doc-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .top-shortcuts { grid-template-columns: minmax(0, 1fr); gap: 2px; }
     .top-shortcuts dd { margin-bottom: 8px; }
+    .top-wire { grid-template-columns: minmax(0, 1fr); }
 }

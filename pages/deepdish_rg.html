@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/docs.css?v=1.3">
-    <link rel="stylesheet" href="/css/deepdish_rg.css?v=2.7">
+    <link rel="stylesheet" href="/css/docs.css?v=1.9">
+    <link rel="stylesheet" href="/css/deepdish_rg.css?v=3.6">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -117,173 +117,150 @@
                 <section class="g-card g-docs-pane">
                     <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">TECHNICAL REFERENCE</span></div>
                     <div class="g-docs-scroll" id="g-docs-scroll">
-                    <article class="doc" id="doc">
+                    <article class="doc is-dense" id="doc">
 
                         <!-- §01 -->
                         <section class="doc-sec" id="s-glance" data-title="At a glance">
-                            <h2><span class="doc-num">§01</span> At a glance</h2>
-                            <div class="doc-tiles">
-                                <div class="doc-tile"><span>platform</span><b>Electron 28</b><small>Windows &middot; macOS &middot; Linux &middot; Node 18+</small></div>
-                                <div class="doc-tile"><span>modes</span><b>desktop + web</b><small>floating overlay &middot; headless web UI on :7777</small></div>
-                                <div class="doc-tile"><span>moods</span><b>25 sprites</b><small>10 idle routines &middot; EN / 中文 status text</small></div>
-                                <div class="doc-tile"><span>progression</span><b>13 ranks</b><small>TRAINEE &rarr; PHANTOM &middot; levels 1&ndash;50+</small></div>
-                                <div class="doc-tile"><span>llm</span><b>any OpenAI API</b><small>Ollama &middot; LM Studio &middot; LocalAI &middot; tool calling</small></div>
-                                <div class="doc-tile"><span>skills</span><b>7 tools</b><small>markdown-defined &middot; 2 gated as dangerous</small></div>
-                                <div class="doc-tile"><span>rad mesh</span><b>UDP 47823</b><small>LAN peer discovery + chat &middot; SIGINT-1.0</small></div>
-                                <div class="doc-tile"><span>audio</span><b>22 sounds</b><small>synthesised live with Web Audio &middot; vibe mode</small></div>
-                                <div class="doc-tile"><span>tests</span><b>18 tests</b><small>node:test &middot; CI on 3 OSes &times; Node 20 / 22</small></div>
-                                <div class="doc-tile"><span>source</span><b>14,292 LOC</b><small>JavaScript &middot; + 5.6k CSS &middot; zero runtime deps</small></div>
-                            </div>
-                            <h3>What it is</h3>
-                            <p>RadGotchi is a radbro that lives on your screen: a transparent, always-on-top window holding a 144&times;44 pixel-art face. It watches your system (CPU, memory, network, hung apps, whether you're at the keyboard) and reacts with one of 25 hand-drawn moods. Click it and it opens the <b>SIGINT Terminal</b>, a CRT-styled chat with whatever local language model you point it at &mdash; which can call tools, remember things about you and see what you attach.</p>
-                            <p>Engagement earns XP: levels, clearance ranks, milestones, daily contracts and an arcade where XP is the currency. It needs feeding and rest, finds other RadGotchis on your LAN, and since October 2026 runs headless as a phone-first web app you can install on an iPhone home screen.</p>
-                            <div class="doc-sprites" aria-hidden="true">
-                                <img class="g-sprite" src="/assets/rg/sprites/AWAKE.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/HAPPY.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/COOL.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/SMART.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/INTENSE.png" alt=""><img class="g-sprite" src="/assets/rg/sprites/SLEEP.png" alt="">
+                            <h2><span class="doc-num">§01</span> At a glance <span class="doc-h2-meta">radgotchi @ 28e2288 · MIT</span></h2>
+                            <div class="dz">
+                                <div class="cell rg-hero doc-hero wf">
+                                    <div class="rg-chamber">
+                                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                                        <img class="g-sprite rg-hero-sprite" id="rg-hero-sprite" src="/assets/rg/sprites/AWAKE.png" alt="RadGotchi, awake" width="144" height="44">
+                                        <span class="rg-hero-tag doc-hero-tag" id="rg-hero-tag">AWAKE</span>
+                                    </div>
+                                    <div class="rg-hero-text">
+                                        <p class="doc-lede">RadGotchi is a radbro that lives on your screen: a transparent, always-on-top window holding a 144&times;44 pixel-art face. It watches your system (CPU, memory, network, hung apps, whether you're at the keyboard) and reacts with one of 25 hand-drawn moods. Click it and it opens the <b>SIGINT Terminal</b>, a CRT-styled chat with whatever local language model you point it at &mdash; which can call tools, remember things about you and see what you attach.</p>
+                                        <p>Engagement earns XP: levels, clearance ranks, milestones, daily contracts and an arcade where XP is the currency. It needs feeding and rest, finds other RadGotchis on your LAN, and since October 2026 runs headless as a phone-first web app you can install on an iPhone home screen.</p>
+                                    </div>
+                                </div>
+                                <div class="doc-tiles doc-cols wf" style="--cols: 5; --cols-sm: 2"><div class="doc-tile"><span>platform</span><b>Electron 28</b><small>Windows &middot; macOS &middot; Linux &middot; Node 18+</small></div><div class="doc-tile"><span>modes</span><b>desktop + web</b><small>floating overlay &middot; headless web UI on :7777</small></div><div class="doc-tile"><span>moods</span><b data-count="25">25 sprites</b><small>10 idle routines &middot; EN / 中文 status text</small></div><div class="doc-tile"><span>progression</span><b data-count="13">13 ranks</b><small>TRAINEE &rarr; PHANTOM &middot; levels 1&ndash;50+</small></div><div class="doc-tile"><span>llm</span><b>any OpenAI API</b><small>Ollama &middot; LM Studio &middot; LocalAI &middot; tool calling</small></div><div class="doc-tile"><span>skills</span><b data-count="7">7 tools</b><small>markdown-defined &middot; 2 gated as dangerous</small></div><div class="doc-tile"><span>rad mesh</span><b>UDP 47823</b><small>LAN peer discovery + chat &middot; SIGINT-1.0</small></div><div class="doc-tile"><span>audio</span><b data-count="22">22 sounds</b><small>synthesised live with Web Audio &middot; vibe mode</small></div><div class="doc-tile"><span>tests</span><b data-count="18">18 tests</b><small>node:test &middot; CI on 3 OSes &times; Node 20 / 22</small></div><div class="doc-tile"><span>source</span><b data-count="14292">14,292 LOC</b><small>JavaScript &middot; + 5.6k CSS &middot; zero runtime deps</small></div></div>
                             </div>
                         </section>
 
                         <!-- §02 -->
                         <section class="doc-sec" id="s-arch" data-title="Architecture">
-                            <h2><span class="doc-num">§02</span> Architecture</h2>
-                            <p>Standard Electron split: a main process that owns the windows, system access, persistence and the network, and renderers that draw the pet and the terminal. <code>main.js</code> (180 lines) only boots; <code>src/main/bootstrap.js</code> wires the modules together. In web mode <code>headless.js</code> runs the same main-process modules under plain Node, and <code>src/web/web-bridge.js</code> stands in for Electron IPC in the browser.</p>
-                            <div class="doc-flow" role="img" aria-label="Process layout: the main process serves the pet window, the SIGINT terminal and settings over IPC, or the web UI over WebSocket in headless mode">
-                                <div class="flow-col">
-                                    <div class="flow-node in">system<small>cpu &middot; mem &middot; net &middot; idle &middot; cursor</small></div>
-                                    <div class="flow-node">LLM endpoint<small>OpenAI-compatible</small></div>
-                                    <div class="flow-node">LAN peers<small>UDP broadcast</small></div>
+                            <h2><span class="doc-num">§02</span> Architecture <span class="doc-h2-meta">Electron main + renderers · 21 main modules</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Standard Electron split: a main process that owns the windows, system access, persistence and the network, and renderers that draw the pet and the terminal. <code>main.js</code> (180 lines) only boots; <code>src/main/bootstrap.js</code> wires the modules together. In web mode <code>headless.js</code> runs the same main-process modules under plain Node, and <code>src/web/web-bridge.js</code> stands in for Electron IPC in the browser.</p>
+                                    <div class="doc-flow" role="img" aria-label="Process layout: the main process serves the pet window, the SIGINT terminal and settings over IPC, or the web UI over WebSocket in headless mode">
+                                        <div class="flow-col">
+                                            <div class="flow-node in">system<small>cpu &middot; mem &middot; net &middot; idle &middot; cursor</small></div>
+                                            <div class="flow-node">LLM endpoint<small>OpenAI-compatible</small></div>
+                                            <div class="flow-node">LAN peers<small>UDP broadcast</small></div>
+                                        </div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col">
+                                            <div class="flow-node core">main process<small>src/main &middot; bootstrap.js</small></div>
+                                            <div class="flow-node alt">headless.js<small>same modules under Node</small></div>
+                                        </div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col">
+                                            <div class="flow-node">pet window<small>src/renderer &middot; preload.js</small></div>
+                                            <div class="flow-node">SIGINT terminal<small>src/chat &middot; preload-chat.js</small></div>
+                                            <div class="flow-node out">web UI<small>src/web &middot; WebSocket</small></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flow-arrow">&rarr;</div>
-                                <div class="flow-col">
-                                    <div class="flow-node core">main process<small>src/main &middot; bootstrap.js</small></div>
-                                    <div class="flow-node alt">headless.js<small>same modules under Node</small></div>
-                                </div>
-                                <div class="flow-arrow">&rarr;</div>
-                                <div class="flow-col">
-                                    <div class="flow-node">pet window<small>src/renderer &middot; preload.js</small></div>
-                                    <div class="flow-node">SIGINT terminal<small>src/chat &middot; preload-chat.js</small></div>
-                                    <div class="flow-node out">web UI<small>src/web &middot; WebSocket</small></div>
+                                <div class="cell wf">
+                                    <table class="doc-table doc-rgmods">
+                                        <thead><tr><th>src/main module</th><th>lines</th><th>role</th></tr></thead>
+                                        <tbody><tr><td><code>web-server</code></td><td><span class="rg-bar" style="--v:1.000"></span><span class="doc-n">1,122</span></td><td>headless HTTP + WebSocket server, HTTP / SSE fallback</td></tr><tr><td><code>llm</code></td><td><span class="rg-bar" style="--v:0.953"></span><span class="doc-n">1,069</span></td><td>chat, streaming, tool-call rounds, LLM profiles</td></tr><tr><td><code>windows</code></td><td><span class="rg-bar" style="--v:0.615"></span><span class="doc-n">690</span></td><td>pet, terminal and settings windows; tray menu</td></tr><tr><td><code>xp-system</code></td><td><span class="rg-bar" style="--v:0.587"></span><span class="doc-n">659</span></td><td>XP, levels, ranks, milestones, attention events, idle decay</td></tr><tr><td><code>rad-mesh</code></td><td><span class="rg-bar" style="--v:0.545"></span><span class="doc-n">611</span></td><td>UDP peer discovery and messaging</td></tr><tr><td><code>arcade</code></td><td><span class="rg-bar" style="--v:0.442"></span><span class="doc-n">496</span></td><td>coinflip, blackjack, shop, inventory</td></tr><tr><td><code>movement</code></td><td><span class="rg-bar" style="--v:0.387"></span><span class="doc-n">434</span></td><td>bounce, follow and wander physics</td></tr><tr><td><code>persistence</code></td><td><span class="rg-bar" style="--v:0.361"></span><span class="doc-n">405</span></td><td>JSON state files in the user data directory</td></tr><tr><td><code>skill-loader</code></td><td><span class="rg-bar" style="--v:0.331"></span><span class="doc-n">371</span></td><td>loads and sandboxes markdown skills</td></tr><tr><td><code>bootstrap</code></td><td><span class="rg-bar" style="--v:0.275"></span><span class="doc-n">308</span></td><td>wires the modules together at startup</td></tr><tr><td><code>pet-memory</code></td><td><span class="rg-bar" style="--v:0.188"></span><span class="doc-n">211</span></td><td>facts remembered about the operator</td></tr><tr><td><code>system-monitor</code></td><td><span class="rg-bar" style="--v:0.173"></span><span class="doc-n">194</span></td><td>CPU, memory, network and hung-app telemetry</td></tr><tr><td><code>sleep-work</code></td><td><span class="rg-bar" style="--v:0.168"></span><span class="doc-n">188</span></td><td>sleep and work animation cycles</td></tr><tr><td><code>pomodoro</code></td><td><span class="rg-bar" style="--v:0.166"></span><span class="doc-n">186</span></td><td>focus timer</td></tr><tr><td><code>pet-needs</code></td><td><span class="rg-bar" style="--v:0.156"></span><span class="doc-n">175</span></td><td>hunger and energy</td></tr><tr><td><code>network-discovery</code></td><td><span class="rg-bar" style="--v:0.134"></span><span class="doc-n">150</span></td><td>adapter that keeps the old discovery API on top of RAD MESH</td></tr><tr><td><code>daily-contract</code></td><td><span class="rg-bar" style="--v:0.127"></span><span class="doc-n">143</span></td><td>one rank-flavoured objective per day</td></tr><tr><td><code>desktop-env</code></td><td><span class="rg-bar" style="--v:0.121"></span><span class="doc-n">136</span></td><td>cursor and work area, Hyprland-aware</td></tr><tr><td><code>settings-window</code></td><td><span class="rg-bar" style="--v:0.094"></span><span class="doc-n">106</span></td><td>settings window</td></tr><tr><td><code>web-auth</code></td><td><span class="rg-bar" style="--v:0.081"></span><span class="doc-n">91</span></td><td>web-mode login token</td></tr><tr><td><code>broadcast</code></td><td><span class="rg-bar" style="--v:0.053"></span><span class="doc-n">59</span></td><td>push an event to every window</td></tr></tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <table class="doc-table doc-rgmods">
-                                <thead><tr><th>src/main module</th><th>lines</th><th>role</th></tr></thead>
-                                <tbody>
-                                    <tr><td><code>web-server</code></td><td>1,122</td><td>headless HTTP + WebSocket server, HTTP / SSE fallback</td></tr>
-                                    <tr><td><code>llm</code></td><td>1,069</td><td>chat, streaming, tool-call rounds, LLM profiles</td></tr>
-                                    <tr><td><code>windows</code></td><td>690</td><td>pet, terminal and settings windows; tray menu</td></tr>
-                                    <tr><td><code>xp-system</code></td><td>659</td><td>XP, levels, ranks, milestones, attention events, idle decay</td></tr>
-                                    <tr><td><code>rad-mesh</code></td><td>611</td><td>UDP peer discovery and messaging</td></tr>
-                                    <tr><td><code>arcade</code></td><td>496</td><td>coinflip, blackjack, shop, inventory</td></tr>
-                                    <tr><td><code>movement</code></td><td>434</td><td>bounce, follow and wander physics</td></tr>
-                                    <tr><td><code>persistence</code></td><td>405</td><td>JSON state files in the user data directory</td></tr>
-                                    <tr><td><code>skill-loader</code></td><td>371</td><td>loads and sandboxes markdown skills</td></tr>
-                                    <tr><td><code>bootstrap</code></td><td>308</td><td>wires the modules together at startup</td></tr>
-                                    <tr><td><code>pet-memory</code></td><td>211</td><td>facts remembered about the operator</td></tr>
-                                    <tr><td><code>system-monitor</code></td><td>194</td><td>CPU, memory, network and hung-app telemetry</td></tr>
-                                    <tr><td><code>sleep-work</code></td><td>188</td><td>sleep and work animation cycles</td></tr>
-                                    <tr><td><code>pomodoro</code></td><td>186</td><td>focus timer</td></tr>
-                                    <tr><td><code>pet-needs</code></td><td>175</td><td>hunger and energy</td></tr>
-                                    <tr><td><code>network-discovery</code></td><td>150</td><td>adapter that keeps the old discovery API on top of RAD MESH</td></tr>
-                                    <tr><td><code>daily-contract</code></td><td>143</td><td>one rank-flavoured objective per day</td></tr>
-                                    <tr><td><code>desktop-env</code></td><td>136</td><td>cursor and work area, Hyprland-aware</td></tr>
-                                    <tr><td><code>settings-window</code></td><td>106</td><td>settings window</td></tr>
-                                    <tr><td><code>web-auth</code></td><td>91</td><td>web-mode login token</td></tr>
-                                    <tr><td><code>broadcast</code></td><td>59</td><td>push an event to every window</td></tr>
-                                </tbody>
-                            </table>
                         </section>
 
                         <!-- §03 -->
                         <section class="doc-sec" id="s-pet" data-title="Pet &amp; moods">
-                            <h2><span class="doc-num">§03</span> Pet &amp; moods</h2>
-                            <p>The face is one of 25 sprites, tinted to any colour through an SVG filter (default <code>#ff3344</code>; the choice syncs to every window, the web UI and mesh peers) with a breathing glow. Moods last a few seconds then settle back to <code>awake</code>; status text cycles in English or Chinese. Pick any sprite in the <b>Sprite Roster</b> panel, or play an idle routine in the <b>Specimen</b> viewer.</p>
-                            <table class="doc-table">
-                                <thead><tr><th>mood</th><th>triggered by</th></tr></thead>
-                                <tbody>
-                                    <tr><td>happy &middot; excited</td><td>petting, 3 quick clicks, network back, memory / CPU recovering, waking up, contact milestones</td></tr>
-                                    <tr><td>angry</td><td>5+ rapid clicks; critical alerts</td></tr>
-                                    <tr><td>intense</td><td>CPU spike, memory pressure, health escalating to warn / critical</td></tr>
-                                    <tr><td>smart &middot; cool</td><td>sustained high CPU (working); CPU back to normal</td></tr>
-                                    <tr><td>lonely &middot; sad</td><td>network disconnected; something offline</td></tr>
-                                    <tr><td>debug &middot; broken</td><td>an app stops responding; failures and crashes</td></tr>
-                                    <tr><td>upload &middot; upload1 &middot; upload2</td><td>data transfer, LLM work animations</td></tr>
-                                    <tr><td>look_l / look_r (+ _happy)</td><td>eyes follow the cursor</td></tr>
-                                    <tr><td>grateful &middot; motivated &middot; cool</td><td>50, 100 and every 25 contacts past 100</td></tr>
-                                    <tr><td>friend</td><td>a RAD MESH peer comes online</td></tr>
-                                    <tr><td>sleep &middot; sleep2</td><td>idle for 2 minutes (alternating every 3&nbsp;s)</td></tr>
-                                </tbody>
-                            </table>
-                            <h3>Idle routines</h3>
-                            <p>After 15&nbsp;s without input while <code>awake</code>, <code>bored</code> or <code>cool</code>, the pet plays a short scripted routine.</p>
-                            <table class="doc-table doc-routines">
-                                <thead><tr><th>routine</th><th>sequence</th><th>step</th></tr></thead>
-                                <tbody>
-                                    <tr><td>patrol</td><td>look_l &rarr; awake &rarr; look_r &rarr; awake &rarr; look_l_happy &rarr; awake</td><td>1.5&nbsp;s</td></tr>
-                                    <tr><td>study</td><td>smart &rarr; smart &rarr; debug &rarr; smart &rarr; excited</td><td>2.0&nbsp;s</td></tr>
-                                    <tr><td>vibe</td><td>cool &rarr; cool &rarr; happy &rarr; cool &rarr; motivated</td><td>2.2&nbsp;s</td></tr>
-                                    <tr><td>restless</td><td>bored &rarr; look_l &rarr; look_r &rarr; bored &rarr; demotivated &rarr; bored</td><td>1.8&nbsp;s</td></tr>
-                                    <tr><td>workout</td><td>motivated &rarr; intense &rarr; motivated &rarr; excited &rarr; happy &rarr; cool</td><td>1.4&nbsp;s</td></tr>
-                                    <tr><td>nap_prep</td><td>bored &rarr; bored &rarr; sleep &rarr; sleep2 &rarr; sleep &rarr; sleep2 &rarr; sleep &rarr; awake</td><td>2.5&nbsp;s</td></tr>
-                                    <tr><td>hack</td><td>debug &rarr; smart &rarr; debug &rarr; intense &rarr; debug &rarr; excited</td><td>1.6&nbsp;s</td></tr>
-                                    <tr><td>social</td><td>look_l &rarr; friend &rarr; happy &rarr; look_r &rarr; friend &rarr; grateful</td><td>1.8&nbsp;s</td></tr>
-                                    <tr><td>upload_cycle</td><td>upload &rarr; upload1 &rarr; upload2 &rarr; upload1 &rarr; upload2 &rarr; happy</td><td>0.8&nbsp;s</td></tr>
-                                    <tr><td>existential</td><td>smart &rarr; lonely &rarr; sad &rarr; smart &rarr; bored &rarr; cool</td><td>2.2&nbsp;s</td></tr>
-                                </tbody>
-                            </table>
-                            <h3>Movement</h3>
-                            <table class="doc-table doc-kv">
-                                <tr><td>static</td><td>stays where you drag it</td></tr>
-                                <tr><td>bounce</td><td>patrols the screen, reflecting off edges and cycling through nine neon colours</td></tr>
-                                <tr><td>follow</td><td>chases the cursor (max speed 5&nbsp;px / tick)</td></tr>
-                                <tr><td>wander</td><td>explores on its own with rests (max speed 2)</td></tr>
-                            </table>
-                            <p>Drag to move, scroll to scale. On Linux the pet runs through XWayland so it can position itself; under Hyprland it reads the cursor position and the space reserved by bars from Hyprland's IPC socket, because XWayland can't see either. Recommended <code>hyprland.conf</code> rules make it float, pin, and drop borders, shadow and blur.</p>
+                            <h2><span class="doc-num">§03</span> Pet &amp; moods <span class="doc-h2-meta">25 sprites · 10 routines · 4 movement modes</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>The face is one of 25 sprites, tinted to any colour through an SVG filter (default <code>#ff3344</code>; the choice syncs to every window, the web UI and mesh peers) with a breathing glow. Moods last a few seconds then settle back to <code>awake</code>; status text cycles in English or Chinese. Pick any sprite in the <b>Sprite Roster</b> panel, or play an idle routine below or in the <b>Specimen</b> viewer.</p>
+                                    <table class="doc-table rg-moods">
+                                        <thead><tr><th></th><th>mood</th><th>triggered by</th></tr></thead>
+                                        <tbody><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>happy · excited</td><td>petting, 3 quick clicks, network back, memory / CPU recovering, waking up, contact milestones</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/ANGRY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>angry</td><td>5+ rapid clicks; critical alerts</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/INTENSE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>intense</td><td>CPU spike, memory pressure, health escalating to warn / critical</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>smart · cool</td><td>sustained high CPU (working); CPU back to normal</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/LONELY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>lonely · sad</td><td>network disconnected; something offline</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEBUG.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>debug · broken</td><td>an app stops responding; failures and crashes</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>upload · upload1 · upload2</td><td>data transfer, LLM work animations</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_L.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>look_l / look_r (+ _happy)</td><td>eyes follow the cursor</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/GRATEFUL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>grateful · motivated · cool</td><td>50, 100 and every 25 contacts past 100</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/FRIEND.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>friend</td><td>a RAD MESH peer comes online</td></tr><tr><td><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP.png" alt="" width="144" height="44" loading="lazy" decoding="async"></td><td>sleep · sleep2</td><td>idle for 2 minutes (alternating every 3&nbsp;s)</td></tr></tbody>
+                                    </table>
+                                </div>
+                                <div class="cell wf">
+                                    <h3>Idle routines <span>after 15&nbsp;s without input while awake, bored or cool &middot; pick one to play it in the chamber</span></h3>
+                                    <ol class="rg-routines"><li><button type="button" class="rg-routine" data-routine="patrol" title="Play patrol in the chamber (§01)"><b>patrol</b><small>1.5&nbsp;s / step</small><span class="rg-strip" aria-label="look_l → awake → look_r → awake → look_l_happy → awake"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_L.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/AWAKE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_R.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/AWAKE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_L_HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/AWAKE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="study" title="Play study in the chamber (§01)"><b>study</b><small>2.0&nbsp;s / step</small><span class="rg-strip" aria-label="smart → smart → debug → smart → excited"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEBUG.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/EXCITED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="vibe" title="Play vibe in the chamber (§01)"><b>vibe</b><small>2.2&nbsp;s / step</small><span class="rg-strip" aria-label="cool → cool → happy → cool → motivated"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/COOL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/COOL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/COOL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/MOTIVATED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="restless" title="Play restless in the chamber (§01)"><b>restless</b><small>1.8&nbsp;s / step</small><span class="rg-strip" aria-label="bored → look_l → look_r → bored → demotivated → bored"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_L.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_R.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEMOTIVATED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="workout" title="Play workout in the chamber (§01)"><b>workout</b><small>1.4&nbsp;s / step</small><span class="rg-strip" aria-label="motivated → intense → motivated → excited → happy → cool"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/MOTIVATED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/INTENSE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/MOTIVATED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/EXCITED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/COOL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="nap_prep" title="Play nap_prep in the chamber (§01)"><b>nap_prep</b><small>2.5&nbsp;s / step</small><span class="rg-strip" aria-label="bored → bored → sleep → sleep2 → sleep → sleep2 → sleep → awake"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP2.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP2.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SLEEP.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/AWAKE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="hack" title="Play hack in the chamber (§01)"><b>hack</b><small>1.6&nbsp;s / step</small><span class="rg-strip" aria-label="debug → smart → debug → intense → debug → excited"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEBUG.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEBUG.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/INTENSE.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/DEBUG.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/EXCITED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="social" title="Play social in the chamber (§01)"><b>social</b><small>1.8&nbsp;s / step</small><span class="rg-strip" aria-label="look_l → friend → happy → look_r → friend → grateful"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_L.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/FRIEND.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LOOK_R.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/FRIEND.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/GRATEFUL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="upload_cycle" title="Play upload_cycle in the chamber (§01)"><b>upload_cycle</b><small>0.8&nbsp;s / step</small><span class="rg-strip" aria-label="upload → upload1 → upload2 → upload1 → upload2 → happy"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD1.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD2.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD1.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/UPLOAD2.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/HAPPY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li><li><button type="button" class="rg-routine" data-routine="existential" title="Play existential in the chamber (§01)"><b>existential</b><small>2.2&nbsp;s / step</small><span class="rg-strip" aria-label="smart → lonely → sad → smart → bored → cool"><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/LONELY.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SAD.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/SMART.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/BORED.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i><i><img class="g-sprite rg-mini" src="/assets/rg/sprites/COOL.png" alt="" width="144" height="44" loading="lazy" decoding="async"></i></span></button></li></ol>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Movement</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>static</td><td>stays where you drag it</td></tr>
+                                        <tr><td>bounce</td><td>patrols the screen, reflecting off edges and cycling through nine neon colours</td></tr>
+                                        <tr><td>follow</td><td>chases the cursor (max speed 5&nbsp;px / tick)</td></tr>
+                                        <tr><td>wander</td><td>explores on its own with rests (max speed 2)</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Linux &amp; Hyprland</h3>
+                                    <p>Drag to move, scroll to scale. On Linux the pet runs through XWayland so it can position itself; under Hyprland it reads the cursor position and the space reserved by bars from Hyprland's IPC socket, because XWayland can't see either. Recommended <code>hyprland.conf</code> rules make it float, pin, and drop borders, shadow and blur.</p>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §04 -->
                         <section class="doc-sec" id="s-telemetry" data-title="System telemetry">
-                            <h2><span class="doc-num">§04</span> System telemetry</h2>
-                            <table class="doc-table">
-                                <thead><tr><th>trigger</th><th>response</th></tr></thead>
-                                <tbody>
-                                    <tr><td>CPU &gt; 80%</td><td>alert state (smart / intense)</td></tr>
-                                    <tr><td>CPU &gt; 95%</td><td>spike: critical alert</td></tr>
-                                    <tr><td>memory &gt; 85%</td><td>pressure warning</td></tr>
-                                    <tr><td>network down / up</td><td>lonely / excited, logged</td></tr>
-                                    <tr><td>app not responding</td><td>debug face, names the hung app</td></tr>
-                                    <tr><td>idle 2 minutes</td><td>sleep mode; any input wakes it</td></tr>
-                                </tbody>
-                            </table>
-                            <p>Health is graded <code>good</code> / <code>warn</code> / <code>crit</code>; escalations shake the pet and announce "THREAT LVL CRITICAL", recovery makes it happy again.</p>
+                            <h2><span class="doc-num">§04</span> System telemetry <span class="doc-h2-meta">good · warn · crit</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <table class="doc-table rg-trig">
+                                        <tr><td>CPU &gt; 80%</td><td>alert state (smart / intense)</td></tr>
+                                        <tr><td>CPU &gt; 95%</td><td>spike: critical alert</td></tr>
+                                        <tr><td>memory &gt; 85%</td><td>pressure warning</td></tr>
+                                        <tr><td>network down / up</td><td>lonely / excited, logged</td></tr>
+                                        <tr><td>app not responding</td><td>debug face, names the hung app</td></tr>
+                                        <tr><td>idle 2 minutes</td><td>sleep mode; any input wakes it</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Health</h3>
+                                    <div class="rg-health"><i class="h-good">GOOD</i><i class="h-warn">WARN</i><i class="h-crit">CRIT</i></div>
+                                    <p>Health is graded <code>good</code> / <code>warn</code> / <code>crit</code>; escalations shake the pet and announce "THREAT LVL CRITICAL", recovery makes it happy again.</p>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §05 -->
                         <section class="doc-sec" id="s-needs" data-title="Needs &amp; care">
-                            <h2><span class="doc-num">§05</span> Needs &amp; care</h2>
-                            <table class="doc-table doc-kv">
-                                <tr><td>hunger</td><td>&minus;1.5 per minute; restored by feeding</td></tr>
-                                <tr><td>energy</td><td>&minus;0.8 per minute; regenerates while asleep (hunger stops decaying)</td></tr>
-                                <tr><td>zones</td><td>low below 30, critical below 10 &mdash; each logs a warning</td></tr>
-                                <tr><td>penalty</td><td>below 20, XP gains are halved</td></tr>
-                            </table>
-                            <h3>Shop</h3>
-                            <table class="doc-table doc-num-table">
-                                <thead><tr><th>item</th><th>effect</th><th>cost</th></tr></thead>
-                                <tbody>
-                                    <tr><td>RATION PACK</td><td>+50% hunger</td><td>50&nbsp;XP</td></tr>
-                                    <tr><td>ENERGY CELL</td><td>+50% energy</td><td>50&nbsp;XP</td></tr>
-                                    <tr><td>STIM SHOT</td><td>+25% both</td><td>40&nbsp;XP</td></tr>
-                                    <tr><td>FULL RESTORE</td><td>both to 100%</td><td>150&nbsp;XP</td></tr>
-                                </tbody>
-                            </table>
+                            <h2><span class="doc-num">§05</span> Needs &amp; care <span class="doc-h2-meta">hunger · energy · 4 items</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <div class="rg-gauges">
+                                        <div class="rg-gauge"><b>hunger</b><small>&minus;1.5 per minute; restored by feeding</small><span class="rg-meter" aria-hidden="true"><i></i></span></div>
+                                        <div class="rg-gauge"><b>energy</b><small>&minus;0.8 per minute; regenerates while asleep (hunger stops decaying)</small><span class="rg-meter" aria-hidden="true"><i></i></span></div>
+                                        <div class="rg-zones"><i class="z-crit">critical &lt; 10</i><i class="z-pen">XP halved &lt; 20</i><i class="z-low">low &lt; 30</i></div>
+                                    </div>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>zones</td><td>low below 30, critical below 10 &mdash; each logs a warning</td></tr>
+                                        <tr><td>penalty</td><td>below 20, XP gains are halved</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Shop <span>spent from XP</span></h3>
+                                    <div class="rg-items doc-cols" style="--cols: 2; --cols-sm: 2">
+                                        <div class="rg-item"><b>RATION PACK</b><span>+50% hunger</span><em>50&nbsp;XP</em></div>
+                                        <div class="rg-item"><b>ENERGY CELL</b><span>+50% energy</span><em>50&nbsp;XP</em></div>
+                                        <div class="rg-item"><b>STIM SHOT</b><span>+25% both</span><em>40&nbsp;XP</em></div>
+                                        <div class="rg-item"><b>FULL RESTORE</b><span>both to 100%</span><em>150&nbsp;XP</em></div>
+                                    </div>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §06 -->
                         <section class="doc-sec" id="s-xp" data-title="Progression">
-                            <h2><span class="doc-num">§06</span> Progression</h2>
-                            <div class="doc-split doc-split-even">
-                                <table class="doc-table doc-num-table">
-                                    <thead><tr><th>source</th><th>XP</th></tr></thead>
-                                    <tbody>
+                            <h2><span class="doc-num">§06</span> Progression <span class="doc-h2-meta">XP · 13 ranks · milestones · contracts</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>XP sources</h3>
+                                    <table class="doc-table doc-num-table">
                                         <tr><td>passive, every 30&nbsp;s</td><td class="pos">+1</td></tr>
                                         <tr><td>click (3&nbsp;s cooldown)</td><td class="pos">+2</td></tr>
                                         <tr><td>message sent / received</td><td class="pos">+5 / +3</td></tr>
@@ -293,96 +270,92 @@
                                         <tr><td>arcade wins</td><td class="pos">wager</td></tr>
                                         <tr><td>ignored attention, per 30&nbsp;s</td><td class="neg">&minus;2</td></tr>
                                         <tr><td>idle decay, per minute</td><td class="neg">&minus;1&hellip;10</td></tr>
-                                    </tbody>
-                                </table>
-                                <div>
+                                    </table>
+                                </div>
+                                <div class="cell">
                                     <p><b>Attention events</b> fire with a 15% chance every 2 minutes from level 2; the pet wants you, and leaving it costs XP until you respond. <b>Idle decay</b> starts after 3 minutes away, from 1 XP a minute up to 10 on a curve. Nothing is gained or lost while asleep.</p>
                                     <p><b>Focus</b>: a Pomodoro of 25&nbsp;min work and 5&nbsp;min break, with a 15&nbsp;min long break and a 10&nbsp;XP focus bonus.</p>
+                                    <h3>Milestones</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>clicks</td><td>10 &middot; 50 &middot; 100 &middot; 250 &middot; 500 &middot; 1,000 &middot; 2,500 &middot; 5,000</td></tr>
+                                        <tr><td>messages</td><td>5 &middot; 25 &middot; 50 &middot; 100 &middot; 250 &middot; 500</td></tr>
+                                        <tr><td>sessions</td><td>5 &middot; 10 &middot; 25 &middot; 50 &middot; 100</td></tr>
+                                        <tr><td>total XP</td><td>100 &middot; 500 &middot; 1K &middot; 2.5K &middot; 5K &middot; 10K &middot; 25K &middot; 50K</td></tr>
+                                        <tr><td>uptime</td><td>1&nbsp;h &middot; 5&nbsp;h &middot; 24&nbsp;h &middot; 72&nbsp;h</td></tr>
+                                    </table>
                                 </div>
                             </div>
-                            <h3>Levels &amp; ranks</h3>
-                            <table class="doc-table doc-levels">
-                                <thead><tr><th>level</th><th>XP</th><th>level</th><th>XP</th><th>level</th><th>XP</th></tr></thead>
-                                <tbody>
-                                    <tr><td>1</td><td>0</td><td>8</td><td>1,500</td><td>15</td><td>7,200</td></tr>
-                                    <tr><td>2</td><td>50</td><td>9</td><td>2,000</td><td>16</td><td>8,500</td></tr>
-                                    <tr><td>3</td><td>150</td><td>10</td><td>2,600</td><td>17</td><td>10,000</td></tr>
-                                    <tr><td>4</td><td>300</td><td>11</td><td>3,300</td><td>18</td><td>12,000</td></tr>
-                                    <tr><td>5</td><td>500</td><td>12</td><td>4,100</td><td>19</td><td>14,500</td></tr>
-                                    <tr><td>6</td><td>750</td><td>13</td><td>5,000</td><td>20</td><td>17,500</td></tr>
-                                    <tr><td>7</td><td>1,100</td><td>14</td><td>6,000</td><td>21</td><td>21,000</td></tr>
-                                </tbody>
-                            </table>
-                            <p>Past level 21 every level costs another 3,000&nbsp;XP. The rank ladder is in the <b>Clearance</b> panel.</p>
-                            <h3>Milestones</h3>
-                            <table class="doc-table doc-kv">
-                                <tr><td>clicks</td><td>10 &middot; 50 &middot; 100 &middot; 250 &middot; 500 &middot; 1,000 &middot; 2,500 &middot; 5,000</td></tr>
-                                <tr><td>messages</td><td>5 &middot; 25 &middot; 50 &middot; 100 &middot; 250 &middot; 500</td></tr>
-                                <tr><td>sessions</td><td>5 &middot; 10 &middot; 25 &middot; 50 &middot; 100</td></tr>
-                                <tr><td>total XP</td><td>100 &middot; 500 &middot; 1K &middot; 2.5K &middot; 5K &middot; 10K &middot; 25K &middot; 50K</td></tr>
-                                <tr><td>uptime</td><td>1&nbsp;h &middot; 5&nbsp;h &middot; 24&nbsp;h &middot; 72&nbsp;h</td></tr>
-                            </table>
-                            <h3>Daily contracts</h3>
-                            <p>One rank-flavoured directive per day, chosen deterministically from the date.</p>
-                            <table class="doc-table doc-num-table">
-                                <thead><tr><th>directive</th><th>target</th><th>bounty</th></tr></thead>
-                                <tbody>
-                                    <tr><td>Complete {n} focus cycles</td><td>2</td><td>60</td></tr>
-                                    <tr><td>Exchange {n} transmissions</td><td>8</td><td>50</td></tr>
-                                    <tr><td>Make {n} direct contacts</td><td>25</td><td>40</td></tr>
-                                    <tr><td>Resupply: use {n} inventory item</td><td>1</td><td>30</td></tr>
-                                    <tr><td>Win {n} wagers in the arcade</td><td>2</td><td>70</td></tr>
-                                </tbody>
-                            </table>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Daily contracts <span>one per day, chosen from the date</span></h3>
+                                    <table class="doc-table doc-num-table rg-contracts">
+                                        <thead><tr><th>directive</th><th>target</th><th>bounty</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Complete {n} focus cycles</td><td>2</td><td>60</td></tr>
+                                            <tr><td>Exchange {n} transmissions</td><td>8</td><td>50</td></tr>
+                                            <tr><td>Make {n} direct contacts</td><td>25</td><td>40</td></tr>
+                                            <tr><td>Resupply: use {n} inventory item</td><td>1</td><td>30</td></tr>
+                                            <tr><td>Win {n} wagers in the arcade</td><td>2</td><td>70</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Levels <span>XP to reach each level &middot; past 21, every level costs another 3,000 &middot; ranks in the Clearance panel</span></h3>
+                                    <ol class="rg-curve" aria-label="XP needed for levels 1 to 21, from 0 to 21,000"><li style="--v:0.000" title="level 1: 0 XP"><span>0</span><b>1</b></li><li style="--v:0.002" title="level 2: 50 XP"><span>50</span><b>2</b></li><li style="--v:0.007" title="level 3: 150 XP"><span>150</span><b>3</b></li><li style="--v:0.014" title="level 4: 300 XP"><span>300</span><b>4</b></li><li style="--v:0.024" title="level 5: 500 XP"><span>500</span><b>5</b></li><li style="--v:0.036" title="level 6: 750 XP"><span>750</span><b>6</b></li><li style="--v:0.052" title="level 7: 1,100 XP"><span>1,100</span><b>7</b></li><li style="--v:0.071" title="level 8: 1,500 XP"><span>1,500</span><b>8</b></li><li style="--v:0.095" title="level 9: 2,000 XP"><span>2,000</span><b>9</b></li><li style="--v:0.124" title="level 10: 2,600 XP"><span>2,600</span><b>10</b></li><li style="--v:0.157" title="level 11: 3,300 XP"><span>3,300</span><b>11</b></li><li style="--v:0.195" title="level 12: 4,100 XP"><span>4,100</span><b>12</b></li><li style="--v:0.238" title="level 13: 5,000 XP"><span>5,000</span><b>13</b></li><li style="--v:0.286" title="level 14: 6,000 XP"><span>6,000</span><b>14</b></li><li style="--v:0.343" title="level 15: 7,200 XP"><span>7,200</span><b>15</b></li><li style="--v:0.405" title="level 16: 8,500 XP"><span>8,500</span><b>16</b></li><li style="--v:0.476" title="level 17: 10,000 XP"><span>10,000</span><b>17</b></li><li style="--v:0.571" title="level 18: 12,000 XP"><span>12,000</span><b>18</b></li><li style="--v:0.690" title="level 19: 14,500 XP"><span>14,500</span><b>19</b></li><li style="--v:0.833" title="level 20: 17,500 XP"><span>17,500</span><b>20</b></li><li style="--v:1.000" title="level 21: 21,000 XP"><span>21,000</span><b>21</b></li></ol>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §07 -->
                         <section class="doc-sec" id="s-arcade" data-title="Arcade">
-                            <h2><span class="doc-num">§07</span> Arcade</h2>
-                            <p>XP is the currency. Wins, losses and profit are tracked per game and persisted in <code>arcade-data.json</code> with the inventory.</p>
-                            <table class="doc-table doc-kv">
-                                <tr><td>coinflip</td><td>bet 5&ndash;500&nbsp;XP; a win pays 1.8&times; (a 10% house edge on double-or-nothing)</td></tr>
-                                <tr><td>blackjack</td><td>bet 10&ndash;500&nbsp;XP; hit, stand, or double down on the first action; naturals checked on the deal, auto-stand at 21, pushes return the bet</td></tr>
-                                <tr><td>shop</td><td>spend XP on consumables (&sect;05); items go to the inventory until used</td></tr>
-                            </table>
+                            <h2><span class="doc-num">§07</span> Arcade <span class="doc-h2-meta">arcade-data.json</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>XP is the currency. Wins, losses and profit are tracked per game and persisted in <code>arcade-data.json</code> with the inventory.</p>
+                                </div>
+                                <div class="cell rg-game"><span class="doc-glyph" aria-hidden="true">&#9673;</span><h3>Coinflip <span>5&ndash;500&nbsp;XP</span></h3><p>A win pays 1.8&times; (a 10% house edge on double-or-nothing).</p></div>
+                                <div class="cell rg-game"><span class="doc-glyph" aria-hidden="true">&#9824;</span><h3>Blackjack <span>10&ndash;500&nbsp;XP</span></h3><p>Hit, stand, or double down on the first action; naturals checked on the deal, auto-stand at 21, pushes return the bet.</p></div>
+                                <div class="cell rg-game"><span class="doc-glyph" aria-hidden="true">&#9638;</span><h3>Shop <span>&sect;05</span></h3><p>Spend XP on consumables; items go to the inventory until used.</p></div>
+                            </div>
                         </section>
 
                         <!-- §08 -->
                         <section class="doc-sec" id="s-sigint" data-title="SIGINT terminal">
-                            <h2><span class="doc-num">§08</span> SIGINT terminal &amp; LLM</h2>
-                            <p>Click the pet to open the terminal: CRT scanlines, streaming replies rendered as markdown with copyable code blocks, file attachments with previews, an activity log, the XP bar, needs, Pomodoro, mesh panel and an audio equaliser. History persists between sessions.</p>
-                            <table class="doc-table">
-                                <thead><tr><th>backend</th><th>default endpoint</th></tr></thead>
-                                <tbody>
-                                    <tr><td>Ollama</td><td><code>localhost:11434/v1/chat/completions</code></td></tr>
-                                    <tr><td>LM Studio</td><td><code>localhost:1234/v1/chat/completions</code></td></tr>
-                                    <tr><td>LocalAI / other</td><td>any OpenAI-compatible endpoint; several profiles can be saved</td></tr>
-                                </tbody>
-                            </table>
-                            <table class="doc-table doc-kv">
-                                <tr><td>chat</td><td>streaming, temperature 0.8, short replies (200 tokens)</td></tr>
-                                <tr><td>tools</td><td>up to 5 tool-call rounds per message; tool rounds run non-streaming at temperature 0.3 with 2,048 tokens</td></tr>
-                                <tr><td>memory</td><td>after each reply the pet extracts facts about you and keeps up to 50 (<code>pet-memory.json</code>), injected into the system prompt; can be viewed, cleared or disabled</td></tr>
-                                <tr><td>vibe mode</td><td>captures desktop audio (WASAPI / ScreenCaptureKit / PipeWire loopback) and makes the pet dance to it, with a live equaliser</td></tr>
-                            </table>
+                            <h2><span class="doc-num">§08</span> SIGINT terminal &amp; LLM <span class="doc-h2-meta">any OpenAI-compatible endpoint</span></h2>
+                            <div class="dz">
+                                <div class="cell rg-crt wf">
+                                    <p>Click the pet to open the terminal: CRT scanlines, streaming replies rendered as markdown with copyable code blocks, file attachments with previews, an activity log, the XP bar, needs, Pomodoro, mesh panel and an audio equaliser. History persists between sessions.</p>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Backends</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>Ollama</td><td><code>localhost:11434/v1/chat/completions</code></td></tr>
+                                        <tr><td>LM Studio</td><td><code>localhost:1234/v1/chat/completions</code></td></tr>
+                                        <tr><td>LocalAI / other</td><td>any OpenAI-compatible endpoint; several profiles can be saved</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>chat</td><td>streaming, temperature 0.8, short replies (200 tokens)</td></tr>
+                                        <tr><td>tools</td><td>up to 5 tool-call rounds per message; tool rounds run non-streaming at temperature 0.3 with 2,048 tokens</td></tr>
+                                        <tr><td>memory</td><td>after each reply the pet extracts facts about you and keeps up to 50 (<code>pet-memory.json</code>), injected into the system prompt; can be viewed, cleared or disabled</td></tr>
+                                        <tr><td>vibe mode</td><td>captures desktop audio (WASAPI / ScreenCaptureKit / PipeWire loopback) and makes the pet dance to it, with a live equaliser</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §09 -->
                         <section class="doc-sec" id="s-skills" data-title="Skills">
-                            <h2><span class="doc-num">§09</span> Skills</h2>
-                            <p>Tools the model can call are plain markdown files in <code>skills/</code>: YAML frontmatter (name, description, typed parameters, optional <code>dangerous</code> and <code>timeout</code>) plus the first <code>```js</code> block as the implementation. Each runs in a Node <code>vm</code> sandbox (5&nbsp;s to set up, 30&nbsp;s per call by default). API keys come from a <code>.env</code> in the project root.</p>
-                            <table class="doc-table">
-                                <thead><tr><th>skill</th><th>does</th><th>needs</th></tr></thead>
-                                <tbody>
-                                    <tr><td>web_search</td><td>current news, weather, scores, prices, facts</td><td>&mdash;</td></tr>
-                                    <tr><td>read_file</td><td>read a local file</td><td>&mdash;</td></tr>
-                                    <tr><td>list_directory</td><td>list a folder</td><td>&mdash;</td></tr>
-                                    <tr><td>home_assistant</td><td>states, history, call services (lights, switches, climate&hellip;)</td><td><code>HASS_URL</code>, <code>HASS_TOKEN</code></td></tr>
-                                    <tr><td>grafana_query</td><td>dashboards, alerts, datasource queries</td><td><code>GRAFANA_URL</code>, <code>GRAFANA_API_KEY</code></td></tr>
-                                    <tr><td>run_command <span class="doc-new">DANGEROUS</span></td><td>run a shell command</td><td>&mdash;</td></tr>
-                                    <tr><td>create_file <span class="doc-new">DANGEROUS</span></td><td>create or overwrite a file</td><td>&mdash;</td></tr>
-                                </tbody>
-                            </table>
+                            <h2><span class="doc-num">§09</span> Skills <span class="doc-h2-meta">skills/*.md · node vm sandbox</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <p>Tools the model can call are plain markdown files in <code>skills/</code>: YAML frontmatter (name, description, typed parameters, optional <code>dangerous</code> and <code>timeout</code>) plus the first <code>```js</code> block as the implementation. Each runs in a Node <code>vm</code> sandbox (5&nbsp;s to set up, 30&nbsp;s per call by default). API keys come from a <code>.env</code> in the project root.</p>
+                                </div>
+                                <div class="cell">
+                                    <h3>skills/home_assistant.md</h3>
 <pre class="doc-code"><code>---
 name: home_assistant
 description: Control and query Home Assistant ...
@@ -396,49 +369,97 @@ parameters:
 ```js
 // implementation: the first js block in the file
 ```</code></pre>
+                                </div>
+                            </div>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <table class="doc-table rg-skills">
+                                        <thead><tr><th>skill</th><th>does</th><th>needs</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>web_search</td><td>current news, weather, scores, prices, facts</td><td>&mdash;</td></tr>
+                                            <tr><td>read_file</td><td>read a local file</td><td>&mdash;</td></tr>
+                                            <tr><td>list_directory</td><td>list a folder</td><td>&mdash;</td></tr>
+                                            <tr><td>home_assistant</td><td>states, history, call services (lights, switches, climate&hellip;)</td><td><code>HASS_URL</code>, <code>HASS_TOKEN</code></td></tr>
+                                            <tr><td>grafana_query</td><td>dashboards, alerts, datasource queries</td><td><code>GRAFANA_URL</code>, <code>GRAFANA_API_KEY</code></td></tr>
+                                            <tr class="is-danger"><td>run_command <span class="doc-new">DANGEROUS</span></td><td>run a shell command</td><td>&mdash;</td></tr>
+                                            <tr class="is-danger"><td>create_file <span class="doc-new">DANGEROUS</span></td><td>create or overwrite a file</td><td>&mdash;</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §10 -->
                         <section class="doc-sec" id="s-mesh" data-title="RAD MESH">
-                            <h2><span class="doc-num">§10</span> RAD MESH</h2>
-                            <p>Peer discovery and chat between RadGotchis on the same LAN over UDP broadcast. Peers show up in the terminal's network panel with node ID (e.g. <code>RG-A3F2K9</code>), operator name, rank, level, colour and signal strength; mesh messages persist in <code>mesh-messages.json</code>.</p>
-                            <table class="doc-table doc-kv">
-                                <tr><td>protocol</td><td><code>SIGINT-1.0</code> on UDP port 47823</td></tr>
-                                <tr><td>heartbeat</td><td>every 3&nbsp;s &plusmn; 500&nbsp;ms jitter (prevents sync storms)</td></tr>
-                                <tr><td>peer states</td><td>ONLINE &rarr; STALE after 3 missed (~9&nbsp;s) &rarr; OFFLINE after 6 (~18&nbsp;s)</td></tr>
-                                <tr><td>messages</td><td>&le; 200 chars, sent 3 times 150&nbsp;ms apart, de-duplicated for 60&nbsp;s</td></tr>
-                                <tr><td>interfaces</td><td>skips docker, veth, virbr, br-, tailscale, tun, tap and wg</td></tr>
-                                <tr><td>recovery</td><td>socket re-opened up to 5 times, 2&nbsp;s apart</td></tr>
-                            </table>
+                            <h2><span class="doc-num">§10</span> RAD MESH <span class="doc-h2-meta">SIGINT-1.0 · UDP 47823</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Peer discovery and chat between RadGotchis on the same LAN over UDP broadcast. Peers show up in the terminal's network panel with node ID (e.g. <code>RG-A3F2K9</code>), operator name, rank, level, colour and signal strength; mesh messages persist in <code>mesh-messages.json</code>.</p>
+                                    <div class="rg-peer" role="img" aria-label="A peer's state after its last heartbeat: online, stale after 3 missed heartbeats at about 9 seconds, offline after 6 at about 18 seconds">
+                                        <span class="p-on">ONLINE</span><span class="p-stale">STALE</span><span class="p-off">OFFLINE</span>
+                                        <ol><li style="--t:0">0&nbsp;s</li><li style="--t:3">3</li><li style="--t:6">6</li><li style="--t:9">~9&nbsp;s</li><li style="--t:12">12</li><li style="--t:15">15</li><li style="--t:18">~18&nbsp;s</li></ol>
+                                    </div>
+                                </div>
+                                <div class="cell w2">
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>protocol</td><td><code>SIGINT-1.0</code> on UDP port 47823</td></tr>
+                                        <tr><td>heartbeat</td><td>every 3&nbsp;s &plusmn; 500&nbsp;ms jitter (prevents sync storms)</td></tr>
+                                        <tr><td>peer states</td><td>ONLINE &rarr; STALE after 3 missed (~9&nbsp;s) &rarr; OFFLINE after 6 (~18&nbsp;s)</td></tr>
+                                        <tr><td>messages</td><td>&le; 200 chars, sent 3 times 150&nbsp;ms apart, de-duplicated for 60&nbsp;s</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>interfaces</td><td>skips docker, veth, virbr, br-, tailscale, tun, tap and wg</td></tr>
+                                        <tr><td>recovery</td><td>socket re-opened up to 5 times, 2&nbsp;s apart</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §11 -->
                         <section class="doc-sec" id="s-web" data-title="Web mode">
-                            <h2><span class="doc-num">§11</span> Headless web mode</h2>
-                            <p><code>npm run start:headless</code> runs RadGotchi over SSH with no display: a Node-only server for a phone-first web UI (the pet in its chamber plus the full terminal), installable as an iPhone home-screen app with an offline screen.</p>
+                            <h2><span class="doc-num">§11</span> Headless web mode <span class="doc-h2-meta">:7777 · no display needed</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p><code>npm run start:headless</code> runs RadGotchi over SSH with no display: a Node-only server for a phone-first web UI (the pet in its chamber plus the full terminal), installable as an iPhone home-screen app with an offline screen.</p>
 <pre class="doc-code"><code>npm run start:headless                 # 127.0.0.1:7777
 tailscale serve --bg 7777              # https://&lt;machine&gt;.&lt;tailnet&gt;.ts.net
 npm run start:headless -- --host=::    # or: all interfaces, IPv4 + IPv6, plain HTTP</code></pre>
-                            <table class="doc-table doc-kv">
-                                <tr><td>listen</td><td><code>127.0.0.1:7777</code> by default; Tailscale Serve recommended for HTTPS with a real certificate</td></tr>
-                                <tr><td>login</td><td>a 24-byte random token (<code>web-token</code>, mode 600, stable across restarts); <code>/?token=&hellip;</code> sets an HttpOnly cookie, or send <code>Authorization: Bearer</code>; compared in constant time. Delete the file or set <code>RADGOTCHI_WEB_TOKEN</code> to rotate</td></tr>
-                                <tr><td>transport</td><td>a minimal RFC 6455 WebSocket with no dependencies, 30&nbsp;s keep-alive, plus an HTTP fallback (<code>/api/invoke</code>, <code>/api/send</code>, SSE <code>/api/chat-stream</code>)</td></tr>
-                                <tr><td>hardening</td><td>16&nbsp;MB body limit (413), CSP, <code>Referrer-Policy: no-referrer</code>; <code>run_command</code> and <code>create_file</code> are off unless <code>RADGOTCHI_ALLOW_DANGEROUS_TOOLS=1</code></td></tr>
-                                <tr><td>at boot</td><td><code>contrib/radgotchi-web.service</code> systemd user unit + <code>loginctl enable-linger</code></td></tr>
-                            </table>
-                            <p>Keep web mode behind Tailscale or a trusted LAN &mdash; anyone with the token drives the pet and its tools.</p>
+                                </div>
+                                <div class="cell w2">
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>listen</td><td><code>127.0.0.1:7777</code> by default; Tailscale Serve recommended for HTTPS with a real certificate</td></tr>
+                                        <tr><td>login</td><td>a 24-byte random token (<code>web-token</code>, mode 600, stable across restarts); <code>/?token=&hellip;</code> sets an HttpOnly cookie, or send <code>Authorization: Bearer</code>; compared in constant time. Delete the file or set <code>RADGOTCHI_WEB_TOKEN</code> to rotate</td></tr>
+                                        <tr><td>transport</td><td>a minimal RFC 6455 WebSocket with no dependencies, 30&nbsp;s keep-alive, plus an HTTP fallback (<code>/api/invoke</code>, <code>/api/send</code>, SSE <code>/api/chat-stream</code>)</td></tr>
+                                        <tr><td>hardening</td><td>16&nbsp;MB body limit (413), CSP, <code>Referrer-Policy: no-referrer</code>; <code>run_command</code> and <code>create_file</code> are off unless <code>RADGOTCHI_ALLOW_DANGEROUS_TOOLS=1</code></td></tr>
+                                        <tr><td>at boot</td><td><code>contrib/radgotchi-web.service</code> systemd user unit + <code>loginctl enable-linger</code></td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell is-warn">
+                                    <b>TRUST</b>
+                                    <p>Keep web mode behind Tailscale or a trusted LAN &mdash; anyone with the token drives the pet and its tools.</p>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §12 -->
                         <section class="doc-sec" id="s-audio" data-title="Audio">
-                            <h2><span class="doc-num">§12</span> Audio</h2>
-                            <p>Every sound is synthesised on the fly with the Web Audio API &mdash; there are no audio files.</p>
-                            <p class="doc-chips doc-chips-wide"><i>boot</i><i>shutdown</i><i>click</i><i>chatOpen</i><i>chatClose</i><i>messageSend</i><i>messageReceive</i><i>sleepStart</i><i>sleepEnd</i><i>attentionStart</i><i>attentionEnd</i><i>levelUp</i><i>milestone</i><i>xpGain</i><i>xpLoss</i><i>pomodoroStart</i><i>pomodoroComplete</i><i>statsOpen</i><i>statsClose</i><i>selectChange</i><i>gong</i><i>starSpangledBanner</i></p>
+                            <h2><span class="doc-num">§12</span> Audio <span class="doc-h2-meta">22 sounds · Web Audio · no files</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Every sound is synthesised on the fly with the Web Audio API &mdash; there are no audio files.</p>
+                                    <p class="doc-chips rg-sounds"><i>boot</i><i>shutdown</i><i>click</i><i>chatOpen</i><i>chatClose</i><i>messageSend</i><i>messageReceive</i><i>sleepStart</i><i>sleepEnd</i><i>attentionStart</i><i>attentionEnd</i><i>levelUp</i><i>milestone</i><i>xpGain</i><i>xpLoss</i><i>pomodoroStart</i><i>pomodoroComplete</i><i>statsOpen</i><i>statsClose</i><i>selectChange</i><i>gong</i><i>starSpangledBanner</i></p>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §13 -->
                         <section class="doc-sec" id="s-api" data-title="Developer API">
-                            <h2><span class="doc-num">§13</span> Developer API</h2>
+                            <h2><span class="doc-num">§13</span> Developer API <span class="doc-h2-meta">RG · SoundSystem · 40 IPC channels</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Renderer globals</h3>
 <pre class="doc-code"><code>RG.setMood('happy', { duration: 3000, anim: 'bounce', status: 'Custom text' });
 RG.react('critical', 'Alert message');        // 'warning' | 'ok'
 RG.assessHealth({ cpu: { usage_total: 45 }, memory: { percent: 60 } });
@@ -446,76 +467,101 @@ RG.assessHealth({ cpu: { usage_total: 45 }, memory: { percent: 60 } });
 SoundSystem.play('levelUp');
 SoundSystem.setVolume(0.5);                  // 0.0 - 1.0
 SoundSystem.setEnabled(false);</code></pre>
-                            <p>Renderers subscribe to main-process pushes with <code>api.on()</code>; 40 channels in all, the main ones:</p>
-                            <table class="doc-table doc-api">
-                                <thead><tr><th>event</th><th>payload</th></tr></thead>
-                                <tbody>
-                                    <tr><td>xp-update</td><td><code>{level, totalXp, progress, leveledUp}</code></td></tr>
-                                    <tr><td>needs-update</td><td><code>{hunger, energy}</code></td></tr>
-                                    <tr><td>system-event</td><td><code>{type, value}</code></td></tr>
-                                    <tr><td>idle-change</td><td><code>{idle}</code></td></tr>
-                                    <tr><td>chat-stream-chunk</td><td><code>{content, done}</code></td></tr>
-                                    <tr><td>attention-event</td><td><code>{type, message}</code></td></tr>
-                                    <tr><td>pomodoro-update &middot; -complete</td><td><code>{mode, remaining}</code> &middot; <code>{mode}</code></td></tr>
-                                    <tr><td>network-update</td><td><code>{type, node, totalNodes}</code></td></tr>
-                                    <tr><td>audio-levels</td><td><code>{levels[], peak}</code></td></tr>
-                                    <tr><td>activity-log-update</td><td><code>{type, message, ts}</code></td></tr>
-                                    <tr><td>movement-mode-change &middot; set-color &middot; set-language</td><td>mode &middot; color &middot; lang</td></tr>
-                                </tbody>
-                            </table>
+                                </div>
+                                <div class="cell wf">
+                                    <h3>Main-process pushes <span>api.on(): 40 channels, the main ones</span></h3>
+                                    <table class="doc-table doc-api rg-events">
+                                        <tr><td>xp-update</td><td><code>{level, totalXp, progress, leveledUp}</code></td></tr>
+                                        <tr><td>needs-update</td><td><code>{hunger, energy}</code></td></tr>
+                                        <tr><td>system-event</td><td><code>{type, value}</code></td></tr>
+                                        <tr><td>idle-change</td><td><code>{idle}</code></td></tr>
+                                        <tr><td>chat-stream-chunk</td><td><code>{content, done}</code></td></tr>
+                                        <tr><td>attention-event</td><td><code>{type, message}</code></td></tr>
+                                        <tr><td>pomodoro-update &middot; -complete</td><td><code>{mode, remaining}</code> &middot; <code>{mode}</code></td></tr>
+                                        <tr><td>network-update</td><td><code>{type, node, totalNodes}</code></td></tr>
+                                        <tr><td>audio-levels</td><td><code>{levels[], peak}</code></td></tr>
+                                        <tr><td>activity-log-update</td><td><code>{type, message, ts}</code></td></tr>
+                                        <tr><td>movement-mode-change &middot; set-color &middot; set-language</td><td>mode &middot; color &middot; lang</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §14 -->
                         <section class="doc-sec" id="s-build" data-title="Build &amp; data">
-                            <h2><span class="doc-num">§14</span> Build &amp; data</h2>
-                            <h3>Install</h3>
+                            <h2><span class="doc-num">§14</span> Build &amp; data <span class="doc-h2-meta">npm · electron-builder</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Install</h3>
 <pre class="doc-code"><code>curl -fsSL https://tylerirl.com/install_rg.sh | bash     # Linux / macOS
 irm https://tylerirl.com/install_rg.ps1 | iex            # Windows (PowerShell)
 
 git clone https://github.com/itsTylerIRL/radgotchi.git &amp;&amp; cd radgotchi
 npm install &amp;&amp; npm start</code></pre>
-                            <table class="doc-table doc-flags">
-                                <thead><tr><th>npm run</th><th>does</th></tr></thead>
-                                <tbody>
-                                    <tr><td>start</td><td>desktop app (<code>electron .</code>)</td></tr>
-                                    <tr><td>start:safe</td><td>no sandbox, no GPU (VMs, remote sessions)</td></tr>
-                                    <tr><td>start:wayland</td><td>native Wayland client (the pet shows but can't move)</td></tr>
-                                    <tr><td>start:headless</td><td>web mode under Node</td></tr>
-                                    <tr><td>build &middot; build:win / :mac / :linux</td><td>electron-builder: NSIS + portable, DMG + ZIP, AppImage + DEB</td></tr>
-                                    <tr><td>test</td><td><code>node --test test/</code></td></tr>
-                                </tbody>
-                            </table>
-                            <h3>Persistent data</h3>
-                            <p>JSON files in the system user-data directory, surviving updates:</p>
-                            <p class="doc-chips doc-chips-wide"><i>xp-data.json</i><i>chat-data.json</i><i>llm-config.json</i><i>llm-profiles.json</i><i>pet-memory.json</i><i>arcade-data.json</i><i>mesh-messages.json</i><i>window-states.json</i><i>web-token</i></p>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Persistent data <span>JSON in the user-data directory, surviving updates</span></h3>
+                                    <p class="doc-chips"><i>xp-data.json</i><i>chat-data.json</i><i>llm-config.json</i><i>llm-profiles.json</i><i>pet-memory.json</i><i>arcade-data.json</i><i>mesh-messages.json</i><i>window-states.json</i><i>web-token</i></p>
+                                </div>
+                                <div class="cell">
+                                    <h3>Scripts</h3>
+                                    <table class="doc-table doc-kv doc-flags">
+                                        <tr><td>start</td><td>desktop app (<code>electron .</code>)</td></tr>
+                                        <tr><td>start:safe</td><td>no sandbox, no GPU (VMs, remote sessions)</td></tr>
+                                        <tr><td>start:wayland</td><td>native Wayland client (the pet shows but can't move)</td></tr>
+                                        <tr><td>start:headless</td><td>web mode under Node</td></tr>
+                                        <tr><td>build &middot; build:win / :mac / :linux</td><td>electron-builder: NSIS + portable, DMG + ZIP, AppImage + DEB</td></tr>
+                                        <tr><td>test</td><td><code>node --test test/</code></td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §15 -->
                         <section class="doc-sec" id="s-tests" data-title="Tests &amp; CI">
-                            <h2><span class="doc-num">§15</span> Tests &amp; CI</h2>
-                            <table class="doc-table">
-                                <thead><tr><th>suite</th><th>tests</th><th>covers</th></tr></thead>
-                                <tbody>
-                                    <tr><td>unit.test.js</td><td>9</td><td>core logic</td></tr>
-                                    <tr><td>web-auth.test.js</td><td>6</td><td>token generation, persistence, cookie / bearer checks</td></tr>
-                                    <tr><td>desktop-env.test.js</td><td>2</td><td>Hyprland cursor / work-area handling</td></tr>
-                                    <tr><td>headless-smoke.test.js</td><td>1</td><td>boots web mode and talks to it</td></tr>
-                                </tbody>
-                            </table>
-                            <p>GitHub Actions runs <code>npm ci --ignore-scripts</code> and <code>npm test</code> on Ubuntu, Windows and macOS against Node 20 and 22.</p>
+                            <h2><span class="doc-num">§15</span> Tests &amp; CI <span class="doc-h2-meta">18 tests · 3 OSes × Node 20 / 22</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <table class="doc-table rg-suites">
+                                        <thead><tr><th>suite</th><th>tests</th><th>covers</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>unit.test.js</td><td>9</td><td>core logic</td></tr>
+                                            <tr><td>web-auth.test.js</td><td>6</td><td>token generation, persistence, cookie / bearer checks</td></tr>
+                                            <tr><td>desktop-env.test.js</td><td>2</td><td>Hyprland cursor / work-area handling</td></tr>
+                                            <tr><td>headless-smoke.test.js</td><td>1</td><td>boots web mode and talks to it</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>CI matrix <span>GitHub Actions</span></h3>
+                                    <div class="rg-matrix" role="table" aria-label="CI runs on Ubuntu, Windows and macOS against Node 20 and 22">
+                                        <span></span><b>node 20</b><b>node 22</b>
+                                        <b>ubuntu</b><i>npm test</i><i>npm test</i>
+                                        <b>windows</b><i>npm test</i><i>npm test</i>
+                                        <b>macos</b><i>npm test</i><i>npm test</i>
+                                    </div>
+                                    <p class="doc-note">Each job runs <code>npm ci --ignore-scripts</code> then <code>npm test</code>.</p>
+                                </div>
+                            </div>
                         </section>
 
                         <!-- §16 -->
                         <section class="doc-sec" id="s-changelog" data-title="Changelog">
-                            <h2><span class="doc-num">§16</span> Changelog</h2>
-                            <ol class="doc-log">
-                                <li><time>2026-10</time><b>Web mode.</b> Headless Node server with a locked-down web UI; phone-first layout, iPhone home-screen install and offline screens; HTTPS via Tailscale Serve; IPv6 via <code>--host=::</code>; pet glow and desktop movement fixes.</li>
-                                <li><time>2026-07 &middot; 08</time><b>Big update.</b> Chat message hints and better autoscroll, plus fixes.</li>
-                                <li><time>2026-04</time><b>Skills &amp; arcade.</b> Skill loader and web server; read_file, run_command, web_search, then Home Assistant and Grafana skills with <code>.env</code> keys; the arcade; file attachments; memory update; mobile UI and PWA manifest.</li>
-                                <li><time>2026-03</time><b>Foundation.</b> 78 commits: the pet, moods, telemetry and progression; cross-platform audio capture; network discovery with the SIGINT protocol and mesh chat; needs; the pet gets a memory; the codebase split into modules.</li>
-                            </ol>
+                            <h2><span class="doc-num">§16</span> Changelog <span class="doc-h2-meta">108 commits</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <ol class="doc-log">
+                                        <li><time>2026-10</time><b>Web mode.</b> Headless Node server with a locked-down web UI; phone-first layout, iPhone home-screen install and offline screens; HTTPS via Tailscale Serve; IPv6 via <code>--host=::</code>; pet glow and desktop movement fixes.</li>
+                                        <li><time>2026-07 &middot; 08</time><b>Big update.</b> Chat message hints and better autoscroll, plus fixes.</li>
+                                        <li><time>2026-04</time><b>Skills &amp; arcade.</b> Skill loader and web server; read_file, run_command, web_search, then Home Assistant and Grafana skills with <code>.env</code> keys; the arcade; file attachments; memory update; mobile UI and PWA manifest.</li>
+                                        <li><time>2026-03</time><b>Foundation.</b> 78 commits: the pet, moods, telemetry and progression; cross-platform audio capture; network discovery with the SIGINT protocol and mesh chat; needs; the pet gets a memory; the codebase split into modules.</li>
+                                    </ol>
+                                </div>
+                            </div>
                         </section>
-                        <p class="doc-end">&mdash; end of document &middot; source: radgotchi @ 28e2288 &middot; MIT &mdash;</p>
+                        <p class="doc-end">— end of document · radgotchi @ 28e2288 · MIT —</p>
                     </article>
                     </div>
                 </section>
@@ -567,16 +613,16 @@ npm install &amp;&amp; npm start</code></pre>
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.3"></script>
-    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Docs (contents, search, source map) + RadGotchi sprites, routines and ranks -->
-    <script defer src="/js/docs.js?v=1.3"></script>
-    <script defer src="/js/rg-docs.js?v=1.3"></script>
+    <script defer src="/js/docs.js?v=1.5"></script>
+    <script defer src="/js/rg-docs.js?v=1.6"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

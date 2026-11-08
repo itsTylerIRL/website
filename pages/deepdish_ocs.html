@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/docs.css?v=1.3">
-    <link rel="stylesheet" href="/css/deepdish_ocs.css?v=4.0">
+    <link rel="stylesheet" href="/css/docs.css?v=1.9">
+    <link rel="stylesheet" href="/css/deepdish_ocs.css?v=4.4">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -106,19 +106,19 @@
                 <section class="g-card g-docs-pane">
                     <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">TECHNICAL REFERENCE</span></div>
                     <div class="g-docs-scroll" id="g-docs-scroll">
-                    <article class="doc is-dense" id="doc">
+                    <article class="doc is-dense" id="doc" data-reveal=".oc-preset, .oc-expr">
                         <!-- §01 -->
                         <section class="doc-sec" id="s-glance" data-title="At a glance">
-                            <h2><span class="doc-num">§01</span> At a glance <span class="oc-h2-meta">deepdish_ocs @ 925ea62 · 2026-11-06</span></h2>
+                            <h2><span class="doc-num">§01</span> At a glance <span class="doc-h2-meta">deepdish_ocs @ 925ea62 · 2026-11-06</span></h2>
                             <div class="dz">
-                                <div class="cell oc-hero wf">
+                                <div class="cell oc-hero doc-hero wf">
                                     <div class="oc-hero-eye">
                                         <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
                                         <img src="/assets/OCS/docs/r/hero-reactor.webp" alt="The OCS eye in the Arc Reactor preset, looking around" width="260" height="260" decoding="async">
-                                        <span class="oc-hero-tag">LIVE RENDER · ARC REACTOR</span>
+                                        <span class="oc-hero-tag doc-hero-tag">LIVE RENDER · ARC REACTOR</span>
                                     </div>
                                     <div class="oc-hero-text">
-                                        <p class="oc-lede">OCS turns a <b>Gakken Worldeye</b> (a little projector that paints onto the inside of a frosted sphere) into an eye that watches the room. A webcam finds people. The eye follows them, reacts with expressions, drifts through moods when nobody is around, and takes over the sphere for the hour, a siren, or a real aircraft passing overhead.</p>
+                                        <p class="doc-lede">OCS turns a <b>Gakken Worldeye</b> (a little projector that paints onto the inside of a frosted sphere) into an eye that watches the room. A webcam finds people. The eye follows them, reacts with expressions, drifts through moods when nobody is around, and takes over the sphere for the hour, a siren, or a real aircraft passing overhead.</p>
                                         <p>Every control goes through one HTTP API, so the same things can be done from the desktop GUI, the web UI at <code>:5001</code>, the touch UI at <code>/mobile</code>, <code>curl</code>, Home Assistant, or the wheel of a <b>BUSY Bar</b> on the desk.</p>
                                         <table class="doc-table doc-kv oc-surfaces">
                                             <tr><td>desktop</td><td><code>src/app</code>: tkinter control panel + pop-out eye window</td></tr>
@@ -130,21 +130,25 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="doc-tiles wf"><div class="doc-tile"><span>display</span><b>Gakken Worldeye</b><small>sphere · fullscreen 800×480</small></div><div class="doc-tile"><span>frame rate</span><b data-count="30">30 fps</b><small>active · ~8 idle (20 / 5 low-mem)</small></div><div class="doc-tile"><span>tracking</span><b>YOLOv8n-face</b><small>→ YOLO11n → MediaPipe → Haar</small></div><div class="doc-tile"><span>mood</span><b>V · A · D</b><small>vector + behavior tree</small></div><div class="doc-tile"><span>api</span><b data-count="62">62 routes</b><small>+ 10 Socket.IO events · :5001</small></div><div class="doc-tile"><span>looks</span><b data-count="20">20 presets</b><small>11 iris · 12 fill · 7 · 7 · 6 rings</small></div><div class="doc-tile"><span>expressions</span><b data-count="8">8 + neutral</b><small>own overlay, sound and mood push</small></div><div class="doc-tile"><span>alerts</span><b data-count="3">3 takeovers</b><small>siren · flyover (ADS-B) · chime</small></div><div class="doc-tile"><span>sound</span><b data-count="36">36 effects</b><small>3 per expression · Chatterbox TTS</small></div><div class="doc-tile"><span>busy bar</span><b data-count="10">10 pages</b><small>72×16 front · 160×80 back</small></div><div class="doc-tile"><span>telemetry</span><b data-count="45">45 series</b><small>Prometheus · 4 Grafana boards</small></div><div class="doc-tile"><span>tests</span><b data-count="54">54 + 20</b><small>core pytest · Home Assistant</small></div><div class="doc-tile"><span>source</span><b data-count="18278">18,278 LOC</b><small>Python, 39 files in src/</small></div><div class="doc-tile"><span>web ui</span><b>13.2k lines</b><small>HTML / CSS / JS · desktop + touch</small></div></div>
-                                <figure class="doc-figure cell-fig">
-                                    <img src="/assets/OCS/docs/rig.webp" alt="The Gakken Worldeye showing the OCS eye, on top of the DeepDish rack" loading="lazy" decoding="async">
-                                    <figcaption>FIG 1.1 · the Worldeye on top of the DeepDish rack</figcaption>
+                                <div class="doc-tiles doc-cols wf" style="--cols: 7; --cols-sm: 2"><div class="doc-tile"><span>display</span><b>Worldeye</b><small>Gakken sphere · fullscreen 800×480</small></div><div class="doc-tile"><span>frame rate</span><b data-count="30">30 fps</b><small>active · ~8 idle (20 / 5 low-mem)</small></div><div class="doc-tile"><span>tracking</span><b>YOLOv8n-face</b><small>→ YOLO11n → MediaPipe → Haar</small></div><div class="doc-tile"><span>mood</span><b>V · A · D</b><small>vector + behavior tree</small></div><div class="doc-tile"><span>api</span><b data-count="62">62 routes</b><small>+ 10 Socket.IO events · :5001</small></div><div class="doc-tile"><span>looks</span><b data-count="20">20 presets</b><small>11 iris · 12 fill · 7 · 7 · 6 rings</small></div><div class="doc-tile"><span>expressions</span><b data-count="8">8 + neutral</b><small>own overlay, sound and mood push</small></div><div class="doc-tile"><span>alerts</span><b data-count="3">3 takeovers</b><small>siren · flyover (ADS-B) · chime</small></div><div class="doc-tile"><span>sound</span><b data-count="36">36 effects</b><small>3 per expression · Chatterbox TTS</small></div><div class="doc-tile"><span>busy bar</span><b data-count="10">10 pages</b><small>72×16 front · 160×80 back</small></div><div class="doc-tile"><span>telemetry</span><b data-count="45">45 series</b><small>Prometheus · 4 Grafana boards</small></div><div class="doc-tile"><span>tests</span><b data-count="54">54 + 20</b><small>core pytest · Home Assistant</small></div><div class="doc-tile"><span>source</span><b data-count="18278">18,278 LOC</b><small>Python, 39 files in src/</small></div><div class="doc-tile"><span>web ui</span><b>13.2k lines</b><small>HTML / CSS / JS · desktop + touch</small></div></div>
+                                <figure class="doc-figure cell-fig is-tall">
+                                    <img src="/assets/OCS/docs/rig.webp" alt="The Gakken Worldeye showing the OCS eye, on top of the DeepDish rack" width="890" height="1300" loading="lazy" decoding="async">
+                                    <figcaption>FIG 1.1 · on top of the DeepDish rack</figcaption>
                                 </figure>
-                                <figure class="doc-figure cell-fig">
-                                    <img src="/assets/OCS/docs/worldeye.webp" alt="The Gakken Worldeye sphere" loading="lazy" decoding="async">
-                                    <figcaption>FIG 1.2 · Gakken Worldeye: projector inside a frosted sphere</figcaption>
+                                <figure class="doc-figure cell-fig is-tall">
+                                    <img src="/assets/OCS/docs/worldeye.webp" alt="The Gakken Worldeye: a projector inside a frosted sphere" width="700" height="990" loading="lazy" decoding="async">
+                                    <figcaption>FIG 1.2 · the Gakken Worldeye</figcaption>
+                                </figure>
+                                <figure class="doc-figure cell-fig is-tall">
+                                    <img src="/assets/OCS/docs/webui.webp" alt="The OCS web control panel: camera feed, live eye, presets and expression controls" width="863" height="900" loading="lazy" decoding="async">
+                                    <figcaption>FIG 1.3 · the web control panel · :5001</figcaption>
                                 </figure>
                             </div>
                         </section>
 
                         <!-- §02 -->
                         <section class="doc-sec" id="s-arch" data-title="Architecture">
-                            <h2><span class="doc-num">§02</span> System architecture <span class="oc-h2-meta">12 packages · 39 files · 18,278 lines</span></h2>
+                            <h2><span class="doc-num">§02</span> System architecture <span class="doc-h2-meta">12 packages · 39 files · 18,278 lines</span></h2>
                             <div class="dz">
                                 <div class="cell wf">
                                     <p><code>deepdish_ocs.py</code> (542 lines) is only the entry point: it parses arguments and wires the packages together. The eye display is one class composed from render, behavior and tracking mixins; the API server, audio, vision, the BUSY Bar companion, the flyover monitor and metrics run beside it on their own threads.</p>
@@ -179,7 +183,7 @@
                                 <div class="cell wf">
                                     <table class="doc-table doc-modules">
                                         <thead><tr><th>package</th><th>files</th><th>lines</th><th>role</th></tr></thead>
-                                        <tbody><tr><td><code>render</code></td><td>9</td><td><span class="oc-bar" style="--v:1.000"></span>5,603</td><td>iris, rings, fill, housing, effects, event animations, FX toolkit, display fit</td></tr><tr><td><code>api</code></td><td>2</td><td><span class="oc-bar" style="--v:0.502"></span>2,813</td><td>Flask routes, Socket.IO handlers, static web UI</td></tr><tr><td><code>display</code></td><td>2</td><td><span class="oc-bar" style="--v:0.284"></span>1,589</td><td><code>EyeDisplay</code>: the frame pipeline, composed from the mixins</td></tr><tr><td><code>services</code></td><td>3</td><td><span class="oc-bar" style="--v:0.275"></span>1,542</td><td>BUSY Bar companion, flyover monitor</td></tr><tr><td><code>shader</code></td><td>3</td><td><span class="oc-bar" style="--v:0.220"></span>1,230</td><td>optional GPU renderer (moderngl, pygame)</td></tr><tr><td><code>app</code></td><td>3</td><td><span class="oc-bar" style="--v:0.199"></span>1,116</td><td>tkinter GUI, eye-window placement</td></tr><tr><td><code>tracking</code></td><td>2</td><td><span class="oc-bar" style="--v:0.173"></span>967</td><td>detection backends, gaze smoothing, wander + sweeps</td></tr><tr><td><code>behavior</code></td><td>3</td><td><span class="oc-bar" style="--v:0.147"></span>824</td><td>expressions, mood vector, behavior tree</td></tr><tr><td><code>vision</code></td><td>2</td><td><span class="oc-bar" style="--v:0.141"></span>791</td><td>YOLO11 scene analysis for chat context</td></tr><tr><td><code>audio</code></td><td>2</td><td><span class="oc-bar" style="--v:0.138"></span>776</td><td>SoundManager, synthesis, device recovery</td></tr><tr><td><code>metrics</code></td><td>2</td><td><span class="oc-bar" style="--v:0.120"></span>674</td><td>Prometheus collectors</td></tr><tr><td><code>core</code></td><td>6</td><td><span class="oc-bar" style="--v:0.063"></span>353</td><td>config, presets, paths, runtime detection, optional deps</td></tr></tbody>
+                                        <tbody><tr><td><code>render</code></td><td>9</td><td><span class="oc-bar" style="--v:1.000"></span><span class="doc-n">5,603</span></td><td>iris, rings, fill, housing, effects, event animations, FX toolkit, display fit</td></tr><tr><td><code>api</code></td><td>2</td><td><span class="oc-bar" style="--v:0.502"></span><span class="doc-n">2,813</span></td><td>Flask routes, Socket.IO handlers, static web UI</td></tr><tr><td><code>display</code></td><td>2</td><td><span class="oc-bar" style="--v:0.284"></span><span class="doc-n">1,589</span></td><td><code>EyeDisplay</code>: the frame pipeline, composed from the mixins</td></tr><tr><td><code>services</code></td><td>3</td><td><span class="oc-bar" style="--v:0.275"></span><span class="doc-n">1,542</span></td><td>BUSY Bar companion, flyover monitor</td></tr><tr><td><code>shader</code></td><td>3</td><td><span class="oc-bar" style="--v:0.220"></span><span class="doc-n">1,230</span></td><td>optional GPU renderer (moderngl, pygame)</td></tr><tr><td><code>app</code></td><td>3</td><td><span class="oc-bar" style="--v:0.199"></span><span class="doc-n">1,116</span></td><td>tkinter GUI, eye-window placement</td></tr><tr><td><code>tracking</code></td><td>2</td><td><span class="oc-bar" style="--v:0.173"></span><span class="doc-n">967</span></td><td>detection backends, gaze smoothing, wander + sweeps</td></tr><tr><td><code>behavior</code></td><td>3</td><td><span class="oc-bar" style="--v:0.147"></span><span class="doc-n">824</span></td><td>expressions, mood vector, behavior tree</td></tr><tr><td><code>vision</code></td><td>2</td><td><span class="oc-bar" style="--v:0.141"></span><span class="doc-n">791</span></td><td>YOLO11 scene analysis for chat context</td></tr><tr><td><code>audio</code></td><td>2</td><td><span class="oc-bar" style="--v:0.138"></span><span class="doc-n">776</span></td><td>SoundManager, synthesis, device recovery</td></tr><tr><td><code>metrics</code></td><td>2</td><td><span class="oc-bar" style="--v:0.120"></span><span class="doc-n">674</span></td><td>Prometheus collectors</td></tr><tr><td><code>core</code></td><td>6</td><td><span class="oc-bar" style="--v:0.063"></span><span class="doc-n">353</span></td><td>config, presets, paths, runtime detection, optional deps</td></tr></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -187,9 +191,11 @@
 
                         <!-- §03 -->
                         <section class="doc-sec" id="s-looks" data-title="Presets">
-                            <h2><span class="doc-num">§03</span> Presets <span class="oc-h2-meta">presets.json · 20 looks · rendered by OCS</span></h2>
-                            <p>A preset is a choice for every layer plus colors and motion. They live in <code>presets.json</code> and are served to the web UI, the API, Home Assistant and the BUSY Bar from that one file, so a new preset shows up everywhere. Every frame below is the real renderer at 400×400 under the test suite's frozen clock. Pick one to inspect it in the <b>Render</b> panel.</p>
-                            <div class="oc-presets"><button type="button" class="oc-preset" data-key="hal9000" style="--a:#ff0000;--b:#ff3300">
+                            <h2><span class="doc-num">§03</span> Presets <span class="doc-h2-meta">presets.json · 20 looks · rendered by OCS</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>A preset is a choice for every layer plus colors and motion. They live in <code>presets.json</code> and are served to the web UI, the API, Home Assistant and the BUSY Bar from that one file, so a new preset shows up everywhere. Every frame below is the real renderer at 400×400 under the test suite's frozen clock. Pick one to inspect it in the <b>Render</b> panel.</p>
+                                    <div class="oc-presets doc-cols" style="--cols: 5; --cols-sm: 4"><button type="button" class="oc-preset" data-key="hal9000" style="--a:#ff0000;--b:#ff3300">
                                     <img src="/assets/OCS/docs/r/preset-hal9000.webp" alt="" loading="lazy" decoding="async" width="320" height="320">
                                     <b>HAL 9000</b>
                                     <small>minimal · nebula</small>
@@ -270,6 +276,8 @@
                                     <b>Glacier <span class="doc-new">NEW</span></b>
                                     <small>crystal · aurora</small>
                                 </button></div>
+                                </div>
+                            </div>
                             <div class="dz">
                                 <div class="cell">
                                     <h3>Preset schema</h3>
@@ -283,7 +291,7 @@
                                         <tr><td>pulse · depth</td><td>breathing speed and depth</td></tr>
                                     </table>
                                 </div>
-                                <div class="cell">
+                                <div class="cell w2">
                                     <h3>presets.json</h3>
 <pre class="doc-code"><code>"reactor": {
   "label": "⚛ Arc Reactor",
@@ -301,7 +309,7 @@
 
                         <!-- §04 -->
                         <section class="doc-sec" id="s-render" data-title="Render pipeline">
-                            <h2><span class="doc-num">§04</span> Render pipeline <span class="oc-h2-meta">OpenCV + NumPy · back to front</span></h2>
+                            <h2><span class="doc-num">§04</span> Render pipeline <span class="doc-h2-meta">OpenCV + NumPy · back to front</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <p>Each frame is painted from the back of the eye forward. Frames are cached for 33&nbsp;ms while active (30&nbsp;fps) and 120&nbsp;ms idle; low-memory mode uses 50 / 200&nbsp;ms. Fills build their layers one color channel at a time (three whole-plane NumPy operations beat broadcasting against a 3-element color) and counter-rotate through cached remaps.</p>
@@ -345,7 +353,7 @@
                                 </div>
                                 <div class="cell wf">
                                     <h3>Ambient fill · 12 styles <span>rings off, so the material shows</span></h3>
-                                    <div class="oc-tiles is-small"><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-nebula.webp" alt="nebula fill" loading="lazy" decoding="async" width="200" height="200">
+                                    <div class="oc-tiles is-small doc-cols" style="--cols: 6; --cols-sm: 4"><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-nebula.webp" alt="nebula fill" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>nebula</b></figcaption></figure><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-aurora.webp" alt="aurora fill" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>aurora</b></figcaption></figure><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-starfield.webp" alt="starfield fill" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>starfield</b></figcaption></figure><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-vortex.webp" alt="vortex fill" loading="lazy" decoding="async" width="200" height="200">
@@ -359,24 +367,17 @@
                                     <figcaption><b>glyphs</b></figcaption></figure><figure class="oc-tile is-small"><img src="/assets/OCS/docs/r/fill-contour.webp" alt="contour fill" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>contour</b></figcaption></figure></div>
                                 </div>
-                                <div class="cell">
-                                    <h3>Outer ring · 7</h3>
-                                    <div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-solid.webp" alt="solid outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>solid</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-orbs.webp" alt="orbs outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>orbs</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-dashed.webp" alt="dashed outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>dashed</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-pulse.webp" alt="pulse outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>pulse</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-shards.webp" alt="shards outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>shards</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-helix.webp" alt="helix outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>helix</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-reactor.webp" alt="reactor outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>reactor</figcaption></figure></div>
-                                </div>
-                                <div class="cell">
-                                    <h3>Middle ring · 7</h3>
-                                    <div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-gradient.webp" alt="gradient middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>gradient</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-plasma.webp" alt="plasma middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>plasma</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-ripple.webp" alt="ripple middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>ripple</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-hexagon.webp" alt="hexagon middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>hexagon</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-static.webp" alt="static middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>static</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-aperture.webp" alt="aperture middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>aperture</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-circuit.webp" alt="circuit middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>circuit</figcaption></figure></div>
-                                </div>
-                                <div class="cell">
-                                    <h3>Inner ring · 6</h3>
-                                    <div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-glow.webp" alt="glow inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>glow</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-segments.webp" alt="segments inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>segments</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-electric.webp" alt="electric inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>electric</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-pulse.webp" alt="pulse inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>pulse</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-double.webp" alt="double inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>double</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-reticle.webp" alt="reticle inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>reticle</figcaption></figure></div>
+                                <div class="cell wf oc-rings">
+                                    <div class="oc-ring-row"><h3>Outer ring <span>7</span></h3><div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-solid.webp" alt="solid outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>solid</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-orbs.webp" alt="orbs outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>orbs</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-dashed.webp" alt="dashed outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>dashed</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-pulse.webp" alt="pulse outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>pulse</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-shards.webp" alt="shards outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>shards</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-helix.webp" alt="helix outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>helix</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/outer-reactor.webp" alt="reactor outer ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>reactor</figcaption></figure></div></div>
+                                    <div class="oc-ring-row"><h3>Middle ring <span>7</span></h3><div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-gradient.webp" alt="gradient middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>gradient</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-plasma.webp" alt="plasma middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>plasma</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-ripple.webp" alt="ripple middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>ripple</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-hexagon.webp" alt="hexagon middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>hexagon</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-static.webp" alt="static middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>static</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-aperture.webp" alt="aperture middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>aperture</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/middle-circuit.webp" alt="circuit middle ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>circuit</figcaption></figure></div></div>
+                                    <div class="oc-ring-row"><h3>Inner ring <span>6</span></h3><div class="oc-minis"><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-glow.webp" alt="glow inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>glow</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-segments.webp" alt="segments inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>segments</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-electric.webp" alt="electric inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>electric</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-pulse.webp" alt="pulse inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>pulse</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-double.webp" alt="double inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>double</figcaption></figure><figure class="oc-mini"><img src="/assets/OCS/docs/r/inner-reticle.webp" alt="reticle inner ring" loading="lazy" decoding="async" width="140" height="140"><figcaption>reticle</figcaption></figure></div></div>
                                 </div>
                             </div>
                         </section>
 
                         <!-- §05 -->
                         <section class="doc-sec" id="s-behavior" data-title="Behavior &amp; mood">
-                            <h2><span class="doc-num">§05</span> Behavior &amp; mood <span class="oc-h2-meta">valence · arousal · dominance</span></h2>
+                            <h2><span class="doc-num">§05</span> Behavior &amp; mood <span class="doc-h2-meta">valence · arousal · dominance</span></h2>
                             <div class="dz">
                                 <div class="cell">
                                     <p>The mood is a <b>V / A / D</b> vector that decays toward a baseline. Stimuli (a face appearing, motion, idle time, manual expressions) nudge it, and the mood biases which behaviors fire and how strongly. The last 30 stimuli are kept as a feed for the web UI.</p>
@@ -402,7 +403,7 @@
                                 </div>
                                 <div class="cell wf">
                                     <h3>Expressions · 8 <span>0.5–10&nbsp;s at 0–1 intensity · each pushes the mood by ΔV ΔA ΔD × intensity</span></h3>
-                                    <div class="oc-exprs"><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-happy.webp" alt="happy expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
+                                    <div class="oc-exprs doc-cols" style="--cols: 4; --cols-sm: 2"><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-happy.webp" alt="happy expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>happy</b><span class="oc-vad"><i class="dp" style="--m:0.67">+0.20</i><i class="dp" style="--m:0.33">+0.10</i><i class="d0">0</i></span><small>warm radiance, rotating sunburst, smile arc, sparkles</small></figcaption></figure><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-sad.webp" alt="sad expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>sad</b><span class="oc-vad"><i class="dn" style="--m:0.67">−0.20</i><i class="dn" style="--m:0.33">−0.10</i><i class="dn" style="--m:0.17">−0.05</i></span><small>cool desaturated grade, drooping lid, falling tears</small></figcaption></figure><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-angry.webp" alt="angry expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>angry</b><span class="oc-vad"><i class="dn" style="--m:0.50">−0.15</i><i class="dp" style="--m:1.00">+0.30</i><i class="dp" style="--m:0.67">+0.20</i></span><small>heat grade, slammed V brows, crackling rim arcs, shake</small></figcaption></figure><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-surprised.webp" alt="surprised expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
@@ -411,14 +412,14 @@
                                     <figcaption><b>suspicious</b><span class="oc-vad"><i class="dn" style="--m:0.17">−0.05</i><i class="dp" style="--m:0.17">+0.05</i><i class="dp" style="--m:0.33">+0.10</i></span><small>narrowed lids, laser scanner, pupil lock brackets</small></figcaption></figure><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-bored.webp" alt="bored expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>bored</b><span class="oc-vad"><i class="dn" style="--m:0.17">−0.05</i><i class="dn" style="--m:0.67">−0.20</i><i class="d0">0</i></span><small>dimmed grade, heavy sagging lid, drifting z’s</small></figcaption></figure><figure class="oc-expr"><img src="/assets/OCS/docs/r/expr-thinking.webp" alt="thinking expression on the Sentinel preset" loading="lazy" decoding="async" width="200" height="200">
                                     <figcaption><b>thinking</b><span class="oc-vad"><i class="d0">0</i><i class="dn" style="--m:0.17">−0.05</i><i class="dp" style="--m:0.17">+0.05</i></span><small>orbiting loader dots and a counter-rotating dash ring</small></figcaption></figure></div>
-                                    <p class="oc-note">Rendered on the Sentinel preset, 0.8&nbsp;s in. Overlays ease in over the first 12% and out over the last 25%; effects that belong to the eye follow the pupil.</p>
+                                    <p class="doc-note">Rendered on the Sentinel preset, 0.8&nbsp;s in. Overlays ease in over the first 12% and out over the last 25%; effects that belong to the eye follow the pupil.</p>
                                 </div>
                             </div>
                         </section>
 
                         <!-- §06 -->
                         <section class="doc-sec" id="s-tracking" data-title="Tracking">
-                            <h2><span class="doc-num">§06</span> Tracking <span class="oc-h2-meta">best backend that works, and why the others didn't</span></h2>
+                            <h2><span class="doc-num">§06</span> Tracking <span class="doc-h2-meta">best backend that works, and why the others didn't</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <table class="doc-table">
@@ -440,7 +441,7 @@
 
                         <!-- §07 -->
                         <section class="doc-sec" id="s-alerts" data-title="Alerts &amp; takeovers">
-                            <h2><span class="doc-num">§07</span> Alerts &amp; takeovers <span class="oc-h2-meta">one at a time · wall-clock timed</span></h2>
+                            <h2><span class="doc-num">§07</span> Alerts &amp; takeovers <span class="doc-h2-meta">one at a time · wall-clock timed</span></h2>
                             <div class="dz">
                                 <figure class="cell oc-alert" style="--al:255,85,85">
                                     <img src="/assets/OCS/docs/r/alert-siren.webp" alt="The siren takeover animation" loading="lazy" decoding="async" width="220" height="220">
@@ -470,14 +471,14 @@
                                 <div class="cell">
                                     <h3>Thinking</h3>
                                     <p><code>/api/eye/thinking</code> holds a thinking state (orbiting loader dots, counter-rotating dash ring) while a chat or LLM reply is pending.</p>
-                                    <p class="oc-note">Clips: Arc Reactor preset, 3&nbsp;s of each at 12&nbsp;fps.</p>
+                                    <p class="doc-note">Clips: Arc Reactor preset, 3&nbsp;s of each at 12&nbsp;fps.</p>
                                 </div>
                             </div>
                         </section>
 
                         <!-- §08 -->
                         <section class="doc-sec" id="s-busybar" data-title="BUSY Bar">
-                            <h2><span class="doc-num">§08</span> BUSY Bar companion <span class="doc-new">NEW</span> <span class="oc-h2-meta">src/services/busybar.py · 1,167 lines</span></h2>
+                            <h2><span class="doc-num">§08</span> BUSY Bar companion <span class="doc-new">NEW</span> <span class="doc-h2-meta">src/services/busybar.py · 1,167 lines</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <div class="oc-bar-dev" aria-hidden="true">
@@ -530,7 +531,7 @@
 
                         <!-- §09 -->
                         <section class="doc-sec" id="s-audio" data-title="Audio &amp; voice">
-                            <h2><span class="doc-num">§09</span> Audio &amp; voice <span class="oc-h2-meta">36 effects · regenerated 2026-11</span></h2>
+                            <h2><span class="doc-num">§09</span> Audio &amp; voice <span class="doc-h2-meta">36 effects · regenerated 2026-11</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <table class="doc-table doc-kv">
@@ -551,7 +552,7 @@
 
                         <!-- §10 -->
                         <section class="doc-sec" id="s-vision" data-title="Vision">
-                            <h2><span class="doc-num">§10</span> Vision <span class="oc-h2-meta">YOLO11 scene context for chat</span></h2>
+                            <h2><span class="doc-num">§10</span> Vision <span class="doc-h2-meta">YOLO11 scene context for chat</span></h2>
                             <div class="dz">
                                 <div class="cell">
                                     <p><code>src/vision</code> runs YOLO11 object detection on the camera feed to describe the scene, giving chat conversations context about what the eye is looking at.</p>
@@ -568,7 +569,7 @@
 
                         <!-- §11 -->
                         <section class="doc-sec" id="s-api" data-title="API reference">
-                            <h2><span class="doc-num">§11</span> API reference <span class="oc-h2-meta">62 routes · 10 Socket.IO events · :5001</span></h2>
+                            <h2><span class="doc-num">§11</span> API reference <span class="doc-h2-meta">62 routes · 10 Socket.IO events · :5001</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <p>Flask + Flask-SocketIO with CORS. Every UI action is an API call; <code>GET /api/help</code> returns the full reference.</p>
@@ -583,13 +584,13 @@ curl localhost:5001/api/eye/render -o eye.png</code></pre>
                                     <h3>Socket.IO</h3>
                                     <span class="doc-chips"><i>subscribe_eye_stream</i><i>unsubscribe_eye_stream</i><i>get_eye_frame</i><i>subscribe_eye_state</i><i>unsubscribe_eye_state</i><i>set_gaze</i><i>trigger_blink</i><i>set_expression</i><i>connect</i><i>disconnect</i></span>
                                 </div>
-                                <div class="cell oc-api"><h3>eye <span>15</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>config</td><td>full look + style lists</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>presets</td><td>presets.json</td></tr><tr><td>POST</td><td>/api/<wbr>eye/<wbr>preset</td><td>apply a preset</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>expression</td><td>current / trigger</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>expressions/<wbr>list</td><td>available expressions</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>gaze</td><td>gaze target (x, y)</td></tr><tr><td>POST</td><td>/api/<wbr>eye/<wbr>blink</td><td>blink now</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>auto-blink</td><td>automatic blinking</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>mood</td><td>mood vector + stimuli</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>reactive-expressions</td><td>behavior tree on / off</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>effects</td><td>any effect, incl. showpiece</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>display-fit</td><td>sphere alignment</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>state</td><td>live state snapshot</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>render</td><td>current frame (PNG)</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>stream</td><td>MJPEG stream</td></tr></table></div><div class="cell oc-api"><h3>alerts <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>siren</td><td>siren</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>flyover</td><td>flyover config / test</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>hourly-chime</td><td>chime config / test</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>thinking</td><td>thinking state</td></tr></table></div><div class="cell oc-api"><h3>busy bar <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>busybar</td><td>enable, address, token, LED mode</td></tr><tr><td>POST</td><td>/api/<wbr>busybar/<wbr>input</td><td>wheel / OK / BACK / START</td></tr><tr><td>GET POST</td><td>/api/<wbr>busybar/<wbr>device</td><td>bar status, brightness</td></tr><tr><td>GET</td><td>/api/<wbr>busybar/<wbr>screen</td><td>front + back framebuffers</td></tr></table></div><div class="cell oc-api"><h3>tracking &amp; camera <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>tracking</td><td>tracking on / off</td></tr><tr><td>GET POST</td><td>/api/<wbr>calibration</td><td>gaze calibration</td></tr><tr><td>GET</td><td>/api/<wbr>camera/<wbr>image</td><td>annotated frame</td></tr><tr><td>GET</td><td>/api/<wbr>camera/<wbr>image/<wbr>raw</td><td>raw frame</td></tr></table></div><div class="cell oc-api"><h3>sound <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>sound/<wbr>status · /<wbr>list</td><td>mixer, sounds</td></tr><tr><td>POST</td><td>/api/<wbr>sound/<wbr>play · /<wbr>synth · /<wbr>stop</td><td>play, synthesize, stop</td></tr><tr><td>GET POST</td><td>/api/<wbr>sound/<wbr>volume · /<wbr>events</td><td>volume, per-event sounds</td></tr><tr><td>POST</td><td>/api/<wbr>sound/<wbr>reconnect</td><td>re-init the device</td></tr></table></div><div class="cell oc-api"><h3>voice &amp; chat <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>tts/<wbr>status</td><td>model state</td></tr><tr><td>POST</td><td>/api/<wbr>tts/<wbr>enable · /<wbr>disable · /<wbr>unload</td><td>load / free the model</td></tr><tr><td>POST</td><td>/api/<wbr>tts/<wbr>speak · /<wbr>voice</td><td>speak, set the voice</td></tr><tr><td>POST</td><td>/api/<wbr>chat</td><td>LLM proxy</td></tr></table></div><div class="cell oc-api"><h3>vision <span>3</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>vision/<wbr>status · /<wbr>scene · /<wbr>annotated · /<wbr>events</td><td>scene analysis</td></tr><tr><td>POST</td><td>/api/<wbr>vision/<wbr>chat · /<wbr>toggle · /<wbr>reset</td><td>chat, on / off, reset</td></tr><tr><td>GET POST</td><td>/api/<wbr>vision/<wbr>config</td><td>model size, confidence</td></tr></table></div><div class="cell oc-api"><h3>system &amp; ui <span>3</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>status · /<wbr>api/<wbr>help</td><td>health, reference</td></tr><tr><td>GET</td><td>/metrics</td><td>Prometheus</td></tr><tr><td>GET</td><td>/ · /<wbr>mobile · /<wbr>fonts.css</td><td>web + touch UI</td></tr></table></div>
+                                <div class="cell oc-api w2"><h3>eye <span>15</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>config</td><td>full look + style lists</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>presets</td><td>presets.json</td></tr><tr><td>POST</td><td>/api/<wbr>eye/<wbr>preset</td><td>apply a preset</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>expression</td><td>current / trigger</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>expressions/<wbr>list</td><td>available expressions</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>gaze</td><td>gaze target (x, y)</td></tr><tr><td>POST</td><td>/api/<wbr>eye/<wbr>blink</td><td>blink now</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>auto-blink</td><td>automatic blinking</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>mood</td><td>mood vector + stimuli</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>reactive-expressions</td><td>behavior tree on / off</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>effects</td><td>any effect, incl. showpiece</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>display-fit</td><td>sphere alignment</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>state</td><td>live state snapshot</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>render</td><td>current frame (PNG)</td></tr><tr><td>GET</td><td>/api/<wbr>eye/<wbr>stream</td><td>MJPEG stream</td></tr></table></div><div class="cell oc-api"><h3>alerts <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>siren</td><td>siren</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>flyover</td><td>flyover config / test</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>hourly-chime</td><td>chime config / test</td></tr><tr><td>GET POST</td><td>/api/<wbr>eye/<wbr>thinking</td><td>thinking state</td></tr></table></div><div class="cell oc-api"><h3>busy bar <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>busybar</td><td>enable, address, token, LED mode</td></tr><tr><td>POST</td><td>/api/<wbr>busybar/<wbr>input</td><td>wheel / OK / BACK / START</td></tr><tr><td>GET POST</td><td>/api/<wbr>busybar/<wbr>device</td><td>bar status, brightness</td></tr><tr><td>GET</td><td>/api/<wbr>busybar/<wbr>screen</td><td>front + back framebuffers</td></tr></table></div><div class="cell oc-api"><h3>tracking &amp; camera <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET POST</td><td>/api/<wbr>tracking</td><td>tracking on / off</td></tr><tr><td>GET POST</td><td>/api/<wbr>calibration</td><td>gaze calibration</td></tr><tr><td>GET</td><td>/api/<wbr>camera/<wbr>image</td><td>annotated frame</td></tr><tr><td>GET</td><td>/api/<wbr>camera/<wbr>image/<wbr>raw</td><td>raw frame</td></tr></table></div><div class="cell oc-api"><h3>sound <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>sound/<wbr>status · /<wbr>list</td><td>mixer, sounds</td></tr><tr><td>POST</td><td>/api/<wbr>sound/<wbr>play · /<wbr>synth · /<wbr>stop</td><td>play, synthesize, stop</td></tr><tr><td>GET POST</td><td>/api/<wbr>sound/<wbr>volume · /<wbr>events</td><td>volume, per-event sounds</td></tr><tr><td>POST</td><td>/api/<wbr>sound/<wbr>reconnect</td><td>re-init the device</td></tr></table></div><div class="cell oc-api"><h3>voice &amp; chat <span>4</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>tts/<wbr>status</td><td>model state</td></tr><tr><td>POST</td><td>/api/<wbr>tts/<wbr>enable · /<wbr>disable · /<wbr>unload</td><td>load / free the model</td></tr><tr><td>POST</td><td>/api/<wbr>tts/<wbr>speak · /<wbr>voice</td><td>speak, set the voice</td></tr><tr><td>POST</td><td>/api/<wbr>chat</td><td>LLM proxy</td></tr></table></div><div class="cell oc-api"><h3>vision <span>3</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>vision/<wbr>status · /<wbr>scene · /<wbr>annotated · /<wbr>events</td><td>scene analysis</td></tr><tr><td>POST</td><td>/api/<wbr>vision/<wbr>chat · /<wbr>toggle · /<wbr>reset</td><td>chat, on / off, reset</td></tr><tr><td>GET POST</td><td>/api/<wbr>vision/<wbr>config</td><td>model size, confidence</td></tr></table></div><div class="cell oc-api"><h3>system &amp; ui <span>3</span></h3><table class="doc-table doc-api"><tr><td>GET</td><td>/api/<wbr>status · /<wbr>api/<wbr>help</td><td>health, reference</td></tr><tr><td>GET</td><td>/metrics</td><td>Prometheus</td></tr><tr><td>GET</td><td>/ · /<wbr>mobile · /<wbr>fonts.css</td><td>web + touch UI</td></tr></table></div>
                             </div>
                         </section>
 
                         <!-- §12 -->
                         <section class="doc-sec" id="s-ha" data-title="Home Assistant">
-                            <h2><span class="doc-num">§12</span> Home Assistant <span class="oc-h2-meta">custom integration deepdish_ocs v2.0.0</span></h2>
+                            <h2><span class="doc-num">§12</span> Home Assistant <span class="doc-h2-meta">custom integration deepdish_ocs v2.0.0</span></h2>
                             <div class="dz">
                                 <div class="cell w2">
                                     <p>UI config flow (host + port, no YAML), <code>local_polling</code> every 10&nbsp;s. Preset and style options are read from OCS itself, so new presets appear without updating the integration. Install by copying <code>custom_components/deepdish_ocs</code>, or <code>deploy.sh</code> over SSH.</p>
@@ -626,9 +627,9 @@ curl localhost:5001/api/eye/render -o eye.png</code></pre>
 
                         <!-- §13 -->
                         <section class="doc-sec" id="s-telemetry" data-title="Telemetry">
-                            <h2><span class="doc-num">§13</span> Telemetry <span class="oc-h2-meta">45 deepdish_* series · 4 Grafana dashboards</span></h2>
+                            <h2><span class="doc-num">§13</span> Telemetry <span class="doc-h2-meta">45 deepdish_* series · 4 Grafana dashboards</span></h2>
                             <div class="dz">
-                                <div class="cell w2">
+                                <div class="cell wf">
                                     <table class="doc-table oc-series">
                                         <tbody>
                                             <tr><td>mood</td><td><span class="doc-chips"><i>mood_valence</i><i>mood_arousal</i><i>mood_dominance</i><i>mood_label_active</i><i>mood_stimuli_total</i><i>behavior_chosen_total</i><i>behavior_score</i></span></td></tr>
@@ -639,10 +640,10 @@ curl localhost:5001/api/eye/render -o eye.png</code></pre>
                                             <tr><td>system</td><td><span class="doc-chips"><i>system_running</i><i>camera_healthy</i><i>connected_clients</i><i>api_requests_total</i><i>api_request_duration_seconds</i></span></td></tr>
                                         </tbody>
                                     </table>
-                                    <p class="oc-note">At <code>/metrics</code>, plus a build-info block. Dashboards: <code>deepdish_ocs</code>, <code>deepdish_combined</code>, <code>deepdish_jboc</code>, <code>node_exporter</code>.</p>
+                                    <p class="doc-note">At <code>/metrics</code>, plus a build-info block. Dashboards: <code>deepdish_ocs</code>, <code>deepdish_combined</code>, <code>deepdish_jboc</code>, <code>node_exporter</code>.</p>
                                 </div>
-                                <figure class="doc-figure cell-fig">
-                                    <img src="/assets/OCS/docs/grafana.webp" alt="Grafana dashboard panels for DeepDish OCS" loading="lazy" decoding="async">
+                                <figure class="doc-figure cell-fig wf">
+                                    <img src="/assets/OCS/docs/grafana.webp" alt="Grafana dashboard panels for DeepDish OCS" width="1381" height="345" loading="lazy" decoding="async">
                                     <figcaption>FIG 13.1 · Grafana: the OCS dashboard</figcaption>
                                 </figure>
                             </div>
@@ -650,15 +651,17 @@ curl localhost:5001/api/eye/render -o eye.png</code></pre>
 
                         <!-- §14 -->
                         <section class="doc-sec" id="s-deploy" data-title="Deployment">
-                            <h2><span class="doc-num">§14</span> Deployment <span class="oc-h2-meta">venv · Docker · the eye window</span></h2>
+                            <h2><span class="doc-num">§14</span> Deployment <span class="doc-h2-meta">venv · Docker · the eye window</span></h2>
                             <div class="dz">
-                                <div class="cell">
+                                <div class="cell wf">
 <pre class="doc-code"><code>bash scripts/setup_venv.sh    # venv + requirements
 bash run_deepdish.sh          # start; args pass through
 
 docker compose up -d --build  # headless API + UI :5001</code></pre>
                                     <p>Python 3.11 with OpenCV, NumPy, Pillow, Flask, Flask-CORS, Flask-SocketIO, Ultralytics, prometheus-client, Chatterbox TTS + torchaudio, pygame and moderngl. On a CIFS / SMB mount the launcher puts the venv in <code>~/.venv-gakken-worldeye</code> (those mounts can't hold executables). The web UI uses Berkeley Mono when its files are present.</p>
                                 </div>
+                            </div>
+                            <div class="dz fit">
                                 <div class="cell">
                                     <table class="doc-table doc-flags">
                                         <tbody>
@@ -693,12 +696,12 @@ docker compose up -d --build  # headless API + UI :5001</code></pre>
 
                         <!-- §15 -->
                         <section class="doc-sec" id="s-tests" data-title="Tests">
-                            <h2><span class="doc-num">§15</span> Tests <span class="oc-h2-meta">54 core · 20 Home Assistant · no camera or audio needed</span></h2>
+                            <h2><span class="doc-num">§15</span> Tests <span class="doc-h2-meta">54 core · 20 Home Assistant · no camera or audio needed</span></h2>
                             <div class="dz">
                                 <div class="cell">
                                     <p>Config is hermetic (every persisted file redirected to a temp dir), the audio health monitor is stopped, and renders run under a frozen clock with fixed seeds. The suite came first, as "phase 0", so the move into <code>src/</code> could be checked step by step.</p>
                                     <div class="doc-golden" id="doc-golden"></div>
-                                    <p class="oc-note">Golden frames, refreshed in 925ea62. A render passes if the mean difference is under 1.0 and under 0.2% of pixels change by more than 24.</p>
+                                    <p class="doc-note">Golden frames, refreshed in 925ea62. A render passes if the mean difference is under 1.0 and under 0.2% of pixels change by more than 24.</p>
                                 </div>
                                 <div class="cell w2">
                                     <table class="doc-table oc-tests">
@@ -723,15 +726,19 @@ docker compose up -d --build  # headless API + UI :5001</code></pre>
 
                         <!-- §16 -->
                         <section class="doc-sec" id="s-changelog" data-title="Changelog">
-                            <h2><span class="doc-num">§16</span> Changelog <span class="oc-h2-meta">60 commits since 2025-12-11</span></h2>
+                            <h2><span class="doc-num">§16</span> Changelog <span class="doc-h2-meta">60 commits since 2025-12-11</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
                             <ol class="doc-log">
                                 <li><time>2026-11-06 · 925ea62</time><b>BUSY Bar + showpiece.</b> A BUSY Bar companion (<code>src/services/busybar.py</code>, 16 tests): ten pages on the front matrix, a status sheet on the back, wheel and button control, LED status, SIM / LIVE previews in the web UI. The eye window remembers its monitor (<code>window_placement.py</code>). The showpiece work lands: five iris styles (shutter, serpent, nova, circuit, crystal), seven fills (vortex, embers, plasma, warp, hex, rain, glyphs), nine presets, opt-in comets / arcs / shockwave / bloom / glitch, a rebuilt flyover radar on real ground tracks, and faster fill compositing. Sound set regenerated; golden frames refreshed.</li>
                                 <li><time>2026-09</time><b>Restructure.</b> Regression suite first, then the monolith moved into <code>src/</code> in twelve steps (audio, render, behavior, services, core, API, events, housing, tracking, display fit, display core, GUI). Twelve unused legacy renderers removed; presets served from <code>presets.json</code> everywhere; audio self-heal fixed for non-PipeWire backends; Home Assistant integration v2; drone integration removed; repo organised into <code>web/ assets/ docs/ scripts/</code>.</li>
                                 <li><time>2026-01</time><b>Headless.</b> Headless mode and display options for running without the desktop GUI; structure cleanup.</li>
                                 <li><time>2025-12</time><b>DeepDish Optical Control System.</b> Renamed and licensed (VPL). Blink API, gaze tracking and control-panel metrics, color presets in the web UI, Chatterbox TTS, hourly chime, boot sequence and reactive expressions, effects control, the first Home Assistant integration and the Grafana dashboard.</li>
                             </ol>
+                                </div>
+                            </div>
                         </section>
-                        <p class="doc-end">— end of document · source: deepdish_ocs @ 925ea62 (2026-11-06) —</p>
+                        <p class="doc-end">— end of document · deepdish_ocs @ 925ea62 · 2026-11-06 —</p>
                     </article>
                     </div>
                 </section>
@@ -767,16 +774,16 @@ docker compose up -d --build  # headless API + UI :5001</code></pre>
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.3"></script>
-    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Docs (contents, search, source map) + OCS presets and renders -->
-    <script defer src="/js/docs.js?v=1.3"></script>
-    <script defer src="/js/ocs-docs.js?v=3.0"></script>
+    <script defer src="/js/docs.js?v=1.5"></script>
+    <script defer src="/js/ocs-docs.js?v=3.1"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

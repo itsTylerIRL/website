@@ -22,28 +22,41 @@ if ('serviceWorker' in navigator) {
         return String(n);
     };
 
-    fetch('https://www.remilia.net/api/v1/users/tyler')
-        .then((r) => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
-        .then((data) => {
-            const u = data && data.user;
-            if (!u) throw new Error('no user');
-            let any = false;
-            box.querySelectorAll('[data-stat]').forEach((el) => {
-                const v = u[el.dataset.stat];
-                // Counts up from zero as it lands (js/arrive.js)
-                if (typeof v === 'number') { el.textContent = fmt(v); window.tirlArrive?.countUp(el); any = true; }
+    // Fetched on load (numbers count up as they land), then every 5 minutes: a changed number rolls over to
+    // its new value like an odometer (js/micro.js tirlRoll)
+    let loaded = false;
+    function load() {
+        if (loaded && document.hidden) return;
+        fetch('https://www.remilia.net/api/v1/users/tyler')
+            .then((r) => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+            .then((data) => {
+                const u = data && data.user;
+                if (!u) throw new Error('no user');
+                let any = false;
+                box.querySelectorAll('[data-stat]').forEach((el) => {
+                    const v = u[el.dataset.stat];
+                    if (typeof v !== 'number') return;
+                    any = true;
+                    const text = fmt(v);
+                    if (!loaded) { el.textContent = text; window.tirlArrive?.countUp(el); } // counts up from zero (js/arrive.js)
+                    else if (el.textContent.trim() !== text) window.tirlRoll ? window.tirlRoll(el, text) : (el.textContent = text);
+                });
+                if (any) {
+                    // The RemiNET row in Results (js/objects.js)
+                    if (typeof u.socialCredit === 'number') window.ObjectsLive?.('live-reminet', `${fmt(u.socialCredit)} social credit${typeof u.beetles === 'number' ? ` · ${fmt(u.beetles)} beetles` : ''}`, 'purple');
+                    box.hidden = false;
+                    box.classList.remove('offline');
+                    requestAnimationFrame(() => box.classList.add('ready'));
+                    loaded = true;
+                }
+            })
+            .catch((e) => {
+                if (!loaded) box.classList.add('offline');
+                console.log('RemiliaNET stats unavailable:', e.message);
             });
-            if (any) {
-                // The RemiNET row in Results (js/objects.js)
-                if (typeof u.socialCredit === 'number') window.ObjectsLive?.('live-reminet', `${fmt(u.socialCredit)} social credit${typeof u.beetles === 'number' ? ` · ${fmt(u.beetles)} beetles` : ''}`, 'purple');
-                box.hidden = false;
-                requestAnimationFrame(() => box.classList.add('ready'));
-            }
-        })
-        .catch((e) => {
-            box.classList.add('offline');
-            console.log('RemiliaNET stats unavailable:', e.message);
-        });
+    }
+    load();
+    setInterval(load, 5 * 60000);
 })();
 
 // GitHub card in the Host dossier: a contributions heatmap (a column per week, Sunday on top, newest on the

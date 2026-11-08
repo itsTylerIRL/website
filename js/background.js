@@ -360,17 +360,17 @@ void main() {
     canvas.addEventListener('webglcontextlost', e => e.preventDefault());
     canvas.addEventListener('webglcontextrestored', () => { loc = {}; build(); resize(); });
 
-    // ---------- Tab visibility: pause + CONN LOST / CONNECTED title ----------
+    // ---------- Tab visibility: pause + SIGNAL LOST / LINK RESTORED title ----------
     const originalTitle = document.title;
     let restoreTimer = null;
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             window._bgPaused = true;
             if (restoreTimer) { clearTimeout(restoreTimer); restoreTimer = null; }
-            document.title = 'T: ⚠ CONN. LOST';
+            document.title = '\u26a0 [SIGNAL LOST] tyler';
         } else {
             window._bgPaused = false;
-            document.title = 'T: ● CONNECTED';
+            document.title = '\u25cf [LINK RESTORED] tyler';
             restoreTimer = setTimeout(() => {
                 document.title = originalTitle;
                 restoreTimer = null;

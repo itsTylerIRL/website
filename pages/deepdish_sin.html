@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/docs.css?v=1.3">
-    <link rel="stylesheet" href="/css/deepdish_sin.css?v=2.3">
+    <link rel="stylesheet" href="/css/docs.css?v=1.9">
+    <link rel="stylesheet" href="/css/deepdish_sin.css?v=2.5">
 </head>
 <body>
     <div class="corner-brackets"><div class="bottom"></div></div>
@@ -109,202 +109,276 @@
                 <section class="g-card g-docs-pane">
                     <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">PROJECT REFERENCE</span></div>
                     <div class="g-docs-scroll" id="g-docs-scroll">
-                    <article class="doc" id="doc">
-<section class="doc-sec" id="s-overview" data-title="Overview">
-<h2><span class="doc-num">§01</span> Overview</h2>
-<div class="sin-snapshot-label">PROJECT SNAPSHOT &middot; v3.2.1-STABLE</div><div class="doc-tiles"><div class="doc-tile"><span>Servers</span><b>3</b></div>
-<div class="doc-tile"><span>Economy Pool</span><b>847K</b></div>
-<div class="doc-tile"><span>LLM Agents</span><b>6</b></div>
-<div class="doc-tile"><span>Commands/hr</span><b>23</b></div>
-<div class="doc-tile"><span>Modules</span><b>12</b></div>
-<div class="doc-tile"><span>Uptime</span><b>99.7%</b></div></div>
-        <p>
-            <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> Bot is a multi-purpose, extensible Discord bot with deep integration into community culture, games, moderation, analytics, and cross-platform relays. Designed for chaos, fun, and utility across Discord and Telegram with a modular system built for rapid feature expansion.
-        </p>
-        
-        <div class="g-callout">All module interactions generate audit logs. Economy manipulation triggers automated review.</div>
-</section>
+                    <article class="doc is-dense" id="doc" data-reveal=".sin-game">
 
-<section class="doc-sec" id="s-claims" data-title="Daily !claim System">
-<h2><span class="doc-num">§02</span> Daily !claim System</h2>
-<div class="sin-note">
-            <span class="sin-note-title">Core Engagement Loop</span>
-            <p>
-                The core engagement system rewards users for claiming daily. Each day, users can use <code>!claim</code> to receive a payout that scales with their streak of consecutive claims. The longer a user claims without missing a day, the higher their daily reward grows, incentivizing consistent community participation.
-            </p>
-        </div>
-        <p>
-            Extra claims and bonus payouts are awarded for daily engagement with community features like participating in Daily Radbro or generating custom RadPacks. Users who participate in these activities earn additional claim refreshes and multiplier bonuses, turning everyday gameplay into a rewarding cycle of community creation and earning.
-        </p>
-</section>
+                        <!-- §01 -->
+                        <section class="doc-sec" id="s-overview" data-title="Overview">
+                            <h2><span class="doc-num">§01</span> Overview <span class="doc-h2-meta">project snapshot · v3.2.1-STABLE</span></h2>
+                            <div class="dz">
+                                <div class="cell sin-file doc-hero wf">
+                                    <a class="sin-threat" href="#s-defcon" title="Current alert level: open the DEFCON console (§09)">
+                                        <img id="sin-threat-img" src="/assets/redacted/defcon/DEFCON5.webp" alt="" width="480" height="479">
+                                        <span class="doc-hero-tag">THREAT LEVEL<b id="sin-threat-n">DEFCON 5</b></span>
+                                    </a>
+                                    <div class="sin-file-text">
+                                        <span class="sin-stamp" aria-hidden="true">RESTRICTED</span>
+                                        <p class="doc-lede"><span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> Bot is a multi-purpose, extensible Discord bot with deep integration into community culture, games, moderation, analytics, and cross-platform relays. Designed for chaos, fun, and utility across Discord and Telegram with a modular system built for rapid feature expansion.</p>
+                                        <div class="g-callout"><b>AUDIT</b><span>All module interactions generate audit logs. Economy manipulation triggers automated review.</span></div>
+                                    </div>
+                                </div>
+                                <div class="doc-tiles doc-cols wf" style="--cols: 6; --cols-sm: 3"><div class="doc-tile"><span>servers</span><b data-count="3">3</b><small>Discord &middot; Telegram relays</small></div><div class="doc-tile"><span>economy pool</span><b data-count="847">847K</b><small>!claim &middot; games &middot; RadPacks</small></div><div class="doc-tile"><span>llm agents</span><b data-count="6">6</b><small>one per v1 archetype</small></div><div class="doc-tile"><span>commands / hr</span><b data-count="23">23</b><small>reference snapshot</small></div><div class="doc-tile"><span>modules</span><b data-count="12">12</b><small>built for rapid expansion</small></div><div class="doc-tile"><span>uptime</span><b>99.7%</b><small>v3.2.1-STABLE</small></div></div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-games" data-title="Gambling &amp; Games">
-<h2><span class="doc-num">§03</span> Gambling &amp; Games</h2>
-<p>
-            Fully interactive games including Blackjack, Roulette, Dice, Rock-Paper-Scissors, Coin Flips, and Quickdraw Duels. All games feature custom embeds, emoji-rich interactions, streaks, and statistics. Users can bet in-game currency with leaderboards and detailed stats tracking. Daily claims with streak bonuses and early claim penalties keep players engaged.
-        </p>
-        
-        <div class="doc-split doc-split-even">
-            <div class="sin-note">
-                <span class="sin-note-title">Game Modules</span>
-                <ul>
-                    <li>Blackjack (multi-hand)</li>
-                    <li>Roulette (full table)</li>
-                    <li>Dice / Coin Flip</li>
-                    <li>Rock-Paper-Scissors</li>
-                    <li>Quickdraw Duels</li>
-                </ul>
-            </div>
-            <div class="sin-note">
-                <span class="sin-note-title">Tracking Systems</span>
-                <ul>
-                    <li>Win/Loss ratios</li>
-                    <li>Best streaks</li>
-                    <li>Claim patterns</li>
-                    <li>Per-user analytics</li>
-                    <li>Leaderboards</li>
-                </ul>
-            </div>
-        </div>
-</section>
+                        <!-- §02 -->
+                        <section class="doc-sec" id="s-claims" data-title="Daily !claim System">
+                            <h2><span class="doc-num">§02</span> Daily !claim System <span class="doc-h2-meta">core engagement loop</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Streaks</h3>
+                                    <p>The core engagement system rewards users for claiming daily. Each day, users can use <code>!claim</code> to receive a payout that scales with their streak of consecutive claims. The longer a user claims without missing a day, the higher their daily reward grows, incentivizing consistent community participation.</p>
+                                    <ol class="sin-streak" aria-label="Schematic: the payout grows with each consecutive day claimed">
+                                        <li style="--d:1"></li><li style="--d:2"></li><li style="--d:3"></li><li style="--d:4"></li><li style="--d:5"></li><li style="--d:6"></li><li style="--d:7"></li>
+                                    </ol>
+                                    <p class="doc-note">Schematic: the payout grows with each consecutive day.</p>
+                                </div>
+                                <div class="cell">
+                                    <h3>Bonus claims</h3>
+                                    <p>Extra claims and bonus payouts are awarded for daily engagement with community features like participating in Daily Radbro or generating custom RadPacks. Users who participate in these activities earn additional claim refreshes and multiplier bonuses, turning everyday gameplay into a rewarding cycle of community creation and earning.</p>
+                                    <p class="doc-chips"><i>!claim</i><i>Daily Radbro</i><i>RadPacks</i><i>claim refreshes</i><i>multipliers</i></p>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-radpacks" data-title="Radpack Generation">
-<h2><span class="doc-num">§04</span> Radpack Generation</h2>
-<p>
-            Generate custom cigarette packs using casino credit winnings. Users can create unique Radpacks with personalized designs powered by their in-game earnings. Each generated pack is a piece of community art, converting gambling wins into shareable meme content.
-        </p>
-        <div class="sin-evidence">
-            <a class="sin-pack" href="/assets/redacted/radpack.png" target="_blank" rel="noopener" aria-label="Open Radpack Generation image"><img src="/assets/redacted/radpack.png" alt="Radpack Generation" width="447" height="559" loading="lazy" decoding="async"></a>
-        </div>
-</section>
+                        <!-- §03 -->
+                        <section class="doc-sec" id="s-games" data-title="Gambling &amp; Games">
+                            <h2><span class="doc-num">§03</span> Gambling &amp; Games <span class="doc-h2-meta">5 game modules · leaderboards</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Fully interactive games including Blackjack, Roulette, Dice, Rock-Paper-Scissors, Coin Flips, and Quickdraw Duels. All games feature custom embeds, emoji-rich interactions, streaks, and statistics. Users can bet in-game currency with leaderboards and detailed stats tracking. Daily claims with streak bonuses and early claim penalties keep players engaged.</p>
+                                    <div class="sin-games doc-cols" style="--cols: 5; --cols-sm: 2">
+                                        <div class="sin-game"><span class="doc-glyph" aria-hidden="true">&#9824;</span><b>Blackjack</b><small>multi-hand</small></div>
+                                        <div class="sin-game"><span class="doc-glyph" aria-hidden="true">&#9678;</span><b>Roulette</b><small>full table</small></div>
+                                        <div class="sin-game"><span class="doc-glyph" aria-hidden="true">&#9860;</span><b>Dice / Coin Flip</b><small>quick bets</small></div>
+                                        <div class="sin-game"><span class="doc-glyph" aria-hidden="true">&#9986;</span><b>Rock-Paper-Scissors</b><small>head to head</small></div>
+                                        <div class="sin-game"><span class="doc-glyph" aria-hidden="true">&#8982;</span><b>Quickdraw Duels</b><small>fastest wins</small></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Tracking systems</h3>
+                                    <p class="doc-chips"><i>Win/Loss ratios</i><i>Best streaks</i><i>Claim patterns</i><i>Per-user analytics</i><i>Leaderboards</i></p>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-moderation" data-title="Moderation &amp; Analytics">
-<h2><span class="doc-num">§05</span> Moderation &amp; Analytics</h2>
-<p>
-            Comprehensive tracking of moderator actions, ban streaks, and badge generation. Detailed per-user and per-action analytics including win/loss ratios, best streaks, claim patterns, and gambling statistics. LLM rate limiting controls access to AI features per user, per hour.
-        </p>
-</section>
+                        <!-- §04 -->
+                        <section class="doc-sec" id="s-radpacks" data-title="Radpack Generation">
+                            <h2><span class="doc-num">§04</span> Radpack Generation <span class="doc-h2-meta">winnings → meme art</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <p>Generate custom cigarette packs using casino credit winnings. Users can create unique Radpacks with personalized designs powered by their in-game earnings. Each generated pack is a piece of community art, converting gambling wins into shareable meme content.</p>
+                                    <div class="doc-flow sin-flow" role="img" aria-label="Casino credit winnings become a generated Radpack">
+                                        <div class="flow-col"><div class="flow-node in">casino credits<small>gambling winnings</small></div></div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col"><div class="flow-node core">Radpack generator<small>personalized design</small></div></div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col"><div class="flow-node out">shareable pack<small>community art</small></div></div>
+                                    </div>
+                                </div>
+                                <figure class="doc-figure cell-fig sin-pack">
+                                    <a href="/assets/redacted/radpack.png" target="_blank" rel="noopener" aria-label="Open the Radpack image"><img src="/assets/redacted/radpack.png" alt="A generated Radpack" width="447" height="559" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 4.1 &middot; a generated Radpack</figcaption>
+                                </figure>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-relays" data-title="Cross-Platform Relays">
-<h2><span class="doc-num">§06</span> Cross-Platform Relays</h2>
-<div class="sin-note">
-            <span class="sin-note-title">Bi-Directional Relay Network</span>
-            <p>
-                Message, media, and asset relays between Discord and Telegram with toggleable settings. Integration with Noosphere and webring servers for seamless cross-posting. Relay chain tracking enables moderation across platforms.
-            </p>
-        </div>
-        <div class="sin-evidence">
-            <a class="sin-capture" href="/assets/redacted/relays.png" target="_blank" rel="noopener" aria-label="Open Cross-Platform Relays image"><img src="/assets/redacted/relays.png" alt="Cross-Platform Relays" width="1407" height="1180" loading="lazy" decoding="async"></a>
-        </div>
-        
-<details class="sin-snapshot"><summary>Relay intercept &middot; reference snapshot</summary><table class="doc-table"><thead><tr><th>Time</th><th>Channel</th><th>Message</th></tr></thead><tbody><tr><td>0341Z</td><td>#general</td><td>Message relayed to Telegram</td></tr>
-<tr><td>0318Z</td><td>#alerts</td><td>DEFCON update broadcast</td></tr>
-<tr><td>0255Z</td><td>#noosphere</td><td>Cross-post from webring</td></tr></tbody></table></details>
-</section>
+                        <!-- §05 -->
+                        <section class="doc-sec" id="s-moderation" data-title="Moderation &amp; Analytics">
+                            <h2><span class="doc-num">§05</span> Moderation &amp; Analytics <span class="doc-h2-meta">per user · per action</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Comprehensive tracking of moderator actions, ban streaks, and badge generation. Detailed per-user and per-action analytics including win/loss ratios, best streaks, claim patterns, and gambling statistics. LLM rate limiting controls access to AI features per user, per hour.</p>
+                                    <p class="doc-chips"><i>moderator actions</i><i>ban streaks</i><i>badge generation</i><i>gambling statistics</i><i>LLM rate limit · per user / hour</i></p>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-web3" data-title="NFT &amp; Web3 Integration">
-<h2><span class="doc-num">§07</span> NFT &amp; Web3 Integration</h2>
-<p>
-            Monitor NFT sales, mints, and burns for configured collections with optional OpenSea and ENS support. RAD Token-based payment verification for in-bot actions like queue skips and claim refreshes.
-        </p>
-        <div class="sin-evidence">
-            <a class="sin-sale" href="/assets/redacted/sale1.png" target="_blank" rel="noopener" aria-label="Open NFT Sale 1 image"><img src="/assets/redacted/sale1.png" alt="NFT Sale 1" width="377" height="569" loading="lazy" decoding="async"></a>
-            <a class="sin-sale" href="/assets/redacted/sale2.png" target="_blank" rel="noopener" aria-label="Open NFT Sale 2 image"><img src="/assets/redacted/sale2.png" alt="NFT Sale 2" width="396" height="577" loading="lazy" decoding="async"></a>
-        </div>
-</section>
+                        <!-- §06 -->
+                        <section class="doc-sec" id="s-relays" data-title="Cross-Platform Relays">
+                            <h2><span class="doc-num">§06</span> Cross-Platform Relays <span class="doc-h2-meta">Discord ⇄ Telegram · webring</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Bi-directional relay network</h3>
+                                    <p>Message, media, and asset relays between Discord and Telegram with toggleable settings. Integration with Noosphere and webring servers for seamless cross-posting. Relay chain tracking enables moderation across platforms.</p>
+                                    <div class="sin-relay" role="img" aria-label="Messages, media and assets relay both ways between Discord and Telegram, with Noosphere and the webring cross-posting">
+                                        <span class="sin-relay-end">Discord</span>
+                                        <span class="sin-relay-wire"><i></i><i></i><i></i></span>
+                                        <span class="sin-relay-end">Telegram</span>
+                                        <small>messages &middot; media &middot; assets &middot; Noosphere + webring cross-posts</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <figure class="doc-figure cell-fig">
+                                    <a href="/assets/redacted/relays.png" target="_blank" rel="noopener" aria-label="Open the relays image"><img src="/assets/redacted/relays.png" alt="Cross-platform relays" width="1407" height="1180" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 6.1 &middot; cross-platform relays</figcaption>
+                                </figure>
+                                <div class="cell sin-term">
+                                    <h3>Relay intercept <span>reference snapshot</span></h3>
+                                    <ol class="sin-log">
+                                        <li><time>0341Z</time><b>#general</b>Message relayed to Telegram</li>
+                                        <li><time>0318Z</time><b>#alerts</b>DEFCON update broadcast</li>
+                                        <li><time>0255Z</time><b>#noosphere</b>Cross-post from webring</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-voice" data-title="Voice &amp; Media">
-<h2><span class="doc-num">§08</span> Voice &amp; Media</h2>
-<p>
-            Control voice channels, manage user movement, play audio, and queue YouTube videos. Payment-based skip and refresh system for queue management keeps servers interactive and user-driven.
-        </p>
-</section>
+                        <!-- §07 -->
+                        <section class="doc-sec" id="s-web3" data-title="NFT &amp; Web3 Integration">
+                            <h2><span class="doc-num">§07</span> NFT &amp; Web3 Integration <span class="doc-h2-meta">sales · mints · burns · RAD token</span></h2>
+                            <div class="dz">
+                                <div class="cell">
+                                    <p>Monitor NFT sales, mints, and burns for configured collections with optional OpenSea and ENS support. RAD Token-based payment verification for in-bot actions like queue skips and claim refreshes.</p>
+                                    <p class="doc-chips"><i>sales</i><i>mints</i><i>burns</i><i class="opt">OpenSea</i><i class="opt">ENS</i><i>RAD Token payments</i></p>
+                                </div>
+                                <figure class="doc-figure cell-fig is-portrait is-top">
+                                    <a href="/assets/redacted/sale1.png" target="_blank" rel="noopener" aria-label="Open NFT sale 1"><img src="/assets/redacted/sale1.png" alt="NFT sale alert" width="377" height="569" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 7.1 &middot; sale alert</figcaption>
+                                </figure>
+                                <figure class="doc-figure cell-fig is-portrait is-top">
+                                    <a href="/assets/redacted/sale2.png" target="_blank" rel="noopener" aria-label="Open NFT sale 2"><img src="/assets/redacted/sale2.png" alt="NFT sale alert" width="396" height="577" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 7.2 &middot; sale alert</figcaption>
+                                </figure>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-defcon" data-title="DEFCON System">
-<h2><span class="doc-num">§09</span> DEFCON System</h2>
-<div class="sin-note">
-            <span class="sin-note-title">Alert Level Protocol</span>
-            <p>
-                An interactive DEFCON status panel that escalates server alert levels from DEFCON 5 (all clear) through DEFCON 1 (maximum alert). Each level features custom profile pictures, unique audio alerts, and dynamic status messages. The panel updates in real-time and commands can escalate or de-escalate the server's DEFCON status based on events or community decisions.
-            </p>
-        </div>
-        <div class="sin-evidence">
-            <a class="sin-capture" href="/assets/redacted/panel.png" target="_blank" rel="noopener" aria-label="Open DEFCON Panel image"><img src="/assets/redacted/panel.png" alt="DEFCON Panel" width="587" height="705" loading="lazy" decoding="async"></a>
-        </div>
-        <div class="sin-evidence">
-            <a class="sin-level" href="/assets/redacted/DEFCON5.png" target="_blank" rel="noopener" aria-label="Open DEFCON 5 image"><img src="/assets/redacted/DEFCON5.png" alt="DEFCON 5" width="2048" height="2042" loading="lazy" decoding="async"></a>
-            <a class="sin-level" href="/assets/redacted/DEFCON4.png" target="_blank" rel="noopener" aria-label="Open DEFCON 4 image"><img src="/assets/redacted/DEFCON4.png" alt="DEFCON 4" width="2048" height="2042" loading="lazy" decoding="async"></a>
-            <a class="sin-level" href="/assets/redacted/DEFCON3.png" target="_blank" rel="noopener" aria-label="Open DEFCON 3 image"><img src="/assets/redacted/DEFCON3.png" alt="DEFCON 3" width="2048" height="2042" loading="lazy" decoding="async"></a>
-            <a class="sin-level" href="/assets/redacted/DEFCON2.png" target="_blank" rel="noopener" aria-label="Open DEFCON 2 image"><img src="/assets/redacted/DEFCON2.png" alt="DEFCON 2" width="2048" height="2042" loading="lazy" decoding="async"></a>
-            <a class="sin-level" href="/assets/redacted/DEFCON1.png" target="_blank" rel="noopener" aria-label="Open DEFCON 1 image"><img src="/assets/redacted/DEFCON1.png" alt="DEFCON 1" width="2048" height="2042" loading="lazy" decoding="async"></a>
-        </div>
-</section>
+                        <!-- §08 -->
+                        <section class="doc-sec" id="s-voice" data-title="Voice &amp; Media">
+                            <h2><span class="doc-num">§08</span> Voice &amp; Media <span class="doc-h2-meta">voice channels · YouTube queue</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>Control voice channels, manage user movement, play audio, and queue YouTube videos. Payment-based skip and refresh system for queue management keeps servers interactive and user-driven.</p>
+                                    <div class="sin-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-modes" data-title="Customization &amp; Modes">
-<h2><span class="doc-num">§10</span> Customization &amp; Modes</h2>
-<p>
-            Chinese Mode and St. Petersburg Mode provide toggleable alternate language, emoji, and payout logic. Archetype bots are modular sub-bots with unique personalities and relay logic. Dynamic image overlays power meme generation, and TempBotManager enables on-demand bot spawning and management. A Terminal Panel in dedicated channels provides live-updating status and analytics.
-        </p>
-</section>
+                        <!-- §09 -->
+                        <section class="doc-sec" id="s-defcon" data-title="DEFCON System">
+                            <h2><span class="doc-num">§09</span> DEFCON System <span class="doc-h2-meta">alert level protocol · 5 → 1</span></h2>
+                            <div class="dz">
+                                <div class="cell sin-defcon wf" id="sin-defcon" data-level="5">
+                                    <div class="sin-dc-badge"><img id="sin-dc-img" src="/assets/redacted/defcon/DEFCON5.webp" alt="DEFCON 5 profile picture" width="480" height="479"></div>
+                                    <div class="sin-dc-panel">
+                                        <div class="sin-dc-read"><b>DEFCON <span id="sin-dc-n">5</span></b><span id="sin-dc-state">ALL CLEAR</span></div>
+                                        <ol class="sin-dc-ladder" aria-label="Alert level"><li><button type="button" class="sin-dc-step" data-level="5" aria-pressed="true" aria-label="DEFCON 5">5</button></li><li><button type="button" class="sin-dc-step" data-level="4" aria-pressed="false" aria-label="DEFCON 4">4</button></li><li><button type="button" class="sin-dc-step" data-level="3" aria-pressed="false" aria-label="DEFCON 3">3</button></li><li><button type="button" class="sin-dc-step" data-level="2" aria-pressed="false" aria-label="DEFCON 2">2</button></li><li><button type="button" class="sin-dc-step" data-level="1" aria-pressed="false" aria-label="DEFCON 1">1</button></li></ol>
+                                        <div class="sin-dc-ctl">
+                                            <button type="button" class="g-btn" data-step="-1">&#9650; escalate</button>
+                                            <button type="button" class="g-btn" data-step="1">&#9660; de-escalate</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <figure class="doc-figure cell-fig">
+                                    <a href="/assets/redacted/panel.png" target="_blank" rel="noopener" aria-label="Open the DEFCON panel image"><img src="/assets/redacted/panel.png" alt="The DEFCON panel in Discord" width="587" height="705" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 9.1 &middot; the DEFCON panel</figcaption>
+                                </figure>
+                                <div class="cell w2">
+                                    <p>An interactive DEFCON status panel that escalates server alert levels from DEFCON 5 (all clear) through DEFCON 1 (maximum alert). Each level features custom profile pictures, unique audio alerts, and dynamic status messages. The panel updates in real-time and commands can escalate or de-escalate the server's DEFCON status based on events or community decisions.</p>
+                                    <h3>Profile pictures <span>one per level &middot; full size on click</span></h3>
+                                    <div class="sin-badges">
+                                        <a href="/assets/redacted/DEFCON5.png" target="_blank" rel="noopener" data-level="5"><img src="/assets/redacted/defcon/DEFCON5.webp" alt="DEFCON 5" width="480" height="479" loading="lazy" decoding="async"><span>5</span></a>
+                                        <a href="/assets/redacted/DEFCON4.png" target="_blank" rel="noopener" data-level="4"><img src="/assets/redacted/defcon/DEFCON4.webp" alt="DEFCON 4" width="480" height="479" loading="lazy" decoding="async"><span>4</span></a>
+                                        <a href="/assets/redacted/DEFCON3.png" target="_blank" rel="noopener" data-level="3"><img src="/assets/redacted/defcon/DEFCON3.webp" alt="DEFCON 3" width="480" height="479" loading="lazy" decoding="async"><span>3</span></a>
+                                        <a href="/assets/redacted/DEFCON2.png" target="_blank" rel="noopener" data-level="2"><img src="/assets/redacted/defcon/DEFCON2.webp" alt="DEFCON 2" width="480" height="479" loading="lazy" decoding="async"><span>2</span></a>
+                                        <a href="/assets/redacted/DEFCON1.png" target="_blank" rel="noopener" data-level="1"><img src="/assets/redacted/defcon/DEFCON1.webp" alt="DEFCON 1" width="480" height="479" loading="lazy" decoding="async"><span>1</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-agents" data-title="Autonomous LLM Agents">
-<h2><span class="doc-num">§11</span> Autonomous LLM Agents</h2>
-<div class="sin-note sin-alert">
-            <p>Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype.</p>
-        </div>
-        <p>
-            The LLM layer allows for natural, context-aware responses that reflect each bot's individual personality, transforming them from simple command executors into active community participants with their own presence and voice.
-        </p>
-        <div class="sin-evidence">
-            <a class="sin-capture" href="/assets/redacted/posters.png" target="_blank" rel="noopener" aria-label="Open Schizoposter Archetype Bots image"><img src="/assets/redacted/posters.png" alt="Schizoposter Archetype Bots" width="609" height="409" loading="lazy" decoding="async"></a>
-        </div>
-</section>
+                        <!-- §10 -->
+                        <section class="doc-sec" id="s-modes" data-title="Customization &amp; Modes">
+                            <h2><span class="doc-num">§10</span> Customization &amp; Modes <span class="doc-h2-meta">toggleable · on demand</span></h2>
+                            <div class="dz">
+                                <div class="cell"><h3>Chinese Mode &middot; St. Petersburg Mode</h3><p>Toggleable alternate language, emoji, and payout logic.</p></div>
+                                <div class="cell"><h3>Archetype bots</h3><p>Modular sub-bots with unique personalities and relay logic.</p></div>
+                                <div class="cell"><h3>Dynamic image overlays</h3><p>Power meme generation.</p></div>
+                                <div class="cell"><h3>TempBotManager</h3><p>On-demand bot spawning and management.</p></div>
+                                <div class="cell w2 sin-term"><h3>Terminal Panel</h3><p>Dedicated channels with live-updating status and analytics.</p></div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-stack" data-title="Tech Stack">
-<h2><span class="doc-num">§12</span> Tech Stack</h2>
+                        <!-- §11 -->
+                        <section class="doc-sec" id="s-agents" data-title="Autonomous LLM Agents">
+                            <h2><span class="doc-num">§11</span> Autonomous LLM Agents <span class="doc-h2-meta">one LLM bot per archetype</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <div class="g-callout sin-alert"><b>AGENTS</b><span>Each v1 Schizoposter Archetype has a dedicated LLM bot assigned to it, enabling fully custom personalities and autonomous engagement. These AI-driven bots interact with community members using distinct communication styles, memes, and behavioral patterns unique to their archetype.</span></div>
+                                    <p>The LLM layer allows for natural, context-aware responses that reflect each bot's individual personality, transforming them from simple command executors into active community participants with their own presence and voice.</p>
+                                </div>
+                                <figure class="doc-figure cell-fig">
+                                    <a href="/assets/redacted/posters.png" target="_blank" rel="noopener" aria-label="Open the Schizoposter archetype bots image"><img src="/assets/redacted/posters.png" alt="Schizoposter archetype bots" width="609" height="409" loading="lazy" decoding="async"></a>
+                                    <figcaption>FIG 11.1 &middot; Schizoposter archetype bots</figcaption>
+                                </figure>
+                            </div>
+                        </section>
+
+                        <!-- §12 -->
+                        <section class="doc-sec" id="s-stack" data-title="Tech Stack">
+                            <h2><span class="doc-num">§12</span> Tech Stack <span class="doc-h2-meta">Python 3.x · discord.py · web3.py</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
 <pre class="doc-code"><code>import discord, web3, mcstatus, PIL, dotenv
 # Python 3.x + discord.py + web3.py
 # Modular utility architecture for rapid expansion</code></pre>
-        
-        <table class="doc-table">
-            <tr><th>Component</th><th>Technology</th><th>Status</th></tr>
-            <tr><td>Core Runtime</td><td class="tone-blue">Python 3.x</td><td>ACTIVE</td></tr>
-            <tr><td>Discord API</td><td class="tone-blue">discord.py</td><td>ACTIVE</td></tr>
-            <tr><td>Blockchain</td><td class="tone-blue">web3.py</td><td>ACTIVE</td></tr>
-            <tr><td>Image Processing</td><td class="tone-blue">Pillow (PIL)</td><td>ACTIVE</td></tr>
-            <tr><td>Server Monitoring</td><td class="tone-blue">mcstatus</td><td>ACTIVE</td></tr>
-        </table>
-</section>
+                                </div>
+                                <div class="cell">
+                                    <table class="doc-table sin-stack">
+                                        <thead><tr><th>component</th><th>technology</th><th>status</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Core Runtime</td><td>Python 3.x</td><td>ACTIVE</td></tr>
+                                            <tr><td>Discord API</td><td>discord.py</td><td>ACTIVE</td></tr>
+                                            <tr><td>Blockchain</td><td>web3.py</td><td>ACTIVE</td></tr>
+                                            <tr><td>Image Processing</td><td>Pillow (PIL)</td><td>ACTIVE</td></tr>
+                                            <tr><td>Server Monitoring</td><td>mcstatus</td><td>ACTIVE</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-timeline" data-title="Development Timeline">
-<h2><span class="doc-num">§13</span> Development Timeline</h2>
-<ol class="doc-log">
-            <li><time>Phase 1</time>
-                <strong>Core Bot &#8212;</strong> Economy, claims, basic gambling modules deployed
-            </li>
-            <li><time>Phase 2</time>
-                <strong>Cross-Platform &#8212;</strong> Discord &#8596; Telegram relay bridge activated
-            </li>
-            <li><time>Phase 3</time>
-                <strong>Web3 Integration &#8212;</strong> NFT monitoring, RAD token payments online
-            </li>
-            <li><time>Phase 4</time>
-                <strong>LLM Agents &#8212;</strong> Schizoposter archetype bots with autonomous AI
-            </li>
-            <li><time>Ongoing</time>
-                <strong>Expansion &#8212;</strong> New games, deeper analytics, community-driven features
-            </li></ol>
-</section>
+                        <!-- §13 -->
+                        <section class="doc-sec" id="s-timeline" data-title="Development Timeline">
+                            <h2><span class="doc-num">§13</span> Development Timeline <span class="doc-h2-meta">4 phases · ongoing</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <ol class="doc-log">
+                                        <li><time>Phase 1</time><b>Core Bot.</b> Economy, claims, basic gambling modules deployed</li>
+                                        <li><time>Phase 2</time><b>Cross-Platform.</b> Discord &#8596; Telegram relay bridge activated</li>
+                                        <li><time>Phase 3</time><b>Web3 Integration.</b> NFT monitoring, RAD token payments online</li>
+                                        <li><time>Phase 4</time><b>LLM Agents.</b> Schizoposter archetype bots with autonomous AI</li>
+                                        <li><time>Ongoing</time><b>Expansion.</b> New games, deeper analytics, community-driven features</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </section>
 
-<section class="doc-sec" id="s-credits" data-title="Acknowledgments">
-<h2><span class="doc-num">§14</span> Acknowledgments</h2>
-<p>Special thanks to <a href="https://x.com/schizalcoatl" target="_blank" rel="noopener">schizalcoatl</a> and <a href="https://x.com/giverrod" target="_blank" rel="noopener">RiverGod</a> for their contributions and collaboration on this project.</p>
-        
-        <div class="sin-note">
-            <p>Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development. All systems subject to <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> review protocols.</p>
-        </div>
-</section>
-                        <p class="doc-end">A bot for Radbros &middot; Built by Hating the Antichrist</p>
+                        <!-- §14 -->
+                        <section class="doc-sec" id="s-credits" data-title="Acknowledgments">
+                            <h2><span class="doc-num">§14</span> Acknowledgments <span class="doc-h2-meta">2 collaborators</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <p>Special thanks to <a href="https://x.com/schizalcoatl" target="_blank" rel="noopener">schizalcoatl</a> and <a href="https://x.com/giverrod" target="_blank" rel="noopener">RiverGod</a> for their contributions and collaboration on this project.</p>
+                                </div>
+                                <div class="cell">
+                                    <p>Ongoing feature drops, new games, deeper analytics, and more cross-platform chaos. Community-driven suggestions and meme integration drive continuous development. All systems subject to <span class="redacted">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> review protocols.</p>
+                                </div>
+                            </div>
+                        </section>
+                        <p class="doc-end">— end of document · A bot for Radbros · Built by Hating the Antichrist —</p>
                     </article>
                     </div>
                 </section>
@@ -363,13 +437,14 @@
     </main>
 
     <!-- Shared workspace and documentation helpers, in dependency order. -->
-    <script defer src="/js/embed.js?v=1.3"></script>
-    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
-    <script defer src="/js/docs.js?v=1.3"></script>
+    <script defer src="/js/docs.js?v=1.5"></script>
+    <script defer src="/js/sin-docs.js?v=1.0"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

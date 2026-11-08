@@ -986,10 +986,40 @@ const FEATURED = [
         els.statusObjects.textContent = `${listed.length} OBJECTS`;
         els.statusFilter.textContent = `TYPE: ${(type === 'all' ? 'ALL' : typeName(type)).toUpperCase()} · ${visible().length} SHOWN`;
     }
-    const tick = () => {
-        const d = new Date();
-        els.clock.textContent = 'SYNC ' + [d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()].map((n) => String(n).padStart(2, '0')).join(':') + 'Z';
-    };
+    // The clock: click (or Enter) for the next format, kept in this browser. UTC, Tyler's time in Chicago,
+    // an Urbit date, and the Ethereum beacon chain slot (one every 12 s since genesis)
+    const clockPad = (n) => String(n).padStart(2, '0');
+    let chi = null;
+    try { chi = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'short' }); } catch (_) {}
+    const CLOCKS = [
+        { name: 'UTC', fmt: (d) => 'SYNC ' + [d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()].map(clockPad).join(':') + 'Z' },
+        { name: 'Chicago time', fmt: (d) => chi ? 'CHI ' + chi.format(d).replace(/^24/, '00') : 'CHI --:--:--' },
+        { name: 'Urbit date', fmt: (d) => `~${d.getUTCFullYear()}.${d.getUTCMonth() + 1}.${d.getUTCDate()}..${[d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()].map(clockPad).join('.')}` },
+        { name: 'beacon chain slot', fmt: (d) => 'SLOT ' + Math.floor((d.getTime() / 1000 - 1606824023) / 12).toLocaleString('en-US') }
+    ];
+    let clockMode = 0;
+    try { clockMode = Math.max(0, CLOCKS.findIndex((c) => c.name === localStorage.getItem('tirl_clock'))); } catch (_) {}
+    const tick = () => { els.clock.textContent = CLOCKS[clockMode].fmt(new Date()); };
+    function nextClock() {
+        clockMode = (clockMode + 1) % CLOCKS.length;
+        try { localStorage.setItem('tirl_clock', CLOCKS[clockMode].name); } catch (_) {}
+        els.clock.title = `${CLOCKS[clockMode].name} · click for ${CLOCKS[(clockMode + 1) % CLOCKS.length].name}`;
+        tick();
+        els.clock.classList.remove('g-blip');
+        void els.clock.offsetWidth;
+        els.clock.classList.add('g-blip');
+    }
+    els.clock.classList.add('g-clock-btn');
+    els.clock.setAttribute('role', 'button');
+    els.clock.tabIndex = 0;
+    els.clock.title = `${CLOCKS[clockMode].name} · click for ${CLOCKS[(clockMode + 1) % CLOCKS.length].name}`;
+    els.clock.addEventListener('click', nextClock);
+    els.clock.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        e.stopPropagation(); // not the page's Enter / space shortcuts
+        nextClock();
+    });
     tick();
     setInterval(tick, 1000);
 

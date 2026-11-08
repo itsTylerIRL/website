@@ -1,6 +1,7 @@
 /* Page scripts for deepdish_ocs.html (DeepDish OCS @ 925ea62): the preset palette and render viewer, the galleries,
-   the golden frames, the BUSY Bar page cycle, the tiles counting up and cells easing in as they scroll into view.
-   Contents, search and the source map come from js/docs.js. */
+   the golden frames, and the BUSY Bar page cycle.
+   Contents, search, the source map and the dense layout's scroll-in (cells easing up, tiles counting up) come
+   from js/docs.js. */
 
 // ---------- Data ----------
 // Eye presets, from the OCS repo's presets.json; every one has a real render in assets/OCS/docs/r/preset-<key>.webp
@@ -107,38 +108,5 @@ const OCS_RENDER = '/assets/OCS/docs/r';
             i = pages.indexOf(li);
             show();
         });
-    }
-
-    // ---------- Scrolling in: cells ease up, tiles count up ----------
-    const scroller = $('g-docs-scroll');
-    if (!calm() && 'IntersectionObserver' in window) {
-        const items = Array.from(doc.querySelectorAll('.cell, .doc-tile, .oc-preset, .oc-expr'));
-        // Siblings stagger a little
-        items.forEach((el) => {
-            const at = Array.prototype.indexOf.call(el.parentElement.children, el);
-            el.style.setProperty('--d', `${Math.min(at, 10) * 0.035}s`);
-        });
-        const count = (b) => {
-            const to = +b.dataset.count;
-            const text = b.textContent;
-            const start = performance.now();
-            const step = (t) => {
-                const k = Math.min(1, (t - start) / 900);
-                b.textContent = text.replace(/[\d,]+/, Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString('en-US'));
-                if (k < 1) requestAnimationFrame(step); else b.textContent = text;
-            };
-            requestAnimationFrame(step);
-        };
-        // Desktop layouts scroll the docs panel; phones scroll the page
-        const root = scroller && getComputedStyle(scroller).overflowY !== 'visible' ? scroller : null;
-        const io = new IntersectionObserver((list) => list.forEach((en) => {
-            if (!en.isIntersecting) return;
-            en.target.classList.add('is-in');
-            io.unobserve(en.target);
-            const b = en.target.matches('.doc-tile') && en.target.querySelector('b[data-count]');
-            if (b) count(b);
-        }), { root, rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
-        document.documentElement.classList.add('oc-rv');
-        items.forEach((el) => io.observe(el));
     }
 })();

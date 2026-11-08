@@ -62,7 +62,8 @@
             contract: m ? m[1] : '',
             token: m ? m[2] : '',
             isVideo,
-            thumb: isVideo ? '' : media.getAttribute('src'),
+            thumb: isVideo ? (media.getAttribute('poster') || '') : media.getAttribute('src'),
+            preview: isVideo ? media.getAttribute('src') : '',
             full: media.dataset.full || media.getAttribute('src'),
             w: +media.dataset.w || 0,
             h: +media.dataset.h || 0
@@ -119,7 +120,7 @@
         els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
         els.thumbs.innerHTML = list.length ? list.map((p) => `<li><button type="button" class="g-thumb tone-${toneOf(p.collection)}" data-slug="${p.slug}" aria-current="${p === current}" title="${esc(p.name)} · ${esc(p.artist)}">
                 ${p.isVideo
-                    ? `<video src="${esc(p.full)}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.name)}"></video><span class="g-thumb-badge">&#9654;</span>`
+                    ? `<video src="${esc(p.preview || p.full)}"${p.thumb ? ` poster="${esc(p.thumb)}"` : ''} muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.name)}"></video><span class="g-thumb-badge">&#9654;</span>`
                     : `<img src="${esc(p.thumb)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`}
                 <i class="g-dot tone-${toneOf(p.collection)}"></i>
             </button></li>`).join('')
@@ -143,7 +144,7 @@
         const list = visible();
         const idx = list.indexOf(p);
         const tone = toneOf(p.collection);
-        const icon = p.isVideo ? '<span class="g-objimg g-noimg">&#9654;</span>' : `<img class="g-objimg" src="${esc(p.thumb)}" alt="">`;
+        const icon = p.isVideo && !p.thumb ? '<span class="g-objimg g-noimg">&#9654;</span>' : `<img class="g-objimg" src="${esc(p.thumb)}" alt="">`;
         header.innerHTML = `<div class="g-objrow">
                 <div class="g-objicon g-objicon-img">${icon}</div>
                 <div class="g-objtitle">
@@ -198,6 +199,7 @@
             els.img.style.display = 'none';
             els.img.removeAttribute('src');
             els.frame.classList.remove('loading');
+            if (p.thumb) els.vid.poster = p.thumb; else els.vid.removeAttribute('poster');
             els.vid.src = p.full;
             sizeImage(p);
             els.vid.style.display = 'block';

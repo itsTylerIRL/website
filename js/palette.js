@@ -34,33 +34,43 @@
         const name = Array.from(t.childNodes).filter((n) => n !== meta).map((n) => n.textContent).join('').replace(/\s+/g, ' ').trim();
         return [name, meta ? meta.textContent.replace(/\s+/g, ' ').trim() : ''];
     };
-    const anchors = (doc) => Array.from(doc.querySelectorAll('[data-anchor]'), (el) => {
+    // An item's own picture, as a full URL (the pages use paths relative to themselves)
+    const abs = (src, base) => { try { return src ? new URL(src, new URL(base, location.href)).href : ''; } catch (_) { return ''; } };
+    const firstPic = (el) => {
+        const m = el && el.querySelector('img[src], video[poster]');
+        return !m ? '' : m.tagName === 'VIDEO' ? m.getAttribute('poster') : m.getAttribute('src');
+    };
+    // A marked part's picture: data-anchor-img when it names one ("" for none), else the first image in it,
+    // unless it holds marked parts of its own (a group's first image belongs to one of them)
+    const anchorPic = (el) => el.hasAttribute('data-anchor-img') ? el.dataset.anchorImg
+        : el.querySelector('[data-anchor]') ? '' : firstPic(el);
+    const anchors = (doc, base) => Array.from(doc.querySelectorAll('[data-anchor]'), (el) => {
         const [name, meta] = title(el);
-        return { hash: el.dataset.anchor, name: el.dataset.anchorName || name, sub: el.dataset.anchorSub || meta, kind: el.dataset.anchorKind || 'section' };
+        return { hash: el.dataset.anchor, name: el.dataset.anchorName || name, sub: el.dataset.anchorSub || meta, kind: el.dataset.anchorKind || 'section', img: abs(anchorPic(el), base) };
     }).filter((x) => x.name);
 
     // ---------- Index ----------
     // key: the object; kind: what its items are; url: what to read (text: true reads it as text, not a page);
-    // read: -> [{ hash, name, sub }]
+    // read(doc, url) -> [{ hash, name, sub, img }] (img: the item's own picture, shown instead of the object's icon)
     const SOURCES = [
-        { key: 'gallery', kind: 'piece', read: (doc) => slugged(Array.from(doc.querySelectorAll('#gallery-data .pfp-card')), (c) => c.dataset.name || 'piece', 'piece')
-            .map(({ n, slug }) => ({ hash: slug, name: n.dataset.name || 'Untitled', sub: n.dataset.artist || '' })) },
-        { key: 'likes', kind: 'like', read: (doc) => {
+        { key: 'gallery', kind: 'piece', read: (doc, base) => slugged(Array.from(doc.querySelectorAll('#gallery-data .pfp-card')), (c) => c.dataset.name || 'piece', 'piece')
+            .map(({ n, slug }) => ({ hash: slug, name: n.dataset.name || 'Untitled', sub: n.dataset.artist || '', img: abs(firstPic(n), base) })) },
+        { key: 'likes', kind: 'like', read: (doc, base) => {
             const title = (a) => (a.querySelector('.bento-content h3')?.textContent || '').trim();
             return slugged(Array.from(doc.querySelectorAll('#likes-data .bento-item')), title, 'item')
-                .map(({ n, slug }) => ({ hash: slug, name: title(n), sub: (n.querySelector('.bento-content p')?.textContent || '').trim() }))
+                .map(({ n, slug }) => ({ hash: slug, name: title(n), sub: (n.querySelector('.bento-content p')?.textContent || '').trim(), img: abs(firstPic(n.querySelector('.bento-image')), base) }))
                 .filter((x) => x.name);
         } },
-        // Vehicles live in the page's script (VEHICLES), keyed for #<key>
-        { key: 'rocketry', kind: 'vehicle', url: '/js/rocketry.js', text: true, read: (src) =>
-            Array.from(src.matchAll(/key: '([a-z0-9-]+)',\s*designation: '([^']+)'/g), ([, hash, name]) => ({ hash, name, sub: 'high power rocket' })) },
+        // Vehicles live in the page's script (VEHICLES), keyed for #<key>, with their image a few lines on
+        { key: 'rocketry', kind: 'vehicle', url: '/js/rocketry.js', text: true, read: (src, base) =>
+            Array.from(src.matchAll(/key: '([a-z0-9-]+)',\s*designation: '([^']+)'(?:[^}]*?image: '([^']+)')?/g), ([, hash, name, img]) => ({ hash, name, sub: 'high power rocket', img: abs(img, base) })) },
         // Docs pages: their .doc-sec sections (js/docs.js opens #<section id>)
         ...['ocs', 'top', 'sin', 'radgotchi'].map((key) => ({ key, kind: 'section', read: (doc) =>
             Array.from(doc.querySelectorAll('.doc-sec[id]'), (s) => ({ hash: s.id, name: s.dataset.title || s.id, sub: s.querySelector('.doc-num')?.textContent || '' })) })),
         // Pages that mark their parts (projects, apps, sections)
         ...['deepdish', 'cancel', 'nosfyl', 'raddem', 'kol', 'markets'].map((key) => ({ key, kind: 'section', read: anchors }))
     ];
-    const CACHE = 'tirl_palette_index_2';
+    const CACHE = 'tirl_palette_index_3';
     let index = null;
     let loading = null;
     function load() {
@@ -72,10 +82,11 @@
         if (loading) return loading;
         loading = Promise.all(SOURCES.map(async (src) => {
             try {
-                const r = await fetch(src.url || urlOf(src.key));
+                const url = src.url || urlOf(src.key);
+                const r = await fetch(url);
                 if (!r.ok) return [];
                 const text = await r.text();
-                const items = src.read(src.text ? text : new DOMParser().parseFromString(text, 'text/html'));
+                const items = src.read(src.text ? text : new DOMParser().parseFromString(text, 'text/html'), url);
                 return items.map((it) => ({ key: src.key, kind: it.kind || src.kind, ...it }));
             } catch (_) { return []; }
         })).then((lists) => {
@@ -138,6 +149,73 @@
         const at = q ? text.toLowerCase().indexOf(q) : -1;
         return at === -1 ? esc(text) : `${esc(text.slice(0, at))}<mark>${esc(text.slice(at, at + q.length))}</mark>${esc(text.slice(at + q.length))}`;
     }
+    // ---------- Commands nobody told you about ----------
+    // Typing one exactly answers in the list, above whatever it also matches. Its side effect (a signal, the pet)
+    // happens once per opening of the palette.
+    const pet = () => (typeof RG !== 'undefined' ? RG : null); // js/radgotchi.js
+    const stat = (k) => (document.querySelector(`#reminet-stats [data-stat="${k}"]`)?.textContent || '').trim();
+    function visitInfo() {
+        try { return JSON.parse(localStorage.getItem('tirl_visit')) || {}; } catch (_) { return {}; }
+    }
+    const EGGS = [
+        {
+            match: (q) => q === 'help' || q === '?' || q === 'man',
+            lines: () => ['no help is coming.', 'but you could try: whoami · sudo · rm -rf / · fumo · milady · beetle']
+        },
+        {
+            match: (q) => q === 'whoami',
+            lines: () => {
+                const v = visitInfo();
+                const level = document.documentElement.dataset.classif || 'UNCLASSIFIED';
+                return [`visitor · visit #${v.visits || 1} · ${matchMedia('(pointer: coarse)').matches ? 'handheld' : 'desktop'} terminal`,
+                    `clearance: ${level}`, 'need-to-know: denied'];
+            }
+        },
+        {
+            match: (q) => q === 'sudo' || q.startsWith('sudo '),
+            tone: 'warn',
+            lines: () => ['[sudo] password for visitor: ********', 'visitor is not in the sudoers file.', 'this incident will be reported.'],
+            effect: () => {
+                window.tirlLog?.add({ text: 'SUDO ATTEMPT · visitor not in sudoers · incident reported', tone: 'orange' });
+                pet()?.setMood('intense', { status: 'INCIDENT LOGGED', priority: true, duration: 3500 });
+            }
+        },
+        {
+            match: (q) => /^rm\s+-(rf|fr)\s*(\/\*?|~|\.)?$/.test(q),
+            tone: 'warn',
+            lines: () => ["rm: it is dangerous to operate recursively on '/'", 'rm: this site is load-bearing. refusing.'],
+            effect: () => {
+                const root = document.documentElement;
+                if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !root.classList.contains('sys-calm')) {
+                    host.classList.remove('g-quake');
+                    void host.offsetWidth;
+                    host.classList.add('g-quake');
+                    setTimeout(() => host.classList.remove('g-quake'), 600);
+                }
+                pet()?.setMood('sad', { status: 'PLEASE DONT', priority: true, duration: 3000 });
+            }
+        },
+        {
+            match: (q) => q === 'beetle' || q === 'beetles',
+            lines: () => { const n = stat('beetles'); return [n && n !== '—' ? `${n} beetles on ~tyler's RemiNET page.` : 'the beetles are hiding.', "they're fine. they live here now."]; }
+        },
+        {
+            match: (q) => q === 'fumo',
+            lines: () => ['fumo baby 404 · #172 is in the vault.', 'self-fractionalizing. do not squeeze.']
+        },
+        {
+            match: (q) => q === 'milady',
+            lines: () => ['milady.', 'neochibi street style · the vault keeps a few.']
+        }
+    ];
+    let egged = new Set();
+    function eggHtml(q) {
+        const egg = EGGS.find((x) => x.match(q));
+        if (!egg) return '';
+        if (egg.effect && !egged.has(egg)) { egged.add(egg); egg.effect(); }
+        return `<li class="g-pal-egg${egg.tone ? ' is-' + egg.tone : ''}" aria-live="polite"><span class="g-pal-egg-cmd">$ ${esc(input.value.trim())}</span>${egg.lines().map((l) => `<span>${esc(l)}</span>`).join('')}</li>`;
+    }
+
     function render() {
         const q = input.value.trim().toLowerCase();
         rows = search(q);
@@ -147,16 +225,21 @@
             const o = api.objects.find((x) => x.key === r.key);
             const chip = r.kind === 'object' ? api.typeName(o.type) : `${r.kind} · ${o.name}`;
             return `<li role="option" aria-selected="${i === active}"><button type="button" class="g-pal-item" data-i="${i}" tabindex="-1">
-                    ${api.iconHtml(o, 'g-pal-icon')}
+                    ${r.img ? `<img class="g-pal-icon g-pal-thumb is-${esc(r.kind)}" src="${esc(r.img)}" alt="" loading="lazy" decoding="async">` : api.iconHtml(o, 'g-pal-icon')}
                     <span class="g-pal-text"><span class="g-pal-name">${mark(r.name, q)}</span><span class="g-pal-sub">${esc(r.sub || '')}</span></span>
                     <span class="g-pal-chip">${esc(chip)}</span>
                 </button></li>`;
         }).join('') : '<li class="g-pal-empty">[ NO MATCH ] &middot; try a piece, a like or a docs section</li>';
+        const egg = eggHtml(q);
+        if (egg) {
+            list.insertAdjacentHTML('afterbegin', egg);
+            if (!rows.length) list.querySelector('.g-pal-empty')?.remove();
+        }
         reveal();
     }
     function reveal() {
         list.querySelectorAll('[role="option"]').forEach((li, i) => li.setAttribute('aria-selected', i === active));
-        const li = list.children[active];
+        const li = list.querySelectorAll('[role="option"]')[active];
         if (li) li.scrollIntoView({ block: 'nearest' });
     }
     function choose(i, full) {
@@ -180,6 +263,7 @@
         el.hidden = false;
         input.value = '';
         active = 0;
+        egged = new Set();
         render();
         input.focus();
         if (!index) {

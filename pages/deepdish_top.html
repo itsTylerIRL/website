@@ -39,8 +39,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/docs.css?v=1.3">
-    <link rel="stylesheet" href="/css/deepdish_top.css?v=2.0">
+    <link rel="stylesheet" href="/css/docs.css?v=1.9">
+    <link rel="stylesheet" href="/css/deepdish_top.css?v=3.3">
 </head>
 <body>
     <div class="corner-brackets"><div class="bottom"></div></div>
@@ -98,382 +98,482 @@
                 <section class="g-card g-docs-pane">
                     <div class="g-panel-title">Documentation <span class="g-meta" id="g-docs-meta">PROJECT REFERENCE</span></div>
                     <div class="g-docs-scroll" id="g-docs-scroll">
-                    <article class="doc" id="doc">
+                    <article class="doc is-dense" id="doc">
+                        <!-- §01 -->
                         <section class="doc-sec" id="s-glance" data-title="At a glance">
-                            <h2><span class="doc-num">§01</span> At a glance</h2>
-                            <p>TOP is the Terminal Operations Panel for DeepDish: one dashboard for the host, its LAN cluster and the services around them. It combines infrastructure telemetry with container and service controls, the Obsidian vault, Home Assistant, an OCS eye feed and telemetry-aware AI chat.</p>
-                            <div class="top-reference-label">DOCUMENTED CONFIGURATION</div>
-                            <div class="doc-tiles">
-                                <div class="doc-tile"><span>Cluster Nodes</span><b>6</b></div>
-                                <div class="doc-tile"><span>Poll Interval</span><b>2s</b></div>
-                                <div class="doc-tile"><span>Subsystems</span><b>12+</b></div>
-                                <div class="doc-tile"><span>Max Workers</span><b>16</b></div>
-                                <div class="doc-tile"><span>Lines Backend</span><b>2,017</b></div>
-                                <div class="doc-tile"><span>Lines Frontend</span><b>11,553</b></div>
+                            <h2><span class="doc-num">§01</span> At a glance <span class="doc-h2-meta">Python 3.12 · Flask · Gunicorn + gevent · :5000</span></h2>
+                            <div class="dz">
+                                <div class="cell top-hero doc-hero wf">
+                                    <a class="top-hero-shot" href="/assets/TOP/top.png" target="_blank" rel="noopener" aria-label="Open the full-size DeepDish TOP dashboard screenshot">
+                                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                                        <img src="/assets/TOP/top.png" alt="The DeepDish TOP dashboard: host metrics, cluster, OCS eye and service panels" width="1278" height="1384" decoding="async">
+                                        <span class="top-hero-tag doc-hero-tag">THREAT RED · FULL SIZE &nearr;</span>
+                                    </a>
+                                    <div class="top-hero-text">
+                                        <p class="doc-lede">TOP is the <b>Terminal Operations Panel</b> for DeepDish: one dashboard for the host, its LAN cluster and the services around them. It combines infrastructure telemetry with container and service controls, the Obsidian vault, Home Assistant, an OCS eye feed and telemetry-aware AI chat.</p>
+                                        <h3>One terminal, twelve subsystems</h3>
+                                        <div class="doc-chips"><i>System metrics</i><i>Docker management</i><i>Systemd control</i><i>Cluster monitoring</i><i>Home Assistant</i><i>Obsidian vault</i><i>OCS eye stream</i><i>AI chat</i><i>Network topology</i><i>RadGotchi</i><i>Event detection</i><i>Intake portal</i></div>
+                                        <div class="g-callout"><b>SCOPE</b><span>Host metrics and external integrations are collected separately, so slow LAN services do not block the local telemetry feed.</span></div>
+                                    </div>
+                                </div>
+                                <div class="doc-tiles doc-cols wf" style="--cols: 4; --cols-sm: 2"><div class="doc-tile"><span>cluster</span><b data-count="6">6 nodes</b><small>node_exporter :9100</small></div><div class="doc-tile"><span>poll interval</span><b>2s</b><small>local + integrations, in parallel</small></div><div class="doc-tile"><span>subsystems</span><b data-count="12">12+</b><small>one view</small></div><div class="doc-tile"><span>max workers</span><b data-count="16">16</b><small>ThreadPoolExecutor</small></div><div class="doc-tile"><span>server</span><b data-count="3">3 workers</b><small>Gunicorn · gevent · 120s</small></div><div class="doc-tile"><span>api</span><b data-count="13">13 routes</b><small>metrics · management · vault · OCS</small></div><div class="doc-tile"><span>backend</span><b data-count="2017">2,017 lines</b><small>Python · Flask</small></div><div class="doc-tile"><span>frontend</span><b data-count="11553">11,553 lines</b><small>vanilla JS · canvas</small></div></div>
                             </div>
-                            <h3>One terminal, twelve subsystems</h3>
-                            <div class="doc-chips doc-chips-wide"><i>System metrics</i><i>Docker management</i><i>Systemd control</i><i>Cluster monitoring</i><i>Home Assistant</i><i>Obsidian vault</i><i>OCS eye stream</i><i>AI chat</i><i>Network topology</i><i>RadGotchi</i><i>Event detection</i><i>Intake portal</i></div>
-                            <div class="g-callout"><b>SCOPE</b><span>Host metrics and external integrations are collected separately, so slow LAN services do not block the local telemetry feed.</span></div>
                         </section>
 
+                        <!-- §02 -->
                         <section class="doc-sec" id="s-architecture" data-title="Architecture">
-                            <h2><span class="doc-num">§02</span> Architecture</h2>
-                            <p>DEEPDISH TOP is deployed as a privileged Docker container with full host namespace access — PID, network, and hardware. The container runs a Gunicorn WSGI server with gevent async workers, enabling Server-Sent Events and parallel metric collection across all subsystems.</p>
-
-                            <ol class="top-pipeline" aria-label="Deployment layers"><li>Host OS</li><li>Privileged Docker</li><li>Gunicorn + gevent</li><li>Flask application</li><li>Port 5000</li></ol>
-                            <h3>Container Deployment</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Architecture table"><table class="doc-table"><thead><tr><th>Component</th><th>Detail</th></tr></thead><tbody><tr><td class="top-key">Base Image</td><td><code>python:3.12-slim</code></td></tr>
-                            <tr><td class="top-key">WSGI Server</td><td>Gunicorn 21.2.0 — <code>gevent</code> async workers, 3 workers, 120s timeout</td></tr>
-                            <tr><td class="top-key">Network Mode</td><td><code>host</code> — shares host network stack directly</td></tr>
-                            <tr><td class="top-key">PID Namespace</td><td><code>pid: host</code> — sees all host processes via <code>nsenter -t 1</code></td></tr>
-                            <tr><td class="top-key">Privilege</td><td><code>privileged: true</code> — full hardware access (GPU, sensors, Docker socket)</td></tr>
-                            <tr><td class="top-key">Restart Policy</td><td><code>unless-stopped</code></td></tr></tbody></table></div>
-
-                            <h3>Volume Mounts</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Architecture table"><table class="doc-table"><thead><tr><th>Host Path</th><th>Container Path</th><th>Purpose</th></tr></thead><tbody><tr><td>/var/run/docker.sock</td><td>/var/run/docker.sock:ro</td><td>Docker API access</td></tr>
-                            <tr><td>/proc</td><td>/host/proc:ro</td><td>Host process info (CPU, mem, disk)</td></tr>
-                            <tr><td>/sys</td><td>/host/sys:ro</td><td>Hardware sensor data</td></tr>
-                            <tr><td>/etc/os-release</td><td>/etc/os-release:ro</td><td>Host OS identification</td></tr>
-                            <tr><td>/run/dbus</td><td>/run/dbus:ro</td><td>D-Bus socket for systemd</td></tr>
-                            <tr><td>/var/run/avahi-daemon</td><td>/var/run/avahi-daemon:ro</td><td>mDNS resolution for .local hosts</td></tr>
-                            <tr><td>/mnt/deepdish</td><td>/mnt/deepdish:ro</td><td>NAS mount (DeepDish storage array)</td></tr></tbody></table></div>
-
-                            <h3>Python Dependencies</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Architecture table"><table class="doc-table"><thead><tr><th>Package</th><th>Version</th><th>Purpose</th></tr></thead><tbody><tr><td>flask</td><td>3.0.0</td><td>Web framework</td></tr>
-                            <tr><td>psutil</td><td>5.9.8</td><td>System metrics collection</td></tr>
-                            <tr><td>docker</td><td>7.0.0</td><td>Docker Engine API client</td></tr>
-                            <tr><td>gunicorn</td><td>21.2.0</td><td>Production WSGI server</td></tr>
-                            <tr><td>gevent</td><td>24.2.1</td><td>Async worker for SSE/streaming</td></tr>
-                            <tr><td>requests</td><td>2.31.0</td><td>HTTP client for integrations</td></tr></tbody></table></div>
+                            <h2><span class="doc-num">§02</span> Architecture <span class="doc-h2-meta">privileged container · host PID + network</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>TOP is deployed as a privileged Docker container with full host namespace access: PID, network and hardware. The container runs a Gunicorn WSGI server with gevent async workers, enabling Server-Sent Events and parallel metric collection across all subsystems.</p>
+                                    <div class="doc-flow" role="img" aria-label="Deployment layers: the host OS, a privileged Docker container, Gunicorn with gevent, the Flask application, served on port 5000">
+                                        <div class="flow-col">
+                                            <div class="flow-node in">Host OS<small>/proc · /sys · D-Bus · docker.sock</small></div>
+                                            <div class="flow-node">Privileged Docker<small>pid: host · network: host</small></div>
+                                        </div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col">
+                                            <div class="flow-node">Gunicorn + gevent<small>3 async workers · SSE</small></div>
+                                            <div class="flow-node core">Flask application<small>collectors · integrations · API</small></div>
+                                        </div>
+                                        <div class="flow-arrow">&rarr;</div>
+                                        <div class="flow-col">
+                                            <div class="flow-node out">:5000<small>dashboard + /api</small></div>
+                                            <div class="flow-node alt">LAN services<small>cluster · HA · Obsidian · OCS · LM Studio</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Container deployment</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>base image</td><td><code>python:3.12-slim</code></td></tr>
+                                        <tr><td>wsgi server</td><td>Gunicorn 21.2.0: <code>gevent</code> async workers, 3 workers, 120s timeout</td></tr>
+                                        <tr><td>network</td><td><code>host</code>: shares the host network stack directly</td></tr>
+                                        <tr><td>pid</td><td><code>pid: host</code>: sees all host processes via <code>nsenter -t 1</code></td></tr>
+                                        <tr><td>privilege</td><td><code>privileged: true</code>: full hardware access (GPU, sensors, Docker socket)</td></tr>
+                                        <tr><td>restart</td><td><code>unless-stopped</code></td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Python dependencies</h3>
+                                    <table class="doc-table top-deps">
+                                        <thead><tr><th>package</th><th>version</th><th>purpose</th></tr></thead>
+                                        <tbody><tr><td><code>flask</code></td><td>3.0.0</td><td>web framework</td></tr>
+                                        <tr><td><code>psutil</code></td><td>5.9.8</td><td>system metrics collection</td></tr>
+                                        <tr><td><code>docker</code></td><td>7.0.0</td><td>Docker Engine API client</td></tr>
+                                        <tr><td><code>gunicorn</code></td><td>21.2.0</td><td>production WSGI server</td></tr>
+                                        <tr><td><code>gevent</code></td><td>24.2.1</td><td>async worker for SSE / streaming</td></tr>
+                                        <tr><td><code>requests</code></td><td>2.31.0</td><td>HTTP client for integrations</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Volume mounts <span>all read-only</span></h3>
+                                    <table class="doc-table top-mounts">
+                                        <thead><tr><th>host path</th><th>container path</th><th>purpose</th></tr></thead>
+                                        <tbody><tr><td><code>/var/run/docker.sock</code></td><td><code>/var/run/docker.sock:ro</code></td><td>Docker API access</td></tr>
+                                        <tr><td><code>/proc</code></td><td><code>/host/proc:ro</code></td><td>host process info (CPU, mem, disk)</td></tr>
+                                        <tr><td><code>/sys</code></td><td><code>/host/sys:ro</code></td><td>hardware sensor data</td></tr>
+                                        <tr><td><code>/etc/os-release</code></td><td><code>/etc/os-release:ro</code></td><td>host OS identification</td></tr>
+                                        <tr><td><code>/run/dbus</code></td><td><code>/run/dbus:ro</code></td><td>D-Bus socket for systemd</td></tr>
+                                        <tr><td><code>/var/run/avahi-daemon</code></td><td><code>/var/run/avahi-daemon:ro</code></td><td>mDNS resolution for .local hosts</td></tr>
+                                        <tr><td><code>/mnt/deepdish</code></td><td><code>/mnt/deepdish:ro</code></td><td>NAS mount (DeepDish storage array)</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §03 -->
                         <section class="doc-sec" id="s-backend" data-title="Backend &amp; collectors">
-                            <h2><span class="doc-num">§03</span> Backend &amp; collectors</h2>
-                            <h3>mDNS IPv4 Resolution Cache</h3>
-                            <p>A custom DNS resolution layer for <code>.local</code> hostnames on the LAN. Required because mDNS can return IPv6 or resolve to the wrong interface on dual-homed machines. Gathers candidate IPs from <code>avahi-resolve</code>, <code>socket.getaddrinfo</code>, and configurable fallbacks. Results are cached with a 120-second TTL and auto-invalidated on connectivity failure.</p>
-
-                            <h3>System Metric Collectors</h3>
-                            <p>All collectors read from the host via <code>nsenter -t 1</code> (PID namespace) or <code>/proc/1/root</code> (mount namespace). Every metric is gathered in parallel using <code>ThreadPoolExecutor</code>.</p>
-
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Backend &amp; collectors table"><table class="doc-table"><thead><tr><th>Collector</th><th>Strategy</th></tr></thead><tbody><tr><td class="top-key">get_system_info()</td><td>Kernel, arch, distro, CPU model, core counts, total RAM — cached indefinitely</td></tr>
-                            <tr><td class="top-key">get_cpu_info()</td><td>Per-core %, total %, frequency, load averages via <code>psutil</code></td></tr>
-                            <tr><td class="top-key">get_memory_info()</td><td>Total/used/available RAM + swap via <code>psutil</code></td></tr>
-                            <tr><td class="top-key">get_disk_info()</td><td>3-strategy fallback: /proc/1/mounts → nsenter df → psutil. Filters real FSes only</td></tr>
-                            <tr><td class="top-key">get_network_info()</td><td>Per-NIC I/O, interface details, top 80 active connections</td></tr>
-                            <tr><td class="top-key">get_processes()</td><td>Top 50 processes by CPU% — PID, name, user, RSS/VMS, threads, FDs</td></tr>
-                            <tr><td class="top-key">get_gpu_info()</td><td>NVIDIA <code>nvidia-smi</code> — temps, utilization, VRAM, power, fan speed</td></tr>
-                            <tr><td class="top-key">get_temperatures()</td><td><code>psutil.sensors_temperatures()</code> — current/high/critical thresholds</td></tr>
-                            <tr><td class="top-key">get_docker_containers()</td><td>All containers with live stats fetched in parallel per running container</td></tr>
-                            <tr><td class="top-key">get_systemd_services()</td><td>Top 50 services via <code>systemctl</code> with D-Bus fallback</td></tr></tbody></table></div>
-
-                            <h3>Cluster Node Monitoring</h3>
-                            <p>Polls Prometheus <code>node_exporter</code> (port 9100) on 6 LAN nodes in parallel via <code>ThreadPoolExecutor(max_workers=6)</code>. Metrics parsed from Prometheus text format include CPU, memory, disk, network I/O, load averages, and uptime.</p>
-
-                            <div class="top-cluster-grid">
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">MINI</div>
-                            <div class="top-node-host">mini.local:9100</div>
+                            <h2><span class="doc-num">§03</span> Backend &amp; collectors <span class="doc-h2-meta">nsenter -t 1 · ThreadPoolExecutor</span></h2>
+                            <div class="dz">
+                                <div class="cell w2">
+                                    <h3>System metric collectors <span>all in parallel</span></h3>
+                                    <p>Every collector reads the host via <code>nsenter -t 1</code> (PID namespace) or <code>/proc/1/root</code> (mount namespace), and every metric is gathered in parallel with <code>ThreadPoolExecutor</code>.</p>
+                                    <table class="doc-table top-fns">
+                                        <tr><td>get_system_info()</td><td>kernel, arch, distro, CPU model, core counts, total RAM: cached indefinitely</td></tr>
+                                        <tr><td>get_cpu_info()</td><td>per-core %, total %, frequency, load averages via <code>psutil</code></td></tr>
+                                        <tr><td>get_memory_info()</td><td>total / used / available RAM + swap via <code>psutil</code></td></tr>
+                                        <tr><td>get_disk_info()</td><td>3-strategy fallback: /proc/1/mounts → nsenter df → psutil; real filesystems only</td></tr>
+                                        <tr><td>get_network_info()</td><td>per-NIC I/O, interface details, top 80 active connections</td></tr>
+                                        <tr><td>get_processes()</td><td>top 50 processes by CPU%: PID, name, user, RSS / VMS, threads, FDs</td></tr>
+                                        <tr><td>get_gpu_info()</td><td>NVIDIA <code>nvidia-smi</code>: temps, utilization, VRAM, power, fan speed</td></tr>
+                                        <tr><td>get_temperatures()</td><td><code>psutil.sensors_temperatures()</code>: current / high / critical thresholds</td></tr>
+                                        <tr><td>get_docker_containers()</td><td>all containers, live stats fetched in parallel per running container</td></tr>
+                                        <tr><td>get_systemd_services()</td><td>top 50 services via <code>systemctl</code>, D-Bus fallback</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>mDNS IPv4 resolution cache</h3>
+                                    <p>A DNS layer for <code>.local</code> hostnames on the LAN, needed because mDNS can return IPv6 or resolve to the wrong interface on dual-homed machines.</p>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>candidates</td><td><code>avahi-resolve</code>, <code>socket.getaddrinfo</code>, configurable fallbacks</td></tr>
+                                        <tr><td>ttl</td><td>120 seconds</td></tr>
+                                        <tr><td>invalidation</td><td>automatic on connectivity failure</td></tr>
+                                    </table>
+                                    <h3>DEEPDISH intake portal</h3>
+                                    <p>Accepts text, URL or image submissions. URLs auto-fetch their <code>&lt;title&gt;</code> and meta description; images are stored as base64 data URIs. Every note is saved to <code>DEEPDISH/intake/</code> in the Obsidian vault with YAML frontmatter.</p>
+                                </div>
+                                <div class="cell wf">
+                                    <h3>Cluster node monitoring <span>Prometheus node_exporter · max_workers=6</span></h3>
+                                    <p>Polls <code>node_exporter</code> (port 9100) on six LAN nodes in parallel. Parsed from the Prometheus text format: CPU, memory, disk, network I/O, load averages and uptime.</p>
+                                    <ol class="top-nodes"><li><b>MINI</b><code>mini.local:9100</code></li><li><b>CHEESE</b><code>cheese.local:9100</code></li><li><b>PEPPER</b><code>pepper.local:9100</code></li><li><b>ONION</b><code>onion.local:9100</code></li><li><b>GARLIC</b><code>garlic.local:9100</code></li><li><b>SUPREME</b><code>supreme.local:9100</code></li></ol>
+                                </div>
+                                <div class="cell wf">
+                                    <h3>External integrations <span>collected apart from local metrics</span></h3>
+                                    <div class="top-ints doc-cols" style="--cols: 3; --cols-sm: 1">
+                                        <div class="top-int"><b>Native Planet</b><small>Urbit machine</small><code>nativeplanet.local:9100</code><p>Prometheus metrics: root disk, data disk, WiFi, kernel info</p></div>
+                                        <div class="top-int"><b>Cloud Urbit server</b><small>urbit.tylerirl.com</small><code>142.93.██.██</code><p>online check via ICMP ping; RTT taken from the output</p></div>
+                                        <div class="top-int"><b>Epic Gamer PC</b><small>dual interface</small><code>192.168.0.███ / 192.168.1.███</code><p>WiFi + ETH ICMP probe; reports the responding interface</p></div>
+                                        <div class="top-int"><b>Home Assistant</b><small>REST</small><code>homeassistant.local:8123</code><p>HA version, entity states, lights, phone tracking for 2 users: battery, steps, activity, connection type</p></div>
+                                        <div class="top-int"><b>Obsidian vault</b><small>Local REST API plugin · HTTPS</small><code>localhost:27124</code><p>vault stats, full-text search, note viewer, 30s cache TTL</p></div>
+                                        <div class="top-int"><b>OCS</b><small>Optical Control System</small><code>chef.local:5001</code><p>MJPEG stream proxy, eye expressions, vision status, face tracking</p></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">CHEESE</div>
-                            <div class="top-node-host">cheese.local:9100</div>
-                            </div>
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">PEPPER</div>
-                            <div class="top-node-host">pepper.local:9100</div>
-                            </div>
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">ONION</div>
-                            <div class="top-node-host">onion.local:9100</div>
-                            </div>
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">GARLIC</div>
-                            <div class="top-node-host">garlic.local:9100</div>
-                            </div>
-                            <div class="top-cluster-node">
-                            <div class="top-node-name">SUPREME</div>
-                            <div class="top-node-host">supreme.local:9100</div>
-                            </div>
-                            </div>
-
-                            <h3>External Integrations</h3>
-                            <div class="top-integrations">
-                            <div class="top-note">
-                            <div class="top-note-title">Native Planet (Urbit Machine)</div>
-                            <p>Host: <code>nativeplanet.local:9100</code><br>Prometheus metrics — root disk, data disk, WiFi, kernel info</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Cloud Urbit Server</div>
-                            <p>Host: <code>142.93.██.██</code> (urbit.tylerirl.com)<br>Online check via ICMP ping — extracts RTT from output</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Epic Gamer PC</div>
-                            <p>WiFi: <code>192.168.0.███</code> / ETH: <code>192.168.1.███</code><br>Dual-interface ICMP probe — reports responding interface</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Home Assistant</div>
-                            <p>Host: <code>homeassistant.local:8123</code><br>HA version, entity states, lights, phone tracking for 2 users — battery, steps, activity, connection type</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Obsidian Vault</div>
-                            <p>Host: <code>localhost:27124</code> (Local REST API plugin, HTTPS)<br>Vault stats, full-text search, note viewer, 30s cache TTL</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">OCS (Ocular Control System)</div>
-                            <p>Host: <code>chef.local:5001</code><br>MJPEG stream proxy, eye expressions, vision status, face tracking</p>
-                            </div>
-                            </div>
-
-                            <h3>DEEPDISH Intake Portal</h3>
-                            <p>Accepts text, URL, or image submissions. URLs auto-fetch <code>&lt;title&gt;</code> and meta description. Images are stored as base64 data URIs. All notes are saved to <code>DEEPDISH/intake/</code> in the Obsidian vault with YAML frontmatter.</p>
                         </section>
 
+                        <!-- §04 -->
                         <section class="doc-sec" id="s-api" data-title="API reference">
-                            <h2><span class="doc-num">§04</span> API reference</h2>
-                            <h3>Metric Routes</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="API reference table"><table class="doc-table"><thead><tr><th>Route</th><th>Description</th><th>Concurrency</th></tr></thead><tbody><tr><td class="top-key">GET /api/metrics</td><td>Fast local-only metrics (CPU, mem, disk, net, procs, docker, systemd, GPU, temps)</td><td>12 workers</td></tr>
-                            <tr><td class="top-key">GET /api/metrics/integrations</td><td>Slow external integrations (cluster, NP, urbit, gamer, OCS, HA, obsidian)</td><td>8 workers</td></tr>
-                            <tr><td class="top-key">GET /api/metrics/all</td><td>Combined local + integrations (chat context builder)</td><td>16 workers</td></tr></tbody></table></div>
-
-                            <h3>Management Routes</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="API reference table"><table class="doc-table"><thead><tr><th>Route</th><th>Description</th></tr></thead><tbody><tr><td>POST /api/docker/&lt;name&gt;/action</td><td>Docker control: start, stop, restart, remove</td></tr>
-                            <tr><td>GET /api/docker/&lt;name&gt;/logs</td><td>Container log tail (default 80 lines)</td></tr>
-                            <tr><td>POST /api/docker/prune</td><td>Remove all stopped containers</td></tr>
-                            <tr><td>POST /api/systemd/&lt;name&gt;/action</td><td>Systemd control: start, stop, restart, enable, disable</td></tr>
-                            <tr><td>GET /api/systemd/&lt;name&gt;/logs</td><td>journald log tail (default 60 lines)</td></tr></tbody></table></div>
-
-                            <h3>Obsidian &amp; OCS Routes</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="API reference table"><table class="doc-table"><thead><tr><th>Route</th><th>Description</th></tr></thead><tbody><tr><td>GET /api/obsidian/note</td><td>Fetch note content (JSON + tags + frontmatter)</td></tr>
-                            <tr><td>GET /api/obsidian/search</td><td>Full-text vault search (top 20 results)</td></tr>
-                            <tr><td>POST /api/portal/intake</td><td>Submit text/URL/image to vault intake</td></tr>
-                            <tr><td>GET /api/ocs/eye/stream</td><td>MJPEG stream proxy</td></tr>
-                            <tr><td>POST /api/ocs/eye/expression</td><td>Set eye expression + duration</td></tr></tbody></table></div>
+                            <h2><span class="doc-num">§04</span> API reference <span class="doc-h2-meta">13 routes · Flask :5000</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Metric routes <span>split so slow integrations never hold up local telemetry</span></h3>
+                                    <table class="doc-table doc-api top-api">
+                                        <tr><td>GET</td><td>/api/metrics</td><td>fast local-only metrics: CPU, mem, disk, net, procs, Docker, systemd, GPU, temps</td><td>12 workers</td></tr>
+                                        <tr><td>GET</td><td>/api/metrics/integrations</td><td>slow external integrations: cluster, NP, Urbit, gamer, OCS, HA, Obsidian</td><td>8 workers</td></tr>
+                                        <tr><td>GET</td><td>/api/metrics/all</td><td>combined local + integrations (the chat context builder)</td><td>16 workers</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Management</h3>
+                                    <table class="doc-table doc-api">
+                                        <tr><td>POST</td><td>/api/docker/&lt;name&gt;/action</td><td>start, stop, restart, remove</td></tr>
+                                        <tr><td>GET</td><td>/api/docker/&lt;name&gt;/logs</td><td>container log tail (80 lines)</td></tr>
+                                        <tr><td>POST</td><td>/api/docker/prune</td><td>remove all stopped containers</td></tr>
+                                        <tr><td>POST</td><td>/api/systemd/&lt;name&gt;/action</td><td>start, stop, restart, enable, disable</td></tr>
+                                        <tr><td>GET</td><td>/api/systemd/&lt;name&gt;/logs</td><td>journald log tail (60 lines)</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Obsidian &amp; OCS</h3>
+                                    <table class="doc-table doc-api">
+                                        <tr><td>GET</td><td>/api/obsidian/note</td><td>note content (JSON + tags + frontmatter)</td></tr>
+                                        <tr><td>GET</td><td>/api/obsidian/search</td><td>full-text vault search (top 20)</td></tr>
+                                        <tr><td>POST</td><td>/api/portal/intake</td><td>text / URL / image to the vault intake</td></tr>
+                                        <tr><td>GET</td><td>/api/ocs/eye/stream</td><td>MJPEG stream proxy</td></tr>
+                                        <tr><td>POST</td><td>/api/ocs/eye/expression</td><td>set eye expression + duration</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §05 -->
                         <section class="doc-sec" id="s-dashboard" data-title="Dashboard interface">
-                            <h2><span class="doc-num">§05</span> Dashboard interface</h2>
-                            <h3>Layout Architecture</h3>
-                            <p>Three-column responsive grid with independent scrolling. Left column houses CPU/MEM, network I/O, disk, GPU, temps, storage, interfaces, Native Planet, and system info. Center column contains the cluster view, Obsidian vault, processes, Docker, Radgotchi virtual pet, systemd services, net flow matrix, and connections. Right column holds the OCS eye stream, DEEPDISH chat, topology visualization, Home Assistant, and event log.</p>
-
-                            <div class="top-column-map">
-                            <div class="top-note">
-                            <div class="top-note-title">Left Column (260px)</div>
-                            <p>CPU/MEM · NET I/O · DISK I/O · GPU · TEMPS · STORAGE · INTERFACES · NATIVE PLANET · SYSTEM INFO</p>
+                            <h2><span class="doc-num">§05</span> Dashboard interface <span class="doc-h2-meta">3 columns · 2 themes · canvas</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>Layout <span>three-column grid, each column scrolls on its own</span></h3>
+                                    <div class="top-wire" role="img" aria-label="The dashboard's three columns and their panels">
+                                        <div><em>left · 260px</em><i>CPU / MEM</i><i>NET I/O</i><i>DISK I/O</i><i>GPU</i><i>TEMPS</i><i>STORAGE</i><i>INTERFACES</i><i>NATIVE PLANET</i><i>SYSTEM INFO</i></div>
+                                        <div><em>center · flex</em><i class="is-big">CLUSTER</i><i>OBSIDIAN VAULT</i><i>PROCESSES</i><i>DOCKER</i><i>RADTECH</i><i>SYSTEMD</i><i class="is-big">NET FLOW MATRIX</i><i>CONNECTIONS</i></div>
+                                        <div><em>right · 320px</em><i class="is-big">OCS OCULAR</i><i class="is-big">DEEPDISH CHAT</i><i>TOPOLOGY</i><i>HOME ASSISTANT</i><i>EVENT LOG</i></div>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <h3>Dual theme <span>threat red / intel blue</span></h3>
+                                    <p>Clicking the "DEEPDISH" header text switches themes: a radial ripple expands from the click while every panel flashes on a staggered 50ms delay, and the class switch waits 300ms for the reveal. The choice persists in <code>localStorage</code>.</p>
+                                    <div class="top-themes">
+                                        <div class="top-theme" style="--t:#ff0a1e"><b>red · default</b><span><i style="--c:#ff0a1e"></i>--primary #ff0a1e</span><span><i style="--c:#cc2233"></i>--secondary #cc2233</span><span><i style="--c:#ff3344"></i>--accent #ff3344</span><span><i style="--c:#39ff14"></i>--terminal-green #39ff14</span></div>
+                                        <div class="top-theme" style="--t:#0af0ff"><b>blue</b><span><i style="--c:#0af0ff"></i>--primary #0af0ff</span><span><i style="--c:#2288cc"></i>--secondary #2288cc</span><span><i style="--c:#44aaff"></i>--accent #44aaff</span><span><i style="--c:#00ffcc"></i>--terminal-green #00ffcc</span></div>
+                                    </div>
+                                </div>
+                                <div class="cell w2">
+                                    <h3>Data visualization</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>sparklines</td><td>inline SVG for CPU, memory, network, GPU (60-sample rolling history)</td></tr>
+                                        <tr><td>progress bars</td><td>green → orange → red utilization with an animated sweep</td></tr>
+                                        <tr><td>cluster</td><td>3 large CPU / MEM / DISK cards with sweep backgrounds, min / max per metric</td></tr>
+                                        <tr><td>net flow</td><td>canvas heatmap of services vs remote hosts: animated cells, pulse waves, scanlines, crosshair on hover</td></tr>
+                                        <tr><td>obsidian topo</td><td>50-node hex-grid canvas, data packets along connections, comet trails, ambient glow orbs</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Background layers</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>grid</td><td>animated CSS grid (40px cells), slow diagonal drift on a 20s cycle</td></tr>
+                                        <tr><td>globe</td><td>canvas wireframe sphere: 9 lat, 12 lon lines, equator highlight, 2 outer rings, perspective projection on <code>requestAnimationFrame</code></td></tr>
+                                        <tr><td>scanlines</td><td>CRT repeating linear gradient (2px lines)</td></tr>
+                                        <tr><td>watermarks</td><td>神 (kami) and 経 (kei) as fixed decorative text</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Section panels</h3>
+                                    <p>Every panel is one <code>.section</code> component: corner accent lines, hex pattern overlay, alert pulsing, skeleton loading shimmer, collapse / expand, and GPU-accelerated compositing (<code>translateZ(0)</code>, <code>contain: style paint</code>).</p>
+                                    <h3>Typography</h3>
+                                    <p>Body text in Berkeley Mono Nerd Font, headings in Orbitron, icons from NerdFont glyphs.</p>
+                                </div>
+                                <div class="cell">
+                                    <h3>Keyboard</h3>
+                                    <dl class="top-shortcuts"><dt><kbd>Esc</kbd></dt><dd>close the active overlay</dd><dt><kbd>Enter</kbd></dt><dd>send a chat message</dd><dt><kbd>Shift</kbd> + <kbd>Enter</kbd></dt><dd>insert a newline</dd><dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt><dd>submit an intake item</dd></dl>
+                                </div>
                             </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Center Column (flex)</div>
-                            <p>CLUSTER · OBSIDIAN VAULT · PROCESSES · DOCKER · RADTECH · SYSTEMD · NET FLOW MATRIX · CONNECTIONS</p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Right Column (320px)</div>
-                            <p>OCS OCULAR · DEEPDISH CHAT · TOPOLOGY · HOME ASSISTANT · EVENT LOG</p>
-                            </div>
-                            </div>
-
-                            <h3>Dual-Theme System (Threat Red / Intel Blue)</h3>
-                            <p>Two complete color themes toggled by clicking the "DEEPDISH" header text. A radial ripple animation expands from the click origin while all section panels flash with staggered 50ms delays. The class switch is delayed 300ms for dramatic reveal. Theme persists via <code>localStorage</code>.</p>
-
-                            <div class="top-integrations">
-                            <div class="top-note">
-                            <div class="top-note-title">Red Theme (Default)</div>
-                            <p><code>--primary: #ff0a1e</code><br><code>--secondary: #cc2233</code><br><code>--accent: #ff3344</code><br><code>--terminal-green: #39ff14</code></p>
-                            </div>
-                            <div class="top-note">
-                            <div class="top-note-title">Blue Theme</div>
-                            <p><code>--primary: #0af0ff</code><br><code>--secondary: #2288cc</code><br><code>--accent: #44aaff</code><br><code>--terminal-green: #00ffcc</code></p>
-                            </div>
-                            </div>
-
-                            <h3>Visual Effects &amp; Background Layers</h3>
-                            <ul>
-                            <li><strong>Grid background</strong> — Animated CSS grid (40px cells) with slow diagonal drift (20s cycle)</li>
-                            <li><strong>Wireframe globe</strong> — Canvas-rendered rotating sphere (9 lat, 12 lon lines, equator highlight, 2 outer rings). Perspective projection, continuous <code>requestAnimationFrame</code></li>
-                            <li><strong>CRT scanlines</strong> — Repeating linear gradient overlay (2px lines)</li>
-                            <li><strong>Kanji watermarks</strong> — 神 (kami) and 経 (kei) as fixed-position decorative text</li>
-                            </ul>
-
-                            <h3>Section Panel System</h3>
-                            <p>Every section uses a standardized <code>.section</code> component with corner accent lines, hex pattern overlays, alert pulsing, skeleton loading shimmer, collapse/expand toggles, and GPU-accelerated compositing (<code>translateZ(0)</code>, <code>contain: style paint</code>).</p>
-
-                            <h3>Data Visualization</h3>
-                            <ul>
-                            <li><strong>Sparklines</strong> — Inline SVG charts for CPU, memory, network, GPU (60-sample rolling history)</li>
-                            <li><strong>Progress bars</strong> — Color-coded utilization bars (green → orange → red) with animated sweep overlay</li>
-                            <li><strong>Cluster aggregates</strong> — 3 large metric cards (CPU/MEM/DISK) with sweep backgrounds, min/max per metric</li>
-                            <li><strong>Net flow matrix</strong> — Canvas-rendered heatmap of services vs remote hosts. Animated cells, pulse waves, scanline overlay, crosshair on hover</li>
-                            <li><strong>Obsidian topology</strong> — 50-node hex-grid canvas with data packets flowing along connections, comet trails, ambient glow orbs</li>
-                            </ul>
-
-
-
-                            <h3>Dashboard typography</h3><p>Body text uses Berkeley Mono Nerd Font; headings use Orbitron; icons use NerdFont glyphs.</p>
-                            <h3>Dashboard keyboard shortcuts</h3><dl class="top-shortcuts"><dt><kbd>Esc</kbd></dt><dd>Close the active overlay</dd><dt><kbd>Enter</kbd></dt><dd>Send a chat message</dd><dt><kbd>Shift</kbd> + <kbd>Enter</kbd></dt><dd>Insert a newline</dd><dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt><dd>Submit an intake item</dd></dl>
                         </section>
 
+                        <!-- §06 -->
                         <section class="doc-sec" id="s-topology" data-title="Network topology">
-                            <h2><span class="doc-num">§06</span> Network topology</h2>
-                            <p>Force-directed graph rendered on a dedicated canvas element. DEEPDISH sits as the center-pinned hub node with cluster nodes on an equidistant inner ring and external integrations on an outer ring. Full physics simulation with spring forces, repulsion, velocity damping, and boundary clamping.</p>
-
-                            <div class="top-note top-caution">
-                            <p>Data packets flow along links as diamond and circle shapes with comet trails. Colors shift green → orange → red with actual node load. Spawn rate is proportional to real utilization metrics. Threat level indicator changes based on node online/offline status: <strong>NOMINAL</strong> → <strong>ELEVATED</strong> → <strong>CRITICAL</strong></p>
+                            <h2><span class="doc-num">§06</span> Network topology <span class="doc-h2-meta">force-directed · dedicated canvas</span></h2>
+                            <div class="dz fit">
+                                <div class="cell top-topo-cell">
+                                    <svg class="top-topo" viewBox="0 0 320 224" role="img" aria-label="Topology: DEEPDISH at the center, the six cluster nodes on an inner ring, Native Planet, Cloud Urbit, Epic Gamer and Home Assistant on the outer ring">
+                                        <ellipse class="tr-ring" cx="160" cy="112" rx="58" ry="58"/><ellipse class="tr-ring" cx="160" cy="112" rx="128" ry="92"/>
+                                        <line class="tl-in" x1="160" y1="112" x2="160.0" y2="54.0" style="--k:0"/><line class="tl-in" x1="160" y1="112" x2="210.2" y2="83.0" style="--k:1"/><line class="tl-in" x1="160" y1="112" x2="210.2" y2="141.0" style="--k:2"/><line class="tl-in" x1="160" y1="112" x2="160.0" y2="170.0" style="--k:3"/><line class="tl-in" x1="160" y1="112" x2="109.8" y2="141.0" style="--k:4"/><line class="tl-in" x1="160" y1="112" x2="109.8" y2="83.0" style="--k:5"/><line class="tl-out" x1="160" y1="112" x2="250.5" y2="46.9" style="--k:6"/><line class="tl-out" x1="160" y1="112" x2="250.5" y2="177.1" style="--k:7"/><line class="tl-out" x1="160" y1="112" x2="69.5" y2="177.1" style="--k:8"/><line class="tl-out" x1="160" y1="112" x2="69.5" y2="46.9" style="--k:9"/>
+                                        <circle class="tn-in" cx="160.0" cy="54.0" r="4.5"/><text x="160.0" y="46.0" text-anchor="middle">mini</text><circle class="tn-in" cx="210.2" cy="83.0" r="4.5"/><text x="219.2" y="75.0" text-anchor="start">cheese</text><circle class="tn-in" cx="210.2" cy="141.0" r="4.5"/><text x="219.2" y="154.0" text-anchor="start">pepper</text><circle class="tn-in" cx="160.0" cy="170.0" r="4.5"/><text x="160.0" y="183.0" text-anchor="middle">onion</text><circle class="tn-in" cx="109.8" cy="141.0" r="4.5"/><text x="100.8" y="154.0" text-anchor="end">garlic</text><circle class="tn-in" cx="109.8" cy="83.0" r="4.5"/><text x="100.8" y="75.0" text-anchor="end">supreme</text><rect class="tn-out" x="246.5" y="42.9" width="8" height="8" rx="1.5"/><text x="250.5" y="37.9" text-anchor="middle">native planet</text><rect class="tn-out" x="246.5" y="173.1" width="8" height="8" rx="1.5"/><text x="250.5" y="191.1" text-anchor="middle">cloud urbit</text><rect class="tn-out" x="65.5" y="173.1" width="8" height="8" rx="1.5"/><text x="69.5" y="191.1" text-anchor="middle">epic gamer</text><rect class="tn-out" x="65.5" y="42.9" width="8" height="8" rx="1.5"/><text x="69.5" y="37.9" text-anchor="middle">home asst.</text>
+                                        <path class="tn-hub" d="M160 101L171 112L160 123L149 112Z"/><text class="tt-hub" x="160" y="136" text-anchor="middle">DEEPDISH</text>
+                                    </svg>
+                                </div>
+                                <div class="cell">
+                                    <p>A force-directed graph: DEEPDISH is the center-pinned hub, cluster nodes sit on an equidistant inner ring and external integrations on an outer ring, under a full physics simulation (spring forces, repulsion, velocity damping, boundary clamping).</p>
+                                    <div class="g-callout"><b>PACKETS</b><span>Diamonds and circles with comet trails flow along the links, shifting green → orange → red with each node's real load; the spawn rate follows real utilization. The threat level follows nodes going on and offline: <b>NOMINAL</b> → <b>ELEVATED</b> → <b>CRITICAL</b>.</span></div>
+                                </div>
                             </div>
-
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Network topology table"><table class="doc-table"><thead><tr><th>Node Type</th><th>Name</th><th>Layout</th></tr></thead><tbody><tr><td>host</td><td>DEEPDISH</td><td>Center-pinned hub (diamond SVG)</td></tr>
-                            <tr><td>cluster</td><td>mini, cheese, pepper, onion, garlic, supreme</td><td>Equidistant inner ring (Apple logo)</td></tr>
-                            <tr><td>tellurian</td><td>Native Planet</td><td>Outer ring</td></tr>
-                            <tr><td>urbit</td><td>Cloud Urbit</td><td>Outer ring</td></tr>
-                            <tr><td>pc</td><td>Epic Gamer</td><td>Outer ring (Windows logo)</td></tr>
-                            <tr><td>homeassistant</td><td>Home Assistant</td><td>Outer ring (HA gear icon)</td></tr></tbody></table></div>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <table class="doc-table top-ntypes">
+                                        <thead><tr><th>type</th><th>name</th><th>layout</th></tr></thead>
+                                        <tbody><tr><td>host</td><td>DEEPDISH</td><td>center-pinned hub (diamond SVG)</td></tr>
+                                        <tr><td>cluster</td><td>mini, cheese, pepper, onion, garlic, supreme</td><td>equidistant inner ring (Apple logo)</td></tr>
+                                        <tr><td>tellurian</td><td>Native Planet</td><td>outer ring</td></tr>
+                                        <tr><td>urbit</td><td>Cloud Urbit</td><td>outer ring</td></tr>
+                                        <tr><td>pc</td><td>Epic Gamer</td><td>outer ring (Windows logo)</td></tr>
+                                        <tr><td>homeassistant</td><td>Home Assistant</td><td>outer ring (HA gear icon)</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §07 -->
                         <section class="doc-sec" id="s-radgotchi" data-title="RadGotchi">
-                            <h2><span class="doc-num">§07</span> RadGotchi</h2>
-                            <p>A complete virtual pet IIFE module (<code>RG</code>) displayed in the RADTECH section. 25 sprite states, 12 CSS animations, military/SIGINT-themed status messages (e.g., "SIGINT NOMINAL", "OVERWATCH ACTIVE", "EXCESSIVE INPUT — CEASE").</p>
-
-                            <div class="top-integrations">
-                            <div class="top-note">
-                            <div class="top-note-title">Interaction Triggers</div>
-                            <ul>
-                            <li>▸ Mouse near section → eye tracking</li>
-                            <li>▸ Single click → random positive reaction</li>
-                            <li>▸ 3+ rapid clicks → excited</li>
-                            <li>▸ 5+ rapid clicks → angry</li>
-                            <li>▸ Double click → spin trick</li>
-                            <li>▸ Hover on dashboard sections → themed reaction (2.5s cooldown)</li>
-                            </ul>
+                            <h2><span class="doc-num">§07</span> RadGotchi <span class="doc-h2-meta">25 sprite states · 12 animations</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>A complete virtual pet, an IIFE module (<code>RG</code>) living in the RADTECH panel, with military / SIGINT status lines: "SIGINT NOMINAL", "OVERWATCH ACTIVE", "EXCESSIVE INPUT — CEASE".</p>
+                                    <div class="top-sprites doc-cols" style="--cols: 6; --cols-sm: 3"><figure><img src="/assets/radbros/HAPPY.png" alt="" loading="lazy" decoding="async"><figcaption>happy</figcaption></figure><figure><img src="/assets/radbros/EXCITED.png" alt="" loading="lazy" decoding="async"><figcaption>excited</figcaption></figure><figure><img src="/assets/radbros/INTENSE.png" alt="" loading="lazy" decoding="async"><figcaption>intense</figcaption></figure><figure><img src="/assets/radbros/SAD.png" alt="" loading="lazy" decoding="async"><figcaption>sad</figcaption></figure><figure><img src="/assets/radbros/LONELY.png" alt="" loading="lazy" decoding="async"><figcaption>lonely</figcaption></figure><figure><img src="/assets/radbros/SLEEP.png" alt="" loading="lazy" decoding="async"><figcaption>sleep</figcaption></figure></div>
+                                </div>
                             </div>
-                            <div class="top-note">
-                            <div class="top-note-title">System-Aware Behavior</div>
-                            <ul>
-                            <li>▸ CPU >90% → angry (critical mood)</li>
-                            <li>▸ Memory >92% → warn state</li>
-                            <li>▸ Temps >85°C → critical reaction</li>
-                            <li>▸ Node offline → sad</li>
-                            <li>▸ Node online → excited</li>
-                            <li>▸ 120s idle → sleep / lonely</li>
-                            <li>▸ Late night (23:00–06:00) → nap bias</li>
-                            </ul>
-                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Interaction triggers</h3>
+                                    <table class="doc-table doc-kv top-react">
+                                        <tr><td>mouse near</td><td>eye tracking</td></tr>
+                                        <tr><td>single click</td><td>random positive reaction</td></tr>
+                                        <tr><td>3+ rapid clicks</td><td>excited</td></tr>
+                                        <tr><td>5+ rapid clicks</td><td>angry</td></tr>
+                                        <tr><td>double click</td><td>spin trick</td></tr>
+                                        <tr><td>panel hover</td><td>themed reaction (2.5s cooldown)</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>System-aware behavior</h3>
+                                    <table class="doc-table doc-kv top-react">
+                                        <tr><td>CPU &gt;90%</td><td>angry (critical mood)</td></tr>
+                                        <tr><td>memory &gt;92%</td><td>warn state</td></tr>
+                                        <tr><td>temps &gt;85°C</td><td>critical reaction</td></tr>
+                                        <tr><td>node offline</td><td>sad</td></tr>
+                                        <tr><td>node online</td><td>excited</td></tr>
+                                        <tr><td>120s idle</td><td>sleep / lonely</td></tr>
+                                        <tr><td>23:00–06:00</td><td>nap bias</td></tr>
+                                    </table>
+                                </div>
                             </div>
                         </section>
 
+                        <!-- §08 -->
                         <section class="doc-sec" id="s-integrations" data-title="OCS &amp; AI chat">
-                            <h2><span class="doc-num">§08</span> OCS &amp; AI chat</h2>
-                            <h3>MJPEG Eye Stream</h3>
-                            <p>OCS camera feed from <code>chef.local:5001</code> proxied through Flask to avoid CORS. Health check every 10 seconds, auto-reconnect on error with 5-second delay. 7 expression controls (happy, sad, angry, bored, confused, surprised, suspicious). System events automatically trigger expressions with cooldown.</p>
-
-                            <h3>AI Chat Integration</h3>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="OCS &amp; AI chat table"><table class="doc-table"><thead><tr><th>Setting</th><th>Value</th></tr></thead><tbody><tr><td>LLM Endpoint</td><td>supreme.local:1234 (LM Studio)</td></tr>
-                            <tr><td>Model</td><td>gemma-2-27b</td></tr>
-                            <tr><td>Temperature</td><td>0.7</td></tr>
-                            <tr><td>Max Tokens</td><td>300</td></tr>
-                            <tr><td>Persona</td><td>DEEPDISH — black-box intelligence, SIGINT style, lowercase/clinical</td></tr></tbody></table></div>
-
-                            <p>The system prompt dynamically injects full live telemetry context — system info, CPU/memory/GPU/disk/network, Docker containers, systemd services, cluster nodes, Home Assistant, OCS, and Obsidian vault stats. Personal names are redacted (<code>OPERATOR</code> / <code>ASSET-2</code>) in chat history.</p>
+                            <h2><span class="doc-num">§08</span> OCS &amp; AI chat <span class="doc-h2-meta">chef.local:5001 · supreme.local:1234</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <h3>MJPEG eye stream <span>proxied through Flask to avoid CORS</span></h3>
+                                    <p>The OCS camera feed from <code>chef.local:5001</code>, health-checked every 10 seconds and reconnected 5 seconds after an error. Seven expression controls drive the eye, and system events trigger expressions on their own, with a cooldown.</p>
+                                    <div class="top-exprs doc-cols" style="--cols: 7; --cols-sm: 4"><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-happy.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>happy</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-sad.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>sad</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-angry.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>angry</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-bored.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>bored</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-confused.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>confused</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-surprised.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>surprised</figcaption></figure><figure class="top-expr"><img src="/assets/OCS/docs/r/expr-suspicious.webp" alt="" loading="lazy" decoding="async" width="160" height="160"><figcaption>suspicious</figcaption></figure></div>
+                                </div>
+                            </div>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>AI chat</h3>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>endpoint</td><td><code>supreme.local:1234</code> (LM Studio)</td></tr>
+                                        <tr><td>model</td><td>gemma-2-27b</td></tr>
+                                        <tr><td>temperature</td><td>0.7</td></tr>
+                                        <tr><td>max tokens</td><td>300</td></tr>
+                                        <tr><td>persona</td><td>DEEPDISH: black-box intelligence, SIGINT style, lowercase / clinical</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Live context</h3>
+                                    <p>The system prompt injects the full live telemetry: system info, CPU / memory / GPU / disk / network, Docker containers, systemd services, cluster nodes, Home Assistant, OCS and Obsidian vault stats.</p>
+                                    <p class="doc-note">Personal names are redacted to <code>OPERATOR</code> / <code>ASSET-2</code> in chat history.</p>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §09 -->
                         <section class="doc-sec" id="s-events" data-title="Event detection">
-                            <h2><span class="doc-num">§09</span> Event detection</h2>
-                            <p>The event system compares current vs previous data snapshots to detect state changes. Events are classified into 4 levels and trigger both Radgotchi reactions and OCS eye expression changes:</p>
-
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Event detection table"><table class="doc-table"><thead><tr><th>Condition</th><th>Level</th></tr></thead><tbody><tr><td>CPU >90%</td><td>● CRITICAL</td></tr>
-                            <tr><td>CPU >70%</td><td>● WARNING</td></tr>
-                            <tr><td>Memory >90%</td><td>● CRITICAL</td></tr>
-                            <tr><td>Disk >90%</td><td>● WARNING</td></tr>
-                            <tr><td>Temperature > critical threshold</td><td>● CRITICAL</td></tr>
-                            <tr><td>Docker container state change</td><td>● INFO</td></tr>
-                            <tr><td>Cluster node offline</td><td>● WARNING</td></tr>
-                            <tr><td>Systemd service failure</td><td>● WARNING</td></tr>
-                            <tr><td>Service recovery</td><td>● OK</td></tr></tbody></table></div>
+                            <h2><span class="doc-num">§09</span> Event detection <span class="doc-h2-meta">snapshot diff · 4 levels</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <p>Each poll is compared with the last snapshot to find state changes. Events are classed into four levels, and each one triggers both a RadGotchi reaction and an OCS eye expression.</p>
+                                    <div class="top-levels"><i class="lv-crit">CRITICAL</i><i class="lv-warn">WARNING</i><i class="lv-info">INFO</i><i class="lv-ok">OK</i></div>
+                                </div>
+                                <div class="cell">
+                                    <table class="doc-table top-events">
+                                        <tr><td>CPU &gt;90%</td><td><i class="lv-crit">CRITICAL</i></td></tr>
+                                        <tr><td>CPU &gt;70%</td><td><i class="lv-warn">WARNING</i></td></tr>
+                                        <tr><td>memory &gt;90%</td><td><i class="lv-crit">CRITICAL</i></td></tr>
+                                        <tr><td>disk &gt;90%</td><td><i class="lv-warn">WARNING</i></td></tr>
+                                        <tr><td>temperature &gt; critical threshold</td><td><i class="lv-crit">CRITICAL</i></td></tr>
+                                        <tr><td>Docker container state change</td><td><i class="lv-info">INFO</i></td></tr>
+                                        <tr><td>cluster node offline</td><td><i class="lv-warn">WARNING</i></td></tr>
+                                        <tr><td>systemd service failure</td><td><i class="lv-warn">WARNING</i></td></tr>
+                                        <tr><td>service recovery</td><td><i class="lv-ok">OK</i></td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §10 -->
                         <section class="doc-sec" id="s-polling" data-title="Polling &amp; refresh">
-                            <h2><span class="doc-num">§10</span> Polling &amp; refresh</h2>
-                            <p>Split polling strategy separates fast local metrics from slow external integrations:</p>
-
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Polling &amp; refresh table"><table class="doc-table"><thead><tr><th>Interval</th><th>Target</th><th>Purpose</th></tr></thead><tbody><tr><td class="top-key">2,000ms</td><td>/api/metrics + /api/metrics/integrations</td><td>Core telemetry polling (parallel)</td></tr>
-                            <tr><td class="top-key">1,000ms</td><td>—</td><td>Column height sync</td></tr>
-                            <tr><td class="top-key">3,000ms</td><td>Management logs</td><td>Docker/Systemd auto-refresh</td></tr>
-                            <tr><td class="top-key">6,000ms</td><td>—</td><td>Radgotchi idle behavior check</td></tr>
-                            <tr><td class="top-key">10,000ms</td><td>/api/ocs/eye/ping</td><td>OCS stream health check</td></tr>
-                            <tr><td class="top-key">rAF</td><td>Canvas elements</td><td>Globe, topology, net flow, Obsidian topo</td></tr></tbody></table></div>
+                            <h2><span class="doc-num">§10</span> Polling &amp; refresh <span class="doc-h2-meta">fast local · slow integrations</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <p>A split strategy keeps fast local metrics apart from slow external integrations.</p>
+                                    <table class="doc-table top-polls">
+                                        <thead><tr><th>interval</th><th></th><th>target</th><th>purpose</th></tr></thead>
+                                        <tbody><tr><td>1,000ms</td><td><span class="top-ms" style="--v:0.10"></span></td><td>—</td><td>column height sync</td></tr><tr><td>2,000ms</td><td><span class="top-ms" style="--v:0.20"></span></td><td><code>/api/metrics</code> + <code>/api/metrics/integrations</code></td><td>core telemetry polling (parallel)</td></tr><tr><td>3,000ms</td><td><span class="top-ms" style="--v:0.30"></span></td><td>management logs</td><td>Docker / systemd auto-refresh</td></tr><tr><td>6,000ms</td><td><span class="top-ms" style="--v:0.60"></span></td><td>—</td><td>RadGotchi idle behavior check</td></tr><tr><td>10,000ms</td><td><span class="top-ms" style="--v:1.00"></span></td><td><code>/api/ocs/eye/ping</code></td><td>OCS stream health check</td></tr><tr><td>rAF</td><td><span class="top-ms" style="--v:0.03"></span></td><td>canvas elements</td><td>globe, topology, net flow, Obsidian topo</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §11 -->
                         <section class="doc-sec" id="s-preview" data-title="Dashboard recording">
-                            <h2><span class="doc-num">§11</span> Dashboard recording</h2>
-                            <p>A recorded walkthrough of the dashboard, including the cluster, system telemetry, OCS eye and service panels.</p>
-                            <figure class="doc-figure top-recording">
-                            <video controls muted loop playsinline preload="metadata" poster="/assets/TOP/top.png" width="1120" height="1276" aria-label="DeepDish TOP dashboard recording">
-                            <source src="/assets/TOP/dashboar%20d.mp4" type="video/mp4">
-                            <p>Your browser cannot play this recording. <a href="/assets/TOP/dashboar%20d.mp4">Open the video file</a>.</p>
-                            </video>
-                            <figcaption>Dashboard capture &middot; 27 seconds &middot; playback controls available below the image</figcaption>
-                            </figure>
+                            <h2><span class="doc-num">§11</span> Dashboard recording <span class="doc-h2-meta">27 seconds</span></h2>
+                            <div class="dz">
+                                <figure class="doc-figure cell-fig top-recording">
+                                    <video controls muted loop playsinline preload="metadata" poster="/assets/TOP/top.png" width="1120" height="1276" aria-label="DeepDish TOP dashboard recording">
+                                        <source src="/assets/TOP/dashboar%20d.mp4" type="video/mp4">
+                                        <p>Your browser cannot play this recording. <a href="/assets/TOP/dashboar%20d.mp4">Open the video file</a>.</p>
+                                    </video>
+                                    <figcaption>FIG 11.1 · dashboard capture · 27 seconds</figcaption>
+                                </figure>
+                                <div class="cell w2">
+                                    <p>A recorded walkthrough of the dashboard: the cluster, system telemetry, the OCS eye and the service panels.</p>
+                                    <p class="doc-chips"><i>cluster</i><i>system telemetry</i><i>OCS eye</i><i>service panels</i></p>
+                                    <table class="doc-table doc-kv">
+                                        <tr><td>length</td><td>27 seconds</td></tr>
+                                        <tr><td>playback</td><td>muted, loops, plays inline; the browser's own controls</td></tr>
+                                        <tr><td>poster</td><td>the dashboard capture from §01</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §12 -->
                         <section class="doc-sec" id="s-performance" data-title="Performance">
-                            <h2><span class="doc-num">§12</span> Performance</h2>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Performance table"><table class="doc-table"><thead><tr><th>Optimization</th><th>Detail</th></tr></thead><tbody><tr><td>Split API polling</td><td>Local metrics (fast) and integrations (slow) fetched in separate parallel requests</td></tr>
-                            <tr><td>ThreadPoolExecutor</td><td>Container stats, cluster nodes, OCS status — all fetched in parallel</td></tr>
-                            <tr><td>DOM cache</td><td>Map-based ID lookup cache avoids repeated getElementById calls</td></tr>
-                            <tr><td>CSS containment</td><td><code>.section { contain: style paint }</code> — limits layout recalculation</td></tr>
-                            <tr><td>GPU compositing</td><td><code>translateZ(0)</code> + <code>backface-visibility: hidden</code> on animated elements</td></tr>
-                            <tr><td>Static info cache</td><td>System info (kernel, CPU model) cached indefinitely after first fetch</td></tr>
-                            <tr><td>Obsidian TTL cache</td><td>30-second cache prevents API hammering on every poll cycle</td></tr>
-                            <tr><td>mDNS cache</td><td>120-second TTL with connectivity validation</td></tr>
-                            <tr><td>Connection pooling</td><td>Shared <code>requests.Session</code> with keep-alive for all external HTTP</td></tr>
-                            <tr><td>Conditional render</td><td>Row flash animations only fire on actual value changes</td></tr></tbody></table></div>
+                            <h2><span class="doc-num">§12</span> Performance <span class="doc-h2-meta">10 optimizations</span></h2>
+                            <div class="dz fit">
+                                <div class="cell">
+                                    <h3>Collection</h3>
+                                    <table class="doc-table doc-kv top-perf">
+                                        <tr><td>split polling</td><td>local metrics (fast) and integrations (slow) in separate parallel requests</td></tr>
+                                        <tr><td>thread pools</td><td>container stats, cluster nodes, OCS status: all fetched in parallel</td></tr>
+                                        <tr><td>static info</td><td>kernel and CPU model cached indefinitely after the first fetch</td></tr>
+                                        <tr><td>obsidian ttl</td><td>30-second cache, no API hammering every poll</td></tr>
+                                        <tr><td>mdns cache</td><td>120-second TTL with connectivity validation</td></tr>
+                                        <tr><td>pooling</td><td>one shared <code>requests.Session</code> with keep-alive for all external HTTP</td></tr>
+                                    </table>
+                                </div>
+                                <div class="cell">
+                                    <h3>Rendering</h3>
+                                    <table class="doc-table doc-kv top-perf">
+                                        <tr><td>dom cache</td><td>Map-based ID lookup, no repeated <code>getElementById</code></td></tr>
+                                        <tr><td>containment</td><td><code>.section { contain: style paint }</code> limits layout recalculation</td></tr>
+                                        <tr><td>compositing</td><td><code>translateZ(0)</code> + <code>backface-visibility: hidden</code> on animated elements</td></tr>
+                                        <tr><td>conditional</td><td>row flash animations only fire on real value changes</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </section>
 
+                        <!-- §13 -->
                         <section class="doc-sec" id="s-security" data-title="Security posture">
-                            <h2><span class="doc-num">§13</span> Security posture</h2>
-                            <div class="top-note top-caution">
-                            <ul>
-                            <li>Container runs <strong>privileged</strong> with host PID/network — required for full system visibility</li>
-                            <li>HA token &amp; Obsidian API key in <code>.env</code> — not committed to version control</li>
-                            <li>Obsidian API uses self-signed HTTPS — SSL verification disabled</li>
-                            <li>Frontend redacts non-local IPs (e.g., <code>142.███.███.███</code>)</li>
-                            <li>Chat history redacts personal names → <code>OPERATOR</code> / <code>ASSET-2</code></li>
-                            <li>Docker/Systemd management exposed without auth — trusted LAN only</li>
-                            </ul>
-                            </div>
-
-                            <div class="top-note top-muted">
-                            Additional security protocols and network segmentation details are classified under Directive <span class="redacted">████-██</span> and cannot be disclosed in this document. Access requires SCI compartment authorization.
+                            <h2><span class="doc-num">§13</span> Security posture <span class="doc-h2-meta">trusted LAN only</span></h2>
+                            <div class="dz">
+                                <div class="cell is-warn w2">
+                                    <b>RISKS</b>
+                                    <ul class="top-risks">
+                                        <li>the container runs <strong>privileged</strong> with host PID / network: required for full system visibility</li>
+                                        <li>HA token and Obsidian API key live in <code>.env</code>, not in version control</li>
+                                        <li>the Obsidian API uses self-signed HTTPS, so SSL verification is off</li>
+                                        <li>the frontend redacts non-local IPs (<code>142.███.███.███</code>)</li>
+                                        <li>chat history redacts personal names → <code>OPERATOR</code> / <code>ASSET-2</code></li>
+                                        <li>Docker / systemd management is exposed without auth: <strong>trusted LAN only</strong></li>
+                                    </ul>
+                                </div>
+                                <div class="cell top-classified">
+                                    <b>CLASSIFIED</b>
+                                    <p>Additional security protocols and network segmentation details are classified under Directive <span class="redacted">████-██</span> and cannot be disclosed in this document. Access requires SCI compartment authorization.</p>
+                                </div>
                             </div>
                         </section>
 
+                        <!-- §14 -->
                         <section class="doc-sec" id="s-dependencies" data-title="Service dependencies">
-                            <h2><span class="doc-num">§14</span> Service dependencies</h2>
-                            <div class="top-table-wrap" tabindex="0" role="region" aria-label="Service dependencies table"><table class="doc-table"><thead><tr><th>Service</th><th>Host</th><th>Protocol</th><th>Purpose</th></tr></thead><tbody><tr><td class="top-key">Prometheus (×6)</td><td>{node}.local:9100</td><td>HTTP/Prometheus</td><td>Cluster node metrics</td></tr>
-                            <tr><td class="top-key">Native Planet</td><td>nativeplanet.local:9100</td><td>HTTP/Prometheus</td><td>Urbit machine metrics</td></tr>
-                            <tr><td class="top-key">Home Assistant</td><td>homeassistant.local:8123</td><td>HTTP REST</td><td>Smart home / phone tracking</td></tr>
-                            <tr><td class="top-key">Obsidian REST API</td><td>localhost:27124</td><td>HTTPS REST</td><td>Vault access</td></tr>
-                            <tr><td class="top-key">OCS</td><td>chef.local:5001</td><td>HTTP + MJPEG</td><td>Eye rendering / vision</td></tr>
-                            <tr><td class="top-key">LM Studio</td><td>supreme.local:1234</td><td>OpenAI API</td><td>AI chat (gemma-2-27b)</td></tr>
-                            <tr><td class="top-key">Docker Engine</td><td>/var/run/docker.sock</td><td>Unix socket</td><td>Container management</td></tr>
-                            <tr><td class="top-key">systemd</td><td>D-Bus</td><td>D-Bus / nsenter</td><td>Service management</td></tr></tbody></table></div>
-
-
-                            <div class="top-footnotes">
-                            <p>¹ All network addresses shown are partially redacted per standard operating procedure.</p>
-                            <p>² Metric collection intervals are tunable — values shown reflect production configuration.</p>
-                            <p>³ Dependency versions and source counts describe the documented project snapshot.</p>
+                            <h2><span class="doc-num">§14</span> Service dependencies <span class="doc-h2-meta">8 services</span></h2>
+                            <div class="dz">
+                                <div class="cell wf">
+                                    <table class="doc-table top-svcs">
+                                        <thead><tr><th>service</th><th>host</th><th>protocol</th><th>purpose</th></tr></thead>
+                                        <tbody><tr><td>Prometheus (×6)</td><td><code>{node}.local:9100</code></td><td>HTTP / Prometheus</td><td>cluster node metrics</td></tr>
+                                        <tr><td>Native Planet</td><td><code>nativeplanet.local:9100</code></td><td>HTTP / Prometheus</td><td>Urbit machine metrics</td></tr>
+                                        <tr><td>Home Assistant</td><td><code>homeassistant.local:8123</code></td><td>HTTP REST</td><td>smart home / phone tracking</td></tr>
+                                        <tr><td>Obsidian REST API</td><td><code>localhost:27124</code></td><td>HTTPS REST</td><td>vault access</td></tr>
+                                        <tr><td>OCS</td><td><code>chef.local:5001</code></td><td>HTTP + MJPEG</td><td>eye rendering / vision</td></tr>
+                                        <tr><td>LM Studio</td><td><code>supreme.local:1234</code></td><td>OpenAI API</td><td>AI chat (gemma-2-27b)</td></tr>
+                                        <tr><td>Docker Engine</td><td><code>/var/run/docker.sock</code></td><td>Unix socket</td><td>container management</td></tr>
+                                        <tr><td>systemd</td><td>D-Bus</td><td>D-Bus / nsenter</td><td>service management</td></tr></tbody>
+                                    </table>
+                                    <div class="top-footnotes">
+                                        <p>¹ All network addresses shown are partially redacted per standard operating procedure.</p>
+                                        <p>² Metric collection intervals are tunable; values shown reflect production configuration.</p>
+                                        <p>³ Dependency versions and source counts describe the documented project snapshot.</p>
+                                    </div>
+                                </div>
                             </div>
                         </section>
-                        <p class="doc-end">DEEPDISH TOP &middot; Terminal Operations Panel</p>
+                        <p class="doc-end">— end of document · DeepDish TOP · Terminal Operations Panel —</p>
                     </article>
                     </div>
                 </section>
             </section>
 
             <aside class="g-side">
-                <section class="top-preview-pane" data-embed="side">
-                    <div class="g-panel-title">Dashboard <span class="g-meta">CAPTURE</span></div>
-                    <a class="top-screenshot" href="/assets/TOP/top.png" target="_blank" rel="noopener" aria-label="Open the full-size DeepDish TOP dashboard screenshot">
-                        <img src="/assets/TOP/top.png" alt="DeepDish TOP dashboard with host metrics, cluster monitoring, OCS eye and service panels" width="1278" height="1384" decoding="async">
-                        <span>VIEW FULL SIZE &nearr;</span>
-                    </a>
+                <section class="top-cadence-pane" data-embed="side">
+                    <div class="g-panel-title">Cadence <span class="g-meta">POLL LOOPS &middot; LIVE</span></div>
+                    <!-- Each bar fills over the loop's real interval (§10) and starts again -->
+                    <ol class="top-cadence">
+                        <li style="--ms:1000ms"><b>1s</b><span class="top-tick"><i></i></span><small>column height sync</small></li>
+                        <li class="is-core" style="--ms:2000ms"><b>2s</b><span class="top-tick"><i></i></span><small>/api/metrics + integrations</small></li>
+                        <li style="--ms:3000ms"><b>3s</b><span class="top-tick"><i></i></span><small>Docker / systemd logs</small></li>
+                        <li style="--ms:6000ms"><b>6s</b><span class="top-tick"><i></i></span><small>RadGotchi idle check</small></li>
+                        <li style="--ms:10000ms"><b>10s</b><span class="top-tick"><i></i></span><small>OCS stream health</small></li>
+                        <li class="is-raf"><b>rAF</b><span class="top-tick"><i></i></span><small>canvases, every frame</small></li>
+                    </ol>
                 </section>
                 <section class="top-runtime-pane" data-embed="side">
                     <div class="g-panel-title">Runtime <span class="g-meta">CONFIGURATION</span></div>
@@ -517,13 +617,13 @@
     </div>
     </main>
 
-    <script defer src="/js/embed.js?v=1.3"></script>
-    <script defer src="/js/background.js?v=1.5"></script>
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
-    <script defer src="/js/docs.js?v=1.3"></script>
+    <script defer src="/js/docs.js?v=1.5"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

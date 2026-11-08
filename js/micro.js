@@ -3,7 +3,8 @@
    - Featured cards tilt toward the pointer (the art floats a little); comms icons lean toward it; the Host
      hologram turns to follow it around its panel
    - Panel titles decode when hovered (once per title every few seconds)
-   - Live values (dossier stats, Results telemetry lines, comms status) flash when they change in place
+   - Live values (dossier stats, Results telemetry lines, comms status) flash when they change in place; a number
+     that changes rolls over like an odometer (window.tirlRoll)
    - Screen care, while ambient mode is on (js/objects.js sends tirl:ambient): the layout shifts a few pixels every
      couple of minutes, so nothing sits burned into one spot. Off with SYS "Screen care" (html.sys-no-saver).
    Motion is skipped with reduced motion or SYS calm; hover touches only for a mouse. */
@@ -125,7 +126,7 @@
         for (const m of list) {
             const node = m.target.nodeType === 3 ? m.target.parentElement : m.target;
             const el = node && node.closest(WATCH);
-            if (el && el.isConnected) hits.add(el);
+            if (el && el.isConnected && !el.__rolling) hits.add(el); // mid-roll: flashes when it lands
         }
         if (hits.size > 4) return; // a redraw, not an update
         hits.forEach((el) => {
@@ -143,6 +144,40 @@
             if (el) mo.observe(el, { subtree: true, childList: true, characterData: true });
         });
     }, 5000);
+
+    // ---------- Odometer: a number changing in place rolls its digits over to the new value ----------
+    // window.tirlRoll(el, text) for a live value that changes after it first landed (js/index.js, the RemiNET
+    // stats). Digits are right-aligned against the old value, and each changed one rolls forward (9 -> 2 goes
+    // through 0) on a strip of 0-9 twice; the rightmost starts first. Plain text again once it lands.
+    const ROLL_MS = 900;
+    function roll(el, next) {
+        next = String(next);
+        const prev = el.textContent.trim();
+        if (el.__rolling || prev === next || calm() || !/\d/.test(prev)) { el.textContent = next; return; }
+        const len = Math.max(prev.length, next.length);
+        const a = prev.padStart(len, ' '), b = next.padStart(len, ' ');
+        const cells = '0123456789'.repeat(2).split('').map((d) => `<i>${d}</i>`).join('');
+        let html = '', col = 0;
+        for (let i = len - 1; i >= 0; i--) {
+            const c = b[i];
+            if (c === ' ') continue;
+            if (/\d/.test(c) && a[i] !== c) {
+                const from = /\d/.test(a[i]) ? +a[i] : 0;
+                const to = +c + (+c < from ? 10 : 0);
+                html = `<span class="g-odo" aria-hidden="true"><span style="--from:${from};--to:${to};--d:${col * 70}ms">${cells}</span></span>` + html;
+                col++;
+            } else html = (c === '<' ? '&lt;' : c === '&' ? '&amp;' : c) + html;
+        }
+        el.__rolling = true;
+        el.setAttribute('aria-label', next);
+        el.innerHTML = html;
+        setTimeout(() => {
+            el.removeAttribute('aria-label');
+            if (el.querySelector('.g-odo')) el.textContent = next; // unless something wrote over it meanwhile
+            el.__rolling = false;
+        }, ROLL_MS + col * 70 + 50);
+    }
+    window.tirlRoll = roll;
 
     // ---------- Screen care while idle ----------
     const SHIFT_MS = 120000; // a new few-pixel offset every 2 minutes
