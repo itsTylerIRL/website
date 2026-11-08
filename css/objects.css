@@ -895,9 +895,10 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     transform: translateY(-2px);
 }
 
-/* Row layout (default): art | name / desc / cta. Sizes track the card's height and width. */
+/* Row layout (default): art | name / desc / cta. Sizes track the card's height and width, with no ceiling, so
+   on a big screen (or zoomed out) the art and text grow to fill the card instead of floating in it */
 .g-feat-body {
-    --art: clamp(28px, min(52cqh, 20cqw), 100px);
+    --art: max(28px, min(62cqh, 24cqw));
     height: 100%;
     display: grid;
     /* Same art column on every card (sized for the wide sprite) so captions line up */
@@ -965,7 +966,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-feat-name {
     grid-area: name;
     max-width: 100%;
-    font-size: clamp(13px, min(11.5cqh, 5.8cqw), 19px);
+    font-size: clamp(13px, min(12cqh, 5.8cqw), 30px);
     font-weight: 600;
     letter-spacing: 0.02em;
     line-height: 1.2;
@@ -973,7 +974,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 }
 .g-feat-desc {
     grid-area: desc;
-    font-size: clamp(10.5px, min(8.5cqh, 4cqw), 12.5px);
+    font-size: clamp(10.5px, min(8.5cqh, 4cqw), 17px);
     line-height: 1.45;
     color: var(--g-muted);
     display: -webkit-box;
@@ -991,7 +992,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     padding: 0.55em 0.9em;
     white-space: nowrap;
     font-family: var(--g-mono);
-    font-size: clamp(9.5px, min(8cqh, 3.6cqw), 12px);
+    font-size: clamp(9.5px, min(8cqh, 3.6cqw), 15px);
     letter-spacing: 0.12em;
     border-color: rgba(var(--feat), 0.6);
     color: rgb(var(--feat));
@@ -1009,7 +1010,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 /* Stacked layout for roomy cards: art over a centred caption */
 @container feat (max-aspect-ratio: 21/10) and (min-height: 150px) {
     .g-feat-body {
-        --art: clamp(40px, min(36cqh, 40cqw), 150px);
+        --art: max(40px, min(46cqh, 58cqw));
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas: "art" "name" "desc" "cta";
         justify-items: center;
@@ -1017,15 +1018,15 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         row-gap: clamp(3px, 2.4cqh, 10px);
         padding: clamp(10px, 6cqh, 22px) clamp(12px, 6cqw, 24px);
     }
-    .g-feat-name { font-size: clamp(14px, min(7.5cqh, 6.8cqw), 22px); }
+    .g-feat-name { font-size: clamp(14px, min(7.5cqh, 6.8cqw), 36px); }
     .g-feat-desc {
-        font-size: clamp(10.5px, min(4.6cqh, 4cqw), 13px);
+        font-size: clamp(10.5px, min(4.6cqh, 4cqw), 19px);
         /* Reserve a line so names and buttons line up across a row of cards */
         min-height: 1.45em;
         -webkit-line-clamp: 2;
         line-clamp: 2;
     }
-    .g-feat-cta { font-size: clamp(10px, min(4.6cqh, 3.8cqw), 12px); }
+    .g-feat-cta { font-size: clamp(10px, min(4.6cqh, 3.8cqw), 17px); }
 }
 
 
@@ -1103,9 +1104,11 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         flex: 1 1 0;
         min-height: 0;
     }
-    .g-results-pane { flex: 1 1 0; }
+    /* Results takes its share of the column but never more than its list needs: a short list leaves the
+       room to the panels under it instead of empty space */
+    .g-results-pane { flex: 1 1 0; max-height: max-content; min-height: 0; }
     .g-results {
-        flex: 1 1 0;
+        flex: 1 1 auto;
         min-height: 0;
         overflow-y: auto;
         scrollbar-width: thin;
@@ -1145,7 +1148,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-body {
         flex: 1 0 auto;
         grid-template-columns: clamp(190px, 22%, 260px) minmax(0, 1fr);
-        grid-template-rows: auto clamp(220px, 40vh, 480px) minmax(150px, 1fr);
+        grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) minmax(150px, 1fr);
         align-items: stretch;
     }
     .g-rail,
@@ -1154,7 +1157,9 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-side > .g-results-pane { grid-column: 1; grid-row: 2; } /* beats the shell's .g-side > :only-child span */
     .g-activity-pane { grid-column: 1; grid-row: 3; }
     .g-main { grid-column: 2; grid-row: 1 / span 3; }
-    /* Size containment: list length never stretches the rows; the grid sets their height */
+    /* Size containment: list length never stretches the rows; the grid sets their height. Results is the
+       exception: its row fits the list (fit-content above), up to a viewport-based height, so a short list
+       leaves no empty space under it */
     .g-results-pane,
     .g-activity-pane {
         contain: size;
@@ -1163,6 +1168,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         min-height: 0;
         overflow: hidden;
     }
+    .g-results-pane { contain: none; }
     .g-results,
     .g-activity {
         flex: 1 1 0;
@@ -1172,6 +1178,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         scrollbar-width: thin;
         scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
     }
+    .g-results { flex-basis: auto; } /* so the row can measure the list */
 }
 
 @media (max-width: 1359px) {
@@ -1436,7 +1443,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-preview.is-embed { min-height: min(760px, 80vh); }
     .g-embed-side { grid-column: 1; grid-row: 4; }
     .g-embed-rail { grid-row: 3; }
-    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto clamp(220px, 40vh, 480px) auto auto minmax(150px, 1fr); }
+    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) auto auto minmax(150px, 1fr); }
     .g-body:has(.g-embed-side:not([hidden])) .g-activity-pane { grid-row: 5; }
     .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 5; }
 }
@@ -2106,10 +2113,10 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
 }
 /* Two columns: the last row of the rail column, below Recently Viewed */
 @media (min-width: 900px) and (max-width: 1359px) {
-    .g-body { grid-template-rows: auto clamp(220px, 40vh, 480px) minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
+    .g-body { grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
     .g-main { grid-row: 1 / span 4; }
     .g-signal-pane { grid-column: 1; grid-row: 4; }
-    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto clamp(220px, 40vh, 480px) auto auto minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
+    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) auto auto minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
     .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 6; }
     .g-body:has(.g-embed-side:not([hidden])) .g-signal-pane { grid-row: 6; }
     .g-signal-pane {

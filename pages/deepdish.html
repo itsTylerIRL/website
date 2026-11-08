@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.9">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/uplink.css?v=1.3">
     <link rel="stylesheet" href="/css/deepdish-dir.css?v=1.1">
@@ -76,7 +76,7 @@
                         <dt>watched by</dt><dd>TOP + prometheus</dd>
                     </dl>
                 </section>
-                <section class="g-stack-pane g-fill" data-embed="rail">
+                <section class="g-stack-pane g-fill" data-embed="rail" data-anchor="stack">
                     <div class="g-panel-title">Stack</div>
                     <div class="g-scroll">
                         <ul class="dd-chips">
@@ -120,10 +120,10 @@
                     </div>
                 </section>
 
-                <section class="g-card">
+                <section class="g-card" data-anchor="projects">
                     <div class="g-panel-title">Projects <span class="g-meta">6 on the rack &middot; open one to view it</span></div>
                     <ul class="dd-projects">
-                        <li><a class="dd-project" href="/#ocs" style="--p: 139, 233, 253">
+                        <li><a class="dd-project" data-anchor="ocs" href="/#ocs" style="--p: 139, 233, 253">
                             <span class="dd-shot"><img src="/assets/deepdish/ocs.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/ocs-sentinel.webp" alt="" width="28" height="28"><b>OCS</b><small>optical control system</small></span>
@@ -132,7 +132,7 @@
                             </span>
                             <span class="dd-go">OPEN &rarr;</span>
                         </a></li>
-                        <li><a class="dd-project" href="/#top" style="--p: 80, 250, 123">
+                        <li><a class="dd-project" data-anchor="top" href="/#top" style="--p: 80, 250, 123">
                             <span class="dd-shot"><img src="/assets/deepdish/top.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/top.webp" alt="" width="28" height="28"><b>TOP</b><small>terminal operations panel</small></span>
@@ -141,7 +141,7 @@
                             </span>
                             <span class="dd-go">OPEN &rarr;</span>
                         </a></li>
-                        <li><a class="dd-project" href="/#sin" style="--p: 255, 121, 198">
+                        <li><a class="dd-project" data-anchor="radactedbot" href="/#sin" style="--p: 255, 121, 198">
                             <span class="dd-shot"><img src="/assets/deepdish/sin.webp" alt="" width="488" height="305" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/sin-defcon4.webp" alt="" width="28" height="28"><b>RADactedBot</b><small>discord + telegram bot</small></span>
@@ -150,7 +150,7 @@
                             </span>
                             <span class="dd-go">OPEN &rarr;</span>
                         </a></li>
-                        <li><a class="dd-project" href="/#radgotchi" style="--p: 139, 233, 253">
+                        <li><a class="dd-project" data-anchor="radgotchi" href="/#radgotchi" style="--p: 139, 233, 253">
                             <span class="dd-shot"><img src="/assets/deepdish/radgotchi.webp" alt="" width="497" height="311" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/radgotchi-shades.webp" alt="" width="28" height="28"><b>RadGotchi</b><small>desktop companion</small></span>
@@ -159,7 +159,7 @@
                             </span>
                             <span class="dd-go">OPEN &rarr;</span>
                         </a></li>
-                        <li><a class="dd-project" href="/#digiflip" style="--p: 255, 85, 85">
+                        <li><a class="dd-project" data-anchor="digiflip" href="/#digiflip" style="--p: 255, 85, 85">
                             <span class="dd-shot"><img src="/assets/deepdish/digiflip.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/digiflip.webp" alt="" width="28" height="28"><b>DigiFlip</b><small>flipper zero virtual pet</small></span>
@@ -168,7 +168,7 @@
                             </span>
                             <span class="dd-go">OPEN &rarr;</span>
                         </a></li>
-                        <li><a class="dd-project" href="https://github.com/itsTylerIRL/middle-management" target="_blank" rel="noopener" style="--p: 255, 121, 198">
+                        <li><a class="dd-project" data-anchor="middle-management" data-anchor-name="Middle Management" data-anchor-kind="project" data-anchor-sub="corporate alignment daemon · local llm grades your jargon" href="https://github.com/itsTylerIRL/middle-management" target="_blank" rel="noopener" style="--p: 255, 121, 198">
                             <span class="dd-shot"><img src="/assets/deepdish/middle-management.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></span>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/object-icons/middle-management.webp" alt="" width="28" height="28"><b>Middle Management</b><small>corporate alignment daemon</small></span>
@@ -181,10 +181,10 @@
                 </section>
 
                 <!-- Urbit apps: no workspace page here, so each has its install line (from ~nosfyl) and its repo -->
-                <section class="g-card">
+                <section class="g-card" data-anchor="apps">
                     <div class="g-panel-title">Urbit Apps <span class="g-meta">3 desks &middot; |install from ~nosfyl</span></div>
                     <ul class="dd-projects" id="dd-apps">
-                        <li><div class="dd-project is-app" style="--p: 255, 184, 108">
+                        <li><div class="dd-project is-app" data-anchor="sextant" data-anchor-name="%sextant" data-anchor-kind="urbit app" data-anchor-sub="|install ~nosfyl %sextant · live urbit network map" style="--p: 255, 184, 108">
                             <a class="dd-shot" href="https://github.com/itsTylerIRL/sextant" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/sextant.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/urbit-apps/sextant.webp" alt="" width="28" height="28"><b>%sextant</b><small>live network map</small></span>
@@ -194,7 +194,7 @@
                             </span>
                             <a class="dd-go" href="https://github.com/itsTylerIRL/sextant" target="_blank" rel="noopener">GITHUB &nearr;</a>
                         </div></li>
-                        <li><div class="dd-project is-app" style="--p: 255, 222, 23">
+                        <li><div class="dd-project is-app" data-anchor="chibi" data-anchor-name="%chibi" data-anchor-kind="urbit app" data-anchor-sub="|install ~nosfyl %chibi · remilia on-chain feed" style="--p: 255, 222, 23">
                             <a class="dd-shot" href="https://github.com/itsTylerIRL/chibi" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/chibi.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/urbit-apps/chibi.webp" alt="" width="28" height="28"><b>%chibi</b><small>remilia on-chain feed</small></span>
@@ -204,7 +204,7 @@
                             </span>
                             <a class="dd-go" href="https://github.com/itsTylerIRL/chibi" target="_blank" rel="noopener">GITHUB &nearr;</a>
                         </div></li>
-                        <li><div class="dd-project is-app" style="--p: 189, 147, 249">
+                        <li><div class="dd-project is-app" data-anchor="iron" data-anchor-name="%iron" data-anchor-kind="urbit app" data-anchor-sub="|install ~nosfyl %iron · dumbbell workout tracker" style="--p: 189, 147, 249">
                             <a class="dd-shot" href="https://github.com/itsTylerIRL/iron" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/assets/deepdish/iron.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></a>
                             <span class="dd-project-text">
                                 <span class="dd-project-head"><img src="/assets/urbit-apps/iron.webp" alt="" width="28" height="28"><b>%iron</b><small>dumbbell workout tracker</small></span>
@@ -219,7 +219,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-dir-pane" data-embed="side">
+                <section class="g-dir-pane" data-embed="side" data-anchor="directory">
                     <div class="g-panel-title">Directory <span class="g-meta">deepdish /</span></div>
                     <ol class="g-results">
                         <li><a class="g-res" href="/#ocs"><img class="g-res-icon" src="/assets/object-icons/ocs-sentinel.webp" alt=""><span class="g-res-text"><span class="g-res-title">DeepDish OCS</span><span class="g-res-desc">a robot eye that watches you back</span></span><i class="g-dot tone-green"></i></a></li>
@@ -261,7 +261,7 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.2"></script>
+    <script defer src="/js/embed.js?v=1.3"></script>
     <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>

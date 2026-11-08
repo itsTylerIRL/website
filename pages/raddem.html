@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.9">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/uplink.css?v=1.3">
 </head>
@@ -106,7 +106,7 @@
                     </div>
                 </section>
 
-                <section class="g-card">
+                <section class="g-card" data-anchor="uptime">
                     <div class="g-panel-title">Uptime <span class="g-meta" id="s-up-meta">checked every minute</span></div>
                     <div class="g-uptime">
                         <div class="g-uptime-head"><span>last 24 hours &middot; by the hour</span><b id="s-up24">&mdash;</b></div>
@@ -121,23 +121,23 @@
                     <p class="g-note" id="s-up-note"></p>
                 </section>
 
-                <section class="g-card">
+                <section class="g-card" data-anchor="response">
                     <div class="g-panel-title">Response Time <span class="g-meta">/~/host round trip &middot; hourly average</span></div>
                     <div class="g-spark-wrap" id="s-spark"></div>
                 </section>
 
-                <section class="g-card g-fill">
+                <section class="g-card g-fill" data-anchor="running">
                     <div class="g-panel-title">Running On This Ship</div>
                     <ul class="g-services g-scroll" id="s-services"></ul>
                 </section>
             </section>
 
             <aside class="g-side">
-                <section class="g-fleet-pane g-fleet" data-embed="side">
+                <section class="g-fleet-pane g-fleet" data-embed="side" data-anchor="fleet">
                     <div class="g-panel-title">Fleet <span class="g-meta">tyler's urbit ids</span></div>
                     <ol class="g-results" id="s-fleet"></ol>
                 </section>
-                <section class="g-log-pane g-fill" data-embed="side">
+                <section class="g-log-pane g-fill" data-embed="side" data-anchor="log">
                     <div class="g-panel-title">Check Log <span class="g-meta" id="s-log-meta"></span></div>
                     <ol class="g-activity g-scroll" id="s-log"></ol>
                 </section>
@@ -170,14 +170,14 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.2"></script>
+    <script defer src="/js/embed.js?v=1.3"></script>
     <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/radgotchi.js"></script>
     <script defer src="/js/workspace.js?v=1.0"></script>
 
-    <script defer src="/js/ship.js?v=1.1"></script>
+    <script defer src="/js/ship.js?v=1.2"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

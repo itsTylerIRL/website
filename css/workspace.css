@@ -935,3 +935,18 @@ html.is-embed .g-main > [data-embed="hide"] + * { margin-top: 0; } /* the first 
         scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
     }
 }
+
+/* ---------- Anchors ----------
+   A part of the page a link went to (#name on a data-anchor element, js/embed.js) lights up for a moment */
+[data-anchor] { scroll-margin-top: 12px; }
+.is-anchored { animation: g-anchored 2.4s ease-out; }
+@keyframes g-anchored {
+    0%, 30% { box-shadow: 0 0 0 1px rgba(var(--accent, var(--g-blue-rgb)), 0.95), 0 0 26px rgba(var(--accent, var(--g-blue-rgb)), 0.45); }
+    100% { box-shadow: 0 0 0 1px rgba(var(--accent, var(--g-blue-rgb)), 0), 0 0 26px rgba(var(--accent, var(--g-blue-rgb)), 0); }
+}
+.dd-project.is-anchored { animation-name: g-anchored-p; }
+@keyframes g-anchored-p {
+    0%, 30% { box-shadow: 0 0 0 1px rgb(var(--p)), 0 0 26px rgba(var(--p), 0.5); }
+    100% { box-shadow: 0 0 0 1px rgba(var(--p), 0), 0 0 26px rgba(var(--p), 0); }
+}
+@media (prefers-reduced-motion: reduce) { .is-anchored { animation-duration: 0.01s; } }

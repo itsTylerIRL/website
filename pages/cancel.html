@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=2.9">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.0">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
     <link rel="stylesheet" href="/css/cancel-preview.css?v=1.7">
     <link rel="stylesheet" href="/css/uplink.css?v=1.3">
@@ -67,17 +67,17 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-tribes-pane" data-embed="rail">
+                <section class="g-tribes-pane" data-embed="rail" data-anchor="tribes">
                     <div class="g-panel-title">Tribes <span class="g-meta">win rate &middot; runs</span></div>
                     <ol class="g-bars" id="c-tribes"><li class="g-wait">LOADING&hellip;</li></ol>
                 </section>
-                <section class="g-days-pane" data-embed="rail">
+                <section class="g-days-pane" data-embed="rail" data-anchor="days">
                     <div class="g-panel-title">Where Runs End <span class="g-meta">by day</span></div>
                     <div class="g-cols" id="c-days" aria-label="Runs that ended on each day"></div>
                     <div class="g-col-axis" id="c-days-axis"></div>
                     <p class="g-note" id="c-days-note"></p>
                 </section>
-                <section class="g-killers-pane g-fill" data-embed="rail">
+                <section class="g-killers-pane g-fill" data-embed="rail" data-anchor="most-wanted">
                     <div class="g-panel-title">Most Wanted <span class="g-meta">what ends runs</span></div>
                     <ol class="g-bars g-scroll" id="c-killers" style="--bar: 255, 85, 85"><li class="g-wait">LOADING&hellip;</li></ol>
                 </section>
@@ -116,18 +116,18 @@
                     </div>
                 </section>
 
-                <section class="g-card">
+                <section class="g-card" data-anchor="hall">
                     <div class="g-panel-title">Crown &amp; Hall of Fame <span class="g-meta" id="c-hall-meta">CONNECTING&hellip;</span></div>
                     <div class="g-hall-host" id="c-hall"></div>
                 </section>
 
-                <section class="g-card">
+                <section class="g-card" data-anchor="runs">
                     <div class="g-panel-title">Recent Runs <span class="g-meta" id="c-runs-meta"></span></div>
                     <ol class="g-feed is-capped" id="c-runs"><li class="g-wait">LOADING&hellip;</li></ol>
                 </section>
 
                 <!-- the network is growing, the companion idle clicker (js/network.js) -->
-                <section class="g-card" style="--accent: 255, 121, 198">
+                <section class="g-card" style="--accent: 255, 121, 198" data-anchor="network">
                     <div class="g-panel-title">Network Leaderboards <span class="g-meta" id="n-board-meta">CONNECTING&hellip;</span></div>
                     <div class="g-tabs" role="tablist" aria-label="Boards" id="n-tabs">
                         <button type="button" role="tab" data-board="grass" aria-selected="true">grass</button>
@@ -142,7 +142,7 @@
             </section>
 
             <aside class="g-side">
-                <section class="g-pulse-pane" data-embed="side">
+                <section class="g-pulse-pane" data-embed="side" data-anchor="pulse">
                     <div class="g-panel-title">Pulse
                         <span class="g-seg" role="group" aria-label="Range" id="c-range">
                             <button type="button" data-range="today" aria-pressed="false">today</button>
@@ -158,16 +158,16 @@
                     </div>
                     <p class="g-note" id="c-pulse-note"></p>
                 </section>
-                <section class="g-relics-pane" data-embed="side">
+                <section class="g-relics-pane" data-embed="side" data-anchor="loadout">
                     <div class="g-panel-title">Loadout Meta <span class="g-meta">relics held at the end</span></div>
                     <ol class="g-bars" id="c-relics" style="--bar: 189, 147, 249"><li class="g-wait">LOADING&hellip;</li></ol>
                 </section>
-                <section class="g-winners-pane" data-embed="side">
+                <section class="g-winners-pane" data-embed="side" data-anchor="winners">
                     <div class="g-panel-title">Winners vs. the Fallen <span class="g-meta">avg final stats</span></div>
                     <ol class="g-bars" id="c-final"><li class="g-wait">LOADING&hellip;</li></ol>
                     <p class="g-note">Bars are winners (gold) against the fallen (red), as a share of whichever is bigger.</p>
                 </section>
-                <section class="g-census-pane" data-embed="side" style="--accent: 255, 121, 198">
+                <section class="g-census-pane" data-embed="side" style="--accent: 255, 121, 198" data-anchor="census">
                     <div class="g-panel-title">The Network <span class="g-meta">census &middot; every synced network</span></div>
                     <div class="g-stats" id="n-census" style="--cols: 2">
                         <div class="g-stat"><b data-k="networks">&mdash;</b><small>networks</small></div>
@@ -177,7 +177,7 @@
                     </div>
                     <p class="g-note" id="n-census-note"></p>
                 </section>
-                <section class="g-netfeed-pane g-fill" data-embed="side" style="--accent: 255, 121, 198">
+                <section class="g-netfeed-pane g-fill" data-embed="side" style="--accent: 255, 121, 198" data-anchor="network-feed">
                     <div class="g-panel-title">Network Feed <span class="g-meta" id="n-feed-meta"></span></div>
                     <ol class="g-feed is-plain g-scroll" id="n-feed"><li class="g-wait">LOADING&hellip;</li></ol>
                 </section>
@@ -202,7 +202,7 @@
     </main>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.2"></script>
+    <script defer src="/js/embed.js?v=1.3"></script>
     <script defer src="/js/background.js?v=1.5"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
@@ -210,8 +210,8 @@
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <script defer src="/js/cancel-preview.js?v=1.3"></script>
-    <script defer src="/js/cancel.js?v=1.2"></script>
-    <script defer src="/js/network.js?v=1.1"></script>
+    <script defer src="/js/cancel.js?v=1.3"></script>
+    <script defer src="/js/network.js?v=1.2"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

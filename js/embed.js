@@ -7,6 +7,31 @@
    <html data-embed-focus> pages take the keyboard as soon as they're selected (the timer's space bar);
    others wait for a click, so arrowing through the home page's Results doesn't get caught in them.
    Load it first, before the page's other scripts (js/background.js and js/escape-home.js check window.TirlEmbed). */
+// Anchors, embedded or not: a part of the page marked data-anchor="name" (a card, a section) is where #name
+// takes it, scrolled into view and lit for a moment (css/workspace.css .is-anchored). The home page sends its
+// deep links here (/#deepdish/middle-management) and its command palette lists them (js/palette.js reads
+// data-anchor, data-anchor-name, data-anchor-kind and data-anchor-sub, or the part's panel title).
+(function() {
+    'use strict';
+    function land() {
+        let h = location.hash.slice(1);
+        try { h = decodeURIComponent(h); } catch (_) {}
+        if (!h) return;
+        // document.querySelector also finds panels handed to the home page (below)
+        const el = document.querySelector(`[data-anchor="${CSS.escape(h)}"]`);
+        if (!el) return;
+        if (el.ownerDocument === document && el.isConnected) el.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        el.classList.remove('is-anchored');
+        void el.offsetWidth;
+        el.classList.add('is-anchored');
+        clearTimeout(el._anchored);
+        el._anchored = setTimeout(() => el.classList.remove('is-anchored'), 2600);
+    }
+    window.addEventListener('hashchange', land);
+    // After the page's scripts have drawn (and the column panels have moved)
+    window.addEventListener('load', () => setTimeout(land, 120));
+})();
+
 (function() {
     'use strict';
     if (window.parent === window || !new URLSearchParams(location.search).has('embed')) return;
@@ -88,10 +113,16 @@
         setTimeout(() => { if (!e.defaultPrevented) host.key(e.key); });
     });
 
-    // Links to other pages open in the window, not inside the preview
+    // Links to other pages in the workspace (/#key, /#key/part, an object's own page) switch the home page's
+    // preview in place; anything else opens in the window, not inside the preview
     document.addEventListener('click', (e) => {
         const a = e.target instanceof Element && e.target.closest('a[href]');
-        if (a && !a.target && !a.getAttribute('href').startsWith('#')) a.target = '_top';
+        if (!a || a.target || a.getAttribute('href').startsWith('#') || a.hasAttribute('download')) return;
+        if (!e.button && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && host.go && host.go(window, a.href)) {
+            e.preventDefault();
+            return;
+        }
+        a.target = '_top';
     }, true);
 
     // side, rail, styles and focus are read by the home page once this page has loaded (its scripts hold on to
