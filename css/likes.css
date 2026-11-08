@@ -230,7 +230,7 @@ html.is-embed .g-cloud-hud {
     .g-results-pane { order: 3; }
     .g-mix-pane { order: 4; }
     /* Phones: a smaller cloud (swipe sideways to spin; the Results list stays the main way through) */
-    .icon-cloud-container { height: min(78vw, 360px); }
+    .icon-cloud-container { height: min(96vw, 400px); }
     .icon-tooltip { display: none; }
     .g-results { max-height: 60vh; }
     .g-objmeta b { margin-right: 6px; }

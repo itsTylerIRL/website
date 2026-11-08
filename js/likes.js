@@ -303,7 +303,7 @@
     const TAU = Math.PI * 2;
     const PITCH_MAX = 1.15;
 
-    let W = 0, H = 0, dpr = 1;
+    let W = 0, H = 0, CY = 0, dpr = 1;
     let radius = 100, iconSize = 32, persp = 400;
     let icons = [];
     let edges = [];
@@ -420,14 +420,21 @@
 
     // ---------- Size ----------
     function resize() {
-        const r = container.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        W = r.width; H = r.height;
+        // Layout size, not getBoundingClientRect: a transform on an ancestor mid-animation would skew it
+        if (!container.clientWidth || !container.clientHeight) return;
+        W = container.clientWidth; H = container.clientHeight;
         dpr = Math.min(2, window.devicePixelRatio || 1);
         canvas.width = Math.round(W * dpr);
         canvas.height = Math.round(H * dpr);
-        // Leave room around the sphere for the lock label and the legend
-        radius = Math.max(60, Math.min(W * 0.4, (H - 56) * 0.45));
+        // Fit the sphere in the band between the controls (top right) and the legend (bottom left), centred in
+        // it. Front icons project ~5% past the radius and stick out by half their size, so leave room for both.
+        const ctl = document.getElementById('g-cloud-controls');
+        const leg = document.getElementById('g-cloud-legend');
+        const top = ctl ? ctl.offsetTop + ctl.offsetHeight + 4 : 40;
+        const bottom = leg && leg.offsetHeight ? H - leg.offsetTop + 4 : 36;
+        const band = Math.max(80, H - top - bottom);
+        CY = top + band / 2;
+        radius = Math.max(50, Math.min(W * 0.4, (band / 2 - 16) / 1.05));
         persp = radius * 3.2;
         if (inited) sizeIcons();
         exclusion();
@@ -435,7 +442,7 @@
     function exclusion() {
         if (!window.setExclusionZone || !container.offsetParent) return;
         const r = container.getBoundingClientRect();
-        window.setExclusionZone('iconCloud', r.left + r.width / 2, r.top + r.height / 2, radius * 1.15);
+        window.setExclusionZone('iconCloud', r.left + r.width / 2, r.top + CY, radius * 1.15);
     }
 
     // ---------- Turning ----------
@@ -484,7 +491,7 @@
             const [x, y, z] = rotate(i.x * radius, i.y * radius, i.z * radius);
             const s = persp / (persp + z);
             i.px = W / 2 + x * s;
-            i.py = H / 2 + y * s;
+            i.py = CY + y * s;
             i.s = s;
             i.depth = (z / radius + 1) / 2; // 0 front .. 1 back
         });
@@ -507,14 +514,14 @@
         // Sphere: a faint equator and meridian so the shape reads even with few icons showing
         ctx.lineWidth = 1;
         ctx.strokeStyle = 'rgba(139,233,253,0.06)';
-        ctx.beginPath(); ctx.arc(W / 2, H / 2, radius, 0, TAU); ctx.stroke();
+        ctx.beginPath(); ctx.arc(W / 2, CY, radius, 0, TAU); ctx.stroke();
         [[0, 1, 0], [1, 0, 0]].forEach(([ax]) => {
             ctx.beginPath();
             for (let k = 0; k <= 48; k++) {
                 const t = (k / 48) * TAU;
                 const [x, y, z] = ax ? rotate(0, Math.cos(t) * radius, Math.sin(t) * radius) : rotate(Math.cos(t) * radius, 0, Math.sin(t) * radius);
                 const s = persp / (persp + z);
-                k ? ctx.lineTo(W / 2 + x * s, H / 2 + y * s) : ctx.moveTo(W / 2 + x * s, H / 2 + y * s);
+                k ? ctx.lineTo(W / 2 + x * s, CY + y * s) : ctx.moveTo(W / 2 + x * s, CY + y * s);
             }
             ctx.stroke();
         });
@@ -761,6 +768,7 @@
         loadSprites();
         inited = true;
         renderLegend();
+        resize(); // the legend's height is known now
         syncSpin();
         canvas.setAttribute('aria-label', `A rotating cloud of ${icons.length} things I like; the Results list has the same items`);
         const first = pendingFocus || window.likesCurrent; // selected before the cloud was up
