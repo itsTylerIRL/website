@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const randomIndex = Math.floor(Math.random() * soundEffects.length);
         const audio = new Audio(soundEffects[randomIndex]);
         audio.volume = 0.3; // Set volume to 30% to not be too loud
-        audio.play().catch(e => console.log('Audio play failed:', e));
+        audio.play().catch(() => {}); // blocked until the visitor interacts
     }
 
     // Add draggable attribute and event listeners to each PFP card
@@ -436,24 +436,5 @@ document.addEventListener('DOMContentLoaded', function() {
         if (placed) cursor.style.opacity = '1';
     });
 
-    // Add hover sound effects to navigation cards on index page
-    const navCards = document.querySelectorAll('.nav-card');
-    // Nav cards and contact icons hover sounds - DISABLED (now using sounds.js)
-    // console.log('Found nav cards:', navCards.length);
-    // navCards.forEach(card => {
-    //     card.addEventListener('mouseenter', function() {
-    //         console.log('Nav card hover detected');
-    //         playHoverSound();
-    //     });
-    // });
-
-    // // Add hover sound effects to contact icons on index page
-    // const contactIcons = document.querySelectorAll('.contact-icon-link');
-    // console.log('Found contact icons:', contactIcons.length);
-    // contactIcons.forEach(icon => {
-    //     icon.addEventListener('mouseenter', function() {
-    //         console.log('Contact icon hover detected');
-    //         playHoverSound();
-    //     });
-    // });
+    // Nav card and contact icon hover sounds live in js/sounds.js
 });

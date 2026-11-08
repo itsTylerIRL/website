@@ -3,3 +3,7 @@ contracts/FundNFT.sol
 metadata/contract.json
 metadata/1.json
 metadata/README.md
+
+# macOS
+.DS_Store
+._*

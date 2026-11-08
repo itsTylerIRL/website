@@ -2048,7 +2048,6 @@ window.getPacketsSettings = () => ({ enabled: packetsEnabled, count: packets.len
 
 // Reduce particles on mobile
 if (isMobile()) {
-    console.log('Mobile detected - using reduced particle count');
     // Disable some effects on mobile for performance
     linesEnabled = false;
     glitchEnabled = false;
