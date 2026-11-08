@@ -22,7 +22,7 @@ footer.g-statusbar {
     align-items: center;
     gap: 18px;
     padding: 5px 16px;
-    border-radius: 999px;
+    border-radius: var(--g-r-pill);
     font-family: 'Share Tech Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     font-size: 10.5px;
     line-height: normal;

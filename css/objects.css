@@ -261,7 +261,7 @@ html.boot-reveal .g-op-materialize {
     gap: 3px;
     padding: 8px 4px 7px;
     border: 1px solid rgba(var(--chan), 0.22);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: radial-gradient(ellipse at 50% 0%, rgba(var(--chan), 0.12), transparent 70%), rgba(0, 0, 0, 0.45);
     color: rgb(var(--chan));
     text-decoration: none;
@@ -361,7 +361,7 @@ html.boot-reveal .g-op-materialize {
     display: grid;
     grid-template-columns: 1.7fr repeat(4, minmax(0, 1fr));
     border: 1px solid var(--g-border);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.45);
     text-decoration: none;
     overflow: hidden;
@@ -430,7 +430,7 @@ html.boot-reveal .g-op-materialize {
     gap: 10px;
     padding: 5px 12px 5px 6px;
     border: 1px solid color-mix(in srgb, var(--pres) 35%, transparent);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--pres) 14%, transparent), transparent 70%), rgba(0, 0, 0, 0.45);
     color: var(--g-text);
     text-decoration: none;
@@ -568,7 +568,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     gap: 16px;
     padding: 5px 6px 5px 12px;
     border: 1px solid var(--g-border);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.45);
     color: var(--g-text);
     text-decoration: none;
@@ -602,7 +602,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     gap: 10px;
     padding: 5px 8px 5px 6px;
     border: 1px solid rgba(var(--soc), 0.25);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: radial-gradient(ellipse at 0% 50%, rgba(var(--soc), 0.1), transparent 70%), rgba(0, 0, 0, 0.45);
     color: var(--g-text);
     text-decoration: none;
@@ -786,7 +786,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     letter-spacing: 0.2em;
     color: var(--g-blue);
     border: 2px solid var(--g-blue);
-    border-radius: 16px;
+    border-radius: var(--g-r-ctl);
     padding: 14px 40px;
     background: rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 40px rgba(var(--g-blue-rgb), 0.4);
@@ -838,7 +838,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     font-size: 26px;
     height: auto;
     padding: 12px 30px;
-    border-radius: 12px;
+    border-radius: var(--g-r-ctl);
 }
 
 /* ---------- Featured pages (FEATURED in js/objects.js), in place of the preview for tylerirl.com ----------
@@ -1500,7 +1500,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     position: absolute;
     inset: 22px 0 0;
     border: 1px solid var(--g-border);
-    border-radius: 14px;
+    border-radius: var(--g-r-panel);
     background:
         repeating-linear-gradient(0deg, rgba(var(--g-blue-rgb), 0.07) 0 1px, transparent 1px 3px),
         repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 5px),
@@ -1531,7 +1531,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     pointer-events: none;
     background: linear-gradient(180deg, transparent, rgba(var(--g-blue-rgb), 0.16) 48%, rgba(var(--g-blue-rgb), 0.4) 50%, transparent 52%) 0 -100% / 100% 200% no-repeat;
     animation: g-hold-scan 1.4s linear infinite;
-    border-radius: 14px;
+    border-radius: var(--g-r-panel);
 }
 @keyframes g-hold-scan { to { background-position: 0 200%; } }
 @keyframes g-hold-in { from { opacity: 0; } }
@@ -1632,7 +1632,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--g-border-strong);
-    border-radius: 14px;
+    border-radius: var(--g-r-panel);
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(var(--g-blue-rgb), 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     overflow: hidden;
     animation: g-pal-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -1873,7 +1873,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     letter-spacing: 0.14em;
     color: var(--g-blue);
     border: 1px dashed var(--g-border);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     animation: g-wait 1.2s ease-in-out infinite;
 }
 .g-player-wait.is-error { color: var(--g-muted); animation: none; }
@@ -1890,7 +1890,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     min-width: 0;
     padding: 9px 12px 10px;
     border: 1px solid rgba(var(--game), 0.25);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     background: linear-gradient(135deg, rgba(var(--game), 0.07), transparent 60%), var(--g-well);
     color: inherit;
     text-decoration: none;
@@ -1948,7 +1948,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     flex-direction: column;
     min-width: 0;
     padding: 5px 8px;
-    border-radius: 7px;
+    border-radius: var(--g-r-ctl);
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -2068,7 +2068,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     min-width: 0;
     padding: 5px 9px 6px;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     background: var(--g-well);
     color: var(--g-muted);
     font: inherit;
@@ -2216,7 +2216,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     height: 30px;
     padding: 0;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     background: var(--g-well);
     color: var(--g-muted);
     cursor: pointer;
@@ -2239,7 +2239,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     scrollbar-width: thin;
     padding: 0 0 12px;
     border: 1px solid var(--g-border-strong);
-    border-radius: 14px;
+    border-radius: var(--g-r-panel);
     background: rgba(6, 12, 16, 0.92);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -2264,7 +2264,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     width: 24px;
     height: 24px;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     background: none;
     color: var(--g-muted);
     font-size: 18px;
@@ -2284,7 +2284,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     align-items: center;
     padding: 5px 4px;
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     background: var(--g-well);
 }
 .g-sys-read b { font-family: var(--g-mono); font-weight: 400; font-size: 14px; color: var(--g-blue); }
@@ -2359,7 +2359,7 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
     flex: none;
     display: inline-flex;
     border: 1px solid var(--g-border-strong);
-    border-radius: 7px;
+    border-radius: var(--g-r-ctl);
     overflow: hidden;
 }
 .g-seg button {
@@ -2424,7 +2424,7 @@ html.sys-calm *::after {
         gap: 6px;
         padding: 6px;
         border: 1px solid var(--g-border-strong);
-        border-radius: 16px;
+        border-radius: var(--g-r-panel);
         background: rgba(6, 12, 16, 0.86);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);

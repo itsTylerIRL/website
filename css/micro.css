@@ -344,7 +344,7 @@ html.g-redact .g-op-tag .g-dot { visibility: hidden; }
     margin: 6px 8px;
     padding: 10px 12px;
     border: 1px solid rgba(80, 250, 123, 0.35);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     background: rgba(80, 250, 123, 0.05);
     font: 400 11.5px/1.45 var(--g-mono);
     color: #50fa7b;

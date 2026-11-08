@@ -152,7 +152,7 @@
     padding: 8px 10px;
     background: var(--g-well);
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
 }
 .doc-tile span {
     font-family: var(--g-mono);
@@ -186,7 +186,7 @@
 .doc-figure {
     margin: 0 0 12px;
     border: 1px solid var(--g-border);
-    border-radius: 10px;
+    border-radius: var(--g-r-box);
     overflow: hidden;
     background: rgba(0, 0, 0, 0.4);
 }
@@ -280,7 +280,7 @@
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid var(--g-border);
     border-left: 2px solid var(--g-blue);
-    border-radius: 6px;
+    border-radius: var(--g-r-box);
     overflow-x: auto;
     scrollbar-width: thin;
 }
@@ -356,7 +356,7 @@
     padding: 7px 10px;
     background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.08), rgba(0, 0, 0, 0.25));
     border: 1px solid var(--g-border);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
 }
 .doc-stack li b {
     font-family: var(--g-mono);
@@ -398,7 +398,7 @@
     color: var(--g-text);
     background: var(--g-well);
     border: 1px solid var(--g-border-strong);
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
 }
 .flow-node small {
     display: block;
@@ -541,7 +541,7 @@
     padding: 10px 12px;
     background: linear-gradient(160deg, rgba(var(--g-blue-rgb), 0.035), transparent 40%), var(--g-well);
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
 }
 .cell > :last-child { margin-bottom: 0; }
 /* A table wider than its cell scrolls inside it rather than spilling out */
@@ -626,7 +626,7 @@
 .doc.is-dense .doc-note { font-size: 10.5px; line-height: 1.5; color: var(--g-dim); }
 
 /* Cards inside cells: one radius, one border */
-.doc.is-dense { --card-r: 6px; }
+.doc.is-dense { --card-r: var(--g-r-ctl); }
 
 /* Labels: the bold word that opens a callout or a warning cell */
 .doc.is-dense .g-callout > b,

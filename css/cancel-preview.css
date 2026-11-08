@@ -41,7 +41,7 @@
 .g-cancel-card {
     display: block;
     border: 1px solid rgba(255, 222, 23, 0.55);
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     overflow: hidden;
     box-shadow: 0 0 0 3px rgba(255, 222, 23, 0.07), 0 0 26px rgba(255, 222, 23, 0.16);
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -58,7 +58,7 @@
 .g-cancel-challenge { flex: none; height: auto; text-decoration: none; padding: 8px 11px; font-size: 10.5px; letter-spacing: 0.08em; color: var(--cancel-gold); border-color: rgba(255, 222, 23, 0.5); background: rgba(255, 222, 23, 0.06); }
 .g-cancel-challenge:hover,
 .g-cancel-challenge:focus-visible { border-color: var(--cancel-gold); background: rgba(255, 222, 23, 0.14); box-shadow: 0 0 16px rgba(255, 222, 23, 0.12); }
-.g-cancel-throne.is-vacant { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px dashed rgba(255, 222, 23, 0.4); border-radius: 8px; }
+.g-cancel-throne.is-vacant { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px dashed rgba(255, 222, 23, 0.4); border-radius: var(--g-r-box); }
 .g-cancel-throne.is-vacant .g-cancel-crown { font-size: 26px; color: var(--cancel-gold); }
 .g-cancel-throne.is-vacant strong { color: var(--cancel-gold); font-weight: 500; }
 .g-cancel-throne.is-vacant p { margin: 2px 0 0; font-size: 10px; color: var(--g-muted); }
@@ -78,7 +78,7 @@
     min-width: 0;
     padding: 0;
     border: 1px solid var(--g-border);
-    border-radius: 5px;
+    border-radius: var(--g-r-ctl);
     background: rgba(139, 233, 253, 0.035);
     color: var(--g-text);
     font-family: var(--g-mono);

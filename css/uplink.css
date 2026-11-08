@@ -197,7 +197,7 @@ a.g-row:hover { background: rgba(var(--accent), 0.06); }
 .g-hero-art {
     position: relative;
     display: block;
-    border-radius: 8px;
+    border-radius: var(--g-r-box);
     overflow: hidden;
     border: 1px solid rgba(var(--accent), 0.35);
     box-shadow: 0 0 30px rgba(var(--accent), 0.12);

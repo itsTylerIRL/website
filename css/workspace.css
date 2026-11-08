@@ -4,6 +4,14 @@
    Page CSS adds its own panels and decides which panel in each column takes the spare height.
    Everything is scoped under .gotham. */
 
+/* Corner radii, outermost to innermost: a panel holds boxes, a box holds controls. Icons and avatars keep their own shapes. */
+:root {
+    --g-r-panel: 14px;   /* floating glass panels, top bar, palette, modals */
+    --g-r-box: 10px;     /* tiles, cards, figures, screenshots, code blocks inside a panel */
+    --g-r-ctl: 6px;      /* buttons, inputs, tooltips, single-line rows */
+    --g-r-pill: 999px;   /* status bar, chips, badges */
+}
+
 .gotham {
     --g-panel: rgba(0, 0, 0, 0.3);
     --g-panel-2: rgba(139, 233, 253, 0.04);
@@ -53,7 +61,7 @@
     border: 1px solid rgba(139, 233, 253, 0.22);
     border-top-color: rgba(255, 255, 255, 0.14);
     border-left-color: rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    border-radius: var(--g-r-panel);
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
         0 8px 32px rgba(0, 0, 0, 0.2),
@@ -63,7 +71,7 @@
 }
 .g-card,
 .g-rail > section,
-.g-side > section { border-radius: 14px; }
+.g-side > section { border-radius: var(--g-r-panel); }
 
 .gotham button,
 .gotham input {
@@ -78,7 +86,7 @@
     flex: none;
     color: var(--g-classif);
     border: 1px solid rgba(80, 250, 123, 0.4);
-    border-radius: 999px;
+    border-radius: var(--g-r-pill);
     background: rgba(80, 250, 123, 0.07);
     font-family: var(--g-mono);
     font-size: 10.5px;
@@ -159,7 +167,7 @@
     gap: 6px;
     background: var(--g-well);
     border: 1px solid var(--g-border);
-    border-radius: 8px;
+    border-radius: var(--g-r-ctl);
     padding: 4px 6px 4px 10px;
     width: 240px;
     flex: 0 1 240px;
@@ -280,7 +288,7 @@
     color: var(--g-dim);
     background: var(--g-well);
     border: 1px solid var(--g-border);
-    border-radius: 4px;
+    border-radius: var(--g-r-pill);
     padding: 0 5px;
     min-width: 20px;
     text-align: center;
@@ -363,7 +371,7 @@
     color: var(--tone, var(--g-muted));
     background: var(--tone-bg, transparent);
     border: 1px solid var(--tone, var(--g-border-strong));
-    border-radius: 4px;
+    border-radius: var(--g-r-pill);
     padding: 1px 7px;
     white-space: nowrap;
 }
@@ -434,7 +442,7 @@
     min-width: 26px;
     height: 26px;
     padding: 0 8px;
-    border-radius: 6px;
+    border-radius: var(--g-r-ctl);
     font-size: 13px;
     line-height: 1;
 }
@@ -522,7 +530,7 @@
     padding: 8px 12px;
     background: rgba(255, 184, 108, 0.07);
     border-left: 3px solid var(--g-orange);
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 var(--g-r-box) var(--g-r-box) 0;
     font-size: 12.5px;
     color: #d9cdbf;
 }
@@ -700,7 +708,7 @@
     align-items: center;
     gap: 18px;
     padding: 5px 16px;
-    border-radius: 999px;
+    border-radius: var(--g-r-pill);
     font-family: var(--g-mono);
     font-size: 10.5px;
     color: var(--g-muted);
@@ -863,7 +871,7 @@
         padding: 5px 10px;
         border: 1px solid var(--g-border);
         border-left-width: 1px;
-        border-radius: 8px;
+        border-radius: var(--g-r-ctl);
         white-space: nowrap;
     }
     .g-obj-btn[aria-current="true"] { border-color: var(--g-blue); }
@@ -871,7 +879,7 @@
     .g-objrow { flex-wrap: wrap; }
     .g-objtitle h1 { font-size: 19px; }
     .g-statusbar .g-hint { display: none; }
-    .g-statusbar { border-radius: 14px; }
+    .g-statusbar { border-radius: var(--g-r-panel); }
 }
 
 @media (max-width: 479px) {
