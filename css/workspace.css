@@ -129,13 +129,8 @@
     letter-spacing: 0.22em;
     font-size: 13px;
 }
-.g-brand-sub {
-    font-family: var(--g-mono);
-    font-size: 11px;
-    color: var(--g-muted);
-    letter-spacing: 0.08em;
-}
-
+/* The breadcrumb carries on from TYLERIRL (the brand is its first crumb): TYLERIRL / Objects / type / object */
+.g-brand + .g-crumbs { margin-left: -9px; }
 .g-crumbs {
     display: flex;
     align-items: center;
@@ -799,9 +794,6 @@
 @media (max-width: 1439px) {
     .g-crumbs { display: none; }
 }
-@media (max-width: 1179px) {
-    .g-brand-sub { display: none; }
-}
 
 @media (max-width: 1359px) {
     .g-body { grid-template-columns: clamp(160px, 19%, 200px) minmax(0, 1fr); }
@@ -838,7 +830,6 @@
         flex: 1 1 100%;
     }
     .g-search kbd { display: none; }
-    .g-brand-sub { display: none; }
     .g-classif { order: 2; margin-left: auto; letter-spacing: 0.08em; }
     .g-body { grid-template-columns: minmax(0, 1fr); min-height: 0; }
     /* Rail and side columns dissolve so pages can order their panels in one column */
