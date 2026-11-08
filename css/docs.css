@@ -294,6 +294,33 @@
     white-space: pre;
 }
 
+/* Copy button on code blocks (js/docs.js wraps each pre.doc-code) */
+.doc-code-wrap { position: relative; margin: 4px 0 12px; }
+.doc-code-wrap > .doc-code { margin: 0; }
+/* A tab on the block's top border, so it never sits over the code */
+.doc-copy {
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    padding: 1px 7px;
+    font: 400 9.5px/1.4 var(--g-mono);
+    letter-spacing: 0.1em;
+    color: var(--g-muted);
+    background: #060b0f;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.doc-code-wrap:hover .doc-copy,
+.doc-copy:focus-visible,
+.doc-copy.is-done { opacity: 1; }
+.doc-copy:hover { color: var(--g-text); border-color: var(--g-blue); }
+.doc-copy.is-done { color: var(--g-green); border-color: var(--g-green); }
+/* Touch screens have no hover: always shown */
+@media (hover: none) { .doc-copy { opacity: 1; } }
+
 /* Style vocabulary chips */
 .doc-chips {
     display: flex;
@@ -444,6 +471,207 @@
     color: var(--g-dim);
     margin: 18px 0 0;
 }
+
+/* ======================================================================================================
+   Dense layout (.doc.is-dense): sections are grids of cells sized by the documentation panel's own width
+   (a container), not the window's, so the page packs two or three columns wherever it's shown: on its own,
+   or embedded in the home page's preview. Section titles stick to the top of the panel while you read.
+   ====================================================================================================== */
+.doc.is-dense {
+    container: doc / inline-size;
+    padding: 0 14px 18px;
+    font-size: 12px;
+    line-height: 1.55;
+}
+.doc.is-dense .doc-sec { padding: 0 0 12px; border-bottom: none; }
+.doc.is-dense .doc-sec > p { margin: 0 0 8px; max-width: none; }
+.doc.is-dense h2 {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 -14px 10px;
+    padding: 9px 14px 8px;
+    font-size: 15px;
+    background: linear-gradient(rgba(6, 11, 15, 0.97), rgba(6, 11, 15, 0.9));
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--g-border);
+    box-shadow: 0 8px 14px -10px rgba(0, 0, 0, 0.9);
+}
+.doc.is-dense h2 .doc-num { text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.7); }
+.doc-h2-meta {
+    margin-left: auto;
+    min-width: 0;
+    font: 400 10px/1.4 var(--g-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    text-shadow: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.doc.is-dense h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 0 6px;
+    font-size: 10.5px;
+}
+.doc.is-dense h3 span { font-size: 10px; letter-spacing: 0.02em; text-transform: none; color: var(--g-dim); }
+.doc.is-dense .cell > * + h3 { margin-top: 12px; }
+.doc.is-dense .doc-table { font-size: 11.5px; margin: 0; }
+.doc.is-dense .doc-table td, .doc.is-dense .doc-table th { padding: 4px 8px; }
+.doc.is-dense .doc-kv td:first-child { width: 96px; font-size: 10.5px; }
+.doc.is-dense .doc-code { margin: 0 0 8px; }
+.doc.is-dense .doc-code-wrap { margin: 0 0 8px; }
+.doc.is-dense p { margin: 0 0 8px; }
+
+.dz {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+    grid-auto-flow: row dense;
+    gap: 10px;
+    margin: 0 0 10px;
+}
+.cell {
+    min-width: 0;
+    padding: 10px 12px;
+    background: linear-gradient(160deg, rgba(var(--g-blue-rgb), 0.035), transparent 40%), var(--g-well);
+    border: 1px solid var(--g-border);
+    border-radius: 8px;
+}
+.cell > :last-child { margin-bottom: 0; }
+/* A table wider than its cell scrolls inside it rather than spilling out */
+.cell { overflow-x: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
+.wf { grid-column: 1 / -1; }
+/* .dz.fit: a short run of cells shares the whole row (empty columns collapse) instead of leaving a gap */
+.dz.fit { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); }
+@container doc (min-width: 620px) { .w2 { grid-column: span 2; } }
+.cell-fig { margin: 0; align-self: start; }
+.doc.is-dense .doc-tiles { grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 6px; margin: 0; }
+.doc.is-dense .doc-tile { padding: 6px 9px; }
+.doc.is-dense .doc-tile b { font-size: 14px; }
+.doc.is-dense .doc-flow { margin: 6px 0; }
+.doc.is-dense .doc-stack { margin: 4px 0 0; }
+.doc.is-dense .doc-stack li { grid-template-columns: 128px minmax(0, 1fr); padding: 5px 8px; }
+.doc.is-dense .doc-log { margin: 0; }
+
+/* ---------- Uniform details (dense layout) ----------
+   One rule for each recurring detail, so equivalent pieces match on every page to the pixel. */
+/* Cells: their padding is the only space at their edges (page rules giving p, chips, flows or code a margin
+   would otherwise leave 6-8px more under some cells than others) */
+.doc.is-dense .dz > .cell > :first-child { margin-top: 0; }
+.doc.is-dense .dz > .cell > :last-child,
+.doc.is-dense .dz > .cell > :last-child > :last-child { margin-bottom: 0; }
+/* One vertical rhythm inside a cell, whatever the blocks are: 8px between them, 14px before a sub-heading.
+   (Cells laid out as a grid, the hero, the DEFCON console and the OCS alert cards, place their own children.) */
+.doc.is-dense .dz > .cell:not(.doc-hero, .sin-defcon, .oc-alert) > * { margin-block: 0; }
+.doc.is-dense .dz > .cell:not(.doc-hero, .sin-defcon, .oc-alert) > * + * { margin-top: 8px; }
+.doc.is-dense .dz > .cell:not(.doc-hero, .sin-defcon, .oc-alert) > * + h3 { margin-top: 14px; }
+.doc.is-dense .doc-hero > div > * { margin-block: 0; }
+.doc.is-dense .doc-hero > div > * + * { margin-top: 8px; }
+.doc.is-dense .doc-hero > div > * + h3 { margin-top: 14px; }
+/* Figures fill their row like cells do: the image centres in the space left above the caption, so bottoms and
+   captions line up. Figures that share a row also share a shape: .is-square, .is-landscape (4:3), .is-tall (3:4),
+   .is-portrait (2:3) crop to it, centred (.is-top: from the top, where screenshots start). Captions stay one line. */
+.doc.is-dense .cell-fig { align-self: stretch; display: flex; flex-direction: column; }
+.doc.is-dense .cell-fig > :not(figcaption) { margin-block: auto; }
+.doc.is-dense .cell-fig > a > img { display: block; }
+.doc.is-dense .cell-fig.is-square img { aspect-ratio: 1; object-fit: cover; }
+.doc.is-dense .cell-fig.is-landscape img { aspect-ratio: 4 / 3; object-fit: cover; }
+.doc.is-dense .cell-fig.is-tall img { aspect-ratio: 3 / 4; object-fit: cover; }
+.doc.is-dense .cell-fig.is-portrait img { aspect-ratio: 2 / 3; object-fit: cover; }
+.doc.is-dense .cell-fig.is-top img { object-position: top; }
+.doc.is-dense .cell-fig figcaption { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Code keeps its lines and scrolls sideways inside its block (cells too narrow for their code are laid out wider) */
+/* Every row of tiles as tall as the tallest */
+.doc.is-dense .doc-tiles { grid-auto-rows: 1fr; }
+/* Key columns of key/value tables have a set width, so long keys wrap instead of widening the table */
+.doc.is-dense .doc-kv td:first-child { white-space: normal; }
+/* Inline code stays in one piece: it moves to the next line whole rather than breaking at a hyphen or colon */
+.doc.is-dense :is(p, li, td, dd) > code { white-space: nowrap; }
+/* Numbers in a fixed slot, right-aligned, so what precedes them (a bar) lines up; numeric headers sit over their numbers */
+.doc-n { display: inline-block; min-width: 5ch; text-align: right; font-variant-numeric: tabular-nums; }
+.doc.is-dense .doc-num-table th:not(:first-child) { text-align: right; }
+.doc.is-dense .doc-tile b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doc.is-dense .doc-tile small { overflow-wrap: anywhere; }
+
+/* Galleries and tile rows with a set number of columns (style="--cols: 5; --cols-sm: 4"), chosen so the items
+   fill every row; narrow containers drop to --cols-sm (default 2) */
+.doc.is-dense .doc-cols { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); }
+@container doc (max-width: 640px) {
+    .doc.is-dense .doc-cols { grid-template-columns: repeat(var(--cols-sm, 2), minmax(0, 1fr)); }
+}
+/* The side boxes under a flow diagram: one height */
+.doc.is-dense .doc-flow-side { align-items: stretch; }
+
+/* Hero (the first cell of §01): media column, then the lede */
+.doc.is-dense .doc-hero {
+    display: grid;
+    grid-template-columns: minmax(150px, 200px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+}
+.doc-lede { font-size: 13px; line-height: 1.6; color: var(--g-text); }
+.doc-hero-tag { font: 400 9.5px/1 var(--g-mono); letter-spacing: 0.14em; text-align: center; }
+@container doc (max-width: 560px) {
+    .doc.is-dense .doc-hero { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .doc.is-dense .doc-hero > :first-child { width: min(200px, 100%); justify-self: center; }
+}
+
+/* Small print under a table or figure */
+.doc.is-dense .doc-note { font-size: 10.5px; line-height: 1.5; color: var(--g-dim); }
+
+/* Cards inside cells: one radius, one border */
+.doc.is-dense { --card-r: 6px; }
+
+/* Labels: the bold word that opens a callout or a warning cell */
+.doc.is-dense .g-callout > b,
+.doc.is-dense .cell.is-warn > b:first-child {
+    font: 400 10px/1.5 var(--g-mono);
+    letter-spacing: 0.2em;
+}
+.doc.is-dense .cell.is-warn { border-left: 2px solid var(--g-orange); }
+.doc.is-dense .cell.is-warn > b:first-child { display: block; margin-bottom: 4px; color: var(--g-orange); }
+
+/* A large faint glyph in the corner of a card (games and the like); --glyph tints it */
+.doc-glyph {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    font-size: 40px;
+    line-height: 1;
+    color: color-mix(in srgb, var(--glyph, var(--g-blue)) 20%, transparent);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--glyph, var(--g-blue)) 25%, transparent);
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), color 0.2s ease;
+}
+:hover > .doc-glyph { transform: rotate(-12deg) scale(1.1); color: color-mix(in srgb, var(--glyph, var(--g-blue)) 34%, transparent); }
+/* A card carrying a glyph keeps its first line clear of it */
+:has(> .doc-glyph) > .doc-glyph + * { padding-right: 44px; }
+
+/* Scrolling in: cells and tiles ease up as they come into view (js/docs.js adds html.doc-rv; a page can list
+   more to ease in with data-reveal on the .doc) */
+html.doc-rv .doc.is-dense :is(.cell, .doc-tile):not(.is-in) { opacity: 0; transform: translateY(14px); }
+html.doc-rv .doc.is-dense :is(.cell, .doc-tile) {
+    transition: opacity 0.5s ease var(--d, 0s), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s), border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+/* Phones: the docs scroll with the page */
+@media (max-width: 899px) {
+    .doc.is-dense { padding: 0 10px 14px; }
+    .doc.is-dense h2 { position: static; margin: 0 -10px 8px; padding: 8px 10px; } /* the page scrolls under the fixed top bar */
+}
+
+/* Embedded on the home page: its preview already names the screen and the section, so dense docs drop their own
+   title bar and frame and use the whole preview, edge to edge (the shell's padding would leave the unframed docs
+   ending in a hard cut short of the preview's bottom) */
+html.is-embed .gotham:has(.doc.is-dense) { padding: 0; }
+html.is-embed .g-docs-pane:has(> .g-docs-scroll > .doc.is-dense) { margin: 0; border: none; border-radius: 0; background: none; box-shadow: none; }
+html.is-embed .g-docs-pane:has(> .g-docs-scroll > .doc.is-dense) > .g-panel-title { display: none; }
 
 /* ---------- One-screen layout (desktop) ----------
    Contents and the documentation take their column's spare height; the docs scroll inside. */

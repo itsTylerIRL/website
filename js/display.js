@@ -3,6 +3,9 @@
    Loaded only the first time a page is put on display. Each recipe is picked by what the page has:
    - step through a list (things I like, the gallery, missile program, markets, a docs page's contents, the cancel's
      hall of fame, the network's boards): click the next item every so often
+   - RadGotchi's docs: play the idle routines one after another in the §01 chamber (js/rg-docs.js window.rgChamber)
+   - OCS's docs: step through the §03 preset gallery (the Render panel on the home page follows)
+   - RADactedBot's docs: the §09 DEFCON console steps from 5 down to 1 and back (js/sin-docs.js window.sinDefcon)
    - otherwise scroll the main column slowly down and back to the top, like a teleprompter (KoL, the ship pages)
    Clicks here are synthetic, so the home page doesn't count them as someone coming back. Column panels have moved
    to the home page by now (js/embed.js), so lookups include them. */
@@ -21,6 +24,7 @@
         ['#g-thumbs, .g-thumbs', '.g-thumb', 6000, 'random'],
         ['#g-milestones', '.g-explorer .g-obj-btn[data-index]', 8000, 'next'],
         ['#g-colls', '.g-coll', 6000, 'next'],
+        ['.oc-presets', '.oc-preset', 4500, 'next'],
         ['#g-toc', '.g-toc-item', 6000, 'next'],
         ['.g-hall-host', '.g-cancel-cell[data-hall-id]', 2500, 'next'],
         ['#n-tabs', '#n-tabs [data-board]', 5000, 'next']
@@ -88,9 +92,33 @@
         frame = requestAnimationFrame(run);
     }
 
+    // RadGotchi: the chamber at the top of the docs plays each idle routine in turn (RG_ROUTINES: js/rg-docs.js)
+    function chamber() {
+        const box = document.getElementById('g-docs-scroll');
+        if (box) box.scrollTo({ top: 0, behavior: 'smooth' });
+        let i = 0;
+        const next = () => {
+            const [name, steps, ms] = RG_ROUTINES[i++ % RG_ROUTINES.length];
+            window.rgChamber.play(name);
+            timer = setTimeout(next, steps.length * ms + 2500);
+        };
+        timer = setTimeout(next, 1500);
+    }
+
+    // RADactedBot: bring the DEFCON console into view, then a level every few seconds
+    function defcon() {
+        const box = document.getElementById('g-docs-scroll');
+        const sec = document.getElementById('s-defcon');
+        if (box && sec) box.scrollTo({ top: sec.offsetTop - box.offsetTop, behavior: 'smooth' });
+        const next = () => { window.sinDefcon.step(); timer = setTimeout(next, 3200); };
+        timer = setTimeout(next, 2000);
+    }
+
     function start() {
         stop();
         if (calm()) return; // the tour still visits; the page just stays put
+        if (window.rgChamber && typeof RG_ROUTINES !== 'undefined') return chamber();
+        if (window.sinDefcon) return defcon();
         const recipe = STEPS.find(([has]) => roots().some((r) => r.querySelector(has)));
         if (recipe) stepper(recipe[1], recipe[2], recipe[3]);
         else prompter();

@@ -2,13 +2,14 @@
    is over Chicago (Tyler's time zone), so the panel drifts through the day: the usual cyan by day, warm
    coral around sunrise and sunset, deep indigo with stars at night. Sets --sky-rgb, --sky-a and --night on
    .g-home (css/objects.css) once a minute.
-   Testing: ?sky=-8 pins the sun at that altitude in degrees; ?sky=cycle runs a whole day in a minute. */
+   At 4:20 (the visitor's clock) it goes green for the minute.
+   Testing: ?sky=-8 pins the sun at that altitude in degrees; ?sky=cycle runs a whole day in a minute; ?sky=420 is 4:20. */
 (function () {
     'use strict';
     const home = document.querySelector('.g-home');
     if (!home) return;
     const LAT = 41.88, LON = -87.63; // Chicago
-    const DAY = [139, 233, 253], DUSK = [255, 138, 112], NIGHT = [104, 112, 255];
+    const DAY = [139, 233, 253], DUSK = [255, 138, 112], NIGHT = [104, 112, 255], GREEN = [80, 250, 123];
     const rad = Math.PI / 180;
 
     // Sun altitude in degrees (a low-precision solar position; good to a fraction of a degree)
@@ -42,11 +43,34 @@
         // A day in a minute, from midnight
         const start = Date.now(), midnight = new Date().setHours(0, 0, 0, 0);
         setInterval(() => paint(altitude(midnight + ((Date.now() - start) % 60000) * 1440)), 100);
+    } else if (pin === '420') {
+        paint(altitude(Date.now()));
+        green();
     } else if (pin !== null && Number.isFinite(+pin)) {
         paint(+pin);
     } else {
-        const run = () => paint(altitude(Date.now()));
+        // 4:20 (the visitor's clock, am or pm): the sky goes green for the minute. The minute timer from load
+        // lands inside every minute once, so it never misses it.
+        let was = false;
+        const run = () => {
+            const d = new Date();
+            const is = d.getHours() % 12 === 4 && d.getMinutes() === 20;
+            if (is) {
+                if (!was) green();
+            } else {
+                if (was) home.classList.remove('is-420');
+                paint(altitude(Date.now()));
+            }
+            was = is;
+        };
         run();
         setInterval(run, 60000);
+    }
+    function green() {
+        home.style.setProperty('--sky-rgb', GREEN.join(', '));
+        home.style.setProperty('--sky-a', '1');
+        home.classList.add('is-420');
+        window.tirlLog?.add({ text: '4:20 · SKY GREEN', tone: 'green' });
+        window.tirlTicker?.push({ text: '4:20 · sky green for the minute', tone: 'green' });
     }
 })();

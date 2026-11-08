@@ -1692,7 +1692,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-pal-item {
     width: 100%;
     display: grid;
-    grid-template-columns: 26px minmax(0, 1fr) auto;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
     align-items: center;
     gap: 10px;
     padding: 6px 14px;
@@ -1717,7 +1717,17 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     background: var(--g-well);
     color: var(--g-blue);
     font-family: var(--g-mono);
+    justify-self: center;
 }
+/* An item's own picture (a gallery piece, a like, a vehicle, a project) instead of its object's icon */
+.g-pal-icon.g-pal-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px var(--g-border);
+}
+/* Vehicles are long side-on rockets: laid along the diagonal, nose up */
+.g-pal-icon.g-pal-thumb.is-vehicle { object-fit: contain; background: none; box-shadow: none; border-radius: 0; transform: rotate(-45deg) scale(1.35); }
 .g-pal-text { display: flex; flex-direction: column; min-width: 0; }
 .g-pal-name,
 .g-pal-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

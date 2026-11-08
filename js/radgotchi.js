@@ -85,6 +85,7 @@ const RG = (function() {
         if (locked && !opts.priority) return;
         if (!faces[newMood]) return;
         if (moodTimer) clearTimeout(moodTimer);
+        if (opts.priority && isInRoutine) stopRoutine(); // an idle routine's next step would talk over it
 
         lastMood = mood;
         mood = newMood;

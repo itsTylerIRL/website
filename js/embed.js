@@ -146,7 +146,7 @@
             if (on && !document.getElementById('tirl-display')) {
                 const s = document.createElement('script');
                 s.id = 'tirl-display';
-                s.src = '/js/display.js?v=1.0';
+                s.src = '/js/display.js?v=1.1';
                 document.head.append(s);
             }
             window.dispatchEvent(new CustomEvent('tirl:display', { detail: { on: !!on } }));

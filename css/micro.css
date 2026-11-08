@@ -203,3 +203,166 @@ html.sys-calm .g-feat.is-tilt .g-feat-art,
 html.sys-calm .g-chan.is-magnet .g-chan-icon { translate: none; }
 html.sys-calm .g-home.is-turn .g-op-subject { transform: none; }
 html.sys-calm :is(.g-blip, .g-trace, .g-packet, .g-res.is-sonar > .g-dot) { animation: none; }
+
+/* ================= Secrets and small toys (js/eggs.js, js/palette.js, js/objects.js clock, js/sky.js) ================= */
+
+/* ---------- Status bar clock: click for another format ---------- */
+.g-clock-btn { cursor: pointer; border-radius: 3px; transition: color 0.2s ease; }
+.g-clock-btn:hover { color: var(--g-text); }
+.g-clock-btn:focus-visible { outline: 1px solid var(--g-blue); outline-offset: 2px; }
+
+/* ---------- Odometer digits (window.tirlRoll) ---------- */
+.g-odo { display: inline-block; height: 1.15em; line-height: 1.15em; overflow: hidden; vertical-align: top; }
+.g-odo > span {
+    display: block;
+    transform: translateY(calc(var(--from, 0) * -1.15em));
+    animation: g-odo 0.9s cubic-bezier(0.3, 0.7, 0.2, 1) var(--d, 0s) forwards;
+}
+.g-odo i { display: block; height: 1.15em; font-style: normal; }
+@keyframes g-odo { to { transform: translateY(calc(var(--to, 0) * -1.15em)); } }
+
+/* ---------- Classification badge: clearance levels, in the real banner colours ---------- */
+.g-topbar .g-classif { cursor: pointer; user-select: none; transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease; }
+.g-topbar .g-classif:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+html[data-classif] { --g-lvl: 80, 250, 123; }
+html[data-classif="CONFIDENTIAL"] { --g-lvl: 79, 163, 255; }
+html[data-classif="SECRET"] { --g-lvl: 255, 85, 85; }
+html[data-classif="TOP SECRET"] { --g-lvl: 255, 184, 108; }
+html[data-classif] .g-topbar .g-classif {
+    color: rgb(var(--g-lvl));
+    border-color: rgba(var(--g-lvl), 0.5);
+    background: rgba(var(--g-lvl), 0.1);
+    text-shadow: 0 0 10px rgba(var(--g-lvl), 0.5);
+    box-shadow: 0 0 14px rgba(var(--g-lvl), 0.2);
+}
+html[data-classif] :is(.g-topbar, .g-statusbar) {
+    border-color: rgba(var(--g-lvl), 0.55);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 18px rgba(var(--g-lvl), 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 20px rgba(var(--g-lvl), 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.g-classif.is-stamp { animation: g-stamp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes g-stamp { 0% { scale: 1.35; filter: brightness(2); } 100% { scale: 1; filter: none; } }
+/* TOP SECRET: a few labels go behind black bars */
+html.g-redact :is(.g-chan-text small, .g-op-tag, .g-op-seen, .g-op-stat small, #g-crumb) {
+    color: transparent !important;
+    text-shadow: none !important;
+    background: #05070a;
+    box-shadow: 0 0 0 1px rgba(var(--g-lvl), 0.25);
+    border-radius: 1px;
+    user-select: none;
+}
+html.g-redact .g-op-tag .g-dot { visibility: hidden; }
+
+/* ---------- Comms: handle copied ---------- */
+.g-chan { position: relative; -webkit-touch-callout: none; }
+.g-chan-copied {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.82);
+    border: 1px solid rgba(80, 250, 123, 0.6);
+    font: 400 10px/1 var(--g-mono);
+    letter-spacing: 0.16em;
+    color: #50fa7b;
+    text-shadow: 0 0 8px rgba(80, 250, 123, 0.7);
+    pointer-events: none;
+    animation: g-copied 1.5s ease both;
+}
+.g-chan-copied.is-fail { border-color: rgba(255, 85, 85, 0.6); color: #ff5555; text-shadow: 0 0 8px rgba(255, 85, 85, 0.7); }
+@keyframes g-copied {
+    0% { opacity: 0; scale: 1.08; }
+    10% { opacity: 1; scale: 1; }
+    75% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ---------- Hologram: static on return, strain and overload when clicked a lot ---------- */
+.hologram-container.is-static .hologram-noise {
+    opacity: 0.95;
+    mix-blend-mode: normal;
+    animation: g-static 0.7s steps(8) both;
+}
+.hologram-container.is-static .hologram-image { animation: g-static-img 0.7s steps(6) both; }
+@keyframes g-static {
+    0% { background-position: 0 0; opacity: 0.95; }
+    25% { background-position: 37px -21px; }
+    50% { background-position: -13px 44px; opacity: 0.8; }
+    75% { background-position: 51px 12px; opacity: 0.5; }
+    100% { background-position: -29px -33px; opacity: 0.15; }
+}
+@keyframes g-static-img {
+    0% { filter: grayscale(1) brightness(1.8) contrast(2); translate: 4px 0; }
+    40% { filter: grayscale(1) brightness(0.6); translate: -3px 1px; }
+    70% { filter: grayscale(0.5) brightness(1.3); translate: 2px -1px; }
+    100% { filter: contrast(1.1) saturate(1.2); translate: 0 0; }
+}
+.hologram-container.is-strain { animation: g-strain 0.22s steps(3); }
+@keyframes g-strain { 33% { translate: 2px -1px; } 66% { translate: -2px 1px; } }
+.hologram-container.is-overload { animation: g-overload 1.9s steps(24) both; }
+.hologram-container.is-overload .hologram-image { animation: g-overload-img 1.9s steps(19) both; }
+.hologram-container.is-overload .hologram-noise { opacity: 0.6; }
+@keyframes g-overload {
+    0%, 100% { translate: 0 0; scale: 1; }
+    10% { translate: -6px 2px; scale: 1.04; }
+    20% { translate: 5px -3px; }
+    30% { translate: -3px -2px; scale: 0.97; }
+    45% { translate: 7px 1px; scale: 1.06; }
+    60% { translate: -5px 3px; }
+    75% { translate: 3px -1px; scale: 1.02; }
+    90% { translate: -1px 1px; }
+}
+@keyframes g-overload-img {
+    0% { filter: drop-shadow(4px 0 0 rgba(255, 0, 60, 0.9)) drop-shadow(-4px 0 0 rgba(0, 220, 255, 0.9)); }
+    25% { filter: drop-shadow(-7px 1px 0 rgba(255, 0, 60, 0.9)) drop-shadow(6px -1px 0 rgba(0, 220, 255, 0.9)) hue-rotate(90deg) saturate(2); }
+    50% { filter: drop-shadow(9px 0 0 rgba(255, 0, 60, 0.9)) drop-shadow(-9px 0 0 rgba(0, 220, 255, 0.9)) invert(0.2); }
+    75% { filter: drop-shadow(-3px 0 0 rgba(255, 0, 60, 0.8)) drop-shadow(3px 0 0 rgba(0, 220, 255, 0.8)) hue-rotate(-60deg); }
+    100% { filter: contrast(1.1) saturate(1.2); }
+}
+
+/* ---------- rm -rf / ---------- */
+.gotham.g-quake { animation: g-quake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+@keyframes g-quake {
+    10%, 90% { translate: -1px 0; }
+    20%, 80% { translate: 3px 0; }
+    30%, 50%, 70% { translate: -5px 1px; }
+    40%, 60% { translate: 5px -1px; }
+}
+
+/* ---------- Palette: an answer from a command nobody mentioned ---------- */
+.g-pal-egg {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 6px 8px;
+    padding: 10px 12px;
+    border: 1px solid rgba(80, 250, 123, 0.35);
+    border-radius: 6px;
+    background: rgba(80, 250, 123, 0.05);
+    font: 400 11.5px/1.45 var(--g-mono);
+    color: #50fa7b;
+    text-shadow: 0 0 8px rgba(80, 250, 123, 0.35);
+}
+.g-pal-egg .g-pal-egg-cmd { color: var(--g-dim); text-shadow: none; }
+.g-pal-egg.is-warn { border-color: rgba(255, 184, 108, 0.4); background: rgba(255, 184, 108, 0.05); color: #ffb86c; text-shadow: 0 0 8px rgba(255, 184, 108, 0.35); }
+
+/* ---------- 4:20 (js/sky.js) ---------- */
+.g-home.is-420 .g-op-tag { color: #50fa7b; text-shadow: 0 0 10px rgba(80, 250, 123, 0.6); }
+
+/* ---------- Midnight rollover (js/eggs.js): the handshake panel's own styles, a smoother bar ---------- */
+#boot-overlay.is-rollover .boot-progress-fill { transition: transform 0.3s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+    .g-odo > span { animation: none; transform: translateY(calc(var(--to, 0) * -1.15em)); }
+    .g-classif.is-stamp, .hologram-container:is(.is-static, .is-strain, .is-overload),
+    .hologram-container:is(.is-static, .is-overload) :is(.hologram-image, .hologram-noise), .gotham.g-quake, .g-chan-copied { animation: none; }
+}
+html.sys-calm .g-odo > span { animation: none; transform: translateY(calc(var(--to, 0) * -1.15em)); }
+html.sys-calm :is(.g-classif.is-stamp, .gotham.g-quake) { animation: none; }

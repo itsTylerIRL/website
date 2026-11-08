@@ -1,9 +1,14 @@
 /* Page styles for deepdish_rg.html: RadGotchi technical documentation.
-   Shell: css/workspace.css; contents, search and documentation typography: css/docs.css.
-   This file adds the sprite tint, Deploy installer, Specimen viewer, Sprite Roster and Clearance ladder (js/rg-docs.js). */
+   Shell: css/workspace.css; contents, search, documentation typography and the dense layout (.doc.is-dense, .dz,
+   .cell, sticky section titles, scroll-in): css/docs.css and js/docs.js.
+   This file adds the sprite tint, Deploy installer, Specimen viewer, Sprite Roster and Clearance ladder (js/rg-docs.js),
+   and the docs' own pieces: the chamber hero, mood and routine sprites, gauges, the level curve, arcade cards,
+   the mesh peer timeline and the CI matrix. */
 
 /* ---------- Sprites: tinted with the app's own SVG filter (#rg-tint) ---------- */
 :root { --rg: #ff3344; }
+/* The side panels handed to the home page sit in its shadow root, where :root doesn't reach (js/rg-docs.js tints them) */
+.is-embed-side { --rg: #ff3344; }
 .rg-tint-flood { flood-color: var(--rg); }
 .g-sprite {
     display: block;
@@ -14,17 +19,6 @@
     image-rendering: crisp-edges;
     filter: url(#rg-tint) drop-shadow(0 0 4px color-mix(in srgb, var(--rg) 70%, transparent));
 }
-.doc-sprites {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 14px;
-    margin: 10px 0 6px;
-    padding: 14px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid var(--g-border);
-    border-radius: 10px;
-}
-
 /* ---------- Deploy: one-line installer (install_rg.sh / install_rg.ps1) ---------- */
 .g-side > .g-install-pane {
     border-color: color-mix(in srgb, var(--rg) 55%, transparent);
@@ -250,20 +244,264 @@
 }
 .g-roster-item[aria-current="true"] span { color: var(--g-text); }
 
-/* ---------- Docs extras ---------- */
-.doc-routines td:first-child { font-family: var(--g-mono); font-size: 11px; color: #9fe8f7; }
-.doc-routines td:last-child { font-family: var(--g-mono); white-space: nowrap; color: var(--g-muted); }
-/* src/main module table: name | lines (narrow, numeric) | role (takes the rest) */
-.doc-rgmods td:nth-child(2) {
-    font-family: var(--g-mono);
-    text-align: right;
-    white-space: nowrap;
-    color: var(--g-muted);
-    width: 64px;
+/* ======================================================================================================
+   Docs (dense layout): everything leans on the tint, so the specimen's colour picker recolours the whole page
+   ====================================================================================================== */
+.doc.is-dense h2 .doc-num { color: var(--rg); text-shadow: 0 0 10px color-mix(in srgb, var(--rg) 70%, transparent); }
+
+/* ---------- §01 hero: the chamber ---------- */
+/* Layout, lede and tag type: the shared hero (css/docs.css .doc-hero) */
+.rg-hero {
+    background: radial-gradient(ellipse at 16% 50%, color-mix(in srgb, var(--rg) 16%, transparent), transparent 55%), var(--g-well);
 }
-.doc-rgmods td:nth-child(3) { width: 100%; }
-.doc-levels td { font-family: var(--g-mono); font-size: 11.5px; }
-.doc-levels td:nth-child(odd) { color: var(--g-blue); width: 50px; }
+.rg-chamber {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 2 / 1;
+    padding: 10px 14px 16px;
+    background:
+        radial-gradient(ellipse at center, color-mix(in srgb, var(--rg) 18%, transparent), transparent 70%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
+        linear-gradient(rgba(var(--g-blue-rgb), 0.04) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.04) 1px, transparent 1px) 0 0 / 20px 20px,
+        rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+.rg-chamber { cursor: pointer; transition: box-shadow 0.2s ease; }
+.rg-chamber:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rg) 35%, transparent); }
+.rg-chamber:focus-visible { outline: 1px solid var(--rg); outline-offset: 2px; }
+.rg-chamber:active .rg-hero-sprite { transform: scale(0.96); }
+.rg-chamber .g-reticle { position: absolute; width: 14px; height: 14px; border: 0 solid var(--rg); opacity: 0.75; }
+.rg-chamber .g-reticle.tl { top: 6px; left: 6px; border-top-width: 1px; border-left-width: 1px; }
+.rg-chamber .g-reticle.tr { top: 6px; right: 6px; border-top-width: 1px; border-right-width: 1px; }
+.rg-chamber .g-reticle.bl { bottom: 6px; left: 6px; border-bottom-width: 1px; border-left-width: 1px; }
+.rg-chamber .g-reticle.br { bottom: 6px; right: 6px; border-bottom-width: 1px; border-right-width: 1px; }
+.rg-hero-sprite {
+    width: 82%;
+    filter: url(#rg-tint) drop-shadow(0 0 6px var(--rg)) drop-shadow(0 0 18px color-mix(in srgb, var(--rg) 55%, transparent));
+    animation: rg-breathe 3.2s ease-in-out infinite;
+}
+.rg-hero-sprite.pop { animation: rg-pop 0.35s ease-out, rg-breathe 3.2s ease-in-out 0.35s infinite; }
+@keyframes rg-breathe { 50% { transform: translateY(-3%) scale(1.02); } }
+.rg-hero-tag {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    color: var(--rg);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--rg) 70%, transparent);
+}
+
+/* ---------- §02 modules ---------- */
+.rg-bar {
+    display: inline-block;
+    width: 46px;
+    height: 5px;
+    margin-right: 6px;
+    vertical-align: 1px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--rg) calc(var(--v) * 100%), color-mix(in srgb, var(--rg) 14%, transparent) 0);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--rg) 30%, transparent);
+}
+.doc.is-dense .doc-rgmods td:nth-child(2) { width: 104px; white-space: nowrap; font-family: var(--g-mono); font-size: 10.5px; color: var(--g-muted); }
+.doc.is-dense .doc-rgmods td:nth-child(3) { color: var(--g-muted); }
+
+/* ---------- §03 moods and routines: small tinted sprites ---------- */
+.g-sprite.rg-mini { width: 46px; filter: url(#rg-tint) drop-shadow(0 0 3px color-mix(in srgb, var(--rg) 60%, transparent)); }
+.doc.is-dense .rg-moods td { vertical-align: middle; }
+.doc.is-dense .rg-moods td:first-child { width: 56px; }
+.doc.is-dense .rg-moods td:nth-child(2) { font-family: var(--g-mono); font-size: 10.5px; color: var(--rg); white-space: normal; }
+.doc.is-dense .rg-moods td:last-child { color: var(--g-muted); }
+.rg-routines {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+}
+.rg-routine {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 0 10px;
+    width: 100%;
+    padding: 8px 10px;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--g-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.rg-routine:hover { border-color: color-mix(in srgb, var(--rg) 50%, transparent); }
+.rg-routine.is-playing { border-color: var(--rg); box-shadow: 0 0 12px color-mix(in srgb, var(--rg) 35%, transparent); }
+.rg-routine b { font: 400 11px/1.3 var(--g-mono); color: var(--g-text); letter-spacing: 0.04em; }
+.rg-routine small { grid-column: 1; font: 400 9.5px/1.3 var(--g-mono); color: var(--g-dim); }
+/* Eight slots whatever the routine's length, so every frame is the same size */
+.rg-strip { grid-column: 2; grid-row: 1 / 3; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; min-width: 0; }
+.rg-strip i { min-width: 0; padding: 3px 2px; border-radius: 3px; background: rgba(255, 255, 255, 0.025); transition: background 0.2s; }
+.rg-strip .g-sprite.rg-mini { width: 100%; }
+.rg-strip i.is-on { background: color-mix(in srgb, var(--rg) 22%, transparent); box-shadow: inset 0 -2px 0 var(--rg); }
+
+/* ---------- §04 health ---------- */
+.rg-health { display: flex; margin: 0 0 8px; border-radius: 4px; overflow: hidden; }
+.rg-health i { flex: 1; padding: 3px 0; text-align: center; font: 400 10px/1.5 var(--g-mono); font-style: normal; letter-spacing: 0.14em; }
+.rg-health .h-good { color: #b5ffc9; background: rgba(80, 250, 123, 0.16); }
+.rg-health .h-warn { color: #ffd9b0; background: rgba(255, 184, 108, 0.16); }
+.rg-health .h-crit { color: #ffc2c2; background: rgba(255, 85, 85, 0.2); }
+.doc.is-dense .rg-trig td:first-child { font-family: var(--g-mono); font-size: 10.5px; color: var(--g-blue); }
+
+/* ---------- §05 needs: gauges with the zones marked, shop items ---------- */
+.rg-gauges { display: flex; flex-direction: column; gap: 8px; margin: 0 0 10px; }
+.rg-gauge { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 1px 10px; align-items: center; }
+.rg-gauge b { font: 400 11px/1 var(--g-mono); color: var(--rg); }
+.rg-gauge small { font-size: 10px; color: var(--g-dim); }
+.rg-meter {
+    grid-column: 2;
+    position: relative;
+    height: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--g-border);
+    background: linear-gradient(90deg, rgba(255, 85, 85, 0.45) 0 10%, rgba(255, 184, 108, 0.32) 10% 20%, rgba(255, 184, 108, 0.14) 20% 30%, rgba(80, 250, 123, 0.1) 30%);
+}
+/* The level drains toward the zones on a loop: hunger faster than energy, as in the app */
+.rg-meter i {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: var(--g-text);
+    box-shadow: 0 0 6px var(--rg);
+    animation: rg-drain 9s linear infinite;
+}
+.rg-gauge + .rg-gauge .rg-meter i { animation-duration: 16s; }
+@keyframes rg-drain { 0% { left: 100%; } 100% { left: 6%; } }
+.rg-zones { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-left: 72px; }
+.rg-zones i { display: inline-flex; align-items: center; gap: 5px; font: 400 9.5px/1.4 var(--g-mono); font-style: normal; color: var(--g-dim); }
+.rg-zones i::before { content: ''; width: 10px; height: 6px; border-radius: 2px; background: var(--z); }
+.z-crit { --z: rgba(255, 85, 85, 0.6); }
+.z-pen { --z: rgba(255, 184, 108, 0.45); }
+.z-low { --z: rgba(255, 184, 108, 0.2); }
+.rg-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.rg-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--rg) 10%, transparent), transparent 60%), rgba(0, 0, 0, 0.35);
+    border: 1px solid color-mix(in srgb, var(--rg) 28%, transparent);
+    border-radius: 6px;
+}
+.rg-item b { font: 400 10.5px/1.3 var(--g-mono); letter-spacing: 0.08em; color: var(--g-text); }
+.rg-item span { font-size: 11px; color: var(--g-muted); }
+.rg-item em { font: 400 11px/1.3 var(--g-mono); font-style: normal; color: var(--g-orange); }
+
+/* ---------- §06 progression ---------- */
+.doc.is-dense .rg-contracts td:not(:first-child) { width: 52px; }
+.rg-curve {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(21, minmax(0, 1fr));
+    align-items: end;
+    gap: 3px;
+    height: 150px;
+    margin: 4px 0 0;
+    padding: 0;
+}
+.rg-curve li { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.rg-curve li::before {
+    content: '';
+    display: block;
+    height: calc(max(var(--v), 0.01) * (100% - 30px));
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(color-mix(in srgb, var(--rg) 85%, white), color-mix(in srgb, var(--rg) 30%, transparent));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--rg) 30%, transparent);
+    transform-origin: bottom;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--v) * 0.6s);
+}
+html.doc-rv .cell:not(.is-in) .rg-curve li::before { transform: scaleY(0); }
+.rg-curve li:hover::before { background: var(--rg); }
+.rg-curve b { order: 2; margin-top: 3px; text-align: center; font: 400 9px/1 var(--g-mono); color: var(--g-dim); }
+.rg-curve span {
+    position: absolute;
+    left: 50%;
+    bottom: calc(max(var(--v), 0.01) * (100% - 30px) + 16px);
+    transform: translateX(-50%);
+    font: 400 8px/1 var(--g-mono);
+    color: var(--g-muted);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.rg-curve li:hover span,
+.rg-curve li:nth-child(5n + 1) span,
+.rg-curve li:last-child span { opacity: 1; }
+
+/* ---------- §07 arcade ---------- */
+/* Glyph: css/docs.css .doc-glyph, in the tint */
+.rg-game { position: relative; overflow: hidden; --glyph: var(--rg); }
+.rg-game h3 span { color: var(--g-orange) !important; }
+
+/* ---------- §08 terminal, §11 trust ---------- */
+.rg-crt {
+    background:
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0 1px, transparent 1px 3px),
+        radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--rg) 12%, transparent), transparent 70%),
+        rgba(0, 0, 0, 0.55);
+    border-color: color-mix(in srgb, var(--rg) 35%, transparent);
+}
+.rg-crt p { color: color-mix(in srgb, var(--rg) 30%, #e8eef2); text-shadow: 0 0 6px color-mix(in srgb, var(--rg) 35%, transparent); }
+.doc.is-dense .rg-skills td:first-child { font-family: var(--g-mono); font-size: 10.5px; color: #9fe8f7; }
+.doc.is-dense .rg-skills tr.is-danger td:first-child { color: #ff8f8f; }
+.doc.is-dense .rg-events td:first-child { width: auto; }
+
+/* ---------- §10 mesh: a peer after its last heartbeat ---------- */
+.rg-peer { position: relative; display: grid; grid-template-columns: 1fr 1fr 0.55fr; row-gap: 8px; }
+.rg-peer > span { padding: 5px 0; text-align: center; font: 400 10px/1.4 var(--g-mono); letter-spacing: 0.14em; }
+.rg-peer .p-on { color: #b5ffc9; background: rgba(80, 250, 123, 0.14); border-radius: 4px 0 0 4px; }
+.rg-peer .p-stale { color: #ffd9b0; background: rgba(255, 184, 108, 0.14); }
+.rg-peer .p-off { color: #ffc2c2; background: rgba(255, 85, 85, 0.14); border-radius: 0 4px 4px 0; }
+/* The ticks run under ONLINE and STALE: 0 to 18 s */
+.rg-peer ol { position: relative; grid-column: 1 / 3; grid-row: 2; height: 10px; margin: 0; padding: 0; list-style: none; }
+.rg-peer li { position: absolute; left: calc(var(--t) / 18 * 100%); top: 0; transform: translateX(-50%); font: 400 8.5px/1 var(--g-mono); color: var(--g-dim); white-space: nowrap; }
+.rg-peer li:first-child { transform: none; }
+.rg-peer li::before { content: ''; position: absolute; left: 50%; top: -7px; width: 1px; height: 5px; background: rgba(255, 255, 255, 0.3); }
+/* A heartbeat pulse travelling along the online stretch */
+.rg-peer .p-on { position: relative; overflow: hidden; }
+.rg-peer .p-on::after { content: ''; position: absolute; top: 0; bottom: 0; width: 18%; background: linear-gradient(90deg, transparent, rgba(80, 250, 123, 0.35), transparent); animation: rg-beat 3s linear infinite; }
+@keyframes rg-beat { from { left: -18%; } to { left: 100%; } }
+
+/* ---------- §12 audio ---------- */
+.rg-sounds i { border-color: color-mix(in srgb, var(--rg) 30%, transparent); }
+.rg-sounds i::before { content: '\266A'; margin-right: 4px; color: var(--rg); }
+
+/* ---------- §15 CI matrix ---------- */
+.doc.is-dense .rg-suites td:nth-child(2) { width: 40px; font-family: var(--g-mono); color: var(--g-orange); text-align: right; }
+.doc.is-dense .rg-suites th:nth-child(2) { text-align: right; }
+.doc.is-dense .rg-suites td:first-child { font-family: var(--g-mono); font-size: 10.5px; }
+.rg-matrix { display: grid; grid-template-columns: 64px 1fr 1fr; gap: 4px; margin: 0 0 8px; }
+.rg-matrix b { font: 400 9.5px/1.6 var(--g-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--g-dim); }
+.rg-matrix > b:nth-child(-n + 3) { text-align: center; }
+.rg-matrix i {
+    padding: 3px 6px;
+    font: 400 10px/1.5 var(--g-mono);
+    font-style: normal;
+    text-align: center;
+    color: #b5ffc9;
+    background: rgba(80, 250, 123, 0.1);
+    border: 1px solid rgba(80, 250, 123, 0.3);
+    border-radius: 4px;
+}
+.rg-matrix i::before { content: '\2713 '; }
+
+@media (prefers-reduced-motion: reduce) {
+    .rg-hero-sprite, .rg-hero-sprite.pop, .rg-meter i, .rg-peer .p-on::after { animation: none; }
+    .rg-curve li::before { transition: none; }
+}
+html.sys-calm :is(.rg-hero-sprite, .rg-meter i, .rg-peer .p-on::after) { animation: none; }
 
 /* ---------- One-screen layout (desktop): this page's panels ---------- */
 @media (min-width: 1360px) and (min-height: 600px) {
@@ -304,7 +542,7 @@
     .g-roster-pane { order: 4; }
     .g-ranks-pane { order: 5; }
     .g-roster { max-height: 360px; overflow-y: auto; }
-    .doc-sprites { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .rg-curve { height: 110px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
