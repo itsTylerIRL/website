@@ -61,7 +61,7 @@ const FEATURED = [
     { key: 'raddem', art: '/assets/featured/raddem.webp', round: true, accent: '98,160,255', cta: 'INFO', info: true, live: true, blurb: 'urbit planet' },
     { key: 'kol', art: 'https://sigs.kingdomofloathing.com/player_571951/mode_avatar/playerfeed_571951.gif', badge: true, accent: '139,233,253', cta: 'INFO', info: true, blurb: 'live moons, display case and KoLmafia' },
     { key: 'nosfyl', art: '/assets/featured/nosfyl.webp', round: true, accent: '189,147,249', cta: 'INFO', info: true, live: true, blurb: 'urbit star' },
-    { key: 'guest-book', art: '/assets/featured/guest-book.webp', round: true, accent: '80,250,123', cta: 'SIGN', blurb: 'leave a message' }
+    { key: 'guest-book', art: '/assets/featured/guest-book.webp', round: true, accent: '80,250,123', cta: 'SIGN', info: true, blurb: 'leave a message' }
 ];
 
 // ---------- Workspace ----------
