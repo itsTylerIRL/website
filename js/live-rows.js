@@ -7,8 +7,8 @@
    - RadGotchi, DigiFlip: last push and stars from one GitHub call, cached for the session (GitHub allows 60 an hour)
    - Things I Like: how many objects the likes page lists, and how many in each category, counted from its
      #likes-data cards the way js/likes.js reads them; once
-   - ~nosfyl, ~raddem-tidwyt: online (and for how long) or offline (and when last seen) from ship-status on
-     cancel-api, which checks each ship every minute; every 2 minutes
+   - ~nosfyl, ~raddem-tidwyt: online or offline and for how long ("online 1d"), from ship-status on cancel-api,
+     which checks each ship every minute; every minute
    - DeepDish: its newest push across the project repos (the same GitHub call); NFT Gallery: pieces and artists,
      and Missile Program: the vehicles and their status, read from the pages once an hour; Neochibi Markets: the
      milady floor from OpenSea, every 10 minutes
@@ -110,23 +110,16 @@
         const m = Math.floor((Date.now() - t) / 60000);
         return m < 60 ? `${Math.max(1, m)}m` : m < 1440 ? `${Math.floor(m / 60)}h` : `${Math.floor(m / 1440)}d`;
     };
-    // hours: [hour start, checks up, checks, avg ms] for each hour ship-status has kept
-    const upPct = (hours) => {
-        const [up, all] = hours.reduce((a, h) => [a[0] + h[1], a[1] + h[2]], [0, 0]);
-        return all ? Math.floor(up / all * 1000) / 10 : null;
-    };
     const shipWas = {};
     every(60000, async () => {
         try {
-            const { ships } = await getJSON(`${API}/ships?history=1`);
+            const { ships } = await getJSON(`${API}/ships`);
             Object.entries(SHIPS).forEach(([key, name]) => {
                 const s = ships && ships[name];
                 if (!s || s.online === null) return;
-                const day = (s.hours || []).slice(-24);
-                const pct = upPct(day);
-                const share = pct === null ? '' : ` · ${pct}% 24h`;
-                if (s.online) set(key, s.since ? `online · up ${span(s.since)}${share}` : `online${share}`, 'green');
-                else set(key, s.lastOnline ? `offline · last seen ${ago(s.lastOnline)}` : 'offline', 'red');
+                // Short, for the narrow places it shows (Results, a featured card): "online 1d", "offline 5m"
+                const since = s.since || (!s.online && s.lastOnline);
+                set(key, `${s.online ? 'online' : 'offline'}${since ? ' ' + span(since) : ''}`, s.online ? 'green' : 'red');
                 // Up or down since the last look
                 if (key in shipWas && shipWas[key] !== s.online) {
                     news({ key, text: `${name} ${s.online ? 'is back online' : 'went offline'}`, tone: s.online ? 'green' : 'red', hash: 'uptime',
