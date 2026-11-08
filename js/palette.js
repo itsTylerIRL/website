@@ -52,13 +52,17 @@
     // ---------- Index ----------
     // key: the object; kind: what its items are; url: what to read (text: true reads it as text, not a page);
     // read(doc, url) -> [{ hash, name, sub, img }] (img: the item's own picture, shown instead of the object's icon)
+    // tags: extra words an item is found by but doesn't show (the filters its page sorts it under)
+    // Gallery collection names, as js/gallery.js COLLECTIONS shows them
+    const GALLERY_COLS = { tyler: 'Tyler PFPs', schizo: 'Schizoposters', remilia: 'Remilia' };
     const SOURCES = [
         { key: 'gallery', kind: 'piece', read: (doc, base) => slugged(Array.from(doc.querySelectorAll('#gallery-data .pfp-card')), (c) => c.dataset.name || 'piece', 'piece')
-            .map(({ n, slug }) => ({ hash: slug, name: n.dataset.name || 'Untitled', sub: n.dataset.artist || '', img: abs(firstPic(n), base) })) },
+            .map(({ n, slug }) => { const d = n.dataset; return { hash: slug, name: d.name || 'Untitled', sub: d.artist || '', img: abs(firstPic(n), base),
+                tags: [d.category, GALLERY_COLS[d.category], d.twitter].filter(Boolean).join(' ') }; }) },
         { key: 'likes', kind: 'like', read: (doc, base) => {
             const title = (a) => (a.querySelector('.bento-content h3')?.textContent || '').trim();
             return slugged(Array.from(doc.querySelectorAll('#likes-data .bento-item')), title, 'item')
-                .map(({ n, slug }) => ({ hash: slug, name: title(n), sub: (n.querySelector('.bento-content p')?.textContent || '').trim(), img: abs(firstPic(n.querySelector('.bento-image')), base) }))
+                .map(({ n, slug }) => ({ hash: slug, name: title(n), sub: (n.querySelector('.bento-content p')?.textContent || '').trim(), img: abs(firstPic(n.querySelector('.bento-image')), base), tags: n.dataset.category || '' }))
                 .filter((x) => x.name);
         } },
         // Vehicles live in the page's script (VEHICLES), keyed for #<key>, with their image a few lines on
@@ -70,7 +74,7 @@
         // Pages that mark their parts (projects, apps, sections)
         ...['deepdish', 'cancel', 'nosfyl', 'raddem', 'kol', 'markets'].map((key) => ({ key, kind: 'section', read: anchors }))
     ];
-    const CACHE = 'tirl_palette_index_3';
+    const CACHE = 'tirl_palette_index_4';
     let index = null;
     let loading = null;
     function load() {
@@ -107,7 +111,7 @@
         const objName = (r) => (api.objects.find((o) => o.key === r.key) || {}).name || '';
         return rows.map((r) => {
             const name = r.name.toLowerCase();
-            const hay = `${name} ${r.sub} ${objName(r)} ${r.kind}`.toLowerCase();
+            const hay = `${name} ${r.sub} ${objName(r)} ${r.kind} ${r.tags || ''}`.toLowerCase();
             if (!words.every((w) => hay.includes(w))) return null;
             // Name starts with it, then a word in the name does, then the name has it, then anything matched;
             // objects before what's inside them
