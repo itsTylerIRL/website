@@ -110,6 +110,11 @@
     z-index: 20;
     background: rgba(0, 0, 0, 0.62);
 }
+/* Wherever the page scrolls under the bar (narrow or short windows), the glass alone lets bright panels like
+   the likes icon cloud read straight through the header, so it goes nearly solid there */
+@media (max-width: 1359px), (max-height: 599px) {
+    .g-topbar { background: rgba(3, 7, 10, 0.97); }
+}
 
 .g-brand {
     display: flex;
