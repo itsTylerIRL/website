@@ -249,7 +249,7 @@ html.boot-reveal .g-op-materialize {
 /* Comms: one tile per channel, glowing in its brand colour */
 .g-chans {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 8px;
 }
 .g-chan {
@@ -357,9 +357,10 @@ html.boot-reveal .g-op-materialize {
 .g-dossier-dots button[aria-selected="true"] { background: var(--g-blue); box-shadow: 0 0 6px rgba(var(--g-blue-rgb), 0.8); }
 /* RemiNET stats (js/index.js fills [data-stat]) */
 .g-op-stats {
+    --soc: 189, 147, 249; /* the picture's placeholder tint (.g-soc-art) */
     min-width: 0;
     display: grid;
-    grid-template-columns: 1.7fr repeat(4, minmax(0, 1fr));
+    grid-template-columns: auto 1.7fr repeat(4, minmax(0, 1fr));
     border: 1px solid var(--g-border);
     border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.45);
@@ -378,6 +379,9 @@ html.boot-reveal .g-op-materialize {
     min-width: 0;
 }
 .g-op-stat + .g-op-stat { border-left: 1px solid rgba(var(--g-blue-rgb), 0.08); }
+/* RemiNET profile picture (js/index.js), its space held while it loads */
+.g-op-pfp { align-self: center; margin: 0 6px; }
+.g-op-pfp img:not([src]) { display: none; }
 .g-op-stat b {
     font-family: var(--g-mono);
     font-weight: 400;
@@ -560,13 +564,14 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-presence.tone-green .g-presence-status { animation: g-presence-pulse 2.4s ease-in-out infinite; }
 @keyframes g-presence-pulse { 50% { box-shadow: 0 0 0 3px #05080a, 0 0 14px var(--tone); } }
 
-/* GitHub: contributions heatmap (newest week on the right, older weeks clipped to fit) and three totals */
+/* GitHub: profile picture, contributions heatmap (newest week on the right, older weeks clipped to fit) and totals */
 .g-gh {
+    --soc: var(--g-blue-rgb); /* the picture's placeholder tint (.g-soc-art) */
     min-width: 0;
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 5px 6px 5px 12px;
+    padding: 5px 6px 5px 6px;
     border: 1px solid var(--g-border);
     border-radius: var(--g-r-box);
     background: rgba(0, 0, 0, 0.45);
@@ -574,6 +579,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     text-decoration: none;
 }
 .g-gh[hidden] { display: none; }
+.g-gh-art { margin-right: -6px; } /* sits closer to the map than the card's gap */
 .g-gh:hover,
 .g-gh:focus-visible { border-color: rgba(var(--g-blue-rgb), 0.6); box-shadow: 0 0 16px rgba(var(--g-blue-rgb), 0.18); }
 /* The map takes its natural width (a year of weeks); when the card is too narrow it shrinks, and rtl keeps
@@ -591,10 +597,11 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-gh-stat b { font-family: var(--g-mono); font-weight: 400; font-size: 15px; color: var(--g-blue); text-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.35); }
 .g-gh-stat small { font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--g-dim); white-space: nowrap; }
 
-/* X and Steam cards (js/socials.js): art, a label row, title and subtitle like the presence card, then stats
-   (X) or recent game capsules (Steam) on the right */
+/* X, Steam and SoundCloud cards (js/socials.js): art, a label row, title and subtitle like the presence card,
+   then stats (X, SoundCloud) or recent game capsules (Steam) on the right */
 .g-xcard,
-.g-steam {
+.g-steam,
+.g-scloud {
     --soc: 230, 230, 230;
     min-width: 0;
     display: flex;
@@ -608,15 +615,28 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     text-decoration: none;
 }
 .g-steam { --soc: 102, 192, 244; }
+.g-scloud { --soc: 255, 119, 51; }
 .g-xcard[hidden],
-.g-steam[hidden] { display: none; }
+.g-steam[hidden],
+.g-scloud[hidden] { display: none; }
 .g-xcard:hover,
 .g-xcard:focus-visible,
 .g-steam:hover,
-.g-steam:focus-visible { border-color: rgba(var(--soc), 0.75); box-shadow: 0 0 16px rgba(var(--soc), 0.2); }
+.g-steam:focus-visible,
+.g-scloud:hover,
+.g-scloud:focus-visible { border-color: rgba(var(--soc), 0.75); box-shadow: 0 0 16px rgba(var(--soc), 0.2); }
 .g-soc-art { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: rgba(var(--soc), 0.1); }
 .g-soc-art img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
 .g-steam .g-soc-art { border-radius: 8px; }
+.g-soc-art .g-sc-badge { /* SoundCloud: the latest upload's artwork on the picture's corner */
+    position: absolute;
+    right: -5px;
+    bottom: -4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px #05080a, 0 0 6px rgba(var(--soc), 0.5);
+}
 .g-steam .g-soc-art.is-capsule { width: 92px; height: 34px; border-radius: 4px; }
 .g-soc-pip {
     position: absolute;
@@ -673,6 +693,15 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-soc-stats .g-soc-stat:last-child { display: none; }
     .g-soc-stat,
     .g-gh-stat { padding: 0 6px; }
+}
+@container dossier (max-width: 480px) {
+    .g-gh { gap: 12px; }
+    .g-gh-art,
+    .g-op-pfp { width: 32px; height: 32px; }
+    .g-op-pfp { margin: 0 4px 0 5px; }
+}
+@container dossier (max-width: 400px) {
+    .g-gh-stat:nth-child(n + 2) { display: none; }
 }
 @container dossier (max-width: 360px) {
     .g-steam-games,
@@ -1116,27 +1145,33 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     }
 }
 
-/* Short screens: a slimmer Host panel so the live preview keeps its room */
+/* Short screens: a slimmer Host panel so the live preview keeps its room (not on the landing, where the Host is all there is) */
 @media (min-width: 1360px) and (min-height: 600px) and (max-height: 820px) {
-    .g-home { --holo: 96px; padding: 8px 20px; gap: 6px 22px; }
-    .g-op-label { display: none; }
-    .g-home-links { gap: 6px; }
-    .g-chan { flex-direction: row; justify-content: center; gap: 6px; padding: 5px 4px; }
-    .g-chan-icon { width: 24px; height: 24px; flex: none; }
-    .g-chan-icon svg { width: 14px; height: 14px; }
-    .g-chan-icon img { width: 17px; height: 17px; }
-    .g-chan-text small { display: none; }
-    .g-op-stat { padding: 3px 4px; }
-    .g-op-stat b { font-size: 13px; }
-    .g-op-stat.is-credit b { font-size: 16px; }
-    .g-op-tag,
-    .g-op-seen { display: none; }
-    .g-presence { padding-block: 3px; }
-    .g-presence-art { width: 32px; height: 32px; }
-    .g-presence-text em { display: none; }
-    .g-music-by { display: inline; }
-    .g-gh { padding-block: 3px; }
-    .g-gh-grid { --cell: 4px; }
+    /* :where() keeps the rules below at their own specificity */
+    :where(html:not(.landing)) {
+        .g-home { --holo: 96px; padding: 8px 20px; gap: 6px 22px; }
+        .g-op-label { display: none; }
+        .g-home-links { gap: 6px; }
+        .g-chan { flex-direction: row; justify-content: center; gap: 5px; padding: 5px 3px; }
+        .g-chan-icon { width: 22px; height: 22px; flex: none; }
+        .g-chan-text b { font-size: 10px; letter-spacing: 0; }
+        .g-chan-icon svg { width: 14px; height: 14px; }
+        .g-chan-icon img { width: 17px; height: 17px; }
+        .g-chan-text small { display: none; }
+        .g-op-stat { padding: 3px 4px; }
+        .g-op-stat b { font-size: 13px; }
+        .g-op-stat.is-credit b { font-size: 16px; }
+        .g-op-tag,
+        .g-op-seen { display: none; }
+        .g-presence { padding-block: 3px; }
+        .g-presence-art { width: 32px; height: 32px; }
+        .g-presence-text em { display: none; }
+        .g-music-by { display: inline; }
+        .g-gh { padding-block: 3px; }
+        .g-gh-art,
+        .g-op-pfp { width: 32px; height: 32px; }
+        .g-gh-grid { --cell: 4px; }
+    }
 }
 
 /* ---------- Responsive: this page's panels ---------- */
@@ -1189,10 +1224,9 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-results-pane { order: 3; }
     .g-preview { height: 58vw; min-height: 220px; }
     .g-home-pane .g-meta { display: none; }
-    /* Comms: three per row (a 6-track grid: three tiles of two tracks, then two of three) */
-    .g-chans { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
-    .g-chan { grid-column: span 2; padding: 6px 4px; }
-    .g-chan:nth-child(n + 4) { grid-column: span 3; }
+    /* Comms: two rows of three */
+    .g-chans { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .g-chan { padding: 6px 4px; }
     .g-chan-icon { width: 26px; height: 26px; }
     .g-chan-icon svg { width: 15px; height: 15px; }
     .g-chan-icon img { width: 18px; height: 18px; }
@@ -2392,11 +2426,16 @@ html.sys-calm *::after {
     transition-duration: 0.001ms !important;
 }
 
-/* Phones: the gear sits beside the classification chip; the panel takes the width */
+/* Top-right window controls: settings, then close (back to the landing, js/landing.js) */
+@media (min-width: 900px) { .g-sys-btn + .g-ws-close { margin-left: -10px; } } /* a pair: 8px apart, not the bar's 18px */
+.g-ws-close:hover,
+.g-ws-close:focus-visible { color: var(--g-red); border-color: var(--g-red); box-shadow: 0 0 12px rgba(255, 85, 85, 0.3); outline: none; }
+.g-ws-close svg { width: 14px; height: 14px; transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-ws-close:hover svg { transform: scale(1.12); }
+
+/* Phones: the classification chip, gear and close share the first row with the brand; the panel takes the width */
 @media (max-width: 899px) {
-    .g-sys-btn { order: 2; margin-left: auto; }
-    .g-whoami:not([hidden]) ~ .g-sys-btn { margin-left: 0; }
-    .g-sys-btn ~ .g-classif { margin-left: 0; }
+    .g-sys-btn { order: 2; }
     .g-sys { top: 10px; right: 10px; left: 10px; width: auto; max-height: calc(100vh - 20px); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2535,14 +2574,15 @@ html.sys-calm *::after {
     /* In use: the preview's corners light up, as when it has the keyboard on a desktop */
     .g-preview.is-touch-live .g-reticle { border-color: var(--g-green); filter: drop-shadow(0 0 6px rgba(80, 250, 123, 0.6)); }
 }
-/* A shorter Host panel: the hologram a size down and the comms on one row, so the object starts sooner */
+/* A shorter Host panel: the hologram a size down and the comms in two slim rows of three (icon beside the
+   name), so the object starts sooner */
 @media (max-width: 639px) {
     .g-home { --holo: 128px; gap: 10px; padding: 12px 10px; }
-    .g-chans { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
-    .g-chan,
-    .g-chan:nth-child(n + 4) { grid-column: auto; padding: 7px 2px 6px; gap: 3px; }
+    .g-chans { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+    .g-chan { flex-direction: row; justify-content: center; padding: 6px 4px; gap: 6px; }
+    .g-chan-icon { width: 24px; height: 24px; flex: none; }
     .g-chan-text small { display: none; }
-    .g-chan-text b { font-size: 10.5px; }
+    .g-chan-text b { font-size: 10.5px; letter-spacing: 0; }
 }
 /* Touch-sized targets */
 @media (pointer: coarse) {

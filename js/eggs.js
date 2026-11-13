@@ -66,7 +66,8 @@
         x: () => '@itsTylerIRL',
         discord: discordName,
         github: () => 'itstylerirl',
-        steam: () => '11111x11111'
+        steam: () => '11111x11111',
+        soundcloud: () => 'itstylerirl'
     };
     function copyText(text) {
         if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);

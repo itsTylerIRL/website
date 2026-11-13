@@ -1,0 +1,284 @@
+/* Landing (index.html): the Host panel on its own, centred in the frame, with a way into the workspace.
+   html.landing is set before first paint (inline script in index.html) on a fresh visit to / with no #deep-link;
+   js/landing.js takes it off when OPEN WORKSPACE is pressed, morphing the Host into its slot in the workspace
+   (a same-document view transition) while the other panels assemble around it (html.ws-reveal, css/index.css).
+   Everything else in the workspace is already loaded underneath, just hidden. */
+
+/* The workspace minus the Host (and the ambient lock-on box, js/objects.js, which also targets the Host) */
+html.landing .gotham > :not(.g-body, .g-lockon),
+html.landing .g-rail,
+html.landing .g-side,
+html.landing .g-main > :not(.g-home-pane) { display: none !important; }
+
+/* The Host, centred and larger. The scroller (.bracket-content-area) scrolls again if the window is too short */
+html.landing .bracket-content-area { overflow-y: auto; }
+html.landing .main-content {
+    flex: 1 0 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+html.landing .gotham {
+    flex: none;
+    min-height: 0;
+    width: min(calc(100% - 24px), 1120px);
+    margin: auto;
+    padding-block: 12px;
+}
+html.landing .g-body {
+    display: block;
+    flex: none;
+    min-height: 0;
+}
+html.landing .g-main {
+    display: block;
+    overflow: visible;
+}
+html.landing .g-home {
+    --holo: clamp(150px, 30vh, 290px);
+    padding: clamp(18px, 4vh, 40px) clamp(16px, 4vw, 44px);
+    gap: 18px clamp(22px, 4vw, 52px);
+}
+html.landing .g-home-pane .g-meta { display: inline; }
+@media (max-width: 639px) {
+    html.landing .gotham { width: 100%; }
+    html.landing .g-home { --holo: min(30vh, 46vw); padding: 18px 14px; }
+}
+
+/* ---------- Open workspace ---------- */
+.g-land-cta { display: none; }
+html.landing .g-land-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 18px;
+    padding: 14px 16px 16px;
+    border-top: 1px solid var(--g-border);
+    background: var(--g-panel-2);
+}
+.g-land-open {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 24px;
+    font-family: var(--g-mono);
+    font-size: 13px;
+    letter-spacing: 0.26em;
+    color: var(--g-blue);
+    background: rgba(var(--g-blue-rgb), 0.08);
+    border: 1px solid rgba(var(--g-blue-rgb), 0.45);
+    border-radius: var(--g-r-ctl);
+    box-shadow: 0 0 18px rgba(var(--g-blue-rgb), 0.14), inset 0 0 14px rgba(var(--g-blue-rgb), 0.06);
+    text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.5);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    animation: g-land-breathe 3.2s ease-in-out infinite;
+}
+.g-land-open:hover,
+.g-land-open:focus-visible {
+    color: #eafbff;
+    background: rgba(var(--g-blue-rgb), 0.16);
+    border-color: var(--g-blue);
+    box-shadow: 0 0 26px rgba(var(--g-blue-rgb), 0.32), inset 0 0 16px rgba(var(--g-blue-rgb), 0.1);
+    outline: none;
+    animation: none;
+}
+.g-land-open:active { transform: translateY(1px); }
+.g-land-open-arrow { display: inline-block; transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.g-land-open:hover .g-land-open-arrow,
+.g-land-open:focus-visible .g-land-open-arrow { transform: translateX(4px); }
+@keyframes g-land-breathe {
+    50% { box-shadow: 0 0 26px rgba(var(--g-blue-rgb), 0.26), inset 0 0 14px rgba(var(--g-blue-rgb), 0.1); }
+}
+.g-land-hint {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+}
+.g-land-hint kbd {
+    font: inherit;
+    color: var(--g-muted);
+    border: 1px solid var(--g-border-strong);
+    border-radius: 4px;
+    padding: 0 5px;
+}
+@media (pointer: coarse) { .g-land-hint { display: none; } }
+
+/* ---------- The morph (js/landing.js, while html.ws-morph is on) ----------
+   The Host is captured on its own and glides from the centre into its slot; the rest of the page doesn't
+   crossfade (the panels rise in themselves) and the shared top/status bars skip their page-change fade. */
+html.ws-morph .g-home-pane { view-transition-name: tirl-host; }
+/* The page-change names (css/styles.css) stay in the page here: a named background would be drawn over
+   everything else, hiding the panels as they rise in */
+html.ws-morph #bg3d-canvas,
+html.ws-morph .g-topbar,
+html.ws-morph footer.g-statusbar { view-transition-name: none; }
+/* Old and new snapshots keep their own aspect (the landing's is taller): clip them to the moving panel */
+:root.ws-morph::view-transition-group(tirl-host) {
+    animation-duration: 0.62s;
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.15, 1);
+    overflow: clip;
+    border-radius: var(--g-r-panel);
+}
+:root.ws-morph::view-transition-old(tirl-host) { animation-duration: 0.26s; }
+:root.ws-morph::view-transition-new(tirl-host) { animation-duration: 0.4s; }
+:root.ws-morph::view-transition-old(root),
+:root.ws-morph::view-transition-new(root) { animation: none; }
+
+/* ---------- Boot splash on the landing (index.html's boot script; the hand-over is in js/landing.js) ----------
+   No separate panel: the Host card draws itself in (its rim traced round, the glass filling in behind,
+   the corner marks snapping on, its title decoding) and the handshake runs inside it, its rows being the
+   six comms channels, with the skip hint in the strip where the button will be. At "link established"
+   a pulse runs out through the background; then each row flies into its button, the progress bar
+   becomes OPEN WORKSPACE, and a scan line wipes the handshake off as the Host comes up behind it.
+   Opacity, not visibility, hides the card's contents while booting (parts of the dossier set their own
+   visibility), so their boxes are in place to be measured for the hand-over. */
+html.landing.booting #boot-overlay:not(.no-card) .boot-panel { visibility: hidden; } /* until it's moved into the card */
+html.landing.booting .gotham { opacity: 1; }
+html.landing.booting .g-home > :not(.g-reticle, .boot-panel),
+html.landing.booting .g-land-cta > :not(.boot-skip) { opacity: 0; pointer-events: none; }
+
+/* The card draws itself in */
+html.landing #g-home { position: relative; }
+html.landing.booting .g-home-pane { animation: bootCardGlass 0.8s ease 0.35s both; }
+html.landing.booting .g-home-pane > :not(.boot-trace) { animation: bootCardFill 0.5s ease 0.4s both; }
+html.landing.booting .g-home > .g-reticle { animation: bootReticle 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.3) 0.8s both; }
+html.landing.booting .g-home > .g-reticle.tl { --rx: -10px; --ry: -10px; }
+html.landing.booting .g-home > .g-reticle.tr { --rx: 10px; --ry: -10px; }
+html.landing.booting .g-home > .g-reticle.bl { --rx: -10px; --ry: 10px; }
+html.landing.booting .g-home > .g-reticle.br { --rx: 10px; --ry: 10px; }
+@keyframes bootCardGlass {
+    from { background-color: transparent; border-color: transparent; box-shadow: none; backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); }
+}
+@keyframes bootCardFill { from { opacity: 0; } }
+@keyframes bootReticle { from { opacity: 0; transform: translate(var(--rx, 0), var(--ry, 0)) scale(1.8); } }
+#g-home > .boot-trace {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    overflow: visible;
+    pointer-events: none;
+    animation: bootTraceOut 0.5s ease 1.05s forwards;
+}
+.boot-trace rect {
+    x: 0.75px;
+    y: 0.75px;
+    width: calc(100% - 1.5px);
+    height: calc(100% - 1.5px);
+    rx: var(--g-r-panel);
+    fill: none;
+    stroke: rgba(139, 233, 253, 0.8);
+    stroke-width: 1.5;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    filter: drop-shadow(0 0 4px rgba(139, 233, 253, 0.8));
+    animation: bootTrace 0.85s cubic-bezier(0.55, 0, 0.25, 1) 0.05s forwards;
+}
+.boot-trace rect.head {
+    stroke: #eafbff;
+    stroke-width: 2.5;
+    stroke-dasharray: 0.03 0.97;
+    stroke-dashoffset: 0.03;
+    filter: drop-shadow(0 0 6px #8be9fd);
+    animation: bootTraceHead 0.85s cubic-bezier(0.55, 0, 0.25, 1) 0.05s both;
+}
+@keyframes bootTrace { to { stroke-dashoffset: 0; } }
+@keyframes bootTraceHead { 90% { opacity: 1; } to { stroke-dashoffset: -0.97; opacity: 0; } }
+@keyframes bootTraceOut { to { opacity: 0; } }
+
+/* The handshake, inside the card */
+.g-home > .boot-panel {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: auto;
+    display: grid;
+    place-items: center;
+    padding: 12px 16px;
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    color: #9aafba;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: bootInCard 0.5s ease 0.45s both;
+}
+.g-home > .boot-panel > :is(.boot-reticle, .boot-title) { display: none; }
+.g-home > .boot-panel .boot-body { width: min(30em, 100%); padding: 0; }
+.g-land-cta { position: relative; }
+.g-land-cta > .boot-skip {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 0 16px;
+    border: 0;
+    background: none;
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    font-size: 10px;
+}
+@keyframes bootInCard { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
+
+/* The hand-over (js/landing.js). Without it (no Web Animations, SYS calm) the handshake just fades out in place */
+.g-home > .boot-panel.handoff,
+.g-land-cta > .boot-skip.handoff { animation: bootOutCard 0.3s ease-in forwards; pointer-events: none; }
+@keyframes bootOutCard { to { opacity: 0; transform: scale(0.98); filter: blur(4px); } }
+.boot-ghost {
+    position: fixed;
+    z-index: 100001;
+    box-sizing: border-box;
+    pointer-events: none;
+    border: 1px solid transparent;
+    border-radius: var(--g-r-box, 8px);
+}
+.boot-ghost.is-chan {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+.boot-ghost.is-bar > i {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #8be9fd, #bd93f9 60%, #ff79c6);
+    box-shadow: 0 0 12px rgba(189, 147, 249, 0.6);
+}
+.boot-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, #8be9fd 12%, #eafbff 50%, #8be9fd 88%, transparent);
+    box-shadow: 0 0 14px 2px rgba(139, 233, 253, 0.65), 0 -18px 30px -6px rgba(139, 233, 253, 0.18);
+}
+/* The pulse at "link established": a ring that brightens the background field as it passes */
+.boot-pulse {
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle closest-side, transparent 82%, rgba(139, 233, 253, 0.1) 94%, transparent 100%);
+    -webkit-backdrop-filter: brightness(2.6) saturate(1.4);
+    backdrop-filter: brightness(2.6) saturate(1.4);
+    -webkit-mask: radial-gradient(circle closest-side, transparent 76%, #000 92%, transparent 100%);
+    mask: radial-gradient(circle closest-side, transparent 76%, #000 92%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .g-land-open { animation: none; }
+}
+html.sys-calm .g-land-open { animation: none; }

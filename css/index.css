@@ -383,7 +383,7 @@
    The overlay is transparent: the isoline background fades in behind a glass "handshake" panel
    while the workspace stays hidden. TYLERIRL decodes, the log resolves, the progress bar fills;
    then the panel dissolves (same motion as the page transitions) and the workspace assembles,
-   panel by panel. Driven by the inline script at the top of index.html. */
+   panel by panel. On the landing it opens out into the Host card instead (css/landing.css). Driven by the inline script at the top of index.html. */
 #boot-overlay {
     position: fixed;
     inset: 0;
@@ -402,15 +402,16 @@ html.booting .gotham { opacity: 0; }
 html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
 @keyframes bootFieldIn { from { opacity: 0; } }
 
-/* The handshake panel: same glass, rim and reticles as the workspace panels */
+/* The handshake panel: same glass, rim, title strip and reticles as the workspace panels (the Host card in
+   particular, which it opens out into on the landing: css/landing.css) */
 .boot-panel {
     position: relative;
     width: min(30em, 100%);
     font-size: clamp(11px, 2.9vw, 12.5px);
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(139, 233, 253, 0.28);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 233, 253, 0.22);
     border-top-color: rgba(255, 255, 255, 0.16);
     border-left-color: rgba(255, 255, 255, 0.1);
     border-radius: var(--g-r-panel);
@@ -441,13 +442,16 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 22px;
-    border-bottom: 1px solid rgba(139, 233, 253, 0.14);
-    font-size: 0.82em;
-    letter-spacing: 0.24em;
+    padding: 9px 14px 9px 22px;
+    border-bottom: 1px solid var(--g-border, rgba(139, 233, 253, 0.14));
+    background: var(--g-panel-2, rgba(139, 233, 253, 0.04));
+    font-size: 0.88em;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
     text-transform: uppercase;
     color: #8be9fd;
 }
+.boot-title > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .boot-classif {
     font-size: 0.85em;
     letter-spacing: 0.16em;
@@ -567,7 +571,8 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
 
 .boot-skip {
     padding: 8px 16px 10px;
-    border-top: 1px solid rgba(139, 233, 253, 0.1);
+    border-top: 1px solid var(--g-border, rgba(139, 233, 253, 0.14));
+    background: var(--g-panel-2, rgba(139, 233, 253, 0.04));
     text-align: center;
     font-size: 0.72em;
     letter-spacing: 0.24em;
@@ -588,19 +593,21 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
 @keyframes bootPanelOut { to { opacity: 0; transform: scale(0.96); filter: blur(6px); } }
 @keyframes bootVeilOut { to { background-color: transparent; opacity: 0; } }
 
-/* Hand-over: the workspace assembles, panel by panel */
-html.boot-reveal .g-topbar { animation: bootDrop 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-html.boot-reveal .g-statusbar { animation: bootRise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s both; }
-html.boot-reveal :is(.g-explorer, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-activity-pane, .g-signal-pane) {
+/* Hand-over: the workspace assembles, panel by panel. Also when the landing opens the workspace
+   (html.ws-reveal, js/landing.js), where the Host is already up and glides into its slot instead */
+html:is(.boot-reveal, .ws-reveal) .g-topbar { animation: bootDrop 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+html:is(.boot-reveal, .ws-reveal) .g-statusbar { animation: bootRise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s both; }
+html:is(.boot-reveal, .ws-reveal) :is(.g-explorer, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-activity-pane, .g-signal-pane) {
     animation: bootRise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-html.boot-reveal .g-explorer { animation-delay: 0.08s; }
-html.boot-reveal .g-home-pane { animation-delay: 0.12s; }
-html.boot-reveal .g-results-pane { animation-delay: 0.16s; }
-html.boot-reveal .g-objhead { animation-delay: 0.2s; }
-html.boot-reveal .g-activity-pane { animation-delay: 0.24s; }
-html.boot-reveal .g-signal-pane { animation-delay: 0.26s; }
-html.boot-reveal .g-preview-pane { animation-delay: 0.28s; }
+html:is(.boot-reveal, .ws-reveal) .g-explorer { animation-delay: 0.08s; }
+html:is(.boot-reveal, .ws-reveal) .g-home-pane { animation-delay: 0.12s; }
+html:is(.boot-reveal, .ws-reveal) .g-results-pane { animation-delay: 0.16s; }
+html:is(.boot-reveal, .ws-reveal) .g-objhead { animation-delay: 0.2s; }
+html:is(.boot-reveal, .ws-reveal) .g-activity-pane { animation-delay: 0.24s; }
+html:is(.boot-reveal, .ws-reveal) .g-signal-pane { animation-delay: 0.26s; }
+html:is(.boot-reveal, .ws-reveal) .g-preview-pane { animation-delay: 0.28s; }
+html:is(.ws-reveal, .boot-glide) .g-home-pane { animation: none; }
 @keyframes bootDrop { from { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
 @keyframes bootRise { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }
 

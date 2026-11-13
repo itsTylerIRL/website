@@ -27,6 +27,12 @@ if ('serviceWorker' in navigator) {
             .then((data) => {
                 const u = data && data.user;
                 if (!u) throw new Error('no user');
+                // Profile picture: pfpUrl is a path on remilia.net's image proxy (or, for some, a full URL)
+                const pfp = box.querySelector('.g-op-pfp img');
+                if (pfp && u.pfpUrl && !pfp.getAttribute('src')) {
+                    pfp.addEventListener('error', () => pfp.parentNode.remove(), { once: true });
+                    pfp.src = new URL(u.pfpUrl, 'https://www.remilia.net').href;
+                }
                 let any = false;
                 box.querySelectorAll('[data-stat]').forEach((el) => {
                     const v = u[el.dataset.stat];
@@ -54,7 +60,7 @@ if ('serviceWorker' in navigator) {
     setInterval(load, 5 * 60000);
 })();
 
-// GitHub card in the Host dossier: a contributions heatmap (a column per week, Sunday on top, newest on the
+// GitHub card in the Host dossier: the profile picture (github.com/<user>.png, no API call), a contributions heatmap (a column per week, Sunday on top, newest on the
 // right; as many weeks as the card has room for) beside the past year, the last 12 weeks, the current and best
 // streaks and active days (css/objects.css drops the later stats as the card narrows).
 // github-contributions-api.jogruber.de reads the public profile and allows CORS.
@@ -78,8 +84,10 @@ if ('serviceWorker' in navigator) {
             days.reduce((run, d) => { run = d.count ? run + 1 : 0; best = Math.max(best, run); return run; }, 0);
             const active = days.filter((d) => d.count).length;
             const stat = (n, label) => `<span class="g-gh-stat"><b>${n.toLocaleString('en-US')}</b><small>${label}</small></span>`;
-            box.innerHTML = `<span class="g-gh-map"><span class="g-gh-grid">${cells.map((d) => `<i class="l${d.level}"></i>`).join('')}</span></span>`
+            box.innerHTML = `<span class="g-soc-art g-gh-art"><img src="https://github.com/itstylerirl.png?size=80" alt="" width="40" height="40" decoding="async" referrerpolicy="no-referrer"></span>`
+                + `<span class="g-gh-map"><span class="g-gh-grid">${cells.map((d) => `<i class="l${d.level}"></i>`).join('')}</span></span>`
                 + `<span class="g-gh-stats">${stat(sum(days), 'past year')}${stat(sum(days.slice(-84)), '12 weeks')}${stat(streak, 'day streak')}${stat(best, 'best streak')}${stat(active, 'active days')}</span>`;
+            box.querySelector('img').addEventListener('error', (e) => e.target.parentNode.remove(), { once: true });
             box.title = `${sum(days)} GitHub contributions in the past year`;
             // The GitHub row in Results (js/objects.js)
             window.ObjectsLive?.('live-github', `${sum(days).toLocaleString('en-US')} contributions this year${streak > 1 ? ` · ${streak}-day streak` : ''}`, 'green');

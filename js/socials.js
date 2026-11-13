@@ -1,14 +1,19 @@
-/* X and Steam cards for the Host dossier (rotated with the others by js/index.js; each joins once it loads).
+/* X, Steam and SoundCloud cards for the Host dossier (rotated with the others by js/index.js; each joins once it loads).
    - X: the latest post that isn't a repost or reply, with its counts, plus followers and posts, from
      api.fxtwitter.com (an unofficial mirror that allows CORS; X's own API is paid). Every 10 minutes.
    - Steam: status and recent games from steam-proxy (cancel-api.tylerirl.com/steam), which reads the public
      profile feed Steam won't serve to other sites and drops the private fields. Every 2 minutes. Also puts
-     the status on the Steam comms tile. */
+     the status on the Steam comms tile.
+   - SoundCloud: the latest public upload and the profile's counts from soundcloud-proxy
+     (cancel-api.tylerirl.com/soundcloud), which reads the public profile page and RSS feed. Every 15 minutes.
+     Also puts the follower count on the SoundCloud comms tile. */
 (function () {
     'use strict';
     const xCard = document.getElementById('g-xcard');
     const steamCard = document.getElementById('g-steam');
     const steamTile = document.getElementById('g-steam-status');
+    const scCard = document.getElementById('g-scloud');
+    const scTile = document.getElementById('g-scloud-status');
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const short = n => !Number.isFinite(n) ? '—' : n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : n >= 1e4 ? Math.round(n / 1e3) + 'k' : n >= 1e3 ? (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
     const ago = t => {
@@ -109,5 +114,39 @@
         const runSteam = () => loadSteam().catch(e => console.log('Steam card unavailable:', e.message));
         runSteam();
         setInterval(() => { if (!document.hidden) runSteam(); }, 2 * 60000);
+    }
+
+    // ---------- SoundCloud ----------
+    if (scCard) {
+        // Uploads can be years old: "3d ago", "5mo ago", "10y ago"
+        const since = t => {
+            const d = Math.max(0, (Date.now() - t) / 864e5);
+            return d < 30 ? ago(t) : d < 365 ? `${Math.floor(d / 30.44)}mo ago` : `${Math.floor(d / 365.25)}y ago`;
+        };
+        const clock = sec => {
+            const h = Math.floor(sec / 3600), m = Math.floor(sec / 60) % 60, s = String(sec % 60).padStart(2, '0');
+            return h ? `${h}:${String(m).padStart(2, '0')}:${s}` : `${m}:${s}`;
+        };
+        async function loadSoundCloud() {
+            const d = await getJSON('https://cancel-api.tylerirl.com/soundcloud');
+            const t = d.latest;
+            scCard.href = t && t.url ? t.url : d.profile;
+            // The profile picture, like the other cards, with the latest upload's artwork as a badge on its corner
+            scCard.innerHTML = `<span class="g-soc-art"><img src="${esc(d.avatar || (t && t.artwork))}" alt="" width="40" height="40" decoding="async" referrerpolicy="no-referrer">${t && t.artwork && d.avatar ? `<img class="g-sc-badge" src="${esc(t.artwork)}" alt="" width="18" height="18" decoding="async" referrerpolicy="no-referrer">` : ''}</span>
+                <span class="g-soc-text">
+                    <small><span>${t ? 'LATEST UPLOAD' : 'SOUNDCLOUD'}</span>${t && t.at ? `<span class="g-soc-dim">${since(t.at)}</span>` : ''}</small>
+                    <b>${esc(t ? t.title : d.name)}</b>
+                    <em>${t ? [t.duration && clock(t.duration), t.description && esc(t.description)].filter(Boolean).join(' · ') : `${short(d.tracks)} tracks`}</em>
+                </span>
+                <span class="g-soc-stats">${stat(short(d.followers), 'followers')}${stat(short(d.likes), 'likes')}${stat(short(d.tracks), 'tracks')}</span>`;
+            scCard.querySelectorAll('img').forEach(img => img.addEventListener('error', () => img.remove(), { once: true }));
+            scCard.hidden = false;
+            if (scTile && Number.isFinite(d.followers)) scTile.textContent = `${short(d.followers)} followers`;
+            // The SoundCloud row in Results (js/objects.js): the latest upload
+            window.ObjectsLive?.('live-soundcloud', t ? `latest upload · ${t.title}${t.at ? ` · ${since(t.at)}` : ''}` : `${short(d.followers)} followers`, 'orange');
+        }
+        const runSoundCloud = () => loadSoundCloud().catch(e => console.log('SoundCloud card unavailable:', e.message));
+        runSoundCloud();
+        setInterval(() => { if (!document.hidden) runSoundCloud(); }, 15 * 60000);
     }
 })();
