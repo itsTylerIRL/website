@@ -44,6 +44,7 @@ const OBJECTS = [
     { key: 'live-discord', name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen', screen: 'Comms Channel', tag: 'dm open · say hi' },
     { key: 'live-music', onHost: true, name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles', screen: 'Audio Feed', tag: 'what\'s in the headphones' },
     { key: 'live-steam', onHost: true, name: 'Steam', url: 'https://steamcommunity.com/id/11111x11111', type: 'live', dossier: 'steam', icon: '/assets/object-icons/live-steam.svg', desc: 'online or in-game, and recently played games with hours', screen: 'Game Feed', tag: 'what\'s on the second monitor' },
+    { key: 'live-soundcloud', onHost: true, name: 'SoundCloud', url: 'https://soundcloud.com/itstylerirl', type: 'live', dossier: 'soundcloud', icon: '/assets/object-icons/live-soundcloud.svg', desc: 'the latest upload, with followers, likes and tracks', screen: 'Upload Feed', tag: 'mixes, originals + collabs' },
     { key: 'live-x', onHost: true, name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts', screen: 'Broadcast Feed', tag: 'posting through it' },
     { key: 'live-github', onHost: true, name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days', screen: 'Commit Feed', tag: 'commits, streaks + green squares' },
     { key: 'live-reminet', onHost: true, name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net', screen: 'Credit Feed', tag: 'social credit, frens + beetles' },
@@ -1430,8 +1431,11 @@ const FEATURED = [
         select: (key, hash) => { const o = objectByKey(key); if (o) select(o, { hash }); }
     };
     setInterval(() => {
-        // Ambient mode can be switched off in the SYS settings (js/sys.js)
-        if (!ambient && !document.hidden && Date.now() - lastInput > AMBIENT_AFTER && !document.documentElement.classList.contains('sys-no-ambient')) enterAmbient();
+        // Ambient mode can be switched off in the SYS settings (js/sys.js), and waits while the landing is up
+        // (js/landing.js): its tour would cycle previews in the hidden workspace. Leaving the landing takes input,
+        // so the 90 s idle clock starts fresh in the workspace.
+        const cls = document.documentElement.classList;
+        if (!ambient && !document.hidden && Date.now() - lastInput > AMBIENT_AFTER && !cls.contains('sys-no-ambient') && !cls.contains('landing')) enterAmbient();
     }, 1000);
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) return;
