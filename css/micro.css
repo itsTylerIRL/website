@@ -235,7 +235,8 @@ html[data-classif] .g-topbar .g-classif {
     text-shadow: 0 0 10px rgba(var(--g-lvl), 0.5);
     box-shadow: 0 0 14px rgba(var(--g-lvl), 0.2);
 }
-html[data-classif] :is(.g-topbar, .g-statusbar) {
+/* Every panel takes the level's colour, not just the top and bottom bars (and the hover spotlight follows it) */
+html[data-classif] :is(.g-topbar, .g-statusbar, .g-rail > section, .g-side > section, .g-objhead, .g-card) {
     border-color: rgba(var(--g-lvl), 0.55);
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
@@ -245,6 +246,18 @@ html[data-classif] :is(.g-topbar, .g-statusbar) {
         inset 0 0 20px rgba(var(--g-lvl), 0.05);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
+html[data-classif] :is(.g-rail > section, .g-side > section, .g-objhead, .g-card) { --spot: var(--g-lvl); }
+html[data-classif] :is(.g-rail > section, .g-side > section, .g-objhead, .g-card) > .g-panel-title { border-bottom-color: rgba(var(--g-lvl), 0.3); }
+html[data-classif] :is(.g-rail, .g-side) > section.g-spot:is(:hover, .is-ambient),
+html[data-classif] :is(.g-objhead, .g-card).g-spot:is(:hover, .is-ambient) {
+    border-color: rgba(var(--g-lvl), 0.8);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 0 24px rgba(var(--g-lvl), 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 24px rgba(var(--g-lvl), 0.08);
+}
+html[data-classif] .g-spot:is(:hover, .is-ambient) > .g-panel-title { color: rgb(var(--g-lvl)); text-shadow: 0 0 10px rgba(var(--g-lvl), 0.45); }
 .g-classif.is-stamp { animation: g-stamp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
 @keyframes g-stamp { 0% { scale: 1.35; filter: brightness(2); } 100% { scale: 1; filter: none; } }
 /* TOP SECRET: a few labels go behind black bars */
