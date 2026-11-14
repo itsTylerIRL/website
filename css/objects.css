@@ -7,7 +7,8 @@
 .g-objmeta .g-format { color: var(--tone); }
 
 /* ---------- Host: subject (left) + comms and live dossier (right), over an animated grid floor ---------- */
-.g-home-pane + .g-objhead { margin-top: var(--g-gap); }
+/* ~ not +: the inline boot-card <script> sits between the two in index.html */
+.g-home-pane ~ .g-objhead { margin-top: var(--g-gap); }
 .g-home {
     --holo: clamp(110px, 16vh, 200px);
     position: relative;
