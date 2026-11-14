@@ -2149,7 +2149,8 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
 }
 /* Three columns: it shares the side column with Results (and the previewed page's panels), scrolling inside */
 @media (min-width: 1360px) and (min-height: 600px) {
-    .g-signal-pane { flex: 0.8 1 0; min-height: 140px; contain: size; }
+    /* Grows into room Results leaves (a short list) but tops out low, so a long list of results keeps the column */
+    .g-signal-pane { flex: 1 1 0; min-height: 120px; max-height: clamp(140px, 24vh, 240px); contain: size; }
     .g-signal { flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
 }
 @media (min-width: 1360px) and (max-height: 599px) {
