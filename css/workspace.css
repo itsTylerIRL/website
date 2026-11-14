@@ -948,6 +948,19 @@ html.is-embed .g-main > [data-embed="hide"] + * { margin-top: 0; } /* the first 
         scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
     }
 }
+/* Raised clearance on the home page (css/micro.css): the handed-over panels take the level's colour like the rest.
+   js/objects.js copies html[data-classif] onto the wrapper; --g-lvl comes in from the home page's root. */
+.is-embed-side[data-classif] > :is(.g-side, .g-rail) > section {
+    border-color: rgba(var(--g-lvl), 0.55);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 18px rgba(var(--g-lvl), 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 20px rgba(var(--g-lvl), 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.is-embed-side[data-classif] > :is(.g-side, .g-rail) > section > .g-panel-title { border-bottom-color: rgba(var(--g-lvl), 0.3); }
 
 /* ---------- Anchors ----------
    A part of the page a link went to (#name on a data-anchor element, js/embed.js) lights up for a moment */

@@ -530,6 +530,16 @@ const FEATURED = [
     const slots = Object.values(els.embedSlots);
     const slotState = new Map(slots.map((slot) => [slot, { gen: 0, holding: false, timer: null }]));
     const hostOf = (slot) => slot.querySelector('.g-embed-host');
+    // The clearance level (js/eggs.js, html[data-classif]) can't be seen from inside a shadow root, so each handed-over
+    // column carries a copy of it for css/workspace.css to colour its panels by (--g-lvl inherits in on its own)
+    const syncClassif = (wrap) => {
+        const level = document.documentElement.dataset.classif;
+        if (level) wrap.dataset.classif = level; else delete wrap.dataset.classif;
+    };
+    new MutationObserver(() => slots.forEach((slot) => {
+        const wrap = hostOf(slot).shadowRoot?.querySelector('.is-embed-side');
+        if (wrap) syncClassif(wrap);
+    })).observe(document.documentElement, { attributes: true, attributeFilter: ['data-classif'] });
     const LEAVE_MS = 180;
     function release(slot) {
         const st = slotState.get(slot);
@@ -594,6 +604,7 @@ const FEATURED = [
             const links = api.styles.map((href) => Object.assign(document.createElement('link'), { rel: 'stylesheet', href }));
             const wrap = document.createElement('div');
             wrap.className = 'gotham is-embed-side';
+            syncClassif(wrap);
             const column = document.createElement('aside');
             column.className = col === 'rail' ? 'g-rail' : 'g-side';
             column.append(...panels);
