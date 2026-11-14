@@ -1135,7 +1135,9 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     }
     /* Results takes its share of the column but never more than its list needs: a short list leaves the
        room to the panels under it instead of empty space */
-    .g-results-pane { flex: 1 1 0; max-height: max-content; min-height: 0; }
+    /* Results is as tall as its list (shrinking, and scrolling, only when the column runs out); not max-height:
+       max-content, which Safari resolves to next to nothing in a flex column */
+    .g-results-pane { flex: 0 1 auto; min-height: 0; }
     .g-results {
         flex: 1 1 auto;
         min-height: 0;
@@ -1453,8 +1455,9 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-embed-label b { color: var(--g-blue); font-weight: 400; }
 .g-embed-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--g-border-strong), transparent); }
 @media (min-width: 1360px) and (min-height: 600px) {
-    .g-embed-side { flex: 1.4 1 0; }
-    .g-embed-host { flex: 1 1 0; }
+    /* The previewed page's side panels are as tall as their content too, so the Signal Log gets the rest */
+    .g-embed-side,
+    .g-embed-side .g-embed-host { flex: 0 1 auto; min-height: 0; }
     /* The page's left column is as tall as its panels (shrinking, and scrolling, only when they don't fit),
        and Recently Viewed fills whatever is left, so it always starts right below them */
     .g-embed-rail,
@@ -2149,8 +2152,8 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
 }
 /* Three columns: it shares the side column with Results (and the previewed page's panels), scrolling inside */
 @media (min-width: 1360px) and (min-height: 600px) {
-    /* Grows into room Results leaves (a short list) but tops out low, so a long list of results keeps the column */
-    .g-signal-pane { flex: 1 1 0; min-height: 120px; max-height: clamp(140px, 24vh, 240px); contain: size; }
+    /* Last in the column: fills whatever Results and the previewed page's panels leave, never under 140px */
+    .g-signal-pane { flex: 1 1 0; min-height: 140px; contain: size; }
     .g-signal { flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
 }
 @media (min-width: 1360px) and (max-height: 599px) {
