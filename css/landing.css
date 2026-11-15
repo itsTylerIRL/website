@@ -44,6 +44,71 @@ html.landing .g-home-pane .g-meta { display: inline; }
     html.landing .gotham { width: 100%; }
     html.landing .g-home { --holo: min(30vh, 46vw); padding: 18px 14px; }
 }
+/* Below desktop the landing is one column: the remilio, then the dossier cards to scroll through, in a card no
+   wider than a phone held sideways */
+@media (max-width: 899px) {
+    html.landing .gotham { width: min(100%, 560px); }
+    html.landing .g-home {
+        --holo: min(30vh, 46vw, 220px);
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: stretch;
+        gap: 16px;
+    }
+}
+
+/* ---------- The dossier, every card at once ----------
+   No comms tiles here (each card links to its channel) and no rotation (js/index.js waits while the landing
+   is up): the cards sit in a grid, two across where there's room and one above another on phones. Each card is
+   its own `dossier` container, so the cards' container queries (css/objects.css) shed stats to fit its cell.
+   Until the dossier settles (js/index.js: every card in, or 8 s), a card still loading holds its place as a
+   labelled skeleton; after that, one that never came is dropped. An odd card out spans the row. */
+.g-land-only { display: none; }
+html.landing .g-land-only { display: inline; }
+html.landing .g-home-links > .g-op-label:first-child,
+html.landing .g-chans,
+html.landing #g-dossier-src,
+html.landing .g-dossier-dots { display: none; }
+html.landing .g-dossier {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 8px;
+}
+html.landing .g-dossier > [data-slide] {
+    grid-area: auto;
+    container: dossier / inline-size;
+    min-height: 52px;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+html.landing .g-dossier:not(.is-settled) > [data-slide]:last-child:nth-child(odd),
+html.landing .g-dossier.is-settled > :nth-last-child(1 of :not([hidden])):nth-child(odd of :not([hidden])) { grid-column: 1 / -1; }
+html.landing .g-dossier:not(.is-settled) > [data-slide][hidden] {
+    display: block;
+    position: relative;
+    visibility: hidden;
+    pointer-events: none;
+}
+html.landing .g-dossier:not(.is-settled) > [data-slide][hidden]::before {
+    content: attr(data-label);
+    visibility: visible;
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border: 1px dashed rgba(var(--g-blue-rgb), 0.2);
+    border-radius: var(--g-r-box);
+    font-family: var(--g-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: transparent;
+    background: linear-gradient(90deg, var(--g-dim) 0%, var(--g-dim) 35%, var(--g-text) 50%, var(--g-dim) 65%, var(--g-dim) 100%) 0 0 / 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: g-acquire 2.2s linear infinite;
+}
+/* Mid-morph the cards mustn't cross-fade (the transition carries them, js/landing.js) */
+html.ws-morph .g-dossier > [data-slide] { transition: none !important; }
 
 /* ---------- Open workspace ---------- */
 .g-land-cta { display: none; }
@@ -132,7 +197,7 @@ html.ws-morph footer.g-statusbar { view-transition-name: none; }
    No separate panel: the Host card draws itself in (its rim traced round, the glass filling in behind,
    the corner marks snapping on, its title decoding) and the handshake runs inside it, its rows being the
    six comms channels, with the skip hint in the strip where the button will be. At "link established"
-   a pulse runs out through the background; then each row flies into its button, the progress bar
+   a pulse runs out through the background; then each row flies into its dossier card, the progress bar
    becomes OPEN WORKSPACE, and a scan line wipes the handshake off as the Host comes up behind it.
    Opacity, not visibility, hides the card's contents while booting (parts of the dossier set their own
    visibility), so their boxes are in place to be measured for the hand-over. */

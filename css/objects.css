@@ -1251,7 +1251,6 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-home { --holo: 96px; }
     .g-chans { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
     .g-chan { flex-direction: row; justify-content: flex-start; text-align: left; gap: 6px; padding: 6px 8px; }
-    .g-chan:last-child { grid-column: 1 / -1; }
     .g-chan-icon { flex: none; width: 24px; height: 24px; }
     .g-chan-icon svg { width: 14px; height: 14px; }
     .g-chan-icon img { width: 17px; height: 17px; }

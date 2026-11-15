@@ -2,8 +2,9 @@
    Objects workspace around it. html.landing is set before first paint by the inline script in <head>, which
    skips it for #deep-links and for a reload of the workspace. css/landing.css has the layout.
 
-   Opening is a same-document view transition: the Host glides from the centre into its slot while the other
-   panels assemble (html.ws-reveal, css/index.css). It pushes a history entry, so Back returns to the landing
+   The landing shows every dossier card at once (css/landing.css). Opening is a same-document view
+   transition: the Host glides from the centre into its slot, each dossier card shrinks into its comms
+   tile (the one that's up glides into the dossier slot), and the other panels assemble (html.ws-reveal, css/index.css). It pushes a history entry, so Back returns to the landing
    and a reload stays in the workspace. Coming in from a sub page opens the workspace straight away (the check is in
    index.html's <head>), with a landing entry behind it. No transition for reduced motion, SYS calm, or browsers without one. */
 (function () {
@@ -33,11 +34,51 @@
         }
     } catch (_) {}
 
+    // The dossier in the morph. On the landing every loaded card is out on its own; in the workspace only the
+    // card that's up is, and every other one is behind its comms tile. Each card gets a view-transition name of
+    // its own, carried in the workspace by the card that's up or else by its channel's tile, so opening shrinks
+    // each card into its button (the one that's up glides into the dossier slot), and closing grows them back.
+    // A card with no tile (music) fades where it is. Names are only set for the transition's length.
+    const dossier = document.getElementById('g-dossier');
+    const CARD_STAGGER = 18;
+    let morphStyle = null;
+    function nameDossier(asLanding, keys) {
+        document.querySelectorAll('[data-vt-dos]').forEach((el) => { el.style.viewTransitionName = ''; delete el.dataset.vtDos; });
+        if (!keys) return;
+        keys.forEach((k) => {
+            const card = dossier.querySelector(`[data-slide="${k}"]`);
+            const el = asLanding || card.classList.contains('is-active') ? card : document.querySelector(`.g-chan[data-dossier="${k}"]`);
+            if (!el || !el.getClientRects().length) return;
+            el.style.viewTransitionName = 'tirl-dos-' + k;
+            el.dataset.vtDos = '';
+        });
+    }
+    function dossierKeys() {
+        if (!dossier) return null;
+        const keys = [...dossier.querySelectorAll('[data-slide]:not([hidden])')].map((s) => s.dataset.slide);
+        // Each name's timing (a stagger in card order), written once. Snapshots keep their aspect in the moving
+        // box: a card is cropped to it, keeping its left end (the art, by the icon); a tile sits whole inside it
+        if (!morphStyle) {
+            morphStyle = document.createElement('style');
+            morphStyle.textContent = [...dossier.querySelectorAll('[data-slide]')].map((s, i) => {
+                const n = 'tirl-dos-' + s.dataset.slide;
+                return `:root.ws-morph::view-transition-group(${n}) { animation-duration: 0.62s; animation-delay: ${i * CARD_STAGGER}ms; animation-fill-mode: both; animation-timing-function: cubic-bezier(0.2, 0.75, 0.15, 1); overflow: clip; border-radius: var(--g-r-box, 8px); }
+:root.ws-morph::view-transition-old(${n}), :root.ws-morph::view-transition-new(${n}) { height: 100%; object-fit: contain; }
+:root.ws-morph::view-transition-old(${n}) { animation-duration: 0.3s; }
+:root.ws-morph:not(.landing)::view-transition-old(${n}), :root.ws-morph.landing::view-transition-new(${n}) { object-fit: cover; object-position: 0 50%; }`;
+            }).join('\n');
+            document.head.append(morphStyle);
+        }
+        return keys;
+    }
+
     // then: runs once the change is applied (inside the transition's update, so the page is already showing)
     function swap(toLanding, then) {
         landing = toLanding;
+        let keys = null;
         const run = () => {
             root.classList.toggle('landing', toLanding);
+            if (keys) nameDossier(toLanding, keys);
             if (window.bracketContentArea) window.bracketContentArea.scrollTop = 0;
             if (toLanding && document.activeElement && document.activeElement.closest('.g-topbar')) btn.focus({ preventScroll: true });
             if (!toLanding && !still()) {
@@ -49,8 +90,13 @@
         };
         if (still() || !document.startViewTransition || document.hidden) { run(); return; }
         root.classList.add('ws-morph');
+        keys = dossierKeys();
+        if (keys) nameDossier(!toLanding, keys);
         const vt = document.startViewTransition(run);
-        vt.finished.finally(() => root.classList.remove('ws-morph'));
+        vt.finished.finally(() => {
+            root.classList.remove('ws-morph');
+            nameDossier(toLanding, null);
+        });
     }
 
     function open(push, then) {
@@ -72,7 +118,7 @@
     // ---------- The boot splash's hand-over on the landing (index.html's boot script calls these) ----------
     // The handshake has been running inside the Host card. pulse(): at "link established" a ring runs out from
     // the card through the background, brightening the field as it passes. handoff(): each channel row flies
-    // into its comms button, the progress bar travels down and becomes the OPEN WORKSPACE button, and a scan
+    // into its dossier card, the progress bar travels down and becomes the OPEN WORKSPACE button, and a scan
     // line sweeps down the card, wiping the handshake off above it and bringing the Host up behind it.
     // Everything is measured before the card's contents are shown (they only lose opacity while booting, so
     // their boxes are already in place), then animated with the Web Animations API from that one moment.
@@ -106,16 +152,21 @@
             const B0 = 80 * k, BAR = 680 * k;               // progress bar into the button
             const bar = panel.querySelector('.boot-progress');
             const hint = cta.querySelector('.g-land-hint');
+            // Each row lands on its channel's dossier card (or the card's skeleton, if it's still loading), in
+            // the colour of its comms tile (a tile, if one is showing: the landing's are hidden)
             const flights = lines.map((line, i) => {
-                const tile = card.querySelector(`.g-chan[data-dossier="${line.id}"]`);
+                const chanTile = card.querySelector(`.g-chan[data-dossier="${line.id}"]`);
+                const tile = [chanTile, card.querySelector(`#g-dossier [data-slide="${line.id}"]`)].find((el) => el && rectOf(el).width);
                 if (!tile) return null;
+                const to = rectOf(tile);
                 const on = line.row.classList.contains('on');
-                return { line, tile, on, from: on && rectOf(line.row), to: rectOf(tile), chan: getComputedStyle(tile).getPropertyValue('--chan').trim() || '139,233,253', d: i * STAGGER };
+                return { line, tile, on, from: on && rectOf(line.row), to, chan: (chanTile && getComputedStyle(chanTile).getPropertyValue('--chan').trim()) || '139,233,253', d: i * STAGGER };
             }).filter(Boolean);
             const flown = new Set(flights.filter((f) => f.on).map((f) => f.tile));
-            const wiped = [...home.querySelectorAll(':scope > .g-op-fx, :scope > .g-op-subject, .g-home-links > :not(.g-chans), .g-chans > .g-chan')]
+            const wiped = [...home.querySelectorAll(':scope > .g-op-fx, :scope > .g-op-subject, .g-home-links > :not(.g-chans, .g-dossier), .g-chans > .g-chan, .g-dossier > [data-slide]')]
                 .filter((el) => !flown.has(el))
-                .map((el) => ({ el, r: rectOf(el) }));
+                .map((el) => ({ el, r: rectOf(el) }))
+                .filter(({ r }) => r.height);
             const barFrom = bar && rectOf(bar), btnTo = rectOf(btn);
             const btnRadius = getComputedStyle(btn).borderRadius;
 
@@ -131,7 +182,7 @@
                 return g;
             };
 
-            // 1. Rows fly into their buttons: a lock-on box carries each row's colour to its button, which lights up as it lands
+            // 1. Rows fly into their cards: a lock-on box carries each row's colour to its card, which lights up as it lands
             flights.forEach((f) => {
                 if (!f.on) return;
                 const c = f.chan;

@@ -102,14 +102,17 @@ if ('serviceWorker' in navigator) {
         .catch((e) => console.log('GitHub activity unavailable:', e.message));
 })();
 
-// Dossier: one live card at a time (Discord, RemiNET, GitHub). It rotates every 7 s; hovering or focusing a
+// Dossier: one live card at a time (Discord, RemiNET, GitHub). It rotates every 7 s (not on the landing, which
+// shows every card at once); hovering or focusing a
 // comms tile with data-dossier shows that card and holds it until the pointer leaves, and so does hovering
 // the card. Cards still loading (hidden) sit out of the rotation and join it once their data lands.
 (function() {
     const box = document.getElementById('g-dossier');
     const src = document.getElementById('g-dossier-src');
     const dots = document.getElementById('g-dossier-dots');
+    const count = document.getElementById('g-dossier-count');
     if (!box || !src || !dots) return;
+    const root = document.documentElement;
     const ROTATE_MS = 7000;
     const slides = [...box.querySelectorAll('[data-slide]')];
     const ready = () => slides.filter((s) => !s.hidden);
@@ -123,12 +126,13 @@ if ('serviceWorker' in navigator) {
         active = slide;
         slides.forEach((s) => s.classList.toggle('is-active', s === slide));
         src.textContent = slide.dataset.label;
+        if (count) count.textContent = `${ready().length} LIVE FEED${ready().length === 1 ? '' : 'S'}`;
         dots.innerHTML = ready().map((s) => `<button type="button" role="tab" data-go="${s.dataset.slide}" aria-selected="${s === slide}" aria-label="${s.dataset.label}"></button>`).join('');
     }
     function start() {
         clearInterval(timer);
         timer = setInterval(() => {
-            if (held || document.hidden) return;
+            if (held || document.hidden || root.classList.contains('landing')) return; // the landing shows them all
             const r = ready();
             if (r.length < 2) return;
             rotated = true;
@@ -167,4 +171,15 @@ if ('serviceWorker' in navigator) {
     }).observe(box, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
     show(ready()[0]);
     start();
+
+    // The landing holds a skeleton for each card still loading (css/landing.css) until the dossier settles:
+    // every card in, or 8 s, after which one that never came is dropped
+    const settle = () => box.classList.add('is-settled');
+    const settleTimer = setTimeout(settle, 8000);
+    new MutationObserver((_, mo) => {
+        if (ready().length < slides.length) return;
+        clearTimeout(settleTimer);
+        settle();
+        mo.disconnect();
+    }).observe(box, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
 })();
