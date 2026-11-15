@@ -932,6 +932,8 @@ html.is-embed .g-main > [data-embed="hide"] + * { margin-top: 0; } /* the first 
 .is-embed-side > :is(.g-side, .g-rail) {
     display: flex;
     flex-direction: column;
+    /* stretch, not the narrow-window grid's align-items: start, which would shrink each panel to its content */
+    align-items: stretch;
     grid-column: auto;
 }
 /* Panels keep their own height here (the page's layout would squeeze some to nothing in a shorter column):
