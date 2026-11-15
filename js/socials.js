@@ -1,6 +1,7 @@
 /* X, Steam and SoundCloud cards for the Host dossier (rotated with the others by js/index.js; each joins once it loads).
-   - X: the latest post that isn't a repost or reply, with its counts, plus followers and posts, from
-     api.fxtwitter.com (an unofficial mirror that allows CORS; X's own API is paid). Every 10 minutes.
+   - X: the latest post that isn't a repost or reply, with its counts, plus followers and posts, from x-proxy
+     (cancel-api.tylerirl.com/x), which polls the flaky api.fxtwitter.com mirror (X's own API is paid) and
+     always serves the last good answer. Every 10 minutes.
    - Steam: status and recent games from steam-proxy (cancel-api.tylerirl.com/steam), which reads the public
      profile feed Steam won't serve to other sites and drops the private fields. Every 2 minutes. Also puts
      the status on the Steam comms tile.
@@ -30,35 +31,13 @@
 
     // ---------- X ----------
     if (xCard) {
-        const KEY = 'tirl_x';
-        const FX = 'https://api.fxtwitter.com';
         async function loadX() {
-            let data = null;
-            try {
-                const c = JSON.parse(sessionStorage.getItem(KEY));
-                if (c && Date.now() - c.at < 10 * 60000) data = c.data;
-            } catch (_) {}
-            if (!data) {
-                const [profile, posts] = await Promise.all([
-                    getJSON(`${FX}/itstylerirl`),
-                    getJSON(`${FX}/2/profile/itstylerirl/statuses`).catch(() => null)
-                ]);
-                const u = profile && profile.user;
-                if (!u) throw new Error('no profile');
-                const post = (posts && posts.results || []).find(p => p.type === 'status' && !p.reposted_by && !p.replying_to);
-                data = {
-                    avatar: (u.avatar_url || '').replace('_normal.', '_200x200.'),
-                    followers: u.followers, posts: u.tweets ?? u.statuses,
-                    post: post && { url: post.url, text: post.text, at: post.created_timestamp * 1000, likes: post.likes, reposts: post.reposts, views: post.views }
-                };
-                // Only a complete answer is reused; without the latest post, the next load asks again
-                if (data.post) try { sessionStorage.setItem(KEY, JSON.stringify({ at: Date.now(), data })); } catch (_) {}
-            }
+            const data = await getJSON('https://cancel-api.tylerirl.com/x');
             const p = data.post;
             xCard.href = p ? p.url : 'https://x.com/itsTylerIRL';
             xCard.innerHTML = `<span class="g-soc-art"><img src="${esc(data.avatar)}" alt="" width="40" height="40" decoding="async" referrerpolicy="no-referrer"></span>
                 <span class="g-soc-text">
-                    <small><span>${p ? 'LATEST POST' : '@ITSTYLERIRL'}</span>${p ? `<span class="g-soc-dim">${ago(p.at)}</span>` : ''}</small>
+                    <small><span>${p ? 'LATEST POST' : '@ITSTYLERIRL'}</span>${p ? `<span class="g-soc-dim">${p.at ? ago(p.at) : ''}</span>` : ''}</small>
                     <b>${p ? esc(p.text.replace(/\s+/g, ' ')) : 'TylerIRL on X'}</b>
                     ${p ? `<em>♥ ${short(p.likes)} · ↻ ${short(p.reposts)}${Number.isFinite(p.views) ? ` · ${short(p.views)} views` : ''}</em>` : ''}
                 </span>
