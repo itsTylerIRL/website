@@ -1,8 +1,6 @@
 /* NOW, on the home object (js/objects.js renderHeader mounts it while tylerirl.com is selected, between the
-   description and the player cards): what's live right now in one row (status, music, the cancel crown, the
-   Kingdom, both ships) and, when you've been here before, what changed since your last visit.
-   - The row is the live lines of those objects' Results rows ('tirl:live', from js/objects.js ObjectsLive); a
-     click selects the object.
+   description and the player cards): a greeting and, when you've been here before, what changed since your last
+   visit (a click on a change selects its object).
    - Visit memory: sources hand in what they've just read with window.tirlVisit.seen(id, value, describe). The
      values are kept in this browser (localStorage), and each session compares against what the last visit left
      there: describe(was, now) says what changed (a string, or { text, tone, key, alert }) or nothing.
@@ -69,28 +67,11 @@
         ? { id: 'visit', status: ago(prev.at).toUpperCase() }
         : { id: 'visit', status: 'FIRST VISIT', tone: 'idle' } }));
 
-    // ---------- The strip ----------
-    const CELLS = [
-        ['live-discord', 'STATUS'],
-        ['live-music', 'AUDIO'],
-        ['cancel', 'CROWN'],
-        ['kol', 'KINGDOM'],
-        ['nosfyl', '~NOSFYL'],
-        ['raddem', '~RADDEM-TIDWYT']
-    ];
+    // ---------- The greeting line ----------
     let box = null;
-    const live = () => (window.TirlObjects && window.TirlObjects.live) || {};
     const player = () => window.TirlPlayer?.user() || null;
     const handle = (u) => (u.handle[0] === '~' ? u.handle : '~' + u.handle);
 
-    function cellHtml([key, label]) {
-        const l = live()[key];
-        return `<button type="button" class="g-now-cell" data-key="${key}"${l ? ` title="${esc(l.text)}"` : ''}>
-                <small>${label}</small>
-                ${l ? `<span><i class="g-live-dot tone-${esc(l.tone || 'green')}"></i><b>${esc(l.text)}</b></span>`
-                    : '<span class="g-acquire">acquiring&hellip;</span>'}
-            </button>`;
-    }
     function helloHtml() {
         const u = player();
         const who = u ? `, <b>${esc(handle(u))}</b>` : '';
@@ -107,8 +88,7 @@
     function render() {
         if (!box || !box.isConnected) return;
         box.innerHTML = `<div class="g-now-head"><span class="g-now-label"><i class="g-dot tone-green"></i>NOW</span>${helloHtml()}</div>
-            <div class="g-now-since"${since.size ? '' : ' hidden'}>${sinceHtml()}</div>
-            <div class="g-now-grid">${CELLS.map(cellHtml).join('')}</div>`;
+            <div class="g-now-since"${since.size ? '' : ' hidden'}>${sinceHtml()}</div>`;
     }
     function renderSince(arrived) {
         const el = box && box.isConnected && box.querySelector('.g-now-since');
@@ -117,18 +97,6 @@
         el.innerHTML = sinceHtml();
         if (arrived) el.querySelectorAll('.g-since').forEach((s) => window.tirlArrive?.arrive(s));
     }
-    window.addEventListener('tirl:live', (e) => {
-        const cell = box && box.isConnected && box.querySelector(`.g-now-cell[data-key="${CSS.escape(e.detail.key)}"]`);
-        if (!cell) return;
-        const def = CELLS.find((c) => c[0] === e.detail.key);
-        const first = !!cell.querySelector('.g-acquire');
-        const tmp = document.createElement('div');
-        tmp.innerHTML = cellHtml(def);
-        const next = tmp.firstElementChild;
-        if (next.outerHTML === cell.outerHTML) return;
-        cell.replaceWith(next);
-        if (first) window.tirlArrive?.arrive(next.querySelector('b'));
-    });
     // Signing in or out changes the greeting
     window.addEventListener('tirl:player', () => {
         const head = box && box.isConnected && box.querySelector('.g-now-head');

@@ -1,7 +1,7 @@
-/* Player link, on the home object (js/objects.js renderHeader, while tylerirl.com is selected): sign in with Remilia
-   SSO or an Urbit ID through the cancel game's service, the same sign-in the cancel is coming and the network is
-   growing use. Signed out, the two buttons sit on the right of the object's header; signed in, who you are (and
-   sign out) moves to the top bar beside the search (#g-whoami), and your stats from both games show in the header.
+/* Player link: sign in with Remilia SSO or an Urbit ID through the cancel game's service, the same sign-in the cancel
+   is coming and the network is growing use. The sign-ins, or who you are and sign out, sit in the User Login panel
+   at the top of the left column (#g-player-link), whatever object is showing; signed in, your stats from both games
+   show in the home object's header (js/objects.js renderHeader, while tylerirl.com is selected).
    The service sends the browser back here with its own signed session in #rn= (or #rn_error=). It's kept in this
    browser (localStorage) until it runs out or you sign out. Load this before js/objects.js, which would otherwise
    read the #fragment as an object to select.
@@ -61,7 +61,7 @@
     let offer = { rn: true, ur: true }; // which sign-ins the service has on (both, until it says)
     let stats = null; // { acct, king, net, at }, or { failed: true }
     let loading = false;
-    const slots = { sso: null, stats: null, top: document.getElementById('g-whoami') };
+    const slots = { link: document.getElementById('g-player-link'), meta: document.getElementById('g-player-meta'), stats: null };
 
     // { ok: false, status } for an answer that isn't a 2xx; null when the service can't be reached
     async function api(path, body) {
@@ -169,26 +169,23 @@
 
     const live = (el) => el && el.isConnected;
     function render(arrived) {
-        // Top bar: who's signed in, whatever object is showing
-        if (slots.top) {
-            slots.top.hidden = !user;
+        // Rail panel: the sign-ins, or who's signed in and sign out
+        if (slots.meta) slots.meta.textContent = user ? 'LINKED' : 'GUEST';
+        if (slots.link) {
             if (user) {
-                slots.top.innerHTML = `${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button>`;
-                slots.top.querySelector('[data-out]').addEventListener('click', () => signOut());
-                if (arrived) window.tirlArrive?.arrive(slots.top.querySelector('.g-ptag b'));
-            } else slots.top.replaceChildren();
-        }
-        // Header, signed out: the two sign-ins on the right
-        if (live(slots.sso)) {
-            const sso = [offer.rn ? `<button type="button" class="g-btn g-sso" data-sso="rn">${REMILIA_MARK}Remilia SSO</button>` : '',
-                offer.ur ? `<button type="button" class="g-btn g-sso ur" data-sso="ur">${URBIT_MARK}Urbit ID</button>` : ''].filter(Boolean).join('<i>or</i>');
-            slots.sso.hidden = !!user;
-            slots.sso.innerHTML = user ? '' : `<div class="g-player-head"><span class="g-player-label">PLAYER LINK</span><small>the cancel is coming · the network is growing</small></div>
-                <div class="g-sso-row">${sso}</div>${notice ? `<span class="g-player-note">${esc(notice)}</span>` : ''}`;
-            slots.sso.querySelectorAll('[data-sso]').forEach((b) => b.addEventListener('click', () => {
-                const back = encodeURIComponent(location.origin + location.pathname);
-                location.assign(`${API}/api/auth/${b.dataset.sso === 'ur' ? 'urbit/' : ''}login?return=${back}`);
-            }));
+                slots.link.innerHTML = `<div class="g-player-who">${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button></div>`;
+                slots.link.querySelector('[data-out]').addEventListener('click', () => signOut());
+                if (arrived) window.tirlArrive?.arrive(slots.link.querySelector('.g-ptag b'));
+            } else {
+                const sso = [offer.rn ? `<button type="button" class="g-btn g-sso" data-sso="rn">${REMILIA_MARK}Remilia SSO</button>` : '',
+                    offer.ur ? `<button type="button" class="g-btn g-sso ur" data-sso="ur">${URBIT_MARK}Urbit ID</button>` : ''].filter(Boolean).join('');
+                slots.link.innerHTML = `<small class="g-player-sub">sign in for the cancel is coming · the network is growing</small>
+                    ${sso ? `<div class="g-sso-row">${sso}</div>` : ''}${notice ? `<span class="g-player-note">${esc(notice)}</span>` : ''}`;
+                slots.link.querySelectorAll('[data-sso]').forEach((b) => b.addEventListener('click', () => {
+                    const back = encodeURIComponent(location.origin + location.pathname);
+                    location.assign(`${API}/api/auth/${b.dataset.sso === 'ur' ? 'urbit/' : ''}login?return=${back}`);
+                }));
+            }
         }
         // Header, signed in: a card per game
         if (live(slots.stats)) {
@@ -202,8 +199,7 @@
     }
 
     // Called by js/objects.js each time it draws the home object's header
-    function mount(sso, statsEl) {
-        slots.sso = sso;
+    function mount(statsEl) {
         slots.stats = statsEl;
         render();
         if (user && (!stats || stats.failed || Date.now() - stats.at > REFRESH)) load();
@@ -215,6 +211,9 @@
         if (!offer.rn && !offer.ur) notice = 'sign-in is switched off on the games right now';
         render();
     });
+
+    render();
+    if (user) load();
 
     // For the boot screen (index.html)
     window.dispatchEvent(new CustomEvent('tirl:boot', { detail: user

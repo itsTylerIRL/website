@@ -265,15 +265,15 @@ const FEATURED = [
                     ${o.key === HOME ? '' : `<a class="g-btn g-visit" href="${esc(o.url)}"${openAttrs(o)}>OPEN &nearr;</a>`}
                 </div>
             </div>
-            ${o.key === HOME ? `<div class="g-objsplit"><div class="g-objinfo">${info}</div><div class="g-player-sso" id="g-player-sso"></div></div>
+            ${o.key === HOME ? `${info}
             <div class="g-now" id="g-now"></div>
             <div class="g-player" id="g-player"></div>` : info}`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
         header.querySelector('[data-up]')?.addEventListener('click', (e) => select(objectByKey(e.currentTarget.dataset.up), { dir: -1 }));
-        // Home: the player link to the games (js/player.js): sign-in beside the description, stats under it; and
-        // between them, what's live right now and what changed since your last visit (js/now.js)
+        // Home: your stats from the games under the description (js/player.js; signing in is in the rail's User
+        // Login panel), and above them the greeting and what changed since your last visit (js/now.js)
         if (o.key === HOME) {
-            window.TirlPlayer?.mount(header.querySelector('#g-player-sso'), header.querySelector('#g-player'));
+            window.TirlPlayer?.mount(header.querySelector('#g-player'));
             window.TirlNow?.mount(header.querySelector('#g-now'));
         }
     }
@@ -1038,7 +1038,7 @@ const FEATURED = [
     // ---------- Hover light ----------
     // Panels and featured cards (.g-spot) carry a light that follows the pointer: one listener,
     // at most one style write per frame, and only to the .g-spot elements under the pointer.
-    document.querySelectorAll('.g-explorer, .g-results-pane, .g-activity-pane, .g-home-pane, .g-objhead, .g-preview-pane')
+    document.querySelectorAll('.g-player-pane, .g-explorer, .g-results-pane, .g-activity-pane, .g-home-pane, .g-objhead, .g-preview-pane')
         .forEach((el) => el.classList.add('g-spot'));
     let spotEvent = null;
     document.addEventListener('pointermove', (e) => {
