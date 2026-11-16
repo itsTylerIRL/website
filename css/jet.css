@@ -1,6 +1,6 @@
 /* Page styles for jet.html: the sprite-stack fighter in the DEEPDISH workspace.
    Shell comes from css/workspace.css; this file styles the flight deck (the scene's two canvases, its HUD,
-   line of help and touch buttons, set by js/jet.js), the controls in the side panels and the flight data. */
+   line of help, combat strip, training card and touch buttons, set by js/jet.js), the controls in the side panels and the flight data. */
 
 /* ---------- Flight deck ---------- */
 .g-flight-pane { margin-top: var(--g-gap); }
@@ -129,6 +129,74 @@
     background: color-mix(in srgb, var(--jet-accent) 30%, rgba(0, 0, 0, 0.6));
     box-shadow: 0 0 18px color-mix(in srgb, var(--jet-accent) 45%, transparent);
 }
+
+/* combat strip: top left, opposite the flight HUD; it stays in the cockpit */
+.jet-hud-war { right: auto; left: 28px; color: var(--g-green); text-shadow: 0 0 8px rgba(80, 250, 123, 0.45), 0 1px 0 rgba(0, 0, 0, 0.6); }
+.jet-stage[data-view="cockpit"] .jet-hud-war { opacity: 1; }
+.jet-stage.is-unarmed .jet-hud-war { display: none; }
+.jet-hud-war .is-low { color: var(--g-red); text-shadow: 0 0 8px rgba(255, 85, 85, 0.6); }
+
+/* missile warning / lock / counter-attack call-out, top centre */
+.jet-alert {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 14px;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: var(--g-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--g-red);
+    text-shadow: 0 0 10px rgba(255, 85, 85, 0.7), 0 1px 0 rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    white-space: nowrap;
+}
+.jet-alert.is-lock { color: var(--g-orange); text-shadow: 0 0 10px rgba(255, 184, 108, 0.7); }
+.jet-alert.is-now { animation: jet-blink 0.35s steps(2) infinite; }
+@keyframes jet-blink { 50% { opacity: 0.25; } }
+
+/* training card: bottom left */
+.jet-lesson {
+    position: absolute;
+    z-index: 3;
+    left: 20px;
+    bottom: 20px;
+    width: min(320px, calc(100% - 40px));
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    color: var(--g-text);
+    background: rgba(0, 0, 0, 0.62);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-box);
+    box-shadow: 0 0 18px rgba(var(--g-blue-rgb), 0.14);
+}
+.jet-lesson[hidden] { display: none; }
+.jet-lesson.is-done { border-color: var(--g-green); box-shadow: 0 0 18px rgba(80, 250, 123, 0.3); }
+.jet-lesson-top { display: flex; align-items: center; gap: 8px; font-family: var(--g-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--g-muted); }
+.jet-lesson-top span + span { color: var(--g-blue); }
+.jet-lesson-x { margin-left: auto; padding: 0 2px; font: inherit; color: var(--g-dim); background: none; border: 0; cursor: pointer; }
+.jet-lesson-x + .jet-lesson-x { margin-left: 4px; font-size: 14px; line-height: 1; }
+.jet-lesson-x:hover { color: var(--g-text); }
+.jet-lesson b { font-size: 14px; font-weight: 600; }
+.jet-lesson p { margin: 0; font-size: 12px; line-height: 1.4; color: var(--g-muted); }
+.jet-lesson .jet-lesson-hint { color: var(--g-orange); }
+.jet-lesson .jet-lesson-hint:empty { display: none; }
+.jet-lesson-bar { position: relative; height: 3px; margin-top: 4px; background: var(--g-well); border-radius: 2px; overflow: hidden; }
+.jet-lesson-bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--g-green); transition: width 0.15s linear; }
+.jet-stage.is-training .jet-hint { opacity: 0; }
+.jet-stage.is-touch .jet-lesson { bottom: auto; top: 40px; }
+.jet-copy { margin: 0; font-size: 11.5px; line-height: 1.45; color: var(--g-muted); }
+
+/* touch: gun and missile above boost, loop above view */
+.jet-touch-gun { right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 64px); }
+.jet-touch-missile { right: calc(max(16px, env(safe-area-inset-right)) + 84px); }
+.jet-touch-loop { left: max(16px, env(safe-area-inset-left)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 64px); }
+.jet-stage.is-unarmed .jet-arm { display: none !important; }
 
 /* ---------- Controls ---------- */
 .jet-controls {
@@ -428,7 +496,7 @@
     .g-flight-pane { flex: 1 1 0; min-height: 0; }
     .jet-stage { flex: 1 1 0; height: auto; min-height: 0; }
     .g-handling-pane { flex: 1 1 0; min-height: 160px; }
-    .g-plan-pane, .g-data-pane, .g-keys-pane { flex: none; }
+    .g-plan-pane, .g-train-pane, .g-data-pane, .g-keys-pane { flex: none; }
     .g-airframe-pane { flex: 1 1 0; min-height: 140px; }
     .g-airframe-pane .g-pane-body,
     .g-handling-pane .g-pane-body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
@@ -439,11 +507,14 @@
 @media (max-width: 899px) {
     .jet-stage { height: min(68vh, 560px); height: min(68dvh, 560px); }
     .jet-hud { right: 24px; gap: 10px; font-size: 10px; }
+    .jet-hud-war { right: auto; left: 24px; }
     .jet-hint { font-size: 10px; letter-spacing: 0.06em; }
     .g-data-pane { order: 2; }
 }
 @media (max-width: 479px) {
     .jet-hud span:first-child { display: none; }
+    .jet-hud-war { top: 32px; right: 24px; left: auto; }
+    .jet-hud-war span:first-child { display: inline; }
 }
 
 /* ---------- Embedded in the home page's live preview: the deck fills the frame ---------- */
@@ -456,4 +527,5 @@ html.is-embed .g-flight-pane { margin-top: 0; }
 
 @media (prefers-reduced-motion: reduce) {
     .jet-hint, .jet-hud { transition: none; }
+    .jet-alert.is-now { animation: none; }
 }

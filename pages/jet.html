@@ -14,14 +14,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerirl.com/jet">
     <meta property="og:title" content="Jet">
-    <meta property="og:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: overhead, chase and cockpit views.">
+    <meta property="og:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: dogfights, missiles, ejections, and overhead, chase and cockpit views.">
     <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tylerirl.com/jet">
     <meta property="twitter:title" content="Jet">
-    <meta property="twitter:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: overhead, chase and cockpit views.">
+    <meta property="twitter:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: dogfights, missiles, ejections, and overhead, chase and cockpit views.">
     <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
     <meta property="twitter:creator" content="@itsTylerIRL">
 
@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.3">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/jet.css?v=1.1">
+    <link rel="stylesheet" href="/css/jet.css?v=1.2">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -95,6 +95,21 @@
                                 <button type="button" data-set="wingmen" data-value="2">+2</button>
                             </div>
                         </div>
+                        <div class="jet-field">
+                            <span class="jet-label">enemies</span>
+                            <div class="jet-seg" role="group" aria-label="Enemies">
+                                <button type="button" data-set="enemies" data-value="0">none</button>
+                                <button type="button" data-set="enemies" data-value="1">1</button>
+                                <button type="button" data-set="enemies" data-value="3">3</button>
+                                <button type="button" data-set="enemies" data-value="5">5</button>
+                            </div>
+                        </div>
+                        <div class="jet-toggles">
+                            <label class="jet-toggle"><input type="checkbox" data-param="weapons"><span>weapons</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="foeFire"><span>return fire</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="crash"><span>crashes</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="invertY"><span>flight stick</span></label>
+                        </div>
                         <div class="jet-field jet-seed">
                             <label class="jet-label" for="jet-seed">world seed</label>
                             <div class="jet-seed-row">
@@ -102,6 +117,13 @@
                                 <button type="button" class="g-btn" id="jet-reseed" title="New world">&#8635;</button>
                             </div>
                         </div>
+                    </div>
+                </section>
+                <section class="g-train-pane" data-embed="rail">
+                    <div class="g-panel-title">Training <span class="g-meta" id="jet-train-meta">14 drills</span></div>
+                    <div class="g-pane-body jet-controls">
+                        <p class="jet-copy">a guided flight: turning, flips, the cannon, missile locks, dodging and bailing out, one thing at a time.</p>
+                        <div class="g-actions"><button type="button" class="jet-btn" id="jet-train">start training</button></div>
                     </div>
                 </section>
                 <section class="g-airframe-pane" data-embed="rail" data-anchor="airframe">
@@ -152,20 +174,35 @@
                         </div>
                         <span class="g-chip tone-blue"><i class="g-dot tone-blue"></i>Program</span>
                     </div>
-                    <p class="g-summary">a pixel-art fighter built from 13 stacked slices, flying over procedural islands. one software renderer, three cameras, smooth WebGL afterburners laid over the pixels.</p>
+                    <p class="g-summary">a pixel-art fighter built from 13 stacked slices, flying over procedural islands. dogfight enemy jets with cannon and lock-on missiles, roll to dodge, bail out under a parachute. one software renderer, three cameras, smooth WebGL afterburners laid over the pixels.</p>
                 </div>
                 <section class="g-card g-flight-pane" data-anchor="flight-deck">
                     <div class="g-panel-title">Flight Deck <span class="g-meta"><span id="jet-view-tag">overhead</span> &middot; <span id="jet-px"></span></span></div>
                     <div class="jet-stage" id="jet-stage" tabindex="0" data-view="top" aria-label="Flight deck: click to fly">
-                        <canvas id="jet-canvas" role="img" aria-label="A pixel-art fighter jet, built from stacked slices, flying over islands. Space moves between the overhead view, the view from behind the jet and the cockpit; arrow keys fly it and Shift fires the thrusters."></canvas>
+                        <canvas id="jet-canvas" role="img" aria-label="A pixel-art fighter jet, built from stacked slices, flying over islands among enemy jets. Space moves between the overhead view, the view from behind the jet and the cockpit; arrow keys fly it, Shift fires the thrusters, J the cannon and M a missile."></canvas>
                         <canvas id="jet-fire" aria-hidden="true"></canvas>
                         <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
                         <div class="jet-hud" aria-hidden="true">
                             <span id="jet-hud-hdg">HDG 000</span><span id="jet-hud-spd">SPD 000</span><span id="jet-hud-alt">ALT 000</span>
                         </div>
+                        <div class="jet-hud jet-hud-war" aria-hidden="true">
+                            <span id="jet-hud-hull">HULL ██████</span><span id="jet-hud-kills">KILLS 0</span><span id="jet-hud-ammo">RDS 300 · MSL 6</span>
+                        </div>
+                        <p class="jet-alert" id="jet-alert" aria-live="assertive"></p>
+                        <div class="jet-lesson" id="jet-lesson" hidden>
+                            <div class="jet-lesson-top"><span id="jet-lesson-step">1 / 14</span><span id="jet-lesson-group"></span>
+                                <button type="button" class="jet-lesson-x" id="jet-lesson-skip">skip</button><button type="button" class="jet-lesson-x" id="jet-lesson-stop" aria-label="End training">&times;</button></div>
+                            <b id="jet-lesson-title"></b>
+                            <p id="jet-lesson-how"></p>
+                            <p class="jet-lesson-hint" id="jet-lesson-hint"></p>
+                            <div class="jet-lesson-bar"><i id="jet-lesson-bar"></i></div>
+                        </div>
                         <p class="jet-hint" id="jet-hint" aria-live="polite"></p>
                         <button type="button" class="jet-touch jet-touch-view" id="jet-view-btn" aria-label="Change view">view</button>
                         <button type="button" class="jet-touch jet-touch-boost" id="jet-boost-btn" aria-label="Thrusters: hold to fire" aria-pressed="false">boost</button>
+                        <button type="button" class="jet-touch jet-touch-gun jet-arm" id="jet-gun-btn" aria-label="Cannon: hold to fire" aria-pressed="false">gun</button>
+                        <button type="button" class="jet-touch jet-touch-missile jet-arm" id="jet-missile-btn" aria-label="Fire a missile">missile</button>
+                        <button type="button" class="jet-touch jet-touch-loop" id="jet-loop-btn" aria-label="Fly a loop">loop</button>
                     </div>
                 </section>
             </section>
@@ -183,6 +220,11 @@
                         <dt>bank</dt><dd id="jet-bank">&mdash;</dd>
                         <dt>turn</dt><dd id="jet-g">&mdash;</dd>
                         <dt>grid</dt><dd id="jet-pos">&mdash;</dd>
+                        <dt>hull</dt><dd id="jet-hull">&mdash;</dd>
+                        <dt>kills</dt><dd id="jet-kills">&mdash;</dd>
+                        <dt>cannon</dt><dd id="jet-rounds">&mdash;</dd>
+                        <dt>missiles</dt><dd id="jet-missiles">&mdash;</dd>
+                        <dt>radar</dt><dd id="jet-radar">&mdash;</dd>
                         <dt>frame rate</dt><dd id="jet-fps">&mdash;</dd>
                     </dl>
                 </section>
@@ -205,6 +247,22 @@
                             <input type="range" id="jet-scale" data-param="jetScale" min="0.5" max="2.5" step="0.05"></label>
                         <label class="jet-range"><span>pixel size</span><output for="jet-pixel"></output>
                             <input type="range" id="jet-pixel" data-param="pixelSize" min="0" max="10" step="1"></label>
+                        <label class="jet-range"><span>bloom</span><output for="jet-bloom"></output>
+                            <input type="range" id="jet-bloom" data-param="bloom" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>colour</span><output for="jet-vivid"></output>
+                            <input type="range" id="jet-vivid" data-param="vivid" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>vignette</span><output for="jet-vignette"></output>
+                            <input type="range" id="jet-vignette" data-param="vignette" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>film grain</span><output for="jet-grain"></output>
+                            <input type="range" id="jet-grain" data-param="grain" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>screen shake</span><output for="jet-shake"></output>
+                            <input type="range" id="jet-shake" data-param="shake" min="0" max="2" step="0.05"></label>
+                        <label class="jet-range"><span>slow motion</span><output for="jet-slowmo"></output>
+                            <input type="range" id="jet-slowmo" data-param="slowMo" min="0" max="3" step="0.1"></label>
+                        <div class="jet-toggles">
+                            <label class="jet-toggle"><input type="checkbox" data-param="cloudCut"><span>cloud wakes</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="followPointer"><span>follow pointer</span></label>
+                        </div>
                         <div class="g-actions">
                             <button type="button" class="jet-btn" id="jet-replay">replay takeoff</button>
                         </div>
@@ -215,8 +273,11 @@
                     <div class="g-pane-body">
                         <table class="keys">
                             <tr><td>point / <kbd>WASD</kbd></td><td>steer, climb + dive</td></tr>
-                            <tr><td>click</td><td>aileron roll</td></tr>
+                            <tr><td>click</td><td>aileron roll · dodges missiles</td></tr>
                             <tr><td>hold / <kbd>shift</kbd></td><td>afterburner</td></tr>
+                            <tr><td>right mouse / <kbd>J</kbd></td><td>cannon</td></tr>
+                            <tr><td><kbd>M</kbd></td><td>missile (lock first)</td></tr>
+                            <tr><td><kbd>F</kbd> / <kbd>G</kbd></td><td>back / front flip</td></tr>
                             <tr><td><kbd>space</kbd></td><td>next camera</td></tr>
                         </table>
                     </div>
@@ -230,7 +291,7 @@
                 <span id="jet-link"><i class="g-dot tone-green"></i>SIM LIVE</span>
                 <span id="jet-status">HDG 000 &middot; ALT 0</span>
                 <span id="g-clock"></span>
-                <span class="g-hint">click the deck to fly &middot; space to change camera</span>
+                <span class="g-hint">click the deck to fly &middot; right-click fires &middot; M for missiles</span>
             </div>
             <div class="g-pet" id="radgotchi-container">
                 <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
@@ -250,8 +311,8 @@
     <script defer src="/js/workspace.js?v=1.0"></script>
 
     <!-- Jet -->
-    <script defer src="/js/jet/engine.js?v=1.2"></script>
-    <script defer src="/js/jet.js?v=1.0"></script>
+    <script defer src="/js/jet/engine.js?v=2.0"></script>
+    <script defer src="/js/jet.js?v=2.0"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
 /* Jet: the sprite-stack fighter scene (js/jet/engine.js, bundled from /mnt/deepdish/Jet) in the DEEPDISH workspace.
    A vanilla port of the scene's React wrapper (jet.tsx): the pixel canvas and the smooth-flame canvas over it,
-   pointer / keyboard / touch flying, the line of help and the touch buttons. On top of that, this page's panels:
-   flight plan and airframe controls (input[data-param], [data-set] buttons, saved in localStorage "jetSettings"),
-   and the flight data readouts, refreshed a few times a second from scene.telemetry. */
+   pointer / keyboard / touch flying and fighting (cannon, missiles, loops), the line of help, the touch buttons and
+   the training flight (E.createTutorial). No sound: the scene's audio / takeSounds() are never read. On top of that,
+   this page's panels: flight plan, airframe and handling controls (input[data-param], [data-set] buttons, saved in
+   localStorage "jetSettings"), and the flight + combat readouts, refreshed a few times a second from the scene. */
 (function () {
     'use strict';
     const E = window.JetEngine;
@@ -120,6 +121,7 @@
         if (now - fpsT > 1000) { fps = Math.round((fpsN * 1000) / (now - fpsT)); fpsN = 0; fpsT = now; }
         if (!scene.width) return;
         scene.step(dt);
+        if (tutorial.on) tutorial.tick(dt);
         const bytes = scene.render();
         if (!image) image = new ImageData(bytes, scene.width, scene.height);
         ctx.putImageData(image, 0, 0);
@@ -143,14 +145,14 @@
 
     // ---------- Line of help ----------
     const HINTS = {
-        top: 'move to steer · click to roll · hold to fire the thrusters · space: chase view',
-        chase: 'point to turn, climb + dive · click to roll · hold for thrusters · space: cockpit',
-        cockpit: 'point to turn, climb + dive · click to roll · hold for thrusters · space: overhead',
+        top: 'move to steer · click: roll · hold: thrust · right-click: gun · M: missile · space: chase',
+        chase: 'point to fly · click: roll · hold: thrust · right-click: gun · M: missile · space: cockpit',
+        cockpit: 'point to fly · click: roll · hold: thrust · right-click: gun · M: missile · space: overhead',
     };
     const TOUCH_HINTS = {
-        top: 'touch to steer · tap to roll · hold boost for the thrusters · view: chase',
-        chase: 'touch to turn, climb + dive · tap to roll · hold boost · view: cockpit',
-        cockpit: 'touch to turn, climb + dive · tap to roll · hold boost · view: overhead',
+        top: 'touch to steer · tap to roll · hold boost / gun · view: chase',
+        chase: 'touch to turn, climb + dive · tap to roll · hold boost / gun · view: cockpit',
+        cockpit: 'touch to turn, climb + dive · tap to roll · hold boost / gun · view: overhead',
     };
     const VIEW_NAME = { top: 'overhead', chase: 'chase', cockpit: 'cockpit' };
     const hintEl = $('jet-hint');
@@ -181,6 +183,15 @@
         ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
         ShiftLeft: 'boost', ShiftRight: 'boost', TouchBoost: 'boost',
     };
+    // one-shot keys: a missile, a loop over the top (F) or forward and under (G)
+    const ACT = { KeyM: () => scene.missile(), KeyF: () => scene.loop(1), KeyG: () => scene.loop(-1) };
+    const GUN_KEYS = new Set(['KeyJ']);
+    const triggers = new Set(); // what is holding the cannon's trigger: a key, the right mouse button, the touch button
+    const trigger = (who, on) => {
+        const had = triggers.size > 0;
+        if (on) triggers.add(who); else triggers.delete(who);
+        if (had !== triggers.size > 0) scene.setFire(triggers.size > 0);
+    };
     const held = new Set();
     function sendKeys() {
         let turn = 0, climb = 0, boost = false;
@@ -209,14 +220,31 @@
             if (!e.repeat) nextView();
             return;
         }
-        if (FLY[e.code] && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (FLY[e.code]) {
             e.preventDefault();
             held.add(e.code);
             sendKeys();
+        } else if (GUN_KEYS.has(e.code)) {
+            e.preventDefault();
+            trigger(e.code, true);
+        } else if (ACT[e.code]) {
+            e.preventDefault();
+            if (!e.repeat) ACT[e.code]();
         }
     });
-    wrap.addEventListener('keyup', (e) => { if (held.delete(e.code)) sendKeys(); });
-    const letGo = () => { held.clear(); sendKeys(); boostBtn && boostBtn.classList.remove('is-on'); };
+    wrap.addEventListener('keyup', (e) => {
+        if (held.delete(e.code)) sendKeys();
+        if (GUN_KEYS.has(e.code)) trigger(e.code, false);
+    });
+    const letGo = () => {
+        held.clear();
+        sendKeys();
+        triggers.clear();
+        scene.setFire(false);
+        boostBtn && boostBtn.classList.remove('is-on');
+        gunBtn && gunBtn.classList.remove('is-on');
+    };
     wrap.addEventListener('blur', () => { if (!held.has('TouchBoost')) letGo(); });
     window.addEventListener('blur', letGo);
     const grab = () => wrap.focus({ preventScroll: true });
@@ -253,19 +281,35 @@
             steer = { id: e.pointerId, t: performance.now(), x: e.clientX, y: e.clientY, moved: false };
             scene.pointerMove(x, y);
         } else {
+            if (fingerScreen) setTouch(false);
             scene.pointerMove(x, y);
-            scene.press();
+            if (e.button === 2) trigger('mouse', true);
+            else if (e.button === 0) scene.press();
         }
+        if (tutorial.on) tutorial.setFlyer(byFinger(e) ? 'touch' : 'pointer');
         grab();
     });
-    wrap.addEventListener('pointerup', (e) => { if (byFinger(e)) endFinger(e, true); else scene.release(); });
-    wrap.addEventListener('pointerleave', (e) => { if (byFinger(e)) endFinger(e, false); else scene.pointerLeave(); });
-    wrap.addEventListener('pointercancel', (e) => { if (byFinger(e)) endFinger(e, false); else scene.pointerLeave(); });
-    wrap.addEventListener('contextmenu', (e) => { if (fingerScreen) e.preventDefault(); });
+    wrap.addEventListener('pointerup', (e) => {
+        if (byFinger(e)) endFinger(e, true);
+        else if (e.button === 2) trigger('mouse', false);
+        else if (e.button === 0) scene.release();
+    });
+    const pointerGone = (e) => {
+        if (byFinger(e)) { endFinger(e, false); return; }
+        trigger('mouse', false);
+        scene.pointerLeave();
+        if (triggers.size) scene.setFire(true); // (pointerLeave lets go of the trigger: a held key keeps it)
+    };
+    wrap.addEventListener('pointerleave', pointerGone);
+    wrap.addEventListener('pointercancel', pointerGone);
+    wrap.addEventListener('contextmenu', (e) => e.preventDefault()); // the right button is the cannon
 
     // Touch buttons: View, and Boost held like a key
     const viewBtn = $('jet-view-btn');
     const boostBtn = $('jet-boost-btn');
+    const gunBtn = $('jet-gun-btn');
+    const missileBtn = $('jet-missile-btn');
+    const loopBtn = $('jet-loop-btn');
     const mine = (e) => e.stopPropagation();
     if (viewBtn) {
         ['pointerdown', 'pointermove', 'pointerup'].forEach((t) => viewBtn.addEventListener(t, mine));
@@ -295,6 +339,34 @@
         boostBtn.addEventListener('lostpointercapture', off);
         boostBtn.addEventListener('contextmenu', (e) => e.preventDefault());
     }
+    if (gunBtn) {
+        const on = (e) => {
+            e.stopPropagation();
+            try { gunBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            trigger('touch', true);
+            gunBtn.classList.add('is-on');
+            gunBtn.setAttribute('aria-pressed', 'true');
+        };
+        const off = (e) => {
+            e.stopPropagation();
+            if (!triggers.has('touch')) return;
+            trigger('touch', false);
+            gunBtn.classList.remove('is-on');
+            gunBtn.setAttribute('aria-pressed', 'false');
+            grab();
+        };
+        gunBtn.addEventListener('pointerdown', on);
+        gunBtn.addEventListener('pointermove', mine);
+        gunBtn.addEventListener('pointerup', off);
+        gunBtn.addEventListener('pointercancel', off);
+        gunBtn.addEventListener('lostpointercapture', off);
+        gunBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+    [[missileBtn, () => scene.missile()], [loopBtn, () => scene.loop(1)]].forEach(([btn, act]) => {
+        if (!btn) return;
+        ['pointerdown', 'pointermove', 'pointerup'].forEach((t) => btn.addEventListener(t, mine));
+        btn.addEventListener('click', () => { act(); grab(); });
+    });
 
     // ---------- Controls: input[data-param] and [data-set][data-value] buttons write settings ----------
     const FMT = {
@@ -309,6 +381,12 @@
         chaseAngle: (v) => Math.round(v) + '°',
         bank: (v) => Math.round(v) + '°',
         pixelSize: (v) => (v > 0 ? v + 'x' : 'auto'),
+        bloom: (v) => Math.round(v * 100) + '%',
+        vivid: (v) => Math.round(v * 100) + '%',
+        vignette: (v) => Math.round(v * 100) + '%',
+        grain: (v) => Math.round(v * 100) + '%',
+        shake: (v) => Math.round(v * 100) + '%',
+        slowMo: (v) => (v > 0 ? v.toFixed(1) + ' s' : 'off'),
     };
     const inputs = Array.from(document.querySelectorAll('[data-param]'));
     const setters = Array.from(document.querySelectorAll('[data-set]'));
@@ -327,6 +405,7 @@
         const sw = $('jet-swatch');
         if (sw) sw.style.setProperty('--jet-accent', settings.accentColor);
         wrap.style.setProperty('--jet-accent', settings.accentColor);
+        wrap.classList.toggle('is-unarmed', !settings.weapons);
     }
     function apply(k, v) {
         settings[k] = v;
@@ -368,6 +447,46 @@
     paint();
     window.addEventListener('hashchange', () => { const v = hashView(); if (v && v !== scene.view) apply('view', v); });
 
+    // ---------- Training flight: a card on the deck, one drill at a time ----------
+    const card = {
+        el: $('jet-lesson'), step: $('jet-lesson-step'), group: $('jet-lesson-group'), title: $('jet-lesson-title'),
+        how: $('jet-lesson-how'), hint: $('jet-lesson-hint'), bar: $('jet-lesson-bar'),
+    };
+    const trainBtn = $('jet-train');
+    const tutorial = E.createTutorial(scene, {
+        change(l) {
+            wrap.classList.toggle('is-training', !!l);
+            if (trainBtn) trainBtn.textContent = l ? 'end training' : 'start training';
+            if (!card.el) return;
+            card.el.hidden = !l;
+            if (!l) return;
+            const flyer = fingerScreen ? 'touch' : 'pointer';
+            const w = E.lessonWords(l.id, flyer, !!settings.invertY, l.view);
+            card.el.classList.toggle('is-done', l.phase !== 'do');
+            card.step.textContent = l.phase === 'end' ? 'done' : `${l.index + 1} / ${l.count}`;
+            card.group.textContent = l.group;
+            card.title.textContent = l.phase === 'end' ? 'Training complete' : (l.phase === 'done' ? '✓ ' : '') + w.title;
+            card.how.textContent = l.phase === 'end' ? 'The sky is yours. Enemies are back.' : w.how;
+            card.hint.textContent = l.phase === 'do' ? l.hint : '';
+            card.bar.style.width = (l.progress * 100).toFixed(1) + '%';
+        },
+        chime() { /* no sound */ },
+    });
+    const meta = $('jet-train-meta');
+    function startTraining() {
+        if (tutorial.on) { tutorial.stop(); return; }
+        tutorial.setFlyer(fingerScreen ? 'touch' : 'pointer');
+        tutorial.start({ armed: !!settings.weapons, crash: !!settings.crash });
+        grab();
+    }
+    if (trainBtn) trainBtn.addEventListener('click', startTraining);
+    const skipBtn = $('jet-lesson-skip');
+    if (skipBtn) skipBtn.addEventListener('click', (e) => { e.stopPropagation(); tutorial.skip(); grab(); });
+    const stopBtn = $('jet-lesson-stop');
+    if (stopBtn) stopBtn.addEventListener('click', (e) => { e.stopPropagation(); tutorial.stop(); grab(); });
+    if (card.el) ['pointerdown', 'pointermove', 'pointerup'].forEach((t) => card.el.addEventListener(t, mine));
+    if (meta) meta.textContent = 'guided';
+
     // ---------- Flight data ----------
     const out = {
         hdg: $('jet-hdg'), spd: $('jet-spd'), alt: $('jet-alt'), agl: $('jet-agl'), g: $('jet-g'),
@@ -375,7 +494,10 @@
         spdBar: $('jet-spd-bar'), altBar: $('jet-alt-bar'),
         hudHdg: $('jet-hud-hdg'), hudSpd: $('jet-hud-spd'), hudAlt: $('jet-hud-alt'),
         status: $('jet-status'),
+        hull: $('jet-hull'), kills: $('jet-kills'), rounds: $('jet-rounds'), missiles: $('jet-missiles'), radar: $('jet-radar'),
+        hudHull: $('jet-hud-hull'), hudKills: $('jet-hud-kills'), hudAmmo: $('jet-hud-ammo'), alert: $('jet-alert'),
     };
+    const load = (n, max, reloading) => (reloading > 0 ? `RELOAD ${Math.round(reloading * 100)}%` : max > 0 ? `${n} / ${max}` : '∞');
     const pad3 = (n) => String(n).padStart(3, '0');
     const deg = (r) => (r * 180) / Math.PI;
     const set = (el, t) => { if (el && el.textContent !== t) el.textContent = t; };
@@ -405,8 +527,34 @@
         set(out.hudSpd, 'SPD ' + pad3(spd));
         set(out.hudAlt, 'ALT ' + pad3(alt));
         set(out.status, `HDG ${hdg} · ALT ${alt}`);
+
+        // combat
+        const hull = scene.hull;
+        const a = scene.ammo;
+        const r = scene.radar;
+        const bars = '█'.repeat(Math.max(0, hull)) + '░'.repeat(Math.max(0, scene.hullMax - hull));
+        set(out.hull, t.out ? 'EJECTED' : `${hull} / ${scene.hullMax}`);
+        set(out.kills, String(scene.kills));
+        set(out.rounds, load(a.rounds, a.roundsMax, a.gunLoad));
+        set(out.missiles, load(a.missiles, a.missilesMax, a.missileLoad));
+        const up = r.foes.filter((f) => f.state === 0).length;
+        set(out.radar, `${up} hostile${up === 1 ? '' : 's'}${r.attackers ? ` · ${r.attackers} attacking` : ''}`);
+        set(out.hudHull, t.out ? 'HULL ──────' : 'HULL ' + bars);
+        if (out.hudHull) out.hudHull.classList.toggle('is-low', !t.out && hull <= 2);
+        set(out.hudKills, 'KILLS ' + scene.kills);
+        set(out.hudAmmo, `RDS ${a.gunLoad > 0 ? '--' : a.roundsMax > 0 ? a.rounds : '∞'} · MSL ${a.missileLoad > 0 ? '-' : a.missilesMax > 0 ? a.missiles : '∞'}`);
+        let alert = '';
+        let cls = '';
+        if (settings.weapons && !t.out) {
+            if (scene.counterOpen) { alert = 'COUNTER · FIRE NOW'; cls = 'is-now'; }
+            else if (scene.threat < 90) { alert = scene.threat < 0.6 ? 'ROLL!' : 'MISSILE INBOUND'; cls = scene.threat < 0.6 ? 'is-now' : ''; }
+            else if (r.locked) { alert = 'LOCKED'; cls = 'is-lock'; }
+            else if (r.lock >= 0) { alert = 'LOCKING'; cls = 'is-lock'; }
+        }
+        set(out.alert, alert);
+        if (out.alert) out.alert.className = 'jet-alert ' + cls;
     }
-    setInterval(readouts, 150);
+    setInterval(readouts, 100);
 
     function setLink(state) {
         const el = $('jet-link');
