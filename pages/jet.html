@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jet - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/jet">
+    <meta property="og:title" content="Jet">
+    <meta property="og:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: overhead, chase and cockpit views.">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/jet">
+    <meta property="twitter:title" content="Jet">
+    <meta property="twitter:description" content="A sprite-stacked pixel-art fighter jet over procedural islands: overhead, chase and cockpit views.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/jet.css?v=1.1">
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+    <!-- Jet workspace: js/jet/engine.js draws the scene (bundled from /mnt/deepdish/Jet), js/jet.js flies it and drives the panels -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Program</span><span class="sep">/</span>
+                <b>Jet</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
+
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="g-plan-pane" data-embed="rail" data-anchor="flight-plan">
+                    <div class="g-panel-title">Flight Plan</div>
+                    <div class="g-pane-body jet-controls">
+                        <div class="jet-field">
+                            <span class="jet-label">camera</span>
+                            <div class="jet-seg" role="group" aria-label="Camera">
+                                <button type="button" data-set="view" data-value="top">overhead</button>
+                                <button type="button" data-set="view" data-value="chase">chase</button>
+                                <button type="button" data-set="view" data-value="cockpit">cockpit</button>
+                            </div>
+                        </div>
+                        <div class="jet-field">
+                            <span class="jet-label">time of day</span>
+                            <div class="jet-seg" role="group" aria-label="Time of day">
+                                <button type="button" data-set="timeOfDay" data-value="day">day</button>
+                                <button type="button" data-set="timeOfDay" data-value="sunset">sunset</button>
+                                <button type="button" data-set="timeOfDay" data-value="night">night</button>
+                            </div>
+                        </div>
+                        <label class="jet-range"><span>cloud cover</span><output for="jet-clouds"></output>
+                            <input type="range" id="jet-clouds" data-param="clouds" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>landmass</span><output for="jet-land"></output>
+                            <input type="range" id="jet-land" data-param="land" min="0" max="1" step="0.01"></label>
+                        <div class="jet-field">
+                            <span class="jet-label">wingmen</span>
+                            <div class="jet-seg" role="group" aria-label="Wingmen">
+                                <button type="button" data-set="wingmen" data-value="0">solo</button>
+                                <button type="button" data-set="wingmen" data-value="1">+1</button>
+                                <button type="button" data-set="wingmen" data-value="2">+2</button>
+                            </div>
+                        </div>
+                        <div class="jet-field jet-seed">
+                            <label class="jet-label" for="jet-seed">world seed</label>
+                            <div class="jet-seed-row">
+                                <input type="number" id="jet-seed" data-param="seed" min="1" max="99999" step="1" inputmode="numeric">
+                                <button type="button" class="g-btn" id="jet-reseed" title="New world">&#8635;</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="g-airframe-pane" data-embed="rail" data-anchor="airframe">
+                    <div class="g-panel-title">Airframe <span class="g-meta" id="jet-swatch"><i class="jet-swatch-dot"></i></span></div>
+                    <div class="g-pane-body jet-controls">
+                        <div class="jet-field">
+                            <span class="jet-label">livery <b id="jet-livery-name"></b></span>
+                            <div class="jet-livery" role="group" aria-label="Livery">
+                                <button type="button" data-set="preset" data-value="deepdish" title="deepdish" aria-label="deepdish livery" style="--a:#8be9fd;--b:#3d4458;--c:#50fa7b"></button>
+                                <button type="button" data-set="preset" data-value="radbro" title="radbro" aria-label="radbro livery" style="--a:#ffb86c;--b:#545969;--c:#8be9fd"></button>
+                                <button type="button" data-set="preset" data-value="dracula" title="dracula" aria-label="dracula livery" style="--a:#bd93f9;--b:#44475a;--c:#ff79c6"></button>
+                                <button type="button" data-set="preset" data-value="ghost" title="ghost" aria-label="ghost livery" style="--a:#ff5555;--b:#c4c9d3;--c:#282a36"></button>
+                                <button type="button" data-set="preset" data-value="original" title="original" aria-label="original livery" style="--a:#f0580e;--b:#545969;--c:#1e8ca0"></button>
+                            </div>
+                        </div>
+                        <div class="jet-colors">
+                            <label><input type="color" data-param="bodyColor" id="jet-body"><span>body</span></label>
+                            <label><input type="color" data-param="accentColor" id="jet-accent"><span>accent</span></label>
+                            <label><input type="color" data-param="canopyColor" id="jet-canopy"><span>canopy</span></label>
+                        </div>
+                        <div class="jet-field">
+                            <span class="jet-label">flames</span>
+                            <div class="jet-seg" role="group" aria-label="Flames">
+                                <button type="button" data-set="flameStyle" data-value="realistic">smooth</button>
+                                <button type="button" data-set="flameStyle" data-value="pixel">pixel</button>
+                            </div>
+                            <p class="jet-note" id="jet-fire-note" hidden>smooth flames need WebGL: drawing them in pixels</p>
+                        </div>
+                        <label class="jet-range"><span>afterburner</span><output for="jet-burn"></output>
+                            <input type="range" id="jet-burn" data-param="afterburner" min="0" max="1" step="0.01"></label>
+                        <div class="jet-toggles">
+                            <label class="jet-toggle"><input type="checkbox" data-param="trails"><span>contrails</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="shadow"><span>shadow</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="stunts"><span>auto rolls</span></label>
+                            <label class="jet-toggle"><input type="checkbox" data-param="intro"><span>takeoff intro</span></label>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main">
+                <div class="g-objhead" data-embed="hide">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/jet.webp" alt="" style="image-rendering: pixelated"></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; PROGRAM &middot; SPRITE-STACK FLIGHT SIM</div>
+                            <h1>Jet</h1>
+                        </div>
+                        <span class="g-chip tone-blue"><i class="g-dot tone-blue"></i>Program</span>
+                    </div>
+                    <p class="g-summary">a pixel-art fighter built from 13 stacked slices, flying over procedural islands. one software renderer, three cameras, smooth WebGL afterburners laid over the pixels.</p>
+                </div>
+                <section class="g-card g-flight-pane" data-anchor="flight-deck">
+                    <div class="g-panel-title">Flight Deck <span class="g-meta"><span id="jet-view-tag">overhead</span> &middot; <span id="jet-px"></span></span></div>
+                    <div class="jet-stage" id="jet-stage" tabindex="0" data-view="top" aria-label="Flight deck: click to fly">
+                        <canvas id="jet-canvas" role="img" aria-label="A pixel-art fighter jet, built from stacked slices, flying over islands. Space moves between the overhead view, the view from behind the jet and the cockpit; arrow keys fly it and Shift fires the thrusters."></canvas>
+                        <canvas id="jet-fire" aria-hidden="true"></canvas>
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                        <div class="jet-hud" aria-hidden="true">
+                            <span id="jet-hud-hdg">HDG 000</span><span id="jet-hud-spd">SPD 000</span><span id="jet-hud-alt">ALT 000</span>
+                        </div>
+                        <p class="jet-hint" id="jet-hint" aria-live="polite"></p>
+                        <button type="button" class="jet-touch jet-touch-view" id="jet-view-btn" aria-label="Change view">view</button>
+                        <button type="button" class="jet-touch jet-touch-boost" id="jet-boost-btn" aria-label="Thrusters: hold to fire" aria-pressed="false">boost</button>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-data-pane" data-embed="side" data-anchor="flight-data">
+                    <div class="g-panel-title">Flight Data <span class="g-meta" id="jet-thr">CRUISE</span></div>
+                    <div class="jet-gauges">
+                        <div class="jet-gauge"><span>airspeed</span><b id="jet-spd">&mdash;</b><div class="g-meter-track"><i id="jet-spd-bar"></i></div></div>
+                        <div class="jet-gauge"><span>altitude</span><b id="jet-alt">&mdash;</b><div class="g-meter-track"><i id="jet-alt-bar"></i></div></div>
+                    </div>
+                    <dl class="g-props">
+                        <dt>heading</dt><dd id="jet-hdg">&mdash;</dd>
+                        <dt>above ground</dt><dd id="jet-agl">&mdash;</dd>
+                        <dt>bank</dt><dd id="jet-bank">&mdash;</dd>
+                        <dt>turn</dt><dd id="jet-g">&mdash;</dd>
+                        <dt>grid</dt><dd id="jet-pos">&mdash;</dd>
+                        <dt>frame rate</dt><dd id="jet-fps">&mdash;</dd>
+                    </dl>
+                </section>
+                <section class="g-handling-pane" data-embed="side" data-anchor="handling">
+                    <div class="g-panel-title">Handling <span class="g-meta"><button type="button" class="jet-link-btn" id="jet-reset">reset all</button></span></div>
+                    <div class="g-pane-body jet-controls">
+                        <label class="jet-range"><span>cruise speed</span><output for="jet-speed"></output>
+                            <input type="range" id="jet-speed" data-param="speed" min="40" max="200" step="1"></label>
+                        <label class="jet-range"><span>boost</span><output for="jet-boost"></output>
+                            <input type="range" id="jet-boost" data-param="boost" min="1" max="4" step="0.1"></label>
+                        <label class="jet-range"><span>agility</span><output for="jet-agility"></output>
+                            <input type="range" id="jet-agility" data-param="agility" min="0.4" max="3" step="0.05"></label>
+                        <label class="jet-range"><span>max bank</span><output for="jet-bankmax"></output>
+                            <input type="range" id="jet-bankmax" data-param="bank" min="0" max="85" step="1"></label>
+                        <label class="jet-range"><span>camera follow</span><output for="jet-follow"></output>
+                            <input type="range" id="jet-follow" data-param="cameraFollow" min="0" max="1" step="0.01"></label>
+                        <label class="jet-range"><span>chase distance</span><output for="jet-chase"></output>
+                            <input type="range" id="jet-chase" data-param="chaseDistance" min="1.5" max="6" step="0.1"></label>
+                        <label class="jet-range"><span>jet size</span><output for="jet-scale"></output>
+                            <input type="range" id="jet-scale" data-param="jetScale" min="0.5" max="2.5" step="0.05"></label>
+                        <label class="jet-range"><span>pixel size</span><output for="jet-pixel"></output>
+                            <input type="range" id="jet-pixel" data-param="pixelSize" min="0" max="10" step="1"></label>
+                        <div class="g-actions">
+                            <button type="button" class="jet-btn" id="jet-replay">replay takeoff</button>
+                        </div>
+                    </div>
+                </section>
+                <section class="g-keys-pane" data-embed="side">
+                    <div class="g-panel-title">Controls <span class="g-meta">saved in this browser</span></div>
+                    <div class="g-pane-body">
+                        <table class="keys">
+                            <tr><td>point / <kbd>WASD</kbd></td><td>steer, climb + dive</td></tr>
+                            <tr><td>click</td><td>aileron roll</td></tr>
+                            <tr><td>hold / <kbd>shift</kbd></td><td>afterburner</td></tr>
+                            <tr><td><kbd>space</kbd></td><td>next camera</td></tr>
+                        </table>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span id="jet-link"><i class="g-dot tone-green"></i>SIM LIVE</span>
+                <span id="jet-status">HDG 000 &middot; ALT 0</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">click the deck to fly &middot; space to change camera</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
+    </main>
+
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+
+    <!-- Jet -->
+    <script defer src="/js/jet/engine.js?v=1.2"></script>
+    <script defer src="/js/jet.js?v=1.0"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
+</body>
+</html>

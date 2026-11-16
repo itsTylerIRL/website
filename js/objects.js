@@ -18,6 +18,7 @@
 // onHost: a live connection the Host panel already shows (its comms tile and dossier card), kept out of Results
 // and the counts like a parent's projects; the NOW strip, the Signal Log and the command palette still open it.
 // parent: a project listed on another object's page (DeepDish's directory) rather than in Results and the counts.
+// unlisted: kept out of Results and the counts, but still found by search (the command palette) and opened by link.
 // It can still be opened by link (/#key), the command palette and the idle tour; while it's showing, its parent's
 // row stays lit and the header offers a way back.
 // Links: /#key selects an object, /#key/part also takes its page to a part of it (a card or section the page
@@ -30,6 +31,7 @@ const OBJECTS = [
     { key: 'network', hidden: true, name: 'the network is growing', url: 'https://clicker.tylerirl.com', type: 'external', icon: '/assets/object-icons/network.webp', desc: 'neochibi idle clicker, sibling to the cancel is coming', screen: 'Clicker Uplink', tag: 'click, grow, repeat · it never stops growing' }, // now a section of the cancel's page
     { key: 'kol', name: 'Kingdom of Loathing', url: '/pages/kol.html', type: 'collection', workspace: true, embed: true, icon: '/assets/object-icons/kol.webp', desc: 'TylerIRL in the Kingdom: live moons and calendar, display case with mall prices and what\'s new in KoLmafia', screen: 'Kingdom Uplink', tag: 'radbro of the kingdom since 2005' },
     { key: 'rocketry', name: 'Missile Program', url: '/pages/rocketry.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/rocketry.webp', desc: 'high power rocketry: vehicle builds, milestones, flight footage and launch status', screen: 'Range Control', tag: 'builds, burns + flight footage · go for launch' },
+    { key: 'jet', name: 'Jet', url: '/pages/jet.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/jet.webp', desc: 'sprite-stacked pixel-art fighter jet over procedural islands: overhead, chase and cockpit cameras, liveries and live flight data', screen: 'Flight Deck', tag: 'point to steer · hold to burn · space for the cockpit' },
     { key: 'deepdish', name: 'DeepDish', url: '/pages/deepdish.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/deepdish-rack.webp', desc: 'the homelab: a custom-built machine and what\'s built on it, OCS, TOP, RADactedBot, RadGotchi, DigiFlip and Middle Management, plus the Urbit apps %sextant, %chibi and %iron', screen: 'Rack Directory', tag: 'the homelab' },
     { key: 'ocs', parent: 'deepdish', name: 'DeepDish OCS', url: '/pages/deepdish_ocs.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/ocs-sentinel.webp', desc: 'optical control system: a face-tracking animated eye for the Gakken Worldeye, with technical docs', screen: 'Optic Feed', tag: 'a robot eye that watches you back' },
     { key: 'ocs-demo', hidden: true, name: 'OCS Web UI Demo', url: '/pages/OCS-web-ui-demo.html', type: 'program', icon: '/assets/object-icons/ocs-demo.webp', desc: 'interactive demo of the DeepDish OCS web interface' },
@@ -38,10 +40,10 @@ const OBJECTS = [
     { key: 'radgotchi', name: 'RadGotchi', url: '/pages/deepdish_rg.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/radgotchi-shades.webp', desc: 'desktop + web pixel-art companion: system telemetry, local-AI chat with tools, XP and a LAN mesh, with technical docs', screen: 'Companion Link', tag: 'a pixel radbro that lives on your desktop' },
     { key: 'grep', hidden: true, name: 'grep dojo', url: '/pages/grep.html', type: 'tool', icon: '/assets/object-icons/grep.webp', desc: 'master grep through interactive terminal challenges' },
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser', screen: 'Device Bay', tag: 'digimon v20th for the flipper zero · now in wasm' },
-    { key: 'timer', name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser', screen: 'Solve Station', tag: 'hold space · release · solve' },
-    { key: 'markets', name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart', screen: 'Market Terminal', tag: 'neochibi floors, volume + the CULT chart' },
+    { key: 'timer', unlisted: true, name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser', screen: 'Solve Station', tag: 'hold space · release · solve' },
+    { key: 'markets', unlisted: true, name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart', screen: 'Market Terminal', tag: 'neochibi floors, volume + the CULT chart' },
     { key: 'cornhub', hidden: true, name: 'CornHub', url: '/pages/cornhub.html', type: 'page', icon: '/assets/object-icons/cornhub.webp', desc: 'cornhub intl inc. - yet another shitcoin' },
-    { key: 'live-discord', name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen', screen: 'Comms Channel', tag: 'dm open · say hi' },
+    { key: 'live-discord', onHost: true, name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen', screen: 'Comms Channel', tag: 'dm open · say hi' },
     { key: 'live-music', onHost: true, name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles', screen: 'Audio Feed', tag: 'what\'s in the headphones' },
     { key: 'live-steam', onHost: true, name: 'Steam', url: 'https://steamcommunity.com/id/11111x11111', type: 'live', dossier: 'steam', icon: '/assets/object-icons/live-steam.svg', desc: 'online or in-game, and recently played games with hours', screen: 'Game Feed', tag: 'what\'s on the second monitor' },
     { key: 'live-soundcloud', onHost: true, name: 'SoundCloud', url: 'https://soundcloud.com/itstylerirl', type: 'live', dossier: 'soundcloud', icon: '/assets/object-icons/live-soundcloud.svg', desc: 'the latest upload, with followers, likes and tracks', screen: 'Upload Feed', tag: 'mixes, originals + collabs' },
@@ -128,7 +130,7 @@ const FEATURED = [
             format: o.type === 'live' ? 'live' : external ? 'external' : (o.workspace ? 'workspace' : 'legacy')
         };
     }).filter((o) => !o.hidden);
-    const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t && !o.parent && !o.onHost));
+    const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t && !o.parent && !o.onHost && !o.unlisted));
 
     let type = 'all';
     let current = null;
@@ -145,7 +147,7 @@ const FEATURED = [
         viewed.length = Math.min(viewed.length, HISTORY_MAX);
     } catch (_) {}
 
-    const listed = objects.filter((o) => !o.parent && !o.onHost);
+    const listed = objects.filter((o) => !o.parent && !o.onHost && !o.unlisted);
     const visible = () => listed.filter((o) => type === 'all' || o.type === type);
     const countOf = (t) => t === 'all' ? listed.length : listed.filter((o) => o.type === t).length;
     const parentOf = (o) => o && o.parent ? objects.find((x) => x.key === o.parent) : null;

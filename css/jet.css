@@ -1,0 +1,459 @@
+/* Page styles for jet.html: the sprite-stack fighter in the DEEPDISH workspace.
+   Shell comes from css/workspace.css; this file styles the flight deck (the scene's two canvases, its HUD,
+   line of help and touch buttons, set by js/jet.js), the controls in the side panels and the flight data. */
+
+/* ---------- Flight deck ---------- */
+.g-flight-pane { margin-top: var(--g-gap); }
+.jet-stage {
+    --jet-accent: var(--g-blue);
+    position: relative;
+    height: min(72vh, 760px);
+    min-height: 320px;
+    overflow: hidden;
+    background: #0a0d16;
+    outline: none;
+    cursor: crosshair;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.jet-stage canvas {
+    position: absolute;
+    display: block;
+}
+#jet-canvas { image-rendering: pixelated; }
+#jet-fire { pointer-events: none; }
+/* a soft vignette so the picture sits in the panel like a feed (no scanlines: they beat against the pixel grid) */
+.jet-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, 0.32) 100%);
+}
+.jet-stage:focus-visible { box-shadow: inset 0 0 0 1px rgba(var(--g-blue-rgb), 0.6); }
+.jet-stage .g-reticle {
+    position: absolute;
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    border: 0 solid rgba(var(--g-blue-rgb), 0.6);
+    pointer-events: none;
+}
+.jet-stage .g-reticle.tl { top: 8px; left: 8px; border-top-width: 1px; border-left-width: 1px; }
+.jet-stage .g-reticle.tr { top: 8px; right: 8px; border-top-width: 1px; border-right-width: 1px; }
+.jet-stage .g-reticle.bl { bottom: 8px; left: 8px; border-bottom-width: 1px; border-left-width: 1px; }
+.jet-stage .g-reticle.br { bottom: 8px; right: 8px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* HUD strip: the cockpit has its own instruments, so it steps aside there */
+.jet-hud {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    right: 28px;
+    display: flex;
+    gap: 14px;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--g-blue);
+    text-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.55), 0 1px 0 rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+.jet-stage[data-view="cockpit"] .jet-hud { opacity: 0; }
+
+/* Line of help: a glass pill, bottom centre; top centre in the cockpit and on touch screens */
+.jet-hint {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: 18px;
+    max-width: calc(100% - 40px);
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 5px 12px;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--g-text);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-pill);
+    box-shadow: 0 0 18px rgba(var(--g-blue-rgb), 0.12);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+.jet-hint.is-on { opacity: 1; }
+.jet-stage[data-view="cockpit"] .jet-hint,
+.jet-stage.is-touch .jet-hint { bottom: auto; top: 40px; }
+
+/* Touch buttons: only on touch screens */
+.jet-touch {
+    position: absolute;
+    z-index: 3;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 56px;
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-text);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-box);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+}
+.jet-stage.is-touch .jet-touch { display: inline-flex; }
+.jet-touch-view { left: max(16px, env(safe-area-inset-left)); }
+.jet-touch-boost { right: max(16px, env(safe-area-inset-right)); }
+.jet-touch:active,
+.jet-touch.is-on {
+    border-color: var(--jet-accent);
+    background: color-mix(in srgb, var(--jet-accent) 30%, rgba(0, 0, 0, 0.6));
+    box-shadow: 0 0 18px color-mix(in srgb, var(--jet-accent) 45%, transparent);
+}
+
+/* ---------- Controls ---------- */
+.jet-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.jet-field { display: flex; flex-direction: column; gap: 5px; }
+.jet-label,
+.jet-range > span {
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-muted);
+}
+
+/* segmented buttons */
+.jet-seg {
+    display: flex;
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-ctl);
+    overflow: hidden;
+    background: var(--g-well);
+}
+.jet-seg button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 5px 4px;
+    font-size: 11px;
+    color: var(--g-muted);
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--g-border);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.jet-seg button:first-child { border-left: 0; }
+.jet-seg button:hover { color: var(--g-text); background: rgba(var(--g-blue-rgb), 0.08); }
+.jet-seg button[aria-pressed="true"] {
+    color: #0b0f18;
+    background: var(--g-blue);
+    font-weight: 600;
+}
+
+/* sliders: label and value on one line, the track under them */
+.jet-range {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 2px 8px;
+}
+.jet-range output {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    color: var(--g-text);
+}
+.jet-range input {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 16px;
+    margin: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+.jet-range input::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--g-well);
+    border: 1px solid var(--g-border);
+}
+.jet-range input::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--g-well);
+    border: 1px solid var(--g-border);
+}
+.jet-range input::-moz-range-progress { height: 4px; border-radius: 2px; background: rgba(var(--g-blue-rgb), 0.5); }
+.jet-range input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -5px;
+    border-radius: 2px;
+    background: var(--g-blue);
+    box-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.6);
+    border: 0;
+}
+.jet-range input::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--g-blue);
+    box-shadow: 0 0 8px rgba(var(--g-blue-rgb), 0.6);
+    border: 0;
+}
+.jet-range input:focus-visible { outline: 1px solid var(--g-blue); outline-offset: 2px; }
+
+/* seed */
+.jet-seed-row { display: flex; gap: 6px; }
+.jet-seed-row input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 4px 8px;
+    font-family: var(--g-mono);
+    font-size: 12px;
+    color: var(--g-text);
+    background: var(--g-well);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-ctl);
+    outline: none;
+}
+.jet-seed-row input:focus { border-color: var(--g-blue); box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.2); }
+
+/* liveries: a strip of tri-colour swatches */
+.jet-label b { font-weight: 400; color: var(--g-text); text-transform: none; letter-spacing: 0.04em; margin-left: 4px; }
+.jet-livery {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+}
+.jet-livery button {
+    height: 22px;
+    padding: 0;
+    background: linear-gradient(90deg, var(--b) 0 50%, var(--a) 50% 80%, var(--c) 80%);
+    border: 1px solid var(--g-border);
+    border-radius: var(--g-r-ctl);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.jet-livery button:hover { opacity: 1; }
+.jet-livery button[aria-pressed="true"] {
+    opacity: 1;
+    border-color: #fff;
+    box-shadow: 0 0 0 1px var(--a), 0 0 12px color-mix(in srgb, var(--a) 45%, transparent);
+}
+
+/* colour pickers */
+.jet-colors {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+.jet-colors label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    cursor: pointer;
+}
+.jet-colors input {
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    background: var(--g-well);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-ctl);
+    cursor: pointer;
+}
+.jet-colors input::-webkit-color-swatch-wrapper { padding: 2px; }
+.jet-colors input::-webkit-color-swatch { border: 0; border-radius: 3px; }
+.jet-colors input::-moz-color-swatch { border: 0; border-radius: 3px; }
+.jet-swatch-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--jet-accent, var(--g-blue));
+    box-shadow: 0 0 8px var(--jet-accent, var(--g-blue));
+}
+
+/* toggles */
+.jet-toggles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+}
+.jet-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 7px;
+    font-size: 11px;
+    color: var(--g-muted);
+    border: 1px solid var(--g-border);
+    border-radius: var(--g-r-ctl);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+.jet-toggle:hover { color: var(--g-text); border-color: var(--g-border-strong); }
+.jet-toggle:has(input:checked) { color: var(--g-text); border-color: rgba(var(--g-blue-rgb), 0.45); }
+.jet-toggle input { accent-color: var(--g-blue); margin: 0; }
+.jet-note { margin: 0; font-size: 10.5px; color: var(--g-orange); }
+
+.jet-btn {
+    flex: 1 1 auto;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: var(--g-blue);
+    background: var(--g-raise);
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-ctl);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.jet-btn:hover {
+    color: #fff;
+    border-color: var(--g-blue);
+    background: rgba(var(--g-blue-rgb), 0.14);
+    box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.25);
+}
+.jet-link-btn {
+    padding: 0;
+    font: inherit;
+    color: var(--g-dim);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+.jet-link-btn:hover { color: var(--g-red); text-decoration: underline; }
+
+/* ---------- Flight data ---------- */
+#jet-thr { transition: color 0.2s ease; }
+#jet-thr.is-hot { color: var(--g-orange); text-shadow: 0 0 8px rgba(255, 184, 108, 0.6); }
+.jet-gauges {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px 12px 4px;
+}
+.jet-gauge {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    background: var(--g-well);
+    border: 1px solid var(--g-border);
+    border-radius: var(--g-r-box);
+}
+.jet-gauge span {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-muted);
+}
+.jet-gauge b {
+    font-family: var(--g-mono);
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--g-blue);
+    text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.35);
+    white-space: nowrap;
+}
+.jet-gauge .g-meter-track { width: 100%; }
+.jet-gauge .g-meter-track i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: var(--g-blue);
+    transition: width 0.15s linear;
+}
+.jet-gauge + .jet-gauge .g-meter-track i { background: var(--g-green); }
+
+/* key table */
+.g-keys-pane .keys { width: 100%; border-collapse: collapse; font-size: 11px; }
+.g-keys-pane .keys td { padding: 4px 0; border-bottom: 1px solid rgba(var(--g-blue-rgb), 0.07); vertical-align: top; }
+.g-keys-pane .keys tr:last-child td { border-bottom: 0; }
+.g-keys-pane .keys td:first-child { color: var(--g-text); padding-right: 10px; white-space: nowrap; }
+.g-keys-pane .keys td:last-child { color: var(--g-muted); text-align: right; }
+.g-keys-pane kbd {
+    display: inline-block;
+    min-width: 16px;
+    margin: 0 1px;
+    padding: 0 4px;
+    font-family: var(--g-mono);
+    font-size: 10px;
+    text-align: center;
+    color: var(--g-blue);
+    border: 1px solid var(--g-border-strong);
+    border-radius: 3px;
+    background: var(--g-well);
+}
+.g-keys-pane .panel-note { margin: 8px 0 0; font-size: 10.5px; color: var(--g-dim); }
+
+/* ---------- One-screen layout (desktop): the deck takes the main column's height ---------- */
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-main { overflow: hidden; }
+    .g-flight-pane { flex: 1 1 0; min-height: 0; }
+    .jet-stage { flex: 1 1 0; height: auto; min-height: 0; }
+    .g-handling-pane { flex: 1 1 0; min-height: 160px; }
+    .g-plan-pane, .g-data-pane, .g-keys-pane { flex: none; }
+    .g-airframe-pane { flex: 1 1 0; min-height: 140px; }
+    .g-airframe-pane .g-pane-body,
+    .g-handling-pane .g-pane-body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
+    .jet-controls { gap: 8px; }
+}
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 899px) {
+    .jet-stage { height: min(68vh, 560px); height: min(68dvh, 560px); }
+    .jet-hud { right: 24px; gap: 10px; font-size: 10px; }
+    .jet-hint { font-size: 10px; letter-spacing: 0.06em; }
+    .g-data-pane { order: 2; }
+}
+@media (max-width: 479px) {
+    .jet-hud span:first-child { display: none; }
+}
+
+/* ---------- Embedded in the home page's live preview: the deck fills the frame ---------- */
+html.is-embed .g-flight-pane { margin-top: 0; }
+@media (min-width: 900px) {
+    html.is-embed .g-main { overflow: hidden; }
+    html.is-embed .g-flight-pane { flex: 1 1 0; min-height: 0; }
+    html.is-embed .jet-stage { flex: 1 1 0; height: auto; min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .jet-hint, .jet-hud { transition: none; }
+}
