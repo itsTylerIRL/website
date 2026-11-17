@@ -20,7 +20,9 @@
 // parent: a project listed on another object's page (DeepDish's directory) rather than in Results and the counts.
 // unlisted: kept out of Results and the counts, but still found by search (the command palette) and opened by link.
 // azimuth: an Urbit ID ('star' | 'planet'): listed in the rail's Azimuth IDs panel instead of Results (and its count),
-// with the same live line; search, links, the idle tour and the featured cards still find it.
+// with the same live line; search, links, the idle tour and the featured cards still find it. Its header has a
+// SHIP switch: on, the preview loads the ship itself (Landscape, behind its own +code login) in place of its relay
+// page; remembered per ship in this browser (the idle tour always shows the relay).
 // It can still be opened by link (/#key), the command palette and the idle tour; while it's showing, its parent's
 // row stays lit and the header offers a way back.
 // Links: /#key selects an object, /#key/part also takes its page to a part of it (a card or section the page
@@ -250,6 +252,18 @@ const FEATURED = [
     const openAttrs = (o) => o.external ? ' target="_blank" rel="noopener"' : '';
     // Framed live in the preview: an embed page here, or an external object's own page here (OBJECTS page)
     const embeds = (o) => !!o.embed && (!o.external || !!o.page);
+    // Azimuth IDs: the ship itself in the preview instead of its relay page (the SHIP switch in the header)
+    const SHIP_KEY = 'tirl_ship_view';
+    const shipView = new Set();
+    try { (JSON.parse(localStorage.getItem(SHIP_KEY)) || []).forEach((k) => shipView.add(k)); } catch (_) {}
+    const shipOn = (o) => !!o.azimuth && shipView.has(o.key) && !ambient;
+    const shipUrl = (o) => o.url.replace(/\/$/, '') + '/apps/landscape/';
+    function setShip(o, on) {
+        if (on) shipView.add(o.key); else shipView.delete(o.key);
+        try { localStorage.setItem(SHIP_KEY, JSON.stringify([...shipView])); } catch (_) {}
+        renderHeader(o);
+        renderPreview(o);
+    }
     function renderHeader(o) {
         const list = visible();
         const parent = parentOf(o);
@@ -269,6 +283,8 @@ const FEATURED = [
                     <h1>${esc(o.name)}</h1>
                 </div>
                 <span class="g-chip tone-${tone}"><i class="g-dot tone-${tone}"></i>${esc(typeName(o.type))}</span>
+                ${o.azimuth ? `<button type="button" class="g-ship-switch" role="switch" aria-checked="${shipView.has(o.key)}" data-ship
+                    title="${shipView.has(o.key) ? 'Showing the ship: switch back to its relay page' : `Load ${esc(o.name)} itself here (you log in with its +code)`}"><i aria-hidden="true"></i>SHIP</button>` : ''}
                 <div class="g-objnav">
                     ${swipeHint() ? '<span class="g-swipe-hint" aria-hidden="true">&lsaquo; swipe &rsaquo;</span>' : ''}
                     ${parent ? `<button type="button" class="g-btn g-up" data-up="${esc(parent.key)}" title="Back to ${esc(parent.name)}">&#8624; ${esc(parent.name.toUpperCase())}</button>` : ''}
@@ -282,6 +298,7 @@ const FEATURED = [
             <div class="g-now" id="g-now"></div>` : info}`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
         header.querySelector('[data-up]')?.addEventListener('click', (e) => select(objectByKey(e.currentTarget.dataset.up), { dir: -1 }));
+        header.querySelector('[data-ship]')?.addEventListener('click', () => setShip(o, !shipView.has(o.key)));
         // Home: the greeting and what changed since your last visit (js/now.js). Your stats from the games are in
         // the rail's User Login panel (js/player.js).
         if (o.key === HOME) window.TirlNow?.mount(header.querySelector('#g-now'));
@@ -398,7 +415,9 @@ const FEATURED = [
         embedStatus = '';
         keys();
         tune();
-        const embed = embeds(o);
+        const ship = shipOn(o);
+        const embed = ship || embeds(o);
+        els.preview.classList.toggle('is-ship', ship);
         if (embed) {
             els.preview.classList.add('is-embed');
             els.screen.classList.add('is-embed');
@@ -410,7 +429,7 @@ const FEATURED = [
         els.preview.hidden = home;
         els.featured.hidden = !home;
         // Each object names its screen; the name decodes in on the switch (js/arrive.js)
-        const title = home ? 'Featured' : o.screen || native?.title || 'Live Preview';
+        const title = home ? 'Featured' : ship ? `${o.name} · Landscape` : o.screen || native?.title || 'Live Preview';
         if (els.previewTitle.textContent !== title) {
             els.previewTitle.textContent = title;
             window.tirlArrive?.arrive(els.previewTitle);
@@ -450,8 +469,14 @@ const FEATURED = [
         previewTimer = setTimeout(() => {
             if (current !== o) return;
             const frame = document.createElement('iframe');
-            frame.src = embed ? `${o.page || o.url}?embed${deepHash ? '#' + encodeURIComponent(deepHash) : ''}` : o.url;
-            frame.title = `${o.name} preview`;
+            frame.src = ship ? shipUrl(o) : embed ? `${o.page || o.url}?embed${deepHash ? '#' + encodeURIComponent(deepHash) : ''}` : o.url;
+            frame.title = ship ? `${o.name} (Landscape)` : `${o.name} preview`;
+            if (ship) {
+                // The ship's own pages, from its own host: its login cookie is same-site with tylerirl.com, so a
+                // session from another tab carries over. Nothing is handed over to the columns (it has no TirlEmbed).
+                frame.allow = 'clipboard-write';
+                embedStatus = `SHIP · ${o.host.toUpperCase()}`;
+            }
             if (embed) {
                 embedFrame(o, frame);
                 els.screen.replaceChildren(frame);

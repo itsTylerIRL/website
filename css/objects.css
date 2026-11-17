@@ -2610,3 +2610,49 @@ html.sys-calm *::after {
 @media (max-width: 899px) {
     .g-assetmon-pane { order: 4; }
 }
+
+/* ---------- SHIP switch (Azimuth IDs' headers, js/objects.js setShip) ----------
+   On, the preview loads the ship itself (Landscape) instead of its relay page. */
+.g-ship-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 22px;
+    padding: 0 9px 0 4px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: 999px;
+    background: var(--g-well);
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--g-dim);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.g-ship-switch i {
+    position: relative;
+    width: 26px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    transition: background 0.2s ease;
+}
+.g-ship-switch i::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--g-muted);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.g-ship-switch:hover { color: var(--g-text); border-color: var(--g-blue); }
+.g-ship-switch[aria-checked="true"] { color: #bd93f9; border-color: rgba(189, 147, 249, 0.6); box-shadow: 0 0 12px rgba(189, 147, 249, 0.2); }
+.g-ship-switch[aria-checked="true"] i { background: rgba(189, 147, 249, 0.35); }
+.g-ship-switch[aria-checked="true"] i::after { transform: translateX(12px); background: #bd93f9; }
+@media (prefers-reduced-motion: reduce) {
+    .g-ship-switch, .g-ship-switch i, .g-ship-switch i::after { transition: none; }
+}
