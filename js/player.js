@@ -1,7 +1,8 @@
 /* Player link: sign in with Remilia SSO or an Urbit ID through the cancel game's service, the same sign-in the cancel
    is coming and the network is growing use. The sign-ins, or who you are and sign out, sit in the User Login panel
    at the top of the left column (#g-player-link), whatever object is showing; signed in, your stats from both games
-   show there too, under your name: a compact card per game (refreshed every 5 minutes while the tab is visible).
+   show there too, under your name: a compact card for the cancel is coming (refreshed every 5 minutes while the tab
+   is visible). The network is only read for the visit memory below (no card).
    The service sends the browser back here with its own signed session in #rn= (or #rn_error=). It's kept in this
    browser (localStorage) until it runs out or you sign out. Load this before js/objects.js, which would otherwise
    read the #fragment as an object to select.
@@ -9,7 +10,7 @@
    - POST /api/profile {session, data: {}}: the cancel's account sync. With nothing to add it changes nothing and
      answers with the account's record, DRIP, streak, all-time rank and last runs
    - GET /api/king?player=: weeks as king of the hill, kings slain, and whether you hold the hill now
-   - GET /api/net/profile?h=: the network: miladys, how far along, grass, where you stand on its boards (404: not started)
+   - GET /api/net/profile?h=: the network: miladys (404: not started), for the visit memory only
    Your crown, DRIP and miladys go into the visit memory (js/now.js), so coming back says what changed (losing the
    crown in particular). Who's signed in is window.TirlPlayer.user(), and a 'tirl:player' event says it changed. */
 (function () {
@@ -146,28 +147,6 @@
                 <span class="g-game-last">${lastLine}</span>
             </a>`;
     }
-    const BOARD_NAMES = { fastest: 'fastest to the garden', grass: 'grass', network: 'biggest network', online: 'new internet', uptime: 'uptime' };
-    function netCard() {
-        const n = stats.net;
-        const head = `<span class="g-game-head"><img src="/assets/object-icons/network.webp" alt=""><b>the network is growing</b><span class="g-game-go" title="${n && n.started === false ? 'start' : 'play'}">&nearr;</span></span>`;
-        let body, more = '';
-        if (!n) body = '<span class="g-game-last"><span>the network didn\'t answer</span></span>';
-        else if (n.started === false) body = '<span class="g-game-last"><span>not started yet · same miladys, idle</span></span>';
-        else {
-            const best = Object.entries(n.ranks || {}).filter(([b]) => BOARD_NAMES[b]).sort((x, y) => x[1].rank - y[1].rank)[0];
-            more = [`touched grass ${num(n.runs)}× (${num(n.grass)} grass)`, (n.challenges || []).length ? `${n.challenges.length} challenges beaten` : '',
-                n.cheese || n.beetles ? `🧀 ${num(n.cheese)} cheese this week · 🪲 ${num(n.beetles)} beetles` : '', best ? `#${num(best[1].rank)} of ${num(best[1].total)} · ${BOARD_NAMES[best[0]]}` : ''].filter(Boolean).join(' · ');
-            body = `<span class="g-pstats">
-                    ${stat(num(n.miladys), `milad${n.miladys === 1 ? 'y' : 'ys'}`, 'drip')}
-                    ${stat(n.online ? '🌐 on' : `${n.stage}/7`, n.online ? `${num(n.epochs)} epochs` : 'new internet')}
-                    ${best ? stat(`#${num(best[1].rank)}`, BOARD_NAMES[best[0]]) : stat(`🌱${num(n.runs)}×`, 'touched grass')}
-                    ${stat(hours(n.played || 0), 'played')}
-                </span>
-                <span class="g-game-last"><span>${num(n.ach)} achievements</span>${n.saved ? `<i>synced ${ago(n.saved * 1000)}</i>` : ''}</span>`;
-        }
-        return `<a class="g-game" href="https://clicker.tylerirl.com" target="_blank" rel="noopener" style="--game: 255, 121, 198"${more ? ` title="the network is growing: ${esc(more)}"` : ''}>${head}${body}</a>`;
-    }
-
     const live = (el) => el && el.isConnected;
     function render(arrived) {
         // Rail panel: the sign-ins, or who's signed in and sign out
@@ -176,7 +155,7 @@
             if (user) {
                 const games = !stats ? '<div class="g-player-wait">SYNCING&hellip;</div>'
                     : stats.failed ? '<div class="g-player-wait is-error">[ NO LINK ] the games didn\'t answer <button type="button" class="g-btn" data-retry>RETRY</button></div>'
-                    : `<div class="g-games">${cancelCard()}${netCard()}</div>`;
+                    : `<div class="g-games">${cancelCard()}</div>`;
                 slots.link.innerHTML = `<div class="g-player-who">${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button></div>${games}`;
                 slots.link.querySelector('[data-out]').addEventListener('click', () => signOut());
                 slots.link.querySelector('[data-retry]')?.addEventListener('click', () => { stats = null; render(); load(); });

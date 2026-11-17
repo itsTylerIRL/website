@@ -1808,7 +1808,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 
 /* ---------- Player link (js/player.js) ----------
    The User Login panel tops the left column: the games' two sign-ins, or who you are and sign out, and under it
-   a compact card per game in its own color (four stats in a 2 x 2 grid, the rest in its tooltip). */
+   the cancel is coming's compact card in its color (four stats in a 2 x 2 grid, the rest in its tooltip). */
 .g-player-pane { flex: none; }
 .g-player-link {
     display: flex;
