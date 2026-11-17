@@ -597,7 +597,7 @@ html.booting #bg3d-canvas { animation: bootFieldIn 1.6s ease both; }
    (html.ws-reveal, js/landing.js), where the Host is already up and glides into its slot instead */
 html:is(.boot-reveal, .ws-reveal) .g-topbar { animation: bootDrop 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 html:is(.boot-reveal, .ws-reveal) .g-statusbar { animation: bootRise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s both; }
-html:is(.boot-reveal, .ws-reveal) :is(.g-player-pane, .g-azimuth-pane, .g-assetmon-pane, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-activity-pane, .g-signal-pane) {
+html:is(.boot-reveal, .ws-reveal) :is(.g-player-pane, .g-azimuth-pane, .g-assetmon-pane, .g-home-pane, .g-objhead, .g-preview-pane, .g-results-pane, .g-petpane, .g-activity-pane, .g-signal-pane) {
     animation: bootRise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 html:is(.boot-reveal, .ws-reveal) .g-player-pane { animation-delay: 0.04s; }
@@ -605,6 +605,7 @@ html:is(.boot-reveal, .ws-reveal) .g-azimuth-pane { animation-delay: 0.07s; }
 html:is(.boot-reveal, .ws-reveal) .g-assetmon-pane { animation-delay: 0.1s; }
 html:is(.boot-reveal, .ws-reveal) .g-home-pane { animation-delay: 0.12s; }
 html:is(.boot-reveal, .ws-reveal) .g-results-pane { animation-delay: 0.16s; }
+html:is(.boot-reveal, .ws-reveal) .g-petpane { animation-delay: 0.21s; }
 html:is(.boot-reveal, .ws-reveal) .g-objhead { animation-delay: 0.2s; }
 html:is(.boot-reveal, .ws-reveal) .g-activity-pane { animation-delay: 0.24s; }
 html:is(.boot-reveal, .ws-reveal) .g-signal-pane { animation-delay: 0.26s; }

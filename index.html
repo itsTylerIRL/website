@@ -67,14 +67,14 @@
     <link rel="stylesheet" href="/css/styles.css?v=1.8">
     <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
     <!-- Hologram hero + boot splash -->
-    <link rel="stylesheet" href="/css/index.css?v=2.9">
+    <link rel="stylesheet" href="/css/index.css?v=3.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="/css/workspace.css?v=3.3">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/objects.css?v=6.61">
+    <link rel="stylesheet" href="/css/objects.css?v=6.64">
     <link rel="stylesheet" href="/css/cancel-preview.css?v=1.6">
     <!-- Hover touches, live-value flashes, ambient effects' markup, screen care (js/micro.js) -->
     <link rel="stylesheet" href="/css/micro.css?v=1.4">
@@ -557,6 +557,11 @@
                     <div class="g-panel-title">Object Explorer <span class="g-meta" id="g-results-meta"></span></div>
                     <ol class="g-results" id="g-results"></ol>
                 </section>
+                <!-- Your DigiFlip pet, live in a small frame (js/pet-panel.js, pages/pet.html) -->
+                <section class="g-petpane" id="g-petpane" aria-label="Pet">
+                    <div class="g-panel-title">Pet <span class="g-petpane-right"><span class="g-meta" id="g-petpane-meta"></span><a class="g-pet-expand" id="g-pet-expand" href="/#digiflip" title="Open DigiFlip in the workspace">[EXPAND]</a></span></div>
+                    <div class="g-petbox" id="g-petbox"></div>
+                </section>
                 <!-- Side panels handed over by the page embedded in the live preview (js/objects.js mountPanels) -->
                 <div class="g-embed-side" id="g-embed-side" hidden>
                     <div class="g-embed-label"><i class="g-dot tone-green"></i>IN PREVIEW &middot; <b></b></div>
@@ -611,7 +616,7 @@
     <script defer src="/js/signals.js?v=1.1"></script>
     <script defer src="/js/now.js?v=1.2"></script>
     <script defer src="/js/player.js?v=1.7"></script>
-    <script defer src="/js/objects.js?v=4.59"></script>
+    <script defer src="/js/objects.js?v=4.61"></script>
     <script defer src="/js/landing.js?v=1.8"></script>
     <script defer src="/js/palette.js?v=1.3"></script>
     <script defer src="/js/sys.js?v=1.1"></script>
@@ -625,6 +630,7 @@
     <script defer src="/js/coins.js?v=1.0"></script>
     <script defer src="/js/paper.js?v=1.0"></script>
     <script defer src="/js/assets-monitor.js?v=1.0"></script>
+    <script defer src="/js/pet-panel.js?v=1.2"></script>
     <script defer src="/js/socials.js?v=1.9"></script>
     <script defer src="/js/micro.js?v=1.2"></script>
     <!-- Secrets: clearance badge, copy comms, signal lost, hologram overload, midnight rollover -->
