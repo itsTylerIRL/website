@@ -3,7 +3,7 @@
    so instead of a preview it spotlights featured pages (FEATURED). The Host panel (#g-home) is static markup. */
 
 // ---------- Catalog (edit here to add / update pages) ----------
-// type: 'collection' | 'program' | 'tool' | 'page' | 'live' | 'external'
+// type: 'collection' | 'program' | 'tool' | 'feed' | 'page' | 'live' | 'external'
 // live: a live connection (url: the profile); dossier: the Host dossier card it mirrors in the preview, and
 // its row's status line comes from that card's script (js/presence.js, js/music.js, js/socials.js, js/index.js)
 // workspace: true once the page is on the DEEPDISH workspace template (css/workspace.css)
@@ -19,6 +19,8 @@
 // and the counts like a parent's projects; the NOW strip, the Signal Log and the command palette still open it.
 // parent: a project listed on another object's page (DeepDish's directory) rather than in Results and the counts.
 // unlisted: kept out of Results and the counts, but still found by search (the command palette) and opened by link.
+// azimuth: an Urbit ID ('star' | 'planet'): listed in the rail's Azimuth IDs panel instead of Results (and its count),
+// with the same live line; search, links, the idle tour and the featured cards still find it.
 // It can still be opened by link (/#key), the command palette and the idle tour; while it's showing, its parent's
 // row stays lit and the header offers a way back.
 // Links: /#key selects an object, /#key/part also takes its page to a part of it (a card or section the page
@@ -42,6 +44,10 @@ const OBJECTS = [
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser', screen: 'Device Bay', tag: 'digimon v20th for the flipper zero · now in wasm' },
     { key: 'timer', unlisted: true, name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser', screen: 'Solve Station', tag: 'hold space · release · solve' },
     { key: 'markets', unlisted: true, name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart', screen: 'Market Terminal', tag: 'neochibi floors, volume + the CULT chart' },
+    // The coin feeds: unlisted, as the home page's Assets monitor (js/assets-monitor.js) is their way in
+    { key: 'btc', unlisted: true, name: 'Bitcoin', url: '/pages/btc.html', type: 'feed', workspace: true, embed: true, icon: '/assets/object-icons/btc.svg', desc: 'live BTC-USD price feed: interactive candles from 1m to 1D, volume, moving averages, a live trade tape and market data', screen: 'Price Terminal', tag: 'btc-usd · live candles + trade tape' },
+    { key: 'eth', unlisted: true, name: 'Ethereum', url: '/pages/eth.html', type: 'feed', workspace: true, embed: true, icon: '/assets/object-icons/eth.svg', desc: 'live ETH-USD price feed: interactive candles from 1m to 1D, volume, moving averages, a live trade tape and market data', screen: 'Price Terminal', tag: 'eth-usd · live candles + trade tape' },
+    { key: 'link', unlisted: true, name: 'Chainlink', url: '/pages/link.html', type: 'feed', workspace: true, embed: true, icon: '/assets/object-icons/link.svg', desc: 'live LINK-USD price feed: interactive candles from 1m to 1D, volume, moving averages, a live trade tape and market data', screen: 'Price Terminal', tag: 'link-usd · live candles + trade tape' },
     { key: 'cornhub', hidden: true, name: 'CornHub', url: '/pages/cornhub.html', type: 'page', icon: '/assets/object-icons/cornhub.webp', desc: 'cornhub intl inc. - yet another shitcoin' },
     { key: 'live-discord', onHost: true, name: 'Discord', url: 'https://discordapp.com/users/367487663990898689', type: 'live', dossier: 'discord', icon: '/assets/object-icons/live-discord.svg', desc: 'live status: online, idle or gaming, custom status, and when last seen', screen: 'Comms Channel', tag: 'dm open · say hi' },
     { key: 'live-music', onHost: true, name: 'TIDAL', url: 'https://www.last.fm/user/tylerIRL', type: 'live', dossier: 'music', icon: '/assets/object-icons/live-tidal.svg', desc: 'now playing, or the last track played, by way of Last.fm scrobbles', screen: 'Audio Feed', tag: 'what\'s in the headphones' },
@@ -50,8 +56,8 @@ const OBJECTS = [
     { key: 'live-x', onHost: true, name: 'X', url: 'https://x.com/itsTylerIRL', type: 'live', dossier: 'x', icon: '/assets/object-icons/live-x.svg', desc: 'the latest post, with followers and post counts', screen: 'Broadcast Feed', tag: 'posting through it' },
     { key: 'live-github', onHost: true, name: 'GitHub', url: 'https://github.com/itstylerirl', type: 'live', dossier: 'github', icon: '/assets/object-icons/live-github.svg', desc: 'a year of contributions, with streaks and active days', screen: 'Commit Feed', tag: 'commits, streaks + green squares' },
     { key: 'live-reminet', onHost: true, name: 'RemiNET', url: 'https://remilia.net/~tyler', type: 'live', dossier: 'reminet', icon: '/assets/remilianet-symbol.svg', desc: 'social credit, frens, views, beetles and pokes on remilia.net', screen: 'Credit Feed', tag: 'social credit, frens + beetles' },
-    { key: 'nosfyl', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', page: '/pages/nosfyl.html', embed: true, type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star', screen: 'Star Relay', tag: 'urbit star · the galaxy\'s middle child' },
-    { key: 'raddem', name: '~raddem-tidwyt', url: 'https://urbit.tylerirl.com', page: '/pages/raddem.html', embed: true, type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet', screen: 'Planet Relay', tag: 'urbit planet · home ship' },
+    { key: 'nosfyl', azimuth: 'star', name: '~nosfyl', url: 'https://nosfyl.tylerirl.com', page: '/pages/nosfyl.html', embed: true, type: 'external', icon: '/assets/object-icons/nosfyl.webp', desc: 'urbit star', screen: 'Star Relay', tag: 'urbit star · the galaxy\'s middle child' },
+    { key: 'raddem', azimuth: 'planet', name: '~raddem-tidwyt', url: 'https://urbit.tylerirl.com', page: '/pages/raddem.html', embed: true, type: 'external', icon: '/assets/object-icons/raddem.webp', desc: 'urbit planet', screen: 'Planet Relay', tag: 'urbit planet · home ship' },
     { key: 'guest-book', name: 'Guest Book', url: '/pages/guest-book.html', type: 'page', workspace: true, embed: true, icon: '/assets/object-icons/guest-book.webp', desc: 'leave a message and connect via urbit', screen: 'Comms Relay', tag: 'sign the book · uplink via urbit' }
 ];
 
@@ -80,6 +86,7 @@ const FEATURED = [
         collection: { name: 'Collection', tone: 'blue' },
         program: { name: 'Program', tone: 'green' },
         tool: { name: 'Tool', tone: 'orange' },
+        feed: { name: 'Feed', tone: 'cyan' },
         page: { name: 'Page', tone: 'muted' },
         live: { name: 'Live', tone: 'cyan' },
         external: { name: 'External', tone: 'red' }
@@ -94,11 +101,11 @@ const FEATURED = [
     let viewH = 900;
 
     const els = {
-        types: document.getElementById('g-types'),
-        count: document.getElementById('g-count'),
         activity: document.getElementById('g-activity'),
         results: document.getElementById('g-results'),
         resultsMeta: document.getElementById('g-results-meta'),
+        azimuth: document.getElementById('g-azimuth'),
+        azimuthMeta: document.getElementById('g-azimuth-meta'),
         search: document.getElementById('g-search'),
         crumb: document.getElementById('g-crumb'),
         crumbType: document.getElementById('g-crumb-type'),
@@ -113,7 +120,6 @@ const FEATURED = [
         embedSlots: { side: document.getElementById('g-embed-side'), rail: document.getElementById('g-embed-rail') },
         dock: document.getElementById('g-dock'),
         statusObjects: document.getElementById('g-status-objects'),
-        statusFilter: document.getElementById('g-status-filter'),
         clock: document.getElementById('g-clock')
     };
 
@@ -132,7 +138,6 @@ const FEATURED = [
     }).filter((o) => !o.hidden);
     const types = Object.keys(TYPES).filter((t) => objects.some((o) => o.type === t && !o.parent && !o.onHost && !o.unlisted));
 
-    let type = 'all';
     let current = null;
     // Recently viewed, newest first: [{ o, t }] with t in ms. Kept in localStorage so it survives
     // leaving the page (opening an object, reloads, coming back later).
@@ -147,29 +152,16 @@ const FEATURED = [
         viewed.length = Math.min(viewed.length, HISTORY_MAX);
     } catch (_) {}
 
-    const listed = objects.filter((o) => !o.parent && !o.onHost && !o.unlisted);
-    const visible = () => listed.filter((o) => type === 'all' || o.type === type);
-    const countOf = (t) => t === 'all' ? listed.length : listed.filter((o) => o.type === t).length;
+    const listed = objects.filter((o) => !o.parent && !o.onHost && !o.unlisted && !o.azimuth);
+    const ships = objects.filter((o) => o.azimuth); // the Azimuth IDs panel
+    const visible = () => listed; // the Object Explorer lists everything listed (it once had a filter by type)
     const parentOf = (o) => o && o.parent ? objects.find((x) => x.key === o.parent) : null;
     const rowOf = (o) => parentOf(o) || o; // the Results row that stands for it
     const iconHtml = (o, cls) => o.icon
         ? `<img class="${cls}" src="${esc(o.icon)}" alt="" loading="lazy" decoding="async">`
         : `<span class="${cls} g-noimg">${esc(o.name.charAt(0).toUpperCase())}</span>`;
 
-    // ---------- Explorer (by type) ----------
-    function renderTypes() {
-        els.types.innerHTML = ['all', ...types].map((t) => `<li><button type="button" class="g-obj-btn" data-type="${t}" aria-current="${t === type}">
-            <i class="g-dot tone-${t === 'all' ? 'muted' : toneOf(t)}"></i><span>${t === 'all' ? 'All' : typeName(t)}</span><span class="g-id">${countOf(t)}</span></button></li>`).join('');
-        els.count.textContent = listed.length;
-    }
-    els.types.addEventListener('click', (e) => {
-        const b = e.target.closest('[data-type]');
-        if (!b) return;
-        type = b.dataset.type;
-        refresh();
-    });
-
-    // ---------- Results ----------
+    // ---------- Object Explorer (the list of objects; #g-results, called Results in the comments here) ----------
     // Live telemetry per row (set by js/live-rows.js through window.ObjectsLive): key -> { text, tone }.
     // A live row shows it under the name in place of its tag (OBJECTS tag), else the path; the path is always the tooltip.
     // Rows with a live source say "acquiring signal" until it answers (or for 10 s, then fall back to the
@@ -202,6 +194,7 @@ const FEATURED = [
         window.dispatchEvent(new CustomEvent('tirl:live', { detail: { key, text: text || null, tone } }));
         const desc = els.results.querySelector(`.g-res[data-key="${CSS.escape(key)}"] .g-res-desc`);
         const o = objects.find((x) => x.key === key);
+        if (o && o.azimuth) renderAzimuth(first ? key : null);
         if (!desc || !o) return;
         desc.classList.toggle('is-live', !!live[key]);
         desc.innerHTML = descHtml(o);
@@ -228,9 +221,27 @@ const FEATURED = [
         if (b) select(objects.find((o) => o.key === b.dataset.key));
     });
 
+    // ---------- Azimuth IDs (the rail panel under User Login): the Urbit ships, with their live line ----------
+    function renderAzimuth(arrived) {
+        if (!els.azimuth) return;
+        const up = ships.filter((o) => live[o.key] && live[o.key].tone === 'green').length;
+        els.azimuthMeta.textContent = ships.some((o) => live[o.key]) ? `${up}/${ships.length} ONLINE` : `${ships.length} ID${ships.length === 1 ? '' : 'S'}`;
+        els.azimuth.innerHTML = ships.map((o) => `<li><button type="button" class="g-res" data-key="${o.key}" aria-current="${current === o}">
+                ${iconHtml(o, 'g-res-icon')}
+                <span class="g-res-text"><span class="g-res-title">${esc(o.name)}</span>
+                    <span class="g-res-desc${live[o.key] ? ' is-live' : ''}" title="${esc(o.host || pathOf(o))}">${descHtml(o)}</span></span>
+                <span class="g-az-rank">${esc(o.azimuth)}</span>
+            </button></li>`).join('');
+        if (arrived) window.tirlArrive?.arrive(els.azimuth.querySelector(`[data-key="${CSS.escape(arrived)}"] .g-live-text`));
+    }
+    els.azimuth?.addEventListener('click', (e) => {
+        const b = e.target.closest('.g-res');
+        if (b) select(objects.find((o) => o.key === b.dataset.key));
+    });
+
     function refresh() {
-        renderTypes();
         renderResults();
+        renderAzimuth();
         updateStatus();
         if (current) renderHeader(current);
     }
@@ -268,16 +279,12 @@ const FEATURED = [
                 </div>
             </div>
             ${o.key === HOME ? `${info}
-            <div class="g-now" id="g-now"></div>
-            <div class="g-player" id="g-player"></div>` : info}`;
+            <div class="g-now" id="g-now"></div>` : info}`;
         header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
         header.querySelector('[data-up]')?.addEventListener('click', (e) => select(objectByKey(e.currentTarget.dataset.up), { dir: -1 }));
-        // Home: your stats from the games under the description (js/player.js; signing in is in the rail's User
-        // Login panel), and above them the greeting and what changed since your last visit (js/now.js)
-        if (o.key === HOME) {
-            window.TirlPlayer?.mount(header.querySelector('#g-player'));
-            window.TirlNow?.mount(header.querySelector('#g-now'));
-        }
+        // Home: the greeting and what changed since your last visit (js/now.js). Your stats from the games are in
+        // the rail's User Login panel (js/player.js).
+        if (o.key === HOME) window.TirlNow?.mount(header.querySelector('#g-now'));
     }
 
     // ---------- Live preview ----------
@@ -658,7 +665,7 @@ const FEATURED = [
     let spriteTimer = null;
     function renderFeatured() {
         const items = FEATURED.map((f) => ({ ...f, o: objects.find((x) => x.key === f.key) })).filter((f) => f.o);
-        els.previewMeta.textContent = 'EXPLORE MORE IN RESULTS';
+        els.previewMeta.textContent = 'MORE IN THE OBJECT EXPLORER';
         // An hourly key keeps KoL avatar outfit changes current
         const artHtml = ({ art, round, sprites, badge }) => sprites
             ? `<span class="g-feat-art is-sprite"><img src="${spriteSrc(sprites[0][0])}" alt="" decoding="async" data-sprite></span>`
@@ -759,7 +766,10 @@ const FEATURED = [
         }
         els.crumb.textContent = o.name;
         els.crumbType.textContent = typeName(o.type);
+        window.ObjectsCurrent = o.key;
+        if (changed) window.dispatchEvent(new CustomEvent('tirl:select', { detail: { key: o.key } })); // js/assets-monitor.js
         renderDock(o, changed && !first ? opts.dir || 0 : null);
+        els.azimuth?.querySelectorAll('.g-res').forEach((b) => b.setAttribute('aria-current', b.dataset.key === o.key));
         els.results.querySelectorAll('.g-res').forEach((b) => {
             const on = b.dataset.key === rowOf(o).key;
             b.setAttribute('aria-current', on);
@@ -998,7 +1008,6 @@ const FEATURED = [
     // ---------- Status bar ----------
     function updateStatus() {
         els.statusObjects.textContent = `${listed.length} OBJECTS`;
-        els.statusFilter.textContent = `TYPE: ${(type === 'all' ? 'ALL' : typeName(type)).toUpperCase()} · ${visible().length} SHOWN`;
     }
     // The clock: click (or Enter) for the next format, kept in this browser. UTC, Tyler's time in Chicago,
     // an Urbit date, and the Ethereum beacon chain slot (one every 12 s since genesis)

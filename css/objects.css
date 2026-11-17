@@ -735,7 +735,6 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
         linear-gradient(rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
         linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.035) 1px, transparent 1px) 0 0 / 32px 32px;
 }
-.g-preview .g-reticle { position: absolute; z-index: 2; }
 /* The page renders on a 1440px-wide "screen" that js/objects.js makes as tall as the panel's shape and
    scales to fill it edge to edge (height and --view-h set there) */
 .g-preview-screen {
@@ -1186,16 +1185,17 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-body {
         flex: 1 0 auto;
         grid-template-columns: clamp(190px, 22%, 260px) minmax(0, 1fr);
-        grid-template-rows: auto auto fit-content(clamp(220px, 40vh, 480px)) minmax(150px, 1fr);
+        grid-template-rows: auto auto auto fit-content(clamp(220px, 40vh, 480px)) minmax(150px, 1fr) clamp(160px, 26vh, 260px);
         align-items: stretch;
     }
     .g-rail,
     .g-side { display: contents; }
     .g-player-pane { grid-column: 1; grid-row: 1; }
-    .g-explorer { grid-column: 1; grid-row: 2; }
-    .g-side > .g-results-pane { grid-column: 1; grid-row: 3; } /* beats the shell's .g-side > :only-child span */
-    .g-activity-pane { grid-column: 1; grid-row: 4; }
-    .g-main { grid-column: 2; grid-row: 1 / span 4; }
+    .g-azimuth-pane { grid-column: 1; grid-row: 2; }
+    .g-assetmon-pane { grid-column: 1; grid-row: 3; }
+    .g-side > .g-results-pane { grid-column: 1; grid-row: 4; } /* beats the shell's .g-side > :only-child span */
+    .g-activity-pane { grid-column: 1; grid-row: 5; }
+    .g-main { grid-column: 2; grid-row: 1 / span 6; }
     /* Size containment: list length never stretches the rows; the grid sets their height. Results is the
        exception: its row fits the list (fit-content above), up to a viewport-based height, so a short list
        leaves no empty space under it */
@@ -1479,11 +1479,11 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
    than across. */
 @media (min-width: 900px) and (max-width: 1359px) {
     .g-preview.is-embed { min-height: min(760px, 80vh); }
-    .g-embed-side { grid-column: 1; grid-row: 5; }
-    .g-embed-rail { grid-row: 4; }
-    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto auto fit-content(clamp(220px, 40vh, 480px)) auto auto minmax(150px, 1fr); }
-    .g-body:has(.g-embed-side:not([hidden])) .g-activity-pane { grid-row: 6; }
-    .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 6; }
+    .g-embed-side { grid-column: 1; grid-row: 6; }
+    .g-embed-rail { grid-row: 5; }
+    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto auto auto fit-content(clamp(220px, 40vh, 480px)) auto auto minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
+    .g-body:has(.g-embed-side:not([hidden])) .g-activity-pane { grid-row: 7; }
+    .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 8; }
 }
 @media (max-width: 899px) {
     .g-embed-side { order: 3; }
@@ -1587,29 +1587,9 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-feat-grid > .g-feat { animation: g-head-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--i, 0) * 45ms); }
 
 /* ---------- The preview as an instrument ----------
-   Live pages get no sweep band over their text. Corner marks frame the screen and light up, with a rim
-   glow, while the embedded page has the keyboard; the chip in the title bar says where keys go and hands
-   them over on a click. */
+   Live pages get no sweep band over their text. A rim glow shows while the embedded page has the keyboard;
+   the chip in the title bar says where keys go and hands them over on a click. */
 .g-preview-screen.is-embed::after { display: none; }
-.g-preview .g-reticle {
-    width: 14px;
-    height: 14px;
-    border: 0 solid rgba(var(--g-blue-rgb), 0.45);
-    transition: border-color 0.25s ease, transform 0.25s ease, filter 0.25s ease;
-}
-.g-preview .g-reticle.tl { top: 6px; left: 6px; border-top-width: 1px; border-left-width: 1px; }
-.g-preview .g-reticle.tr { top: 6px; right: 6px; border-top-width: 1px; border-right-width: 1px; }
-.g-preview .g-reticle.bl { bottom: 6px; left: 6px; border-bottom-width: 1px; border-left-width: 1px; }
-.g-preview .g-reticle.br { bottom: 6px; right: 6px; border-bottom-width: 1px; border-right-width: 1px; }
-.g-preview.has-keys .g-reticle {
-    border-color: var(--g-blue);
-    border-width: 2px 0 0 2px;
-    filter: drop-shadow(0 0 4px rgba(var(--g-blue-rgb), 0.8));
-}
-.g-preview.has-keys .g-reticle.tl { transform: translate(-2px, -2px); }
-.g-preview.has-keys .g-reticle.tr { border-width: 2px 2px 0 0; transform: translate(2px, -2px); }
-.g-preview.has-keys .g-reticle.bl { border-width: 0 0 2px 2px; transform: translate(-2px, 2px); }
-.g-preview.has-keys .g-reticle.br { border-width: 0 2px 2px 0; transform: translate(2px, 2px); }
 .g-preview { transition: box-shadow 0.3s ease; }
 .g-preview.has-keys { box-shadow: inset 0 0 0 1px rgba(var(--g-blue-rgb), 0.35), inset 0 0 28px rgba(var(--g-blue-rgb), 0.08); }
 .g-keys {
@@ -1826,8 +1806,8 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 }
 
 /* ---------- Player link (js/player.js) ----------
-   The User Login panel tops the left column: the games' two sign-ins, or who you are and sign out. Signed in, a
-   card per game in its own color sits under the home object's description. */
+   The User Login panel tops the left column: the games' two sign-ins, or who you are and sign out, and under it
+   a compact card per game in its own color (four stats in a 2 x 2 grid, the rest in its tooltip). */
 .g-player-pane { flex: none; }
 .g-player-link {
     display: flex;
@@ -1837,12 +1817,6 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 }
 .g-player-sub { color: var(--g-dim); font-size: 10.5px; line-height: 1.45; }
 .g-player-note { font-size: 10.5px; color: var(--g-red); }
-.g-player:empty { display: none; }
-.g-player {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--g-border);
-}
 .g-player-who {
     display: flex;
     align-items: center;
@@ -1884,29 +1858,30 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-ptag.ur { color: #6fb0ff; border-color: rgba(111, 176, 255, 0.4); }
 .g-ptag b { font-weight: 400; }
 .g-player-wait {
-    padding: 12px;
+    padding: 9px;
     text-align: center;
     font-family: var(--g-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    line-height: 1.6;
     color: var(--g-blue);
     border: 1px dashed var(--g-border);
     border-radius: var(--g-r-box);
     animation: g-wait 1.2s ease-in-out infinite;
 }
 .g-player-wait.is-error { color: var(--g-muted); animation: none; }
-.g-player-wait .g-btn { margin-left: 6px; }
+.g-player-wait .g-btn { margin-left: 6px; height: 22px; font-size: 10px; }
 .g-games {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
 }
 .g-game {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
-    padding: 9px 12px 10px;
+    padding: 7px 9px 8px;
     border: 1px solid rgba(var(--game), 0.25);
     border-radius: var(--g-r-box);
     background: linear-gradient(135deg, rgba(var(--game), 0.07), transparent 60%), var(--g-well);
@@ -1925,13 +1900,15 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     gap: 8px;
     min-width: 0;
 }
-.g-game-head img { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; flex: none; }
+.g-game-head { gap: 6px; }
+.g-game-head .g-game-go { font-size: 12px; letter-spacing: 0; }
+.g-game-head img { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex: none; }
 .g-game-head > b {
     color: rgb(var(--game));
     font-family: var(--g-mono);
     font-weight: 400;
-    font-size: 12px;
-    letter-spacing: 0.06em;
+    font-size: 11px;
+    letter-spacing: 0.02em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1939,33 +1916,32 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-game-head em {
     font-style: normal;
     font-family: var(--g-mono);
-    font-size: 9.5px;
-    letter-spacing: 0.1em;
+    font-size: 10px;
     color: #ffde17;
     border: 1px solid rgba(255, 222, 23, 0.45);
     border-radius: 999px;
-    padding: 0 7px;
+    padding: 0 4px;
     white-space: nowrap;
 }
 .g-game-go {
     margin-left: auto;
     font-family: var(--g-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
     color: var(--g-dim);
     white-space: nowrap;
 }
 .g-game:hover .g-game-go { color: rgb(var(--game)); }
 .g-pstats {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
 }
 .g-pstat {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    padding: 5px 8px;
+    padding: 3px 7px;
     border-radius: var(--g-r-ctl);
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1973,7 +1949,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
 .g-pstat b {
     font-family: var(--g-mono);
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12.5px;
     color: var(--g-text);
     white-space: nowrap;
     overflow: hidden;
@@ -1996,7 +1972,7 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     display: flex;
     align-items: baseline;
     gap: 10px;
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--g-muted);
     min-width: 0;
 }
@@ -2008,9 +1984,8 @@ footer.g-statusbar a.g-ticker-item:hover { color: #fff; }
     .g-player-pane { order: 0; }
     .g-sso-row { flex-direction: row; }
     .g-sso { flex: 1 1 0; }
-}
-@media (max-width: 639px) {
-    .g-pstats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* the full width on phones: the two games side by side once there's room */
+    .g-games { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
     .g-player-wait { animation: none; }
@@ -2104,14 +2079,11 @@ button.g-since:hover { border-color: var(--tone, var(--g-blue)); box-shadow: 0 0
 @media (min-width: 1360px) and (max-height: 599px) {
     .g-signal { max-height: 260px; overflow-y: auto; }
 }
-/* Two columns: the last row of the rail column, below Recently Viewed */
+/* Two columns: the last row of the rail column, below Recently Viewed (rows: login, azimuth IDs, assets, object
+   explorer, [the previewed page's left and side panels,] recently viewed, signal log; the templates are set above) */
 @media (min-width: 900px) and (max-width: 1359px) {
-    .g-body { grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
-    .g-main { grid-row: 1 / span 4; }
-    .g-signal-pane { grid-column: 1; grid-row: 4; }
-    .g-body:has(.g-embed-side:not([hidden])) { grid-template-rows: auto fit-content(clamp(220px, 40vh, 480px)) auto auto minmax(150px, 1fr) clamp(160px, 26vh, 260px); }
-    .g-body:has(.g-embed-side:not([hidden])) .g-main { grid-row: 1 / span 6; }
-    .g-body:has(.g-embed-side:not([hidden])) .g-signal-pane { grid-row: 6; }
+    .g-signal-pane { grid-column: 1; grid-row: 6; }
+    .g-body:has(.g-embed-side:not([hidden])) .g-signal-pane { grid-row: 8; }
     .g-signal-pane {
         contain: size;
         display: flex;
@@ -2519,8 +2491,8 @@ html.sys-calm *::after {
         box-shadow: 0 0 14px rgba(80, 250, 123, 0.25);
     }
     .g-embed-done[hidden] { display: none; }
-    /* In use: the preview's corners light up, as when it has the keyboard on a desktop */
-    .g-preview.is-touch-live .g-reticle { border-color: var(--g-green); filter: drop-shadow(0 0 6px rgba(80, 250, 123, 0.6)); }
+    /* In use: the preview's rim lights up, as when it has the keyboard on a desktop */
+    .g-preview.is-touch-live { box-shadow: inset 0 0 0 1px rgba(80, 250, 123, 0.45), inset 0 0 28px rgba(80, 250, 123, 0.08); }
 }
 /* A shorter Host panel: the hologram a size down and the comms in two slim rows of three (icon beside the
    name), so the object starts sooner */
@@ -2561,3 +2533,80 @@ html.sys-calm *::after {
 /* ---------- A project's header: which page it belongs to, and the way back (js/objects.js parent) ---------- */
 .g-objparent { color: var(--g-blue); }
 .g-objnav .g-up { width: auto; min-width: 0; padding: 0 9px; font-size: 10.5px; letter-spacing: 0.08em; white-space: nowrap; }
+
+/* ---------- Azimuth IDs (js/objects.js renderAzimuth) ----------
+   Under User Login: the Urbit ships as rows like the Object Explorer's (.g-res), tagged star or planet. */
+.g-azimuth-pane { flex: none; }
+.g-azimuth { max-height: none; overflow: visible; }
+.g-azimuth .g-res { grid-template-columns: 26px minmax(0, 1fr) auto; padding-right: 12px; }
+.g-az-rank {
+    flex: none;
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #bd93f9;
+    border: 1px solid rgba(189, 147, 249, 0.4);
+    border-radius: 999px;
+    padding: 0 6px;
+    line-height: 16px;
+}
+.g-azimuth .g-res[data-key="raddem"] .g-az-rank { color: #62a0ff; border-color: rgba(98, 160, 255, 0.4); }
+@media (max-width: 899px) {
+    .g-azimuth-pane { order: 4; }
+}
+
+/* ---------- Assets monitor (js/assets-monitor.js) ----------
+   Under Azimuth IDs, whatever's showing: each coin's live price, 24h sparkline and change (a click opens
+   its terminal), and the paper trading desk's equity underneath. */
+.g-assetmon-pane { flex: none; }
+.g-assetmon { list-style: none; margin: 0; padding: 4px 0; }
+.g-am-row {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    padding: 5px 12px;
+    border-left: 2px solid transparent;
+    color: var(--g-text);
+    text-decoration: none;
+}
+.g-am-row:hover { background: rgba(var(--g-blue-rgb), 0.06); }
+.g-am-row[aria-current="true"] {
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.16), transparent);
+    border-left-color: var(--g-blue);
+}
+.g-am-icon { width: 24px; height: 24px; display: block; }
+.g-am-text { min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+.g-am-name { font-family: var(--g-mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--g-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-am-name small { font-size: 10px; letter-spacing: 0; color: var(--g-blue); }
+.g-am-row[aria-current="true"] .g-am-name { color: var(--g-blue); }
+.g-am-price { font-family: var(--g-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.g-am-right { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.g-am-spark { width: 60px; height: 16px; display: block; }
+.g-am-right .g-delta { font-family: var(--g-mono); font-size: 10px; white-space: nowrap; color: var(--g-dim); }
+.g-assetmon-pane .g-delta.up { color: var(--g-green); }
+.g-assetmon-pane .g-delta.down { color: var(--g-red); }
+.g-am-desk {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-top: 1px solid var(--g-border);
+    font-family: var(--g-mono);
+    font-size: 11px;
+    color: var(--g-text);
+    text-decoration: none;
+}
+.g-am-desk:hover { background: rgba(var(--g-blue-rgb), 0.06); }
+.g-am-desk:empty { display: none; }
+.g-am-desk-k { font-size: 9.5px; letter-spacing: 0.14em; color: var(--g-dim); }
+.g-am-desk b { font-weight: 400; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.g-am-desk .g-delta { font-size: 10.5px; }
+.g-am-desk-cta { color: var(--g-blue); font-size: 10.5px; }
+.g-am-desk-o { margin-left: auto; font-size: 10px; color: var(--g-orange); }
+@media (max-width: 899px) {
+    .g-assetmon-pane { order: 4; }
+}

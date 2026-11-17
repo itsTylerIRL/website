@@ -1,7 +1,7 @@
 /* Player link: sign in with Remilia SSO or an Urbit ID through the cancel game's service, the same sign-in the cancel
    is coming and the network is growing use. The sign-ins, or who you are and sign out, sit in the User Login panel
    at the top of the left column (#g-player-link), whatever object is showing; signed in, your stats from both games
-   show in the home object's header (js/objects.js renderHeader, while tylerirl.com is selected).
+   show there too, under your name: a compact card per game (refreshed every 5 minutes while the tab is visible).
    The service sends the browser back here with its own signed session in #rn= (or #rn_error=). It's kept in this
    browser (localStorage) until it runs out or you sign out. Load this before js/objects.js, which would otherwise
    read the #fragment as an object to select.
@@ -61,7 +61,7 @@
     let offer = { rn: true, ur: true }; // which sign-ins the service has on (both, until it says)
     let stats = null; // { acct, king, net, at }, or { failed: true }
     let loading = false;
-    const slots = { link: document.getElementById('g-player-link'), meta: document.getElementById('g-player-meta'), stats: null };
+    const slots = { link: document.getElementById('g-player-link'), meta: document.getElementById('g-player-meta') };
 
     // { ok: false, status } for an answer that isn't a 2xx; null when the service can't be reached
     async function api(path, body) {
@@ -125,22 +125,23 @@
         : `<a class="g-ptag rm" href="https://remilia.net/~${encodeURIComponent(u.handle)}" target="_blank" rel="noopener" title="signed in with Remilia SSO">${REMILIA_MARK}<b>~${esc(u.handle)}</b></a>`;
     const stat = (value, label, cls = '') => `<span class="g-pstat${cls ? ' ' + cls : ''}"><b>${value}</b><small>${label}</small></span>`;
 
+    // Compact for the rail: the four stats that matter most in a 2 x 2 grid; the rest go in the card's tooltip
     function cancelCard() {
         const a = stats.acct, p = a.data || {}, k = stats.king || {};
         const runs = +p.runs || 0, wins = +p.wins || 0, rank = a.rank || {};
         const last = (a.runs || [])[0];
         const lastLine = last
-            ? `<span class="${last.win ? 'good' : 'bad'}">last run: ${last.endless ? '📡 endless' : last.win ? `👑 saved the timeline on day ${last.day}` : `💀 cancelled on day ${last.day}${last.killedBy ? ' by ' + esc(last.killedBy) : ''}`} · <b>${num(last.score)}</b></span><i>${ago(last.at * 1000)}</i>`
+            ? `<span class="${last.win ? 'good' : 'bad'}">${last.endless ? '📡 endless' : last.win ? `👑 saved it, day ${last.day}` : `💀 day ${last.day}${last.killedBy ? ' · ' + esc(last.killedBy) : ''}`} · <b>${num(last.score)}</b></span><i>${ago(last.at * 1000)}</i>`
             : '<span>no runs on this account yet</span>';
-        return `<a class="g-game" href="https://cancel.tylerirl.com" target="_blank" rel="noopener" style="--game: 255, 222, 23">
-                <span class="g-game-head"><img src="/assets/object-icons/cancel.webp" alt=""><b>the cancel is coming</b>${k.you ? '<em>👑 KING OF THE HILL</em>' : ''}<span class="g-game-go">PLAY &nearr;</span></span>
+        const more = [runs ? `${Math.round(100 * wins / runs)}% saved` : '', rank.rank ? `best ${num(rank.score)}` : '',
+            p.streak && p.streak.best ? `daily streak ${num(p.streak.n)} (best ${num(p.streak.best)})` : '', `${num((p.ach || []).length)} achievements`].filter(Boolean).join(' · ');
+        return `<a class="g-game" href="https://cancel.tylerirl.com" target="_blank" rel="noopener" style="--game: 255, 222, 23" title="the cancel is coming: ${esc(more)}">
+                <span class="g-game-head"><img src="/assets/object-icons/cancel.webp" alt=""><b>the cancel is coming</b>${k.you ? '<em title="king of the hill">👑</em>' : ''}<span class="g-game-go" title="play">&nearr;</span></span>
                 <span class="g-pstats">
-                    ${stat(`<span class="good">${wins}W</span> · <span class="bad">${runs - wins}L</span>`, runs ? `record · ${Math.round(100 * wins / runs)}% saved` : 'record')}
-                    ${stat(rank.rank ? `#${num(rank.rank)}` : '—', rank.rank ? `of ${num(rank.total)} · best ${num(rank.score)}` : 'not on the board yet')}
+                    ${stat(`<span class="good">${wins}W</span>·<span class="bad">${runs - wins}L</span>`, 'record')}
+                    ${stat(rank.rank ? `#${num(rank.rank)}` : '—', rank.rank ? `of ${num(rank.total)}` : 'unranked')}
                     ${stat(num(p.drip), 'drip', 'drip')}
-                    ${stat(`👑 ${num(k.crowns)} · ⚔️ ${num(k.slain)}`, 'crowns · kings slain')}
-                    ${p.streak && p.streak.best ? stat(`🔥 ${num(p.streak.n)}`, `daily streak · best ${num(p.streak.best)}`) : ''}
-                    ${stat(num((p.ach || []).length), 'achievements')}
+                    ${stat(`👑${num(k.crowns)} ⚔️${num(k.slain)}`, 'crowns/slain')}
                 </span>
                 <span class="g-game-last">${lastLine}</span>
             </a>`;
@@ -148,23 +149,23 @@
     const BOARD_NAMES = { fastest: 'fastest to the garden', grass: 'grass', network: 'biggest network', online: 'new internet', uptime: 'uptime' };
     function netCard() {
         const n = stats.net;
-        const head = `<span class="g-game-head"><img src="/assets/object-icons/network.webp" alt=""><b>the network is growing</b><span class="g-game-go">${n && n.started === false ? 'START' : 'PLAY'} &nearr;</span></span>`;
-        let body;
-        if (!n) body = '<span class="g-game-last"><span>the network didn\'t answer · try again in a bit</span></span>';
-        else if (n.started === false) body = '<span class="g-game-last"><span>no network on this account yet · the idle clicker with the same miladys, and it keeps growing while you play the cancel</span></span>';
+        const head = `<span class="g-game-head"><img src="/assets/object-icons/network.webp" alt=""><b>the network is growing</b><span class="g-game-go" title="${n && n.started === false ? 'start' : 'play'}">&nearr;</span></span>`;
+        let body, more = '';
+        if (!n) body = '<span class="g-game-last"><span>the network didn\'t answer</span></span>';
+        else if (n.started === false) body = '<span class="g-game-last"><span>not started yet · same miladys, idle</span></span>';
         else {
             const best = Object.entries(n.ranks || {}).filter(([b]) => BOARD_NAMES[b]).sort((x, y) => x[1].rank - y[1].rank)[0];
+            more = [`touched grass ${num(n.runs)}× (${num(n.grass)} grass)`, (n.challenges || []).length ? `${n.challenges.length} challenges beaten` : '',
+                n.cheese || n.beetles ? `🧀 ${num(n.cheese)} cheese this week · 🪲 ${num(n.beetles)} beetles` : '', best ? `#${num(best[1].rank)} of ${num(best[1].total)} · ${BOARD_NAMES[best[0]]}` : ''].filter(Boolean).join(' · ');
             body = `<span class="g-pstats">
                     ${stat(num(n.miladys), `milad${n.miladys === 1 ? 'y' : 'ys'}`, 'drip')}
-                    ${stat(n.online ? '🌐 on' : `${n.stage}/7`, n.online ? `the new internet · ${num(n.epochs)} epochs` : 'new internet')}
-                    ${stat(`🌱 ${num(n.runs)}×`, `touched grass · ${num(n.grass)} grass`)}
+                    ${stat(n.online ? '🌐 on' : `${n.stage}/7`, n.online ? `${num(n.epochs)} epochs` : 'new internet')}
+                    ${best ? stat(`#${num(best[1].rank)}`, BOARD_NAMES[best[0]]) : stat(`🌱${num(n.runs)}×`, 'touched grass')}
                     ${stat(hours(n.played || 0), 'played')}
-                    ${best ? stat(`#${num(best[1].rank)}`, `of ${num(best[1].total)} · ${BOARD_NAMES[best[0]]}`) : ''}
-                    ${n.cheese || n.beetles ? stat(`🧀 ${num(n.cheese)} · 🪲 ${num(n.beetles)}`, 'cheese this week · beetles') : ''}
                 </span>
-                <span class="g-game-last"><span>${num(n.ach)} achievements${(n.challenges || []).length ? ` · ${n.challenges.length} challenges beaten` : ''}</span>${n.saved ? `<i>synced ${ago(n.saved * 1000)}</i>` : ''}</span>`;
+                <span class="g-game-last"><span>${num(n.ach)} achievements</span>${n.saved ? `<i>synced ${ago(n.saved * 1000)}</i>` : ''}</span>`;
         }
-        return `<a class="g-game" href="https://clicker.tylerirl.com" target="_blank" rel="noopener" style="--game: 255, 121, 198">${head}${body}</a>`;
+        return `<a class="g-game" href="https://clicker.tylerirl.com" target="_blank" rel="noopener" style="--game: 255, 121, 198"${more ? ` title="the network is growing: ${esc(more)}"` : ''}>${head}${body}</a>`;
     }
 
     const live = (el) => el && el.isConnected;
@@ -173,13 +174,17 @@
         if (slots.meta) slots.meta.textContent = user ? 'LINKED' : 'GUEST';
         if (slots.link) {
             if (user) {
-                slots.link.innerHTML = `<div class="g-player-who">${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button></div>`;
+                const games = !stats ? '<div class="g-player-wait">SYNCING&hellip;</div>'
+                    : stats.failed ? '<div class="g-player-wait is-error">[ NO LINK ] the games didn\'t answer <button type="button" class="g-btn" data-retry>RETRY</button></div>'
+                    : `<div class="g-games">${cancelCard()}${netCard()}</div>`;
+                slots.link.innerHTML = `<div class="g-player-who">${tag(user)}<button type="button" class="g-btn" data-out title="Sign out of the games">SIGN OUT</button></div>${games}`;
                 slots.link.querySelector('[data-out]').addEventListener('click', () => signOut());
-                if (arrived) window.tirlArrive?.arrive(slots.link.querySelector('.g-ptag b'));
+                slots.link.querySelector('[data-retry]')?.addEventListener('click', () => { stats = null; render(); load(); });
+                if (arrived) slots.link.querySelectorAll('.g-ptag b, .g-pstat b, .g-game-head b').forEach((el) => window.tirlArrive?.arrive(el));
             } else {
                 const sso = [offer.rn ? `<button type="button" class="g-btn g-sso" data-sso="rn">${REMILIA_MARK}Remilia SSO</button>` : '',
                     offer.ur ? `<button type="button" class="g-btn g-sso ur" data-sso="ur">${URBIT_MARK}Urbit ID</button>` : ''].filter(Boolean).join('');
-                slots.link.innerHTML = `<small class="g-player-sub">sign in for the cancel is coming · the network is growing</small>
+                slots.link.innerHTML = `<small class="g-player-sub">sign in for the cancel is coming</small>
                     ${sso ? `<div class="g-sso-row">${sso}</div>` : ''}${notice ? `<span class="g-player-note">${esc(notice)}</span>` : ''}`;
                 slots.link.querySelectorAll('[data-sso]').forEach((b) => b.addEventListener('click', () => {
                     const back = encodeURIComponent(location.origin + location.pathname);
@@ -187,23 +192,12 @@
                 }));
             }
         }
-        // Header, signed in: a card per game
-        if (live(slots.stats)) {
-            slots.stats.innerHTML = !user ? ''
-                : !stats ? '<div class="g-player-wait">SYNCING PLAYER RECORD&hellip;</div>'
-                : stats.failed ? '<div class="g-player-wait is-error">[ NO LINK ] · the games\' service didn\'t answer · <button type="button" class="g-btn" data-retry>RETRY</button></div>'
-                : `<div class="g-games">${cancelCard()}${netCard()}</div>`;
-            slots.stats.querySelector('[data-retry]')?.addEventListener('click', () => { stats = null; render(); load(); });
-            if (arrived) slots.stats.querySelectorAll('.g-pstat b, .g-game-head b').forEach((el) => window.tirlArrive?.arrive(el));
-        }
     }
 
-    // Called by js/objects.js each time it draws the home object's header
-    function mount(statsEl) {
-        slots.stats = statsEl;
-        render();
-        if (user && (!stats || stats.failed || Date.now() - stats.at > REFRESH)) load();
-    }
+    // Fresh numbers every 5 minutes while the tab is visible (and on coming back to it)
+    const stale = () => user && (!stats || stats.failed || Date.now() - stats.at > REFRESH);
+    setInterval(() => { if (!document.hidden && stale()) load(); }, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && stale()) load(); });
     // Which sign-ins are on (the service's health check); without an answer both stay offered
     if (!user) api('/api/health').then((h) => {
         if (!h || h.ok === false) return;
@@ -220,5 +214,5 @@
         ? { id: 'player', status: (isShip(user.handle) ? user.handle : '~' + user.handle).toUpperCase() }
         : { id: 'player', status: 'GUEST', tone: 'idle' } }));
 
-    window.TirlPlayer = { mount, user: () => user && { handle: user.handle, name: user.name } };
+    window.TirlPlayer = { user: () => user && { handle: user.handle, name: user.name } };
 })();

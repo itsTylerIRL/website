@@ -1,0 +1,435 @@
+/* Page styles for the coin feeds (pages/btc.html, eth.html, link.html) in the DEEPDISH workspace.
+   Shell comes from css/workspace.css; this file adds the asset explorer, chart controls, the live quote,
+   the lightweight-charts panel and the trade tape (js/coin.js), and the paper trading desk: the order ticket,
+   the account strip and the positions / orders / history / runs table (js/coin-desk.js). */
+
+.g-dim { color: var(--g-dim); }
+
+/* Δ badge (explorer, quote, properties, legend) */
+.g-delta {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    white-space: nowrap;
+    color: var(--g-dim);
+}
+.g-delta.up { color: var(--g-green); }
+.g-delta.down { color: var(--g-red); }
+
+/* ---------- Asset explorer ---------- */
+.g-assets {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+}
+.g-asset {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) 7px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+    color: var(--g-text);
+}
+.g-asset:hover { background: rgba(var(--g-blue-rgb), 0.06); }
+.g-asset[aria-current="true"] {
+    background: linear-gradient(90deg, rgba(var(--g-blue-rgb), 0.16), transparent);
+    border-left-color: var(--g-blue);
+}
+.g-asset-logo { width: 30px; height: 30px; display: block; }
+.g-asset-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+}
+.g-asset-name {
+    font-size: 12.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.g-asset-name small { font-family: var(--g-mono); font-size: 10px; color: var(--g-dim); letter-spacing: 0.08em; }
+.g-asset[aria-current="true"] .g-asset-name { color: var(--g-blue); text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.5); }
+.g-asset-price {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    color: var(--g-muted);
+    white-space: nowrap;
+}
+.g-asset-price .g-delta { font-size: 10px; margin-left: 4px; }
+
+/* ---------- Chart controls ---------- */
+.g-ctl-label {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    margin: 8px 0 5px;
+}
+.g-ctl-label:first-child { margin-top: 0; }
+.g-seg { display: grid; gap: 5px; }
+.g-seg-6 { grid-template-columns: repeat(3, 1fr); }
+.g-seg-3 { grid-template-columns: repeat(3, 1fr); }
+.g-seg-4 { grid-template-columns: repeat(4, 1fr); }
+.g-seg .g-btn {
+    height: 26px;
+    padding: 0 4px;
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    min-width: 0;
+}
+.g-seg .g-btn[aria-pressed="true"] {
+    border-color: var(--g-blue);
+    background: rgba(var(--g-blue-rgb), 0.16);
+    color: var(--g-blue);
+    box-shadow: 0 0 12px rgba(var(--g-blue-rgb), 0.25);
+}
+.g-seg .g-ma20[aria-pressed="true"] { border-color: var(--g-orange); color: var(--g-orange); background: rgba(255, 184, 108, 0.12); box-shadow: none; }
+.g-seg .g-ma50[aria-pressed="true"] { border-color: #bd93f9; color: #bd93f9; background: rgba(189, 147, 249, 0.12); box-shadow: none; }
+.g-ctl-note {
+    margin-top: 9px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--g-dim);
+}
+
+/* ---------- Header: live quote ---------- */
+.g-objhead .g-objimg { object-fit: contain; background: none; }
+.g-quote {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin-top: 10px;
+}
+.g-quote-price {
+    font-family: var(--g-mono);
+    font-size: 34px;
+    line-height: 1;
+    color: var(--g-text);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin-left: -4px;
+}
+.g-quote-price.flash-up { animation: g-flash-up 0.7s ease-out; }
+.g-quote-price.flash-down { animation: g-flash-down 0.7s ease-out; }
+@keyframes g-flash-up { 0% { color: var(--g-green); background: rgba(80, 250, 123, 0.14); } }
+@keyframes g-flash-down { 0% { color: var(--g-red); background: rgba(255, 85, 85, 0.14); } }
+.g-quote .g-delta { font-size: 14px; }
+.g-quote-sub {
+    flex-basis: 100%;
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+    color: var(--g-dim);
+}
+.g-quote-sub b { color: var(--g-muted); font-weight: 400; }
+
+/* ---------- Chart ---------- */
+.g-chart-pane { margin-top: var(--g-gap); }
+.g-chart-pane .g-panel-title .g-meta { margin-left: auto; }
+.g-fit { height: 20px; font-family: var(--g-mono); font-size: 10.5px; letter-spacing: 0.1em; padding: 0 7px; }
+.g-chart-wrap {
+    position: relative;
+    height: 460px;
+    background:
+        radial-gradient(ellipse at center, rgba(var(--g-blue-rgb), 0.05) 0%, transparent 65%);
+}
+.g-chart { position: absolute; inset: 0; }
+.g-chart.is-loading::after {
+    content: '[ ACQUIRING DATA… ]';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--g-mono);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: var(--g-blue);
+    text-shadow: 0 0 14px rgba(var(--g-blue-rgb), 0.5);
+    animation: g-acq 1.2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 3;
+}
+@keyframes g-acq { 50% { opacity: 0.4; } }
+.g-legend {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    right: 80px;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+    color: var(--g-dim);
+    pointer-events: none;
+    text-shadow: 0 0 4px #000, 0 0 8px #000;
+}
+.g-legend b { color: var(--g-text); font-weight: 400; }
+.g-legend > b:first-child { color: var(--g-blue); }
+.g-legend .g-ma20 { color: var(--g-orange); }
+.g-legend .g-ma50 { color: #bd93f9; }
+
+/* ---------- Properties + tape ---------- */
+.g-props-pane .g-props dd .g-delta { font-size: 12px; }
+.g-tape {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    height: 300px; /* fixed: busy markets scroll inside it instead of growing the column */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+}
+.g-tape li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    padding: 2px 14px;
+    font-variant-numeric: tabular-nums;
+}
+.g-tape time { color: var(--g-dim); }
+.g-tape b { font-weight: 400; text-align: right; }
+.g-tape span { color: var(--g-muted); text-align: right; min-width: 64px; }
+.g-tape li.up b { color: var(--g-green); }
+.g-tape li.down b { color: var(--g-red); }
+.g-tape li:first-child { animation: g-tape-in 0.6s ease-out; }
+@keyframes g-tape-in { 0% { background: rgba(var(--g-blue-rgb), 0.12); } }
+
+/* ---------- Paper trading: order ticket ---------- */
+.g-ticket { display: flex; flex-direction: column; gap: 7px; padding: 10px 12px 12px; }
+.g-seg-2 { grid-template-columns: repeat(2, 1fr); }
+.g-sides .g-btn { height: 30px; font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+.g-sides .g-btn[data-side="buy"][aria-pressed="true"] { border-color: var(--g-green); color: var(--g-green); background: rgba(80, 250, 123, 0.13); box-shadow: 0 0 12px rgba(80, 250, 123, 0.2); }
+.g-sides .g-btn[data-side="sell"][aria-pressed="true"] { border-color: var(--g-red); color: var(--g-red); background: rgba(255, 85, 85, 0.13); box-shadow: 0 0 12px rgba(255, 85, 85, 0.2); }
+.g-field {
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+}
+.g-field input {
+    min-width: 0;
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--g-border-strong);
+    border-radius: var(--g-r-ctl);
+    background: var(--g-well);
+    color: var(--g-text);
+    font-family: var(--g-mono);
+    font-size: 13px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.g-field input:focus { outline: none; border-color: var(--g-blue); box-shadow: 0 0 0 2px rgba(var(--g-blue-rgb), 0.18); }
+.g-field input::placeholder { color: var(--g-dim); opacity: 0.6; }
+.g-bracket .g-field { grid-template-columns: 74px minmax(0, 1fr); }
+.g-bracket { display: flex; flex-direction: column; gap: 7px; }
+.g-mini { height: 22px; min-width: 0; padding: 0 6px; font-family: var(--g-mono); font-size: 10px; letter-spacing: 0.08em; }
+/* market orders have no price; sells carry no bracket */
+.g-ticket[data-type="market"] [data-for="price"],
+.g-ticket[data-side="sell"] [data-for="bracket"] { display: none; }
+.g-est {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 3px 10px;
+    margin: 2px 0 0;
+    padding: 7px 9px;
+    border-radius: var(--g-r-ctl);
+    background: var(--g-well);
+    font-family: var(--g-mono);
+    font-size: 11px;
+}
+.g-est dt { color: var(--g-dim); }
+.g-est dd { margin: 0; text-align: right; color: var(--g-text); font-variant-numeric: tabular-nums; }
+.g-submit {
+    height: 34px;
+    font-family: var(--g-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    border-color: var(--g-green);
+    color: var(--g-green);
+    background: rgba(80, 250, 123, 0.12);
+}
+.g-ticket[data-side="sell"] .g-submit { border-color: var(--g-red); color: var(--g-red); background: rgba(255, 85, 85, 0.12); }
+.g-ticket .g-submit:hover { filter: brightness(1.2); }
+.g-t-msg { min-height: 1.4em; margin: 0; font-family: var(--g-mono); font-size: 11px; line-height: 1.4; color: var(--g-dim); }
+.g-t-msg.tone-green { color: var(--g-green); }
+.g-t-msg.tone-red { color: var(--g-red); }
+.g-t-msg.tone-orange { color: var(--g-orange); }
+.g-t-msg.tone-blue { color: var(--g-blue); }
+
+/* ---------- Paper trading: desk ----------
+   Minimized (.is-min, the default) it's just its title bar: the toggle and a one-line account summary. */
+.g-desk-pane { margin-top: var(--g-gap); }
+.g-desk-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    background: none;
+    border: none;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+.g-desk-toggle i { font-style: normal; display: inline-block; transition: transform 0.2s ease; }
+.g-desk-toggle[aria-expanded="true"] i { transform: rotate(90deg); }
+.g-desk-toggle:hover { color: var(--g-text); }
+.g-desk-sum {
+    display: none;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+    margin-right: auto;
+    margin-left: 6px;
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+}
+.g-desk-sum b { font-weight: 400; color: var(--g-text); font-variant-numeric: tabular-nums; }
+.g-desk-sum span:last-child { color: var(--g-dim); overflow: hidden; text-overflow: ellipsis; }
+.g-desk-pane.is-min .g-desk-sum { display: flex; }
+.g-desk-pane.is-min :is(.g-desk-tabs, .g-reset, .g-desk-body) { display: none; }
+.g-desk-pane.is-min > .g-panel-title { border-bottom: none; }
+.g-desk-tabs { display: flex; gap: 2px; margin-right: auto; margin-left: 10px; }
+.g-desk-tabs button {
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 2px 7px;
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+}
+.g-desk-tabs button:hover { color: var(--g-text); }
+.g-desk-tabs button[aria-selected="true"] { color: var(--g-blue); border-bottom-color: var(--g-blue); }
+.g-reset { color: var(--g-muted); }
+.g-acct {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--g-border);
+    font-family: var(--g-mono);
+    font-size: 11.5px;
+}
+.g-acct-main { display: flex; align-items: baseline; gap: 8px; }
+.g-acct-main > span { color: var(--g-dim); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.g-acct-main b { font-size: 18px; font-weight: 400; color: var(--g-text); font-variant-numeric: tabular-nums; }
+.g-acct-main .g-delta { font-size: 12px; }
+.g-title { text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
+.g-acct-stats { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0 0 0 auto; }
+.g-acct-stats dt { color: var(--g-dim); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; align-self: center; }
+.g-acct-stats dd { margin: 0 0 0 -8px; color: var(--g-text); font-variant-numeric: tabular-nums; }
+.g-acct-stats small, .g-desk small { color: var(--g-dim); font-size: 10px; }
+.g-acct .g-t-msg { flex-basis: 100%; }
+.g-desk { height: 170px; overflow: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+.g-desk-t { width: 100%; border-collapse: collapse; font-family: var(--g-mono); font-size: 11.5px; }
+.g-desk-t th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 6px 10px;
+    background: #071016;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--g-dim);
+    text-align: right;
+    border-bottom: 1px solid var(--g-border);
+    white-space: nowrap;
+}
+.g-desk-t td {
+    padding: 4px 10px;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid rgba(var(--g-blue-rgb), 0.06);
+}
+.g-desk-t th:first-child, .g-desk-t td:first-child { text-align: left; }
+.g-desk-t tr[data-coin] { cursor: pointer; }
+.g-desk-t tbody tr:hover { background: rgba(var(--g-blue-rgb), 0.05); }
+.g-desk-t .col-coin { text-align: left; }
+.g-desk-t .col-coin img { vertical-align: -3px; margin-right: 6px; }
+.g-desk-t td.up { color: var(--g-green); text-transform: uppercase; }
+.g-desk-t td.down { color: var(--g-red); text-transform: uppercase; }
+.g-desk-t tr.is-best td { color: var(--g-orange); }
+.g-desk-empty { margin: 0; padding: 14px; font-family: var(--g-mono); font-size: 11.5px; line-height: 1.6; color: var(--g-dim); }
+
+/* ---------- One-screen layout (desktop): the chart, the tape and the log take their column's spare height ---------- */
+@media (min-width: 1360px) and (min-height: 600px) {
+    .g-explorer,
+    .g-controls-pane,
+    .g-objhead,
+    .g-props-pane,
+    .g-ticket-pane,
+    .g-desk-pane { flex: none; }
+    .g-chart-pane { flex: 1 1 0; min-height: 260px; }
+    .g-chart-wrap { flex: 1 1 0; height: auto; min-height: 0; }
+    /* Standalone, the tape fills what the side column has left; handed to the home page (.is-embed-side) that
+       column grows with its panels, so there it keeps its fixed height */
+    .gotham:not(.is-embed-side) .g-tape-pane { flex: 1 1 0; min-height: 120px; }
+    .gotham:not(.is-embed-side) .g-tape { flex: 1 1 0; height: auto; min-height: 0; }
+    .is-embed-side .g-tape { height: 240px; }
+}
+@media (min-width: 1360px) and (min-height: 600px) and (max-height: 820px) {
+    .g-ctl-note { display: none; }
+    .g-summary { display: none; }
+    .g-props-pane .g-props dt,
+    .g-props-pane .g-props dd { padding: 3px 12px; }
+}
+
+/* ---------- Embedded in the home page's live preview (js/embed.js): a tighter header leaves the chart room ---------- */
+html.is-embed .g-summary { display: none; }
+html.is-embed .g-quote { margin-top: 6px; }
+html.is-embed .g-quote-price { font-size: 28px; }
+@media (min-width: 900px) {
+    html.is-embed .g-chart-pane { min-height: 220px; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 899px) {
+    .g-ticket-pane { order: 3; }
+    .g-controls-pane { order: 5; }
+    .g-props-pane { order: 6; }
+    .g-tape-pane { order: 7; }
+    .g-activity-pane { order: 8; }
+    .g-acct-stats { margin-left: 0; }
+    .g-chart-wrap { height: 340px; }
+    .g-quote-price { font-size: 28px; }
+    .g-legend { right: 12px; font-size: 10.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .g-chart.is-loading::after,
+    .g-quote-price.flash-up,
+    .g-quote-price.flash-down,
+    .g-tape li:first-child { animation: none; }
+}

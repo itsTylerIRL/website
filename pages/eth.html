@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-coin="eth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/pages/eth.html">
+    <meta property="og:title" content="Ethereum - Tyler (in real life)">
+    <meta property="og:description" content="Live ETH price feed with interactive charts">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/eth.html">
+    <meta property="twitter:title" content="Ethereum - Tyler (in real life)">
+    <meta property="twitter:description" content="Live ETH price feed with interactive charts">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+    <meta name="color-scheme" content="dark light">
+    <meta name="supported-color-schemes" content="dark light">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
+    <!-- Safari specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.3">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/coin.css?v=2.1">
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+    <!-- Coin feed workspace: pages/btc.html, eth.html and link.html are this same page opened on another coin
+         (html data-coin). js/coin.js renders every panel from its COINS list. -->
+    <div class="gotham" id="gotham">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Feed</span><span class="sep">/</span>
+                <b id="g-crumb">Ethereum</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
+
+        <div class="g-body">
+            <aside class="g-rail">
+                <!-- Not handed to the home page: it has its own Assets monitor (js/assets-monitor.js) -->
+                <section class="g-explorer" aria-label="Assets" data-anchor="assets">
+                    <div class="g-panel-title">Assets <span class="g-meta" id="g-asset-meta"></span></div>
+                    <ul class="g-assets" id="g-assets"></ul>
+                </section>
+                <section class="g-controls-pane" data-embed="rail" data-anchor="controls">
+                    <div class="g-panel-title">Chart</div>
+                    <div class="g-pane-body">
+                        <div class="g-ctl-label">interval</div>
+                        <div class="g-seg g-seg-6" id="g-intervals" role="group" aria-label="Candle interval">
+                            <button type="button" class="g-btn" data-interval="1m">1m</button>
+                            <button type="button" class="g-btn" data-interval="5m">5m</button>
+                            <button type="button" class="g-btn" data-interval="15m">15m</button>
+                            <button type="button" class="g-btn" data-interval="1h">1h</button>
+                            <button type="button" class="g-btn" data-interval="6h">6h</button>
+                            <button type="button" class="g-btn" data-interval="1D">1D</button>
+                        </div>
+                        <div class="g-ctl-label">style</div>
+                        <div class="g-seg g-seg-3" id="g-styles" role="group" aria-label="Chart style">
+                            <button type="button" class="g-btn" data-style="candles">candles</button>
+                            <button type="button" class="g-btn" data-style="line">line</button>
+                            <button type="button" class="g-btn" data-style="area">area</button>
+                        </div>
+                        <div class="g-ctl-label">overlays</div>
+                        <div class="g-seg g-seg-4" id="g-toggles" role="group" aria-label="Overlays">
+                            <button type="button" class="g-btn" data-opt="volume">vol</button>
+                            <button type="button" class="g-btn g-ma20" data-opt="ma20">ma20</button>
+                            <button type="button" class="g-btn g-ma50" data-opt="ma50">ma50</button>
+                            <button type="button" class="g-btn" data-opt="log">log</button>
+                        </div>
+                        <p class="g-ctl-note">drag to pan, wheel or pinch to zoom, scroll back for older candles. with a limit or stop ticket, click the chart to set its price</p>
+                    </div>
+                </section>
+                <!-- Market and the feed log stay on the full page: embedded, the home page's left column has the Assets
+                     monitor and only room for the chart controls (fills still reach its ticker) -->
+                <section class="g-props-pane" data-anchor="properties">
+                    <div class="g-panel-title">Market <span class="g-meta" id="g-props-meta"></span></div>
+                    <dl class="g-props" id="g-props"></dl>
+                </section>
+                <section class="g-activity-pane">
+                    <div class="g-panel-title">Feed Log <span class="g-meta" id="g-log-meta"></span></div>
+                    <ol class="g-activity" id="g-log"></ol>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main">
+                <div class="g-objhead" id="g-objhead">
+                    <noscript><p>This workspace needs JavaScript to load price data.</p></noscript>
+                </div>
+                <section class="g-card g-chart-pane" data-anchor="chart">
+                    <div class="g-panel-title">Price Chart <span class="g-meta" id="g-chart-meta"></span>
+                        <button type="button" class="g-btn g-fit" id="g-fit" title="Fit all loaded candles (F)">FIT</button></div>
+                    <div class="g-chart-wrap">
+                        <div class="g-legend" id="g-legend"></div>
+                        <div class="g-chart" id="g-chart"></div>
+                    </div>
+                </section>
+                <section class="g-card g-desk-pane is-min" id="g-desk-pane" data-anchor="desk">
+                    <div class="g-panel-title">
+                        <button type="button" class="g-desk-toggle" id="g-desk-toggle" aria-expanded="false" aria-controls="g-desk-body" title="Show or hide the desk (D)"><i aria-hidden="true">&#9656;</i>Desk</button>
+                        <span class="g-desk-sum" id="g-desk-sum"></span>
+                        <span class="g-desk-tabs" role="tablist" id="g-desk-tabs">
+                            <button type="button" role="tab" data-tab="pos">positions</button>
+                            <button type="button" role="tab" data-tab="orders">orders</button>
+                            <button type="button" role="tab" data-tab="fills">history</button>
+                            <button type="button" role="tab" data-tab="runs">runs</button>
+                        </span>
+                        <button type="button" class="g-btn g-mini g-reset" id="g-reset" title="File this run and start over with $10,000">RESET</button></div>
+                    <div class="g-desk-body" id="g-desk-body">
+                        <div class="g-acct" id="g-acct"></div>
+                        <div class="g-desk" id="g-desk" role="tabpanel"></div>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="g-ticket-pane" data-embed="side" data-anchor="trade">
+                    <div class="g-panel-title">Paper Trade <span class="g-meta" id="g-ticket-meta"></span></div>
+                    <form class="g-ticket" id="g-ticket" autocomplete="off" novalidate>
+                        <div class="g-seg g-seg-2 g-sides" role="group" aria-label="Side">
+                            <button type="button" class="g-btn" data-side="buy">buy</button>
+                            <button type="button" class="g-btn" data-side="sell">sell</button>
+                        </div>
+                        <div class="g-seg g-seg-3" role="group" aria-label="Order type" id="g-types-t">
+                            <button type="button" class="g-btn" data-type="market">market</button>
+                            <button type="button" class="g-btn" data-type="limit">limit</button>
+                            <button type="button" class="g-btn" data-type="stop">stop</button>
+                        </div>
+                        <label class="g-field" data-for="price"><span>price</span>
+                            <input type="text" inputmode="decimal" id="g-t-price" placeholder="0.00">
+                            <button type="button" class="g-btn g-mini" id="g-t-last" title="Use the last price">LAST</button>
+                        </label>
+                        <label class="g-field"><span>amount</span>
+                            <input type="text" inputmode="decimal" id="g-t-amt" placeholder="0.00">
+                            <button type="button" class="g-btn g-mini" id="g-t-unit" title="Switch between dollars and coins">USD</button>
+                        </label>
+                        <div class="g-seg g-seg-4 g-pcts" role="group" aria-label="Share of what's free">
+                            <button type="button" class="g-btn" data-pct="25">25%</button>
+                            <button type="button" class="g-btn" data-pct="50">50%</button>
+                            <button type="button" class="g-btn" data-pct="75">75%</button>
+                            <button type="button" class="g-btn" data-pct="100">max</button>
+                        </div>
+                        <div class="g-bracket" data-for="bracket">
+                            <label class="g-field"><span>stop-loss</span><input type="text" inputmode="decimal" id="g-t-sl" placeholder="optional"></label>
+                            <label class="g-field"><span>take-profit</span><input type="text" inputmode="decimal" id="g-t-tp" placeholder="optional"></label>
+                        </div>
+                        <dl class="g-est" id="g-t-est"></dl>
+                        <button type="submit" class="g-btn g-submit" id="g-t-go">BUY</button>
+                        <p class="g-t-msg" id="g-t-msg" role="status"></p>
+                    </form>
+                </section>
+                <section class="g-tape-pane" data-embed="side" data-anchor="tape">
+                    <div class="g-panel-title">Trade Tape <span class="g-meta" id="g-tape-meta"></span></div>
+                    <ol class="g-tape" id="g-tape"></ol>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-muted" id="g-feed-dot"></i><span id="g-feed">CONNECTING</span></span>
+                <span id="g-clock"></span>
+                <span class="g-hint">&uarr; &darr; switch coin &middot; 1&ndash;6 interval &middot; C style &middot; F fit &middot; B / S buy or sell &middot; D desk</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
+    </main>
+
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+
+    <!-- Coin feed: TradingView lightweight-charts, then the page -->
+    <script defer src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+    <script defer src="/js/coins.js?v=1.0"></script>
+    <script defer src="/js/paper.js?v=1.0"></script>
+    <script defer src="/js/coin.js?v=2.0"></script>
+    <script defer src="/js/coin-desk.js?v=1.1"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
+</body>
+</html>
