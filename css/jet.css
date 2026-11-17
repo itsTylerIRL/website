@@ -529,3 +529,23 @@ html.is-embed .g-flight-pane { margin-top: 0; }
     .jet-hint, .jet-hud { transition: none; }
     .jet-alert.is-now { animation: none; }
 }
+
+/* ---------- Credits (side column): the shout-out for the source code ---------- */
+.g-credit-pane { flex: none; } /* never squeezed by the one-screen side column */
+.jet-credit {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 12px;
+    color: var(--g-text);
+    text-decoration: none;
+}
+.jet-credit img { width: 22px; height: 22px; display: block; }
+.jet-credit span { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.jet-credit b { font-family: var(--g-mono); font-weight: 400; font-size: 13px; color: var(--g-blue); }
+.jet-credit small { font-size: 10.5px; color: var(--g-dim); }
+.jet-credit i { font-style: normal; color: var(--g-dim); }
+.jet-credit:hover { background: rgba(var(--g-blue-rgb), 0.06); }
+.jet-credit:hover b { text-shadow: 0 0 10px rgba(var(--g-blue-rgb), 0.5); }
+.jet-credit:hover i { color: var(--g-blue); }
