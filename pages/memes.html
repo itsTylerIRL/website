@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Generator - Tyler (in real life)</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerirl.com/pages/memes.html">
+    <meta property="og:title" content="Meme Generator">
+    <meta property="og:description" content="Paste any image, add impact text, bulge it, deep fry it, save it.">
+    <meta property="og:image" content="https://tylerirl.com/assets/5031.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tylerirl.com/pages/memes.html">
+    <meta property="twitter:title" content="Meme Generator">
+    <meta property="twitter:description" content="Paste any image, add impact text, bulge it, deep fry it, save it.">
+    <meta property="twitter:image" content="https://tylerirl.com/assets/5031.png">
+    <meta property="twitter:creator" content="@itsTylerIRL">
+
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/css/styles.css?v=1.8">
+    <link rel="stylesheet" href="/css/radgotchi.css?v=1.1">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Anton stands in for Impact where the system doesn't have it -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.4">
+    <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
+    <link rel="stylesheet" href="/css/memes.css?v=1.1">
+</head>
+<body>
+    <!-- Corner Brackets Border -->
+    <div class="corner-brackets"><div class="bottom"></div></div>
+    <main class="main-content">
+    <!-- Meme generator workspace: js/memes.js renders the canvas and drives every panel -->
+    <div class="gotham" id="memes">
+        <header class="g-topbar">
+            <a class="g-brand" href="/" title="tylerirl.com: home + objects index">
+                <img src="/assets/object-icons/wee-brand.gif" alt="" width="30" height="30">
+                <span class="g-brand-name">TYLERIRL</span>
+            </a>
+            <nav class="g-crumbs" aria-label="Breadcrumb">
+                <span class="sep">/</span>
+                <span>Objects</span><span class="sep">/</span>
+                <span>Tool</span><span class="sep">/</span>
+                <b>Meme Generator</b>
+            </nav>
+            <span class="g-spacer"></span>
+            <span class="g-classif" title="Unclassified // For Official Use Only">UNCLASSIFIED // FOUO</span>
+        </header>
+
+        <div class="g-body">
+            <aside class="g-rail">
+                <section class="mm-source-pane" data-embed="rail">
+                    <div class="g-panel-title">Source</div>
+                    <div class="g-pane-body mm-source">
+                        <div class="mm-actions">
+                            <button type="button" class="mm-btn is-wide" id="mm-open">OPEN IMAGE</button>
+                            <button type="button" class="mm-btn" id="mm-sample" title="Try it on Remilio #5031">SAMPLE</button>
+                            <button type="button" class="mm-btn is-danger" id="mm-clear">CLEAR</button>
+                        </div>
+                        <input type="file" id="mm-file" accept="image/*" hidden>
+                        <dl class="g-props mm-info" id="mm-info"></dl>
+                        <p class="mm-note">or paste (<kbd>Ctrl</kbd>+<kbd>V</kbd>) / drop an image anywhere on the canvas. Any size: exports at full resolution.</p>
+                    </div>
+                </section>
+                <section class="mm-layers-pane" data-embed="rail">
+                    <div class="g-panel-title">Layers</div>
+                    <ol class="mm-layers" id="mm-layers"></ol>
+                    <div class="mm-actions mm-layer-actions">
+                        <button type="button" class="mm-btn" id="mm-add-text">+ TEXT</button>
+                        <button type="button" class="mm-btn" id="mm-add-bulge">+ BULGE</button>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="g-main" id="g-main">
+                <div class="g-objhead" data-embed="hide">
+                    <div class="g-objrow">
+                        <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/memes.webp" alt=""></div>
+                        <div class="g-objtitle">
+                            <div class="g-objtype">OBJECT &middot; TOOL &middot; MEME GENERATOR</div>
+                            <h1>Meme Generator</h1>
+                        </div>
+                        <span class="g-chip tone-orange"><i class="g-dot tone-orange"></i>Tool</span>
+                    </div>
+                </div>
+                <section class="g-card mm-stage-pane" data-anchor="canvas">
+                    <div class="g-panel-title">Canvas <span class="g-meta" id="mm-stage-meta">NO IMAGE</span></div>
+                    <div class="mm-toolbar">
+                        <div class="mm-seg" id="mm-mode" role="group" aria-label="Click mode">
+                            <button type="button" data-mode="text" aria-pressed="true" title="Move text (T)">TEXT</button>
+                            <button type="button" data-mode="bulge" aria-pressed="false" title="Click to bulge (B)">BULGE</button>
+                        </div>
+                        <span class="mm-hint" id="mm-hint"></span>
+                        <button type="button" class="mm-btn mm-copy-now" id="mm-copy-now" title="Copy the meme at full resolution (Ctrl/Cmd+C), or right-click the canvas → Copy image">COPY</button>
+                    </div>
+                    <div class="mm-stage" id="mm-stage">
+                        <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
+                        <div class="mm-empty" id="mm-empty">
+                            <div class="mm-empty-mark mm-impact">TOP TEXT</div>
+                            <p><b>paste</b>, <b>drop</b> or <b>click</b> to load an image</p>
+                            <p class="mm-empty-sub">any resolution &middot; nothing leaves your browser</p>
+                            <div class="mm-empty-mark mm-impact">BOTTOM TEXT</div>
+                        </div>
+                        <div class="mm-wrap" id="mm-wrap">
+                            <canvas id="mm-canvas"></canvas>
+                            <!-- The latest render as a plain image: right-click → Copy image / Save image as (js/memes.js) -->
+                            <img id="mm-shot" alt="Your meme" draggable="true">
+                            <canvas id="mm-overlay" aria-label="Meme canvas"></canvas>
+                            <span class="mm-flash" id="mm-flash" aria-live="polite"></span>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <aside class="g-side">
+                <section class="mm-sel-pane" data-embed="side">
+                    <div class="g-panel-title">Selected <span class="g-meta" id="mm-sel-meta"></span></div>
+                    <div class="g-pane-body mm-sel" id="mm-sel"></div>
+                </section>
+                <section class="mm-fry-pane" data-embed="side">
+                    <div class="g-panel-title">Deep Fry <button type="button" class="mm-btn mm-fry-on" id="mm-fry-on" aria-pressed="false">OFF</button></div>
+                    <div class="g-pane-body">
+                        <div class="mm-actions" id="mm-fry-presets">
+                            <button type="button" class="mm-btn" data-preset="MILD">MILD</button>
+                            <button type="button" class="mm-btn" data-preset="CRISPY">CRISPY</button>
+                            <button type="button" class="mm-btn" data-preset="NUCLEAR">NUCLEAR</button>
+                        </div>
+                        <div class="mm-sliders" id="mm-fry"></div>
+                        <label class="mm-check"><input type="checkbox" id="mm-fry-text" checked> fry the text too</label>
+                    </div>
+                </section>
+                <section class="mm-export-pane" data-embed="side">
+                    <div class="g-panel-title">Export</div>
+                    <div class="g-pane-body">
+                        <div class="mm-actions">
+                            <button type="button" class="mm-btn is-go" id="mm-png">PNG</button>
+                            <button type="button" class="mm-btn is-go" id="mm-jpg">JPG</button>
+                            <button type="button" class="mm-btn" id="mm-copy">COPY</button>
+                        </div>
+                        <p class="mm-note" id="mm-export-state"></p>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+        <footer class="g-statusbar">
+            <!-- One clipped line: items that don't fit wrap out of view, last first; the first always stays -->
+            <div class="g-status-main">
+                <span><i class="g-dot tone-green"></i>CONNECTED</span>
+                <span id="mm-sb-image">NO IMAGE</span>
+                <span>LOCAL ONLY</span>
+                <span id="g-clock"></span>
+                <span class="g-hint">ctrl+v paste &middot; ctrl+c copy &middot; T text &middot; B bulge &middot; del removes</span>
+            </div>
+            <div class="g-pet" id="radgotchi-container">
+                <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
+                <img src="/assets/radbros/HAPPY.png" alt="Radgotchi" class="radgotchi-face" id="radgotchi-face">
+            </div>
+            <span class="g-copy">&copy; 2026 tyler</span>
+        </footer>
+    </div>
+    </main>
+
+    <!-- External JavaScript (deferred, run in order after parsing) -->
+    <script defer src="/js/embed.js?v=1.5"></script>
+    <script defer src="/js/background.js?v=1.7"></script>
+    <script defer src="/js/script.js?v=2.1"></script>
+    <script defer src="/js/interactions.js?v=1.2"></script>
+    <script defer src="/js/radgotchi.js"></script>
+    <script defer src="/js/workspace.js?v=1.0"></script>
+
+    <!-- Meme generator -->
+    <script defer src="/js/memes.js?v=1.2"></script>
+    <script defer src="/js/escape-home.js?v=1.1"></script>
+</body>
+</html>

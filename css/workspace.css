@@ -920,6 +920,17 @@ html.is-embed .gotham {
     padding: 10px;
 }
 html.is-embed .g-body { grid-template-columns: minmax(0, 1fr); }
+/* One panel in the main column (js/embed.js): it sits straight in the preview panel, whose title bar names it
+   and shows what its own title bar said */
+html.is-embed-solo .g-main > .g-card {
+    background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+html.is-embed-solo .g-main > .g-card > .g-panel-title { display: none; }
 html.is-embed .g-main > :first-child,
 html.is-embed .g-main > [data-embed="hide"] + * { margin-top: 0; } /* the first visible panel */
 

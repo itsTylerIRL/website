@@ -43,6 +43,8 @@ const OBJECTS = [
     { key: 'sin', parent: 'deepdish', name: 'RADactedBot', url: '/pages/deepdish_sin.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/sin-defcon4.webp', desc: 'Discord and Telegram bot: economy, games, relays, LLM agents and moderation', screen: 'Bot Intel', tag: 'economy, games + llm agents · discord / telegram' },
     { key: 'radgotchi', name: 'RadGotchi', url: '/pages/deepdish_rg.html', type: 'program', workspace: true, embed: true, icon: '/assets/object-icons/radgotchi-shades.webp', desc: 'desktop + web pixel-art companion: system telemetry, local-AI chat with tools, XP and a LAN mesh, with technical docs', screen: 'Companion Link', tag: 'a pixel radbro that lives on your desktop' },
     { key: 'grep', hidden: true, name: 'grep dojo', url: '/pages/grep.html', type: 'tool', icon: '/assets/object-icons/grep.webp', desc: 'master grep through interactive terminal challenges' },
+    { key: 'studio', name: 'Studio', url: '/pages/studio.html', type: 'program', workspace: true, embed: true, icon: '', desc: 'a mini DAW in the browser: two synths, an eight-voice drum machine, four patterns per track and a looping 16-bar arrangement, with a mixer, keyboard recording and WAV export', screen: 'Mix Console', tag: 'synths, drums + loops · press space' },
+    { key: 'memes', name: 'Meme Generator', url: '/pages/memes.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/memes.webp', desc: 'paste any image, add impact text, bulge it and deep fry it, then save it at full resolution', screen: 'Meme Lab', tag: 'top text · bottom text · deep fried' },
     { key: 'digiflip', name: 'DigiFlip', url: '/pages/digimon.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/digiflip.webp', desc: 'digimon ver.20th virtual pet for the flipper zero, in your browser', screen: 'Device Bay', tag: 'digimon v20th for the flipper zero · now in wasm' },
     { key: 'timer', unlisted: true, name: 'speedcube timer', url: '/pages/timer.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/timer.webp', desc: 'minimal speedcube timer with session stats saved in your browser', screen: 'Solve Station', tag: 'hold space · release · solve' },
     { key: 'markets', unlisted: true, name: 'Neochibi Markets', url: '/pages/markets.html', type: 'tool', workspace: true, embed: true, icon: '/assets/object-icons/markets.webp', desc: 'live floor, volume and price trends for the neochibi collections, plus the CULT chart', screen: 'Market Terminal', tag: 'neochibi floors, volume + the CULT chart' },
@@ -174,7 +176,7 @@ const FEATURED = [
     const fresh = new Map();
     const freshHash = new Map(); // and where in the page the news is (a part to open it at)
     const gist = (t) => String(t || '').replace(/[\d.,:]+/g, '#').replace(/\s+/g, ' ').trim();
-    const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'timer', 'nosfyl', 'raddem', 'deepdish', 'gallery', 'rocketry', 'markets',
+    const LIVE_KEYS = new Set(['home', 'likes', 'kol', 'cancel', 'radgotchi', 'digiflip', 'timer', 'studio', 'nosfyl', 'raddem', 'deepdish', 'gallery', 'rocketry', 'markets',
         ...objects.filter((o) => o.type === 'live').map((o) => o.key)]);
     const waiting = new Set(LIVE_KEYS);
     setTimeout(() => {

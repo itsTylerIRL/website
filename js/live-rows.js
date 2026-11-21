@@ -4,6 +4,7 @@
    - Kingdom of Loathing: today's date and time to rollover (js/kol-calendar.js), every minute
    - the cancel is coming: this week's king of the hill (cancel-api, which only answers tylerirl.com), every 5 minutes
    - speedcube timer: best and solve count in the current session, from this browser's save; as it changes
+   - Studio: the project's name, tempo and length, from this browser's save; as it changes
    - RadGotchi, DigiFlip: last push and stars from one GitHub call, cached for the session (GitHub allows 60 an hour)
    - Things I Like: how many objects the likes page lists, and how many in each category, counted from its
      #likes-data cards the way js/likes.js reads them; once
@@ -78,6 +79,18 @@
     }
     timer();
     window.addEventListener('storage', e => { if (e.key === 'cubeTimerData' || e.key === null) timer(); });
+
+    // Studio: the project in this browser's save (js/studio.js), else the demo it opens with; as it changes
+    function studio() {
+        let p = null;
+        try { p = JSON.parse(localStorage.getItem('tirlStudio') || 'null'); } catch (_) {}
+        if (!p || !Array.isArray(p.song)) return set('studio', 'demo song loaded · press space to play', 'orange');
+        let bars = 0;
+        p.song.forEach(l => Array.isArray(l) && l.forEach((v, b) => { if (v >= 0) bars = Math.max(bars, b + 1); }));
+        set('studio', `${String(p.name || 'untitled').slice(0, 24)} · ${p.bpm} bpm · ${bars} bar${bars === 1 ? '' : 's'}`, 'green');
+    }
+    studio();
+    window.addEventListener('storage', e => { if (e.key === 'tirlStudio' || e.key === null) studio(); });
 
     // Things I Like: the likes page's object count, biggest category first. Counting means fetching the whole
     // page, so the line is kept for an hour.

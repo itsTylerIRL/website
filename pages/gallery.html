@@ -40,9 +40,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="/css/workspace.css?v=3.3">
+    <link rel="stylesheet" href="/css/workspace.css?v=3.4">
     <link rel="stylesheet" href="/css/statusbar.css?v=1.0">
-    <link rel="stylesheet" href="/css/gallery.css?v=2.5">
+    <link rel="stylesheet" href="/css/gallery.css?v=4.1">
 </head>
 <body>
     <!-- Corner Brackets Border -->
@@ -71,14 +71,11 @@
 
         <div class="g-body">
             <aside class="g-rail">
-                <section class="g-explorer" aria-label="Collections" data-embed="rail">
-                    <div class="g-panel-title">Object Explorer</div>
-                    <div class="g-tree">
-                        <div class="g-tree-group"><span class="caret">&#9662;</span>Collection<span class="g-count" id="g-count">0</span></div>
-                        <ul id="g-cols"></ul>
-                    </div>
+                <section class="g-logos-pane" data-embed="rail">
+                    <div class="g-panel-title">Collections <span class="g-meta" id="g-logos-meta"></span></div>
+                    <div class="g-logos" id="g-logos"></div>
                 </section>
-                <section class="g-artists-pane" data-embed="rail">
+                <section class="g-artists-pane" data-embed="hide">
                     <div class="g-panel-title">Artists <span class="g-meta" id="g-artists-meta"></span></div>
                     <ul class="g-artists" id="g-artists"></ul>
                 </section>
@@ -92,7 +89,13 @@
                 <div class="g-objhead" id="g-objhead">
                     <noscript><p>This workspace needs JavaScript to load its objects.</p></noscript>
                 </div>
-                <section class="g-card g-viewer-pane">
+                <!-- Gallery view (the default): every piece that matches the filters, grouped by collection -->
+                <section class="g-card g-grid-pane" id="g-grid-pane">
+                    <div class="g-panel-title">Gallery <span class="g-meta" id="g-results-meta"></span></div>
+                    <div class="g-grid-scroll" id="g-thumbs"></div>
+                </section>
+                <!-- Piece view: a piece clicked in the gallery, with the rest of the gallery as a filmstrip -->
+                <section class="g-card g-viewer-pane" id="g-viewer-pane" hidden>
                     <div class="g-panel-title">Media <span class="g-meta" id="g-viewer-meta"></span></div>
                     <div class="g-stage" id="g-stage">
                         <i class="g-reticle tl"></i><i class="g-reticle tr"></i><i class="g-reticle bl"></i><i class="g-reticle br"></i>
@@ -101,15 +104,17 @@
                             <video id="g-view-vid" loop muted playsinline style="display: none;"></video>
                         </div>
                         <span class="g-stage-zoom" id="g-zoom">ZOOM 1.0&times;</span>
-                        <span class="g-stage-hint">scroll / click to zoom &middot; drag to pan &middot; 0 to reset</span>
+                        <span class="g-stage-hint">scroll / click to zoom &middot; drag to pan &middot; esc for the gallery</span>
                     </div>
+                    <ol class="g-strip" id="g-strip" aria-label="More pieces"></ol>
                 </section>
             </section>
 
             <aside class="g-side">
-                <section class="g-results-pane" data-embed="side">
-                    <div class="g-panel-title">Results <span class="g-meta" id="g-results-meta"></span></div>
-                    <ol class="g-thumbs" id="g-thumbs"></ol>
+                <section class="g-props-pane" data-embed="side">
+                    <div class="g-panel-title">Properties <span class="g-meta" id="g-props-meta"></span></div>
+                    <dl class="g-props" id="g-props"></dl>
+                    <div class="g-links" id="g-links"></div>
                 </section>
             </aside>
         </div>
@@ -121,7 +126,7 @@
                 <span id="g-status-objects"></span>
                 <span id="g-status-filter"></span>
                 <span id="g-clock"></span>
-                <span class="g-hint">&larr; &rarr; browse &middot; + &minus; zoom &middot; / search</span>
+                <span class="g-hint">click a piece to inspect &middot; &larr; &rarr; browse &middot; esc back &middot; / search</span>
             </div>
             <div class="g-pet" id="radgotchi-container">
                 <span class="radgotchi-status" id="radgotchi-status">SIGINT NOMINAL</span>
@@ -174,52 +179,52 @@
         </div>
 
         <!-- Schizo Category PFPs -->
-        <div class="pfp-card" data-category="schizo" data-name="Atlantean" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2476" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2476">
+        <div class="pfp-card" data-category="schizo" data-name="Atlantean" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2476" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2476">
             <img src="/assets/gallery-thumbs/schizo-atlantean.webp" data-full="/assets/schizo/atlantean.png" data-w="1440" data-h="2160" width="400" height="400" alt="Atlantean" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Brobot" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3869" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3869">
+        <div class="pfp-card" data-category="schizo" data-name="Brobot" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3869" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3869">
             <img src="/assets/gallery-thumbs/schizo-brobot.webp" data-full="/assets/schizo/brobot.png" data-w="1440" data-h="2160" width="400" height="400" alt="Brobot" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Celestial" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3415" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3415">
+        <div class="pfp-card" data-category="schizo" data-name="Celestial" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3415" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3415">
             <img src="/assets/gallery-thumbs/schizo-celestial.webp" data-full="/assets/schizo/celestial.png" data-w="1440" data-h="2160" width="400" height="400" alt="Celestial" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Crystalline" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3411" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3411">
+        <div class="pfp-card" data-category="schizo" data-name="Crystalline" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3411" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3411">
             <img src="/assets/gallery-thumbs/schizo-crytal.webp" data-full="/assets/schizo/crytal.png" data-w="1440" data-h="2160" width="400" height="400" alt="Crystalline" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Demon" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/5106" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=5106">
+        <div class="pfp-card" data-category="schizo" data-name="Demon" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/5106" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=5106">
             <img src="/assets/gallery-thumbs/schizo-demon.webp" data-full="/assets/schizo/demon.png" data-w="1440" data-h="2160" width="400" height="400" alt="Demon" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Grey" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1971" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1971">
+        <div class="pfp-card" data-category="schizo" data-name="Grey" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1971" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1971">
             <img src="/assets/gallery-thumbs/schizo-grey.webp" data-full="/assets/schizo/grey.png" data-w="1440" data-h="2160" width="400" height="400" alt="Grey" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Ice" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2465" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2465">
+        <div class="pfp-card" data-category="schizo" data-name="Ice" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2465" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2465">
             <img src="/assets/gallery-thumbs/schizo-ice.webp" data-full="/assets/schizo/ice.png" data-w="1440" data-h="2160" width="400" height="400" alt="Ice" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Microlady" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/560" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=560">
+        <div class="pfp-card" data-category="schizo" data-name="Microlady" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/560" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=560">
             <img src="/assets/gallery-thumbs/schizo-microlady.webp" data-full="/assets/schizo/microlady.png" data-w="1440" data-h="2160" width="400" height="400" alt="Microlady" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Monument" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1598" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1598">
+        <div class="pfp-card" data-category="schizo" data-name="Monument" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1598" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1598">
             <img src="/assets/gallery-thumbs/schizo-monument.webp" data-full="/assets/schizo/monument.png" data-w="1440" data-h="2160" width="400" height="400" alt="Monument" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Nebulady" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/4449" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=4449">
+        <div class="pfp-card" data-category="schizo" data-name="Nebulady" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/4449" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=4449">
             <img src="/assets/gallery-thumbs/schizo-nebulady.webp" data-full="/assets/schizo/nebulady.png" data-w="1440" data-h="2160" width="400" height="400" alt="Nebulady" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Psychedelic" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2507" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2507">
+        <div class="pfp-card" data-category="schizo" data-name="Psychedelic" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2507" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2507">
             <img src="/assets/gallery-thumbs/schizo-psychedelic.webp" data-full="/assets/schizo/psychedelic.png" data-w="1440" data-h="2160" width="400" height="400" alt="Psychedelic" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Robro" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/5076" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=5076">
+        <div class="pfp-card" data-category="schizo" data-name="Robro" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/5076" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=5076">
             <img src="/assets/gallery-thumbs/schizo-robro.webp" data-full="/assets/schizo/robro.png" data-w="1440" data-h="2160" width="400" height="400" alt="Robro" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Rockbro" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2690" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2690">
+        <div class="pfp-card" data-category="schizo" data-name="Rockbro" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/2690" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=2690">
             <img src="/assets/gallery-thumbs/schizo-rockbro.webp" data-full="/assets/schizo/rockbro.png" data-w="1440" data-h="2160" width="400" height="400" alt="Rockbro" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Sealady" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/884" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=884">
+        <div class="pfp-card" data-category="schizo" data-name="Sealady" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/884" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=884">
             <img src="/assets/gallery-thumbs/schizo-sealady.webp" data-full="/assets/schizo/sealady.png" data-w="1440" data-h="2160" width="400" height="400" alt="Sealady" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Tulpa" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3162" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3162">
+        <div class="pfp-card" data-category="schizo" data-name="Tulpa" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/3162" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=3162">
             <img src="/assets/gallery-thumbs/schizo-tulpa.webp" data-full="/assets/schizo/tulpa.png" data-w="1440" data-h="2160" width="400" height="400" alt="Tulpa" decoding="async" loading="lazy">
         </div>
-        <div class="pfp-card" data-category="schizo" data-name="Wired" data-artist="RIVERGOD" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1930" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1930">
+        <div class="pfp-card" data-category="schizo" data-name="Wired" data-artist="SCHIZOPOSTERS" data-twitter="SCHIZO_POSTERS" data-opensea="https://opensea.io/item/ethereum/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5/1930" data-etherscan="https://etherscan.io/token/0xbfe47d6d4090940d1c7a0066b63d23875e3e2ac5?a=1930">
             <img src="/assets/gallery-thumbs/schizo-wired.webp" data-full="/assets/schizo/wired.png" data-w="1440" data-h="2160" width="400" height="400" alt="Wired" decoding="async" loading="lazy">
         </div>
 
@@ -265,15 +270,15 @@
     </div>
 
     <!-- External JavaScript (deferred, run in order after parsing) -->
-    <script defer src="/js/embed.js?v=1.4"></script>
+    <script defer src="/js/embed.js?v=1.5"></script>
     <script defer src="/js/background.js?v=1.7"></script>
     <script defer src="/js/script.js?v=2.1"></script>
     <script defer src="/js/interactions.js?v=1.2"></script>
     <script defer src="/js/sounds.js?v=1.1"></script>
     <script defer src="/js/radgotchi.js"></script>
 
-    <!-- NFT gallery workspace: explorer, viewer (zoom & pan), results -->
-    <script defer src="/js/gallery.js?v=2.4"></script>
+    <!-- NFT gallery workspace: explorer, gallery grid, piece viewer (zoom & pan), properties -->
+    <script defer src="/js/gallery.js?v=4.0"></script>
     <script defer src="/js/escape-home.js?v=1.1"></script>
 </body>
 </html>

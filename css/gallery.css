@@ -1,6 +1,7 @@
 /* Page styles for gallery.html: the NFT gallery workspace.
    Shell (panels, top bar, explorer, header, activity, status bar, one-screen layout) comes from css/workspace.css;
-   this file adds the artists list, the media viewer and the results thumbnail grid.
+   this file adds the artists list, the gallery grid (the default view), the piece viewer with its filmstrip, and
+   the Properties panel. #gotham[data-view] is 'gallery' or 'piece' (js/gallery.js).
    Content is rendered by js/gallery.js from the cards in #gallery-data. */
 
 /* ---------- Artists ---------- */
@@ -49,7 +50,6 @@
 .g-objmeta a:hover { text-decoration: underline; }
 
 /* ---------- Media viewer ---------- */
-.g-viewer-pane { margin-top: var(--g-gap); }
 .g-stage {
     position: relative;
     height: 460px;
@@ -114,16 +114,7 @@
 .g-stage-zoom { top: 10px; right: 28px; color: var(--g-blue); }
 .g-stage-hint { bottom: 8px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
 
-/* ---------- Results thumbnail grid ---------- */
-.g-thumbs {
-    list-style: none;
-    margin: 0;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-    gap: 8px;
-    align-content: start;
-}
+/* ---------- Thumbnails (gallery tiles and the filmstrip share .g-thumb) ---------- */
 .g-thumb {
     position: relative;
     display: block;
@@ -142,6 +133,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.35s ease, filter 0.35s ease;
 }
 .g-thumb:hover {
     border-color: var(--g-border-strong);
@@ -151,17 +143,11 @@
     border-color: var(--g-blue);
     box-shadow: 0 0 0 1px var(--g-blue), 0 0 14px rgba(var(--g-blue-rgb), 0.45);
 }
-.g-thumb .g-dot {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.7);
-}
 /* Video pieces play a muted looping preview, marked with a small play badge */
 .g-thumb-badge {
     position: absolute;
-    left: 5px;
-    bottom: 5px;
+    left: 6px;
+    top: 6px;
     display: grid;
     place-items: center;
     width: 16px;
@@ -174,8 +160,228 @@
     line-height: 1;
 }
 
+/* ---------- Gallery view: one continuous grid ---------- */
+.g-grid-scroll { padding: 12px 14px 16px; }
+/* Fitted by js/gallery.js fitGrid(): the tiles' size is set there, and the grid sits centred in the panel */
+.g-grid-scroll.is-fit {
+    display: grid;
+    place-content: center;
+}
+.g-grid-scroll.is-fit .g-grid { justify-content: center; }
+.g-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+.g-tile:hover img,
+.g-tile:hover video { transform: scale(1.05); }
+.g-tile:focus-visible { outline: 1px solid var(--g-blue); outline-offset: 2px; }
+.g-tile-cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 22px 9px 7px;
+    text-align: left;
+    line-height: 1.25;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    pointer-events: none;
+    /* Name + artist only while the tile is pointed at, focused or the piece just viewed */
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.g-tile:hover .g-tile-cap,
+.g-tile:focus-visible .g-tile-cap,
+.g-tile[aria-current="true"] .g-tile-cap {
+    opacity: 1;
+    transform: none;
+}
+@media (hover: none) {
+    .g-tile-cap { display: none; }
+}
+.g-tile-cap b {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.g-tile-cap span {
+    font-family: var(--g-mono);
+    font-size: 10px;
+    color: var(--g-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.g-grid-empty {
+    padding: 30px 0;
+    text-align: center;
+    color: var(--g-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Header filters (gallery view): each chip drops its filter */
+.g-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+}
+.g-filters > span { color: var(--g-dim); letter-spacing: 0.1em; margin-right: 2px; }
+.g-filter {
+    font-family: var(--g-mono);
+    font-size: 10.5px;
+    color: var(--g-blue);
+    background: rgba(var(--g-blue-rgb), 0.1);
+    border: 1px solid rgba(var(--g-blue-rgb), 0.4);
+    border-radius: var(--g-r-pill);
+    padding: 1px 9px;
+}
+.g-filter:hover { background: rgba(var(--g-blue-rgb), 0.2); color: #fff; }
+.g-back {
+    font-family: var(--g-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--g-blue);
+    height: 30px;
+    padding: 0 10px;
+}
+
+/* In the home page's preview the home page already heads the object (NFT Gallery), so the gallery view drops
+   its own header; the piece view keeps it for ← GALLERY and prev / next */
+html.is-embed #gotham[data-view="gallery"] .g-objhead { display: none; }
+html.is-embed #gotham[data-view="gallery"] .g-grid-pane { margin-top: 0; }
+/* ...and it sits in the home page's preview panel (Vault Viewer), so the centre column's own panels lose their
+   glass and title bars: the grid, the piece's header and the viewer go straight into that panel */
+html.is-embed .g-main > .g-objhead,
+html.is-embed .g-main > .g-card {
+    background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: visible;
+}
+html.is-embed .g-main > .g-card > .g-panel-title { display: none; }
+html.is-embed .gotham { padding: 4px 0 0; }
+html.is-embed .g-grid-scroll { padding: 4px 12px 12px; }
+html.is-embed .g-objhead { padding: 4px 12px 10px; border-bottom: 1px solid var(--g-border); }
+html.is-embed #gotham[data-view="piece"] .g-viewer-pane { margin-top: 10px; }
+html.is-embed .g-stage { border-radius: var(--g-r-box); }
+html.is-embed .g-strip { border-top: none; padding: 8px 12px 10px; }
+
+/* ---------- Piece view: viewer + filmstrip ---------- */
+/* .g-card's display: flex would beat the hidden attribute */
+.g-grid-pane[hidden],
+.g-viewer-pane[hidden] { display: none; }
+.g-viewer-pane:not([hidden]) { animation: g-drill 0.22s ease-out; }
+@keyframes g-drill {
+    from { opacity: 0; transform: scale(0.985); }
+    to { opacity: 1; transform: none; }
+}
+.g-strip {
+    list-style: none;
+    margin: 0;
+    padding: 8px 10px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    border-top: 1px solid var(--g-border);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
+}
+.g-strip li { flex: 0 0 56px; }
+.g-strip .g-thumb { border-radius: 7px; }
+.g-strip .g-thumb:not([aria-current="true"]) img { filter: saturate(0.7) brightness(0.75); }
+.g-strip .g-thumb:hover img { filter: none; }
+.g-strip .g-thumb-badge { width: 13px; height: 13px; font-size: 7px; left: 3px; top: 3px; }
+
+/* ---------- Collection logos (left column) ---------- */
+.g-logos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 10px;
+}
+.g-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 7px 4px 6px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--g-border);
+    border-radius: var(--g-r-box);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.g-logo img,
+.g-logo .g-noimg {
+    width: min(100%, 52px);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(0.55) brightness(0.8);
+    transition: filter 0.2s, transform 0.2s;
+}
+.g-logo-name {
+    font-family: var(--g-mono);
+    font-size: 9.5px;
+    letter-spacing: 0;
+    color: var(--g-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+/* Too narrow for the names (the left column): just the logos, named by their tooltip and the panel's title */
+.g-logos { container-type: inline-size; }
+@container (max-width: 279px) {
+    .g-logo-name { display: none; }
+    .g-logo { padding: 6px; }
+}
+.g-logo:hover { border-color: var(--g-border-strong); }
+.g-logo:hover img { filter: none; transform: scale(1.04); }
+.g-logo[aria-pressed="true"] {
+    border-color: var(--tone);
+    background: var(--tone-bg);
+    box-shadow: 0 0 14px var(--tone-bg), inset 0 0 0 1px var(--tone);
+}
+.g-logo[aria-pressed="true"] img { filter: drop-shadow(0 0 8px var(--tone)); }
+.g-logo[aria-pressed="true"] .g-logo-name { color: var(--tone); }
+
+/* ---------- Properties (side) ---------- */
+.g-props-pane .g-props dd a { color: var(--g-blue); text-decoration: none; }
+.g-props-pane .g-props dd a:hover { text-decoration: underline; }
+.g-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 12px 12px;
+    border-top: 1px solid var(--g-border);
+}
+.g-links .g-visit { margin-left: 0; flex: 1 1 auto; justify-content: center; height: 28px; }
+.g-props-hint { font-size: 11.5px; color: var(--g-dim); margin: 0; }
+
 /* ---------- One-screen layout (desktop): this page's panels ----------
-   Recently viewed, the viewer and the results grid take their column's spare height. */
+   The gallery grid scrolls inside its panel; in the piece view the viewer takes the spare height. */
 @media (min-width: 1360px) and (min-height: 600px) {
     .g-artists-pane { flex: 0 1 auto; max-height: 34%; }
     .g-artists {
@@ -185,43 +391,50 @@
         scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
     }
     .g-objhead { flex: none; }
-    .g-viewer-pane {
+    .g-grid-pane:not([hidden]),
+    .g-viewer-pane:not([hidden]) {
         flex: 1 1 0;
         min-height: 190px;
+        margin-top: var(--g-gap);
     }
-    .g-stage {
-        flex: 1 1 0;
-        height: auto;
-        min-height: 0;
-    }
-    .g-results-pane { flex: 1 1 0; }
-    .g-thumbs {
+    .g-grid-scroll {
         flex: 1 1 0;
         min-height: 0;
         overflow-y: auto;
         scrollbar-width: thin;
         scrollbar-color: rgba(139, 233, 253, 0.25) transparent;
     }
+    .g-stage {
+        flex: 1 1 0;
+        height: auto;
+        min-height: 0;
+    }
+    .g-strip { flex: none; }
+    .g-logos-pane { flex: none; }
+    .g-props-pane { flex: none; }
 }
 
 /* ---------- Responsive: this page's panels ---------- */
 @media (max-width: 1359px) {
-    .g-thumbs { max-height: 420px; overflow-y: auto; }
+    .g-grid-pane,
+    .g-viewer-pane { margin-top: var(--g-gap); }
     .g-artists { max-height: 260px; overflow-y: auto; }
 }
 
 @media (max-width: 899px) {
-    .g-results-pane { order: 3; }
+    .g-logos-pane { order: 1; }
+    .g-props-pane { order: 3; }
     .g-artists-pane { order: 4; }
     .g-stage { height: 62vw; min-height: 260px; }
     .g-stage-hint { display: none; }
-    .g-thumbs {
-        max-height: 60vh;
-        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-    }
+    .g-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+    .g-grid-scroll { padding: 10px; }
+    .g-tile-cap { padding: 16px 6px 5px; }
+    .g-tile-cap span { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .g-frame.loading::after { animation: none; }
-    .g-thumb { transition: none; }
+    .g-thumb, .g-thumb img, .g-thumb video { transition: none; }
+    .g-viewer-pane:not([hidden]) { animation: none; }
 }

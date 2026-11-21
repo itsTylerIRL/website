@@ -1,15 +1,22 @@
-/* Page scripts for gallery.html: the DEEPDISH NFT gallery workspace (collections, artists, recently viewed,
-   object header, media viewer with zoom & pan, results grid) built from the cards in #gallery-data. */
+/* Page scripts for gallery.html: the DEEPDISH NFT gallery workspace, built from the cards in #gallery-data.
+   The centre column has two views (#gotham[data-view]):
+   - gallery (the default): every piece that matches the filters as one continuous grid
+   - piece: one piece clicked in the gallery, in the media viewer (zoom & pan) with the rest as a filmstrip under
+     it; "← GALLERY", Escape or a filter goes back
+   Around it: the collection logos, artists and recently viewed (left), and the Properties panel (right), which describes
+   the open piece or, in the gallery, what's showing.
+   Links: #<piece-slug> opens a piece, #tyler / #schizo / #remilia a collection, no hash the whole gallery. */
 (function() {
     const data = document.getElementById('gallery-data');
     const header = document.getElementById('g-objhead');
     if (!data || !header) return;
 
     // Collection keys (data-category) -> display name + status tone
+    // logo: the collection's button in the left column's Collections panel
     const COLLECTIONS = {
-        tyler: { name: 'Tyler PFPs', tone: 'blue' },
-        schizo: { name: 'Schizoposters', tone: 'red' },
-        remilia: { name: 'Remilia', tone: 'orange' }
+        tyler: { name: 'Tyler PFPs', tone: 'blue', logo: '/assets/gallery-logos/tyler.webp' },
+        schizo: { name: 'Schizoposters', tone: 'red', logo: '/assets/gallery-logos/schizo.webp' },
+        remilia: { name: 'Remilia', tone: 'orange', logo: '/assets/gallery-logos/remilia.webp' }
     };
     const colName = (c) => (COLLECTIONS[c] || {}).name || c;
     const toneOf = (c) => (COLLECTIONS[c] || {}).tone || 'muted';
@@ -18,13 +25,20 @@
     const shortHex = (h) => h.length > 12 ? h.slice(0, 6) + '…' + h.slice(-4) : h;
 
     const els = {
-        cols: document.getElementById('g-cols'),
-        count: document.getElementById('g-count'),
+        root: document.getElementById('gotham'),
+        logos: document.getElementById('g-logos'),
+        logosMeta: document.getElementById('g-logos-meta'),
         artists: document.getElementById('g-artists'),
         artistsMeta: document.getElementById('g-artists-meta'),
         activity: document.getElementById('g-activity'),
-        thumbs: document.getElementById('g-thumbs'),
+        grid: document.getElementById('g-thumbs'),
+        gridPane: document.getElementById('g-grid-pane'),
+        viewerPane: document.getElementById('g-viewer-pane'),
+        strip: document.getElementById('g-strip'),
         resultsMeta: document.getElementById('g-results-meta'),
+        props: document.getElementById('g-props'),
+        propsMeta: document.getElementById('g-props-meta'),
+        links: document.getElementById('g-links'),
         search: document.getElementById('g-search'),
         crumb: document.getElementById('g-crumb'),
         crumbCol: document.getElementById('g-crumb-col'),
@@ -34,6 +48,7 @@
         vid: document.getElementById('g-view-vid'),
         zoom: document.getElementById('g-zoom'),
         viewerMeta: document.getElementById('g-viewer-meta'),
+        main: document.getElementById('g-main'),
         statusObjects: document.getElementById('g-status-objects'),
         statusFilter: document.getElementById('g-status-filter'),
         clock: document.getElementById('g-clock')
@@ -69,6 +84,7 @@
             h: +media.dataset.h || 0
         };
     });
+    const bySlug = (s) => pieces.find((p) => p.slug === s);
 
     const collections = Object.keys(COLLECTIONS).filter((c) => pieces.some((p) => p.collection === c))
         .concat([...new Set(pieces.map((p) => p.collection))].filter((c) => !COLLECTIONS[c]));
@@ -77,24 +93,26 @@
     let collection = 'all';
     let artist = '';
     let query = '';
-    let current = null;
+    let current = null; // the open piece; null in the gallery view
     const viewed = []; // recently viewed, newest first
 
     const matches = (p) => !query || [p.name, p.artist, p.twitter, colName(p.collection)].some((f) => f.toLowerCase().includes(query));
     const visible = () => pieces.filter((p) => (collection === 'all' || p.collection === collection) && (!artist || p.artist === artist) && matches(p));
 
-    // ---------- Collections (explorer) ----------
+    // ---------- Collections: the logo buttons (left column), one per collection, pressed while it's the filter ----------
     function renderCollections() {
-        els.cols.innerHTML = ['all', ...collections].map((c) => `<li><button type="button" class="g-obj-btn" data-col="${c}" aria-current="${c === collection}">
-            <i class="g-dot tone-${c === 'all' ? 'muted' : toneOf(c)}"></i><span>${c === 'all' ? 'All' : esc(colName(c))}</span><span class="g-id">${countOf(c)}</span></button></li>`).join('');
-        els.count.textContent = pieces.length;
+        els.logos.innerHTML = collections.map((c) => `<button type="button" class="g-logo tone-${toneOf(c)}" data-col="${c}" aria-pressed="${c === collection}" title="${esc(colName(c))} · ${countOf(c)}">
+            ${COLLECTIONS[c] && COLLECTIONS[c].logo ? `<img src="${COLLECTIONS[c].logo}" alt="">` : `<span class="g-noimg">${esc(colName(c)[0])}</span>`}
+            <span class="g-logo-name">${esc(colName(c))}</span></button>`).join('');
+        els.logosMeta.textContent = collection === 'all' ? 'ALL' : colName(collection).toUpperCase();
     }
-    els.cols.addEventListener('click', (e) => {
+    // Click a logo to show only that collection; click it again for all of them
+    els.logos.addEventListener('click', (e) => {
         const b = e.target.closest('[data-col]');
         if (!b) return;
-        collection = b.dataset.col;
+        collection = collection === b.dataset.col ? 'all' : b.dataset.col;
         artist = '';
-        refresh();
+        showGallery();
     });
 
     // ---------- Artists (within the current collection) ----------
@@ -111,41 +129,140 @@
         const b = e.target.closest('[data-artist]');
         if (!b) return;
         artist = artist === b.dataset.artist ? '' : b.dataset.artist; // click again to clear
-        refresh();
+        showGallery();
     });
 
-    // ---------- Results grid ----------
-    function renderThumbs() {
+    // ---------- Gallery grid ----------
+    const media = (p, eager) => p.isVideo
+        ? `<video src="${esc(p.preview || p.full)}"${p.thumb ? ` poster="${esc(p.thumb)}"` : ''} muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.name)}"></video><span class="g-thumb-badge">&#9654;</span>`
+        : `<img src="${esc(p.thumb)}" alt="${esc(p.name)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async">`;
+    const tile = (p) => `<li><button type="button" class="g-thumb g-tile tone-${toneOf(p.collection)}" data-slug="${p.slug}" aria-current="${p === current}" title="${esc(p.name)} · ${esc(p.artist)}">
+            ${media(p)}
+            <span class="g-tile-cap"><b>${esc(p.name)}</b><span>${esc(p.artist)}</span></span>
+        </button></li>`;
+    function renderGrid() {
         const list = visible();
         els.resultsMeta.textContent = `${list.length} object${list.length === 1 ? '' : 's'}`;
-        els.thumbs.innerHTML = list.length ? list.map((p) => `<li><button type="button" class="g-thumb tone-${toneOf(p.collection)}" data-slug="${p.slug}" aria-current="${p === current}" title="${esc(p.name)} · ${esc(p.artist)}">
-                ${p.isVideo
-                    ? `<video src="${esc(p.preview || p.full)}"${p.thumb ? ` poster="${esc(p.thumb)}"` : ''} muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.name)}"></video><span class="g-thumb-badge">&#9654;</span>`
-                    : `<img src="${esc(p.thumb)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`}
-                <i class="g-dot tone-${toneOf(p.collection)}"></i>
-            </button></li>`).join('')
-            : '<li class="g-no-results">No matching objects</li>';
+        if (!list.length) {
+            els.grid.innerHTML = '<p class="g-grid-empty">No matching objects. <button type="button" class="g-btn" data-clear>CLEAR FILTERS</button></p>';
+            return;
+        }
+        // One continuous grid, in page order (collection by collection), with no section breaks
+        els.grid.innerHTML = `<ol class="g-grid">${list.map(tile).join('')}</ol>`;
+        fitGrid();
     }
-    els.thumbs.addEventListener('click', (e) => {
+    // Fit the grid to its panel: square tiles, as big as they can be with every row on screen, in as even rows as
+    // possible (16 makes 4 × 4, not 5 + 5 + 5 + 1). If that would make them smaller than FIT_MIN, the grid scrolls
+    // instead, with tiles near SCROLL_SIZE. Only where the panel has a height of its own (the one-screen layout,
+    // and the home page's preview); elsewhere the stylesheet's auto-fill grid stands.
+    const FIT_MIN = 96, SCROLL_SIZE = 150;
+    function fitGrid() {
+        const ol = els.grid.querySelector('.g-grid');
+        if (!ol) return;
+        const cs = getComputedStyle(els.grid);
+        const reset = () => { els.grid.classList.remove('is-fit', 'is-scroll'); ol.style.gridTemplateColumns = ''; };
+        if (!/(auto|scroll)/.test(cs.overflowY) || !els.grid.clientWidth) return reset();
+        const W = els.grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const H = els.grid.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+        const gap = parseFloat(getComputedStyle(ol).columnGap) || 0;
+        const n = ol.children.length;
+        if (W <= 0 || H <= 0 || !n) return reset();
+        let best = null;
+        for (let c = 1; c <= n; c++) {
+            const r = Math.ceil(n / c);
+            const size = Math.floor(Math.min((W - (c - 1) * gap) / c, (H - (r - 1) * gap) / r));
+            if (size <= 0) continue;
+            const empty = r * c - n;
+            // Within 4% of the biggest tiles, fewer empty cells in the last row wins
+            if (!best || size > best.size * 1.04 || (size >= best.size / 1.04 && empty < best.empty)) best = { c, size, empty };
+        }
+        if (best && best.size >= FIT_MIN) {
+            els.grid.classList.add('is-fit');
+            els.grid.classList.remove('is-scroll');
+            ol.style.gridTemplateColumns = `repeat(${best.c}, ${best.size}px)`;
+            return;
+        }
+        // Too many to fit: as many columns of about SCROLL_SIZE as the width takes, filling it
+        const c = Math.max(1, Math.round((W + gap) / (SCROLL_SIZE + gap)));
+        els.grid.classList.add('is-scroll');
+        els.grid.classList.remove('is-fit');
+        ol.style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
+    }
+    if (window.ResizeObserver) new ResizeObserver(() => { if (!current) fitGrid(); }).observe(els.grid);
+    else window.addEventListener('resize', () => { if (!current) fitGrid(); });
+    els.grid.addEventListener('click', (e) => {
+        if (e.target.closest('[data-clear]')) return clearFilters();
         const b = e.target.closest('.g-thumb');
-        if (b) select(pieces.find((p) => p.slug === b.dataset.slug));
+        if (b) open(bySlug(b.dataset.slug));
+    });
+    function clearFilters() {
+        collection = 'all';
+        artist = '';
+        query = '';
+        els.search.value = '';
+        showGallery();
+    }
+
+    // ---------- Filmstrip (piece view): the same list, to hop along without going back ----------
+    function renderStrip() {
+        const list = visible();
+        els.strip.innerHTML = list.map((p) => `<li><button type="button" class="g-thumb tone-${toneOf(p.collection)}" data-slug="${p.slug}" aria-current="${p === current}" title="${esc(p.name)} · ${esc(p.artist)}">
+                ${p.isVideo ? `<img src="${esc(p.thumb)}" alt="${esc(p.name)}" loading="lazy" decoding="async"><span class="g-thumb-badge">&#9654;</span>` : `<img src="${esc(p.thumb)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`}
+            </button></li>`).join('');
+        centerStrip();
+    }
+    // Scrolled by hand: scrollIntoView from inside the home page's preview frame would scroll the home page too
+    function centerStrip() {
+        const on = els.strip.querySelector('[aria-current="true"]');
+        if (!on) return;
+        const li = on.parentElement;
+        els.strip.scrollTo({ left: li.offsetLeft - (els.strip.clientWidth - li.offsetWidth) / 2, behavior: 'smooth' });
+    }
+    els.strip.addEventListener('click', (e) => {
+        const b = e.target.closest('.g-thumb');
+        if (b) open(bySlug(b.dataset.slug));
     });
 
-    function refresh() {
-        renderCollections();
-        renderArtists();
-        renderThumbs();
-        updateStatus();
-        if (current) renderHeader(current);
+    // ---------- Header ----------
+    function renderGalleryHeader() {
+        const list = visible();
+        const title = collection === 'all' ? 'NFT Gallery' : colName(collection);
+        const tone = collection === 'all' ? 'blue' : toneOf(collection);
+        const chips = [
+            collection !== 'all' && `<button type="button" class="g-filter" data-drop="collection">${esc(colName(collection))} &times;</button>`,
+            artist && `<button type="button" class="g-filter" data-drop="artist">${esc(artist)} &times;</button>`,
+            query && `<button type="button" class="g-filter" data-drop="query">&ldquo;${esc(query)}&rdquo; &times;</button>`
+        ].filter(Boolean).join('');
+        header.innerHTML = `<div class="g-objrow">
+                <div class="g-objicon g-objicon-img"><img class="g-objimg" src="/assets/object-icons/oh-ive-seen.webp" alt=""></div>
+                <div class="g-objtitle">
+                    <div class="g-objtype">COLLECTION &middot; ${list.length} PIECES &middot; ${new Set(list.map((p) => p.artist)).size} ARTISTS</div>
+                    <h1>${esc(title)}</h1>
+                </div>
+                <span class="g-chip tone-${tone}"><i class="g-dot tone-${tone}"></i>Collection</span>
+            </div>
+            ${chips ? `<div class="g-filters"><span>FILTERS</span>${chips}</div>` : ''}`;
     }
-
-    // ---------- Object header ----------
-    function renderHeader(p) {
+    header.addEventListener('click', (e) => {
+        const drop = e.target.closest('[data-drop]');
+        if (drop) {
+            const k = drop.dataset.drop;
+            if (k === 'collection') { collection = 'all'; artist = ''; }
+            else if (k === 'artist') artist = '';
+            else { query = ''; els.search.value = ''; }
+            return showGallery();
+        }
+        if (e.target.closest('[data-back]')) return showGallery();
+        const st = e.target.closest('[data-step]');
+        if (st) step(+st.dataset.step);
+    });
+    function renderPieceHeader(p) {
         const list = visible();
         const idx = list.indexOf(p);
         const tone = toneOf(p.collection);
         const icon = p.isVideo && !p.thumb ? '<span class="g-objimg g-noimg">&#9654;</span>' : `<img class="g-objimg" src="${esc(p.thumb)}" alt="">`;
         header.innerHTML = `<div class="g-objrow">
+                <button type="button" class="g-btn g-back" data-back title="Back to the gallery (Esc)">&larr; GALLERY</button>
                 <div class="g-objicon g-objicon-img">${icon}</div>
                 <div class="g-objtitle">
                     <div class="g-objtype">NFT &middot; ${esc(colName(p.collection).toUpperCase())} &middot; ${p.id}</div>
@@ -156,17 +273,39 @@
                     <button type="button" class="g-btn" data-step="-1" aria-label="Previous piece" ${list.length < 2 ? 'disabled' : ''}>&lsaquo;</button>
                     <span>${idx === -1 ? '&ndash;' : idx + 1} / ${list.length}</span>
                     <button type="button" class="g-btn" data-step="1" aria-label="Next piece" ${list.length < 2 ? 'disabled' : ''}>&rsaquo;</button>
-                    ${p.opensea ? `<a class="g-btn g-visit" href="${esc(p.opensea)}" target="_blank" rel="noopener">OPENSEA &nearr;</a>` : ''}
-                    ${p.etherscan ? `<a class="g-btn g-visit" href="${esc(p.etherscan)}" target="_blank" rel="noopener">ETHERSCAN &nearr;</a>` : ''}
                 </div>
-            </div>
-            <div class="g-objmeta">
-                <span>ARTIST</span><b>${esc(p.artist)}${p.twitter ? ` <a href="https://x.com/${esc(p.twitter)}" target="_blank" rel="noopener">@${esc(p.twitter)}</a>` : ''}</b>
-                <span>CONTRACT</span><b title="${esc(p.contract)}">${p.contract ? esc(shortHex(p.contract)) : 'OFF-CHAIN'}</b>
-                <span>TOKEN</span><b>${p.token ? '#' + esc(p.token) : '&mdash;'}</b>
-                <span>RES</span><b>${p.isVideo ? 'VIDEO' : p.w ? `${p.w}&times;${p.h}` : '&mdash;'}</b>
             </div>`;
-        header.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
+    }
+
+    // ---------- Properties (side) ----------
+    const row = (k, v) => `<dt>${k}</dt><dd>${v}</dd>`;
+    function renderProps() {
+        if (!current) {
+            const list = visible();
+            const n = (pred) => list.filter(pred).length;
+            els.propsMeta.textContent = 'GALLERY';
+            els.props.innerHTML = row('showing', `${list.length} / ${pieces.length}`)
+                + collections.filter((c) => n((p) => p.collection === c)).map((c) => row(esc(colName(c).toLowerCase()), `${n((p) => p.collection === c)}`)).join('')
+                + row('artists', `${new Set(list.map((p) => p.artist)).size}`)
+                + row('on-chain', `${n((p) => p.contract)}`)
+                + row('video', `${n((p) => p.isVideo)}`);
+            els.links.innerHTML = '<p class="g-props-hint">Click a piece in the gallery to see its details here.</p>';
+            return;
+        }
+        const p = current;
+        els.propsMeta.textContent = p.id;
+        els.props.innerHTML = row('name', esc(p.name))
+            + row('artist', esc(p.artist) + (p.twitter ? `<br><a href="https://x.com/${esc(p.twitter)}" target="_blank" rel="noopener">@${esc(p.twitter)}</a>` : ''))
+            + row('collection', `<span class="g-chip tone-${toneOf(p.collection)}">${esc(colName(p.collection))}</span>`)
+            + row('contract', p.contract ? `<span title="${esc(p.contract)}">${esc(shortHex(p.contract))}</span>` : 'OFF-CHAIN')
+            + row('token', p.token ? '#' + esc(p.token) : '&mdash;')
+            + row('format', p.isVideo ? 'VIDEO · LOOP' : (p.full.split('.').pop() || '').toUpperCase())
+            + row('resolution', p.isVideo ? '&mdash;' : p.w ? `${p.w}&times;${p.h}` : '&mdash;');
+        els.links.innerHTML = [
+            p.opensea && `<a class="g-btn g-visit" href="${esc(p.opensea)}" target="_blank" rel="noopener">OPENSEA &nearr;</a>`,
+            p.etherscan && `<a class="g-btn g-visit" href="${esc(p.etherscan)}" target="_blank" rel="noopener">ETHERSCAN &nearr;</a>`,
+            `<a class="g-btn g-visit" href="${esc(p.full)}" target="_blank" rel="noopener">ORIGINAL &nearr;</a>`
+        ].filter(Boolean).join('');
     }
 
     // ---------- Viewer: thumbnail first, full-res original swapped in when it arrives ----------
@@ -179,14 +318,14 @@
     // Size the image to the original's aspect inside the stage, so the thumbnail placeholder
     // and the full-res image occupy the same box
     function sizeImage(p) {
+        const r = els.stage.getBoundingClientRect();
+        if (!r.width) return;
         if (p.isVideo) {
             // Video: fill the stage, letterboxed (object-fit: contain)
-            const r = els.stage.getBoundingClientRect();
             els.vid.style.width = Math.max(40, Math.round(r.width - 32)) + 'px';
             els.vid.style.height = Math.max(40, Math.round(r.height - 40)) + 'px';
             return;
         }
-        const r = els.stage.getBoundingClientRect();
         const w = p.w || 400;
         const h = p.h || 400;
         const k = Math.min((r.width - 32) / w, (r.height - 40) / h, 1.5);
@@ -228,7 +367,9 @@
         };
         loader.src = p.full;
     }
-    window.addEventListener('resize', () => { if (current) { sizeImage(current); resetZoom(); } });
+    const resize = () => { if (current) { sizeImage(current); resetZoom(); } };
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(els.stage);
+    else window.addEventListener('resize', resize);
 
     // ---------- Recently viewed ----------
     function renderHistory() {
@@ -238,24 +379,69 @@
     }
     els.activity.addEventListener('click', (e) => {
         const b = e.target.closest('.g-act-link');
-        if (b) select(pieces.find((p) => p.slug === b.dataset.slug));
+        if (b) open(bySlug(b.dataset.slug));
     });
 
-    // ---------- Selection ----------
-    function select(p, opts = {}) {
+    // ---------- Views ----------
+    const setHash = (h) => {
+        const want = h ? '#' + h : '';
+        if (location.hash !== want) history.replaceState(null, '', location.pathname + location.search + want);
+    };
+    function setView(v) {
+        els.root.dataset.view = v;
+        els.gridPane.hidden = v !== 'gallery';
+        els.viewerPane.hidden = v !== 'piece';
+        els.main.scrollTop = 0;
+        els.grid.scrollTop = 0;
+    }
+    // What scrolls the gallery: its own panel in the one-screen layout, else the main column
+    const gridScroller = () => (els.grid.scrollHeight > els.grid.clientHeight + 1 ? els.grid : els.main);
+    function showGallery() {
+        const was = current;
+        current = null;
+        stopVideo();
+        setView('gallery');
+        renderCollections();
+        renderArtists();
+        renderGrid();
+        renderGalleryHeader();
+        renderProps();
+        updateStatus();
+        els.crumbCol.textContent = 'Collection';
+        els.crumb.textContent = collection === 'all' ? 'NFT Gallery' : colName(collection);
+        if (window.TirlEmbed) window.TirlEmbed.status(`GALLERY · ${visible().length} PIECES`);
+        setHash(collection === 'all' ? '' : collection);
+        // Back from a piece: keep its tile in sight and focused, so the keyboard picks up where it was
+        const tileEl = was && els.grid.querySelector(`.g-thumb[data-slug="${was.slug}"]`);
+        if (tileEl) {
+            const box = gridScroller();
+            const m = box.getBoundingClientRect(), t = tileEl.getBoundingClientRect();
+            box.scrollTop += t.top - m.top - m.height / 3;
+            tileEl.focus({ preventScroll: true });
+        }
+    }
+    function open(p) {
         if (!p) return;
+        const fresh = !current;
         current = p;
-        renderHeader(p);
+        // A piece opened by link that the filters hide: drop the filters so it's in its own list
+        if (!visible().includes(p)) { collection = 'all'; artist = ''; query = ''; els.search.value = ''; }
+        renderCollections();
+        renderArtists();
+        setView('piece');
+        renderPieceHeader(p);
+        renderProps();
         showMedia(p);
+        if (fresh) renderStrip();
+        else {
+            els.strip.querySelectorAll('.g-thumb').forEach((b) => b.setAttribute('aria-current', String(b.dataset.slug === p.slug)));
+            centerStrip();
+        }
+        updateStatus();
         // Embedded on the home page (js/embed.js): the preview's status line
         if (window.TirlEmbed) window.TirlEmbed.status(`${p.name} · ${colName(p.collection)} · ${pieces.indexOf(p) + 1}/${pieces.length}`.toUpperCase());
         els.crumb.textContent = p.name;
         els.crumbCol.textContent = colName(p.collection);
-        els.thumbs.querySelectorAll('.g-thumb').forEach((b) => {
-            const on = b.dataset.slug === p.slug;
-            b.setAttribute('aria-current', on);
-            if (on && !opts.noScroll) b.scrollIntoView({ block: 'nearest' });
-        });
         const d = new Date();
         const time = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, '0')).join(':');
         const prev = viewed.findIndex((h) => h.p === p);
@@ -263,28 +449,24 @@
         viewed.unshift({ p, time });
         viewed.length = Math.min(viewed.length, 12);
         renderHistory();
-        if (location.hash !== '#' + p.slug) history.replaceState(null, '', '#' + p.slug);
+        setHash(p.slug);
     }
     function step(dir) {
         const list = visible();
-        if (!list.length) return;
+        if (!list.length || !current) return;
         const i = list.indexOf(current);
-        select(list[(i + dir + list.length) % list.length]);
+        open(list[(i + dir + list.length) % list.length]);
     }
     // #<piece-slug> opens a piece; #tyler / #schizo / #remilia (old gallery links) open a collection
-    function fromHash() {
-        const key = location.hash.slice(1);
-        if (collections.includes(key)) {
-            collection = key;
-            refresh();
-            return visible()[0];
-        }
-        return pieces.find((p) => p.slug === key);
+    function route() {
+        const key = decodeURIComponent(location.hash.slice(1));
+        const p = bySlug(key);
+        if (p) { if (p !== current) open(p); return; }
+        collection = collections.includes(key) ? key : 'all';
+        artist = '';
+        showGallery();
     }
-    window.addEventListener('hashchange', () => {
-        const p = fromHash();
-        if (p && p !== current) select(p);
-    });
+    window.addEventListener('hashchange', route);
 
     // ---------- Zoom & pan (on the frame around the image / video) ----------
     const MIN = 1, MAX = 6, STEP = 0.25;
@@ -381,16 +563,19 @@
     }, { passive: true });
 
     // ---------- Search + keyboard ----------
+    // Searching is a gallery thing: typing takes you back to the grid of what matches
     els.search.addEventListener('input', () => {
         query = els.search.value.trim().toLowerCase();
-        renderThumbs();
+        if (current) return showGallery();
+        renderGrid();
+        renderGalleryHeader();
+        renderProps();
         updateStatus();
-        if (current) renderHeader(current);
     });
     els.search.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const first = visible()[0];
-            if (first) select(first);
+            if (first) open(first);
         } else if (e.key === 'Escape') {
             els.search.value = '';
             els.search.dispatchEvent(new Event('input'));
@@ -400,19 +585,22 @@
     document.addEventListener('keydown', (e) => {
         const el = e.target instanceof Element ? e.target : null;
         if (el && el.closest('input, textarea, [contenteditable="true"]')) return;
-        if (e.key === '/') { e.preventDefault(); els.search.focus(); }
-        else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); step(e.key === 'ArrowLeft' ? -1 : 1); }
+        if (e.key === '/') { e.preventDefault(); els.search.focus(); return; }
+        // The gallery view leaves ← → to the page around it (the home page's Results when embedded)
+        if (!current) return;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); step(e.key === 'ArrowLeft' ? -1 : 1); }
         else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomAt(1 + STEP); }
         else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomAt(1 / (1 + STEP)); }
         else if (e.key === '0') { resetZoom(); }
-        // Escape resets a zoom; unzoomed, it's left to js/escape-home.js (back to the home page)
-        else if (e.key === 'Escape' && scale !== 1) { e.preventDefault(); resetZoom(); }
+        // Escape: a zoom resets first, then it's back to the gallery (from there js/escape-home.js goes home)
+        else if (e.key === 'Escape') { e.preventDefault(); if (scale !== 1) resetZoom(); else showGallery(); }
     });
 
     // ---------- Status bar ----------
     function updateStatus() {
         els.statusObjects.textContent = `${pieces.length} OBJECTS`;
-        els.statusFilter.textContent = `COLLECTION: ${(collection === 'all' ? 'ALL' : colName(collection)).toUpperCase()}`
+        els.statusFilter.textContent = (current ? 'VIEW: PIECE · ' : 'VIEW: GALLERY · ')
+            + `COLLECTION: ${(collection === 'all' ? 'ALL' : colName(collection)).toUpperCase()}`
             + (artist ? ` · ARTIST: ${artist.toUpperCase()}` : '') + (query ? ` · "${query}"` : '') + ` · ${visible().length} SHOWN`;
     }
     const tick = () => {
@@ -423,7 +611,5 @@
     setInterval(tick, 1000);
 
     // ---------- Boot ----------
-    refresh();
-    const initial = fromHash();
-    select(initial || pieces[0], { noScroll: !initial });
+    route();
 })();

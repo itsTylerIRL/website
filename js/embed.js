@@ -131,13 +131,29 @@
     // - status(text): one short line on where the page is (the preview's title bar shows it)
     // - event({ kind, html, tone, mood, status }): something happened (the home page's ticker, the object's row
     //   in Results; with mood, the status-bar RadGotchi reacts, saying status). html is the page's own markup.
+    // A page whose main column is one panel (Jet's Flight Deck, a docs page): that panel would just repeat the
+    // preview's own title bar, so it drops its glass and title (css/workspace.css html.is-embed-solo), and what its
+    // title's .g-meta says (Jet's camera, the meme canvas's size) goes up to the preview's title bar instead, kept
+    // current, unless the page reports a status line of its own.
+    let ownStatus = false;
+    window.addEventListener('load', () => {
+        const cards = Array.from(document.querySelectorAll('.g-main > .g-card')).filter((c) => !c.hidden && c.getAttribute('data-embed') !== 'hide');
+        if (cards.length !== 1) return;
+        root.classList.add('is-embed-solo');
+        const meta = cards[0].querySelector(':scope > .g-panel-title .g-meta');
+        if (!meta) return;
+        const mirror = () => { if (!ownStatus) host.status(window, meta.textContent.replace(/\s+/g, ' ').trim().toUpperCase()); };
+        mirror();
+        new MutationObserver(mirror).observe(meta, { childList: true, characterData: true, subtree: true });
+    });
+
     window.TirlEmbed = {
         side,
         rail,
         styles: Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map((l) => l.href),
         focus: root.hasAttribute('data-embed-focus'),
         key: (k) => host.key(k),
-        status: (text) => host.status(window, text),
+        status: (text) => { ownStatus = true; host.status(window, text); },
         event: (e) => host.event(window, e),
         // display(on): the home page's idle tour has this page up (or has moved on). The first time, js/display.js is
         // loaded, which runs a small demo of the page from its own controls; 'tirl:display' says when to start and stop.
