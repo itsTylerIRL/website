@@ -1,23 +1,41 @@
 // DigiFlip — the Flipper Zero virtual pet, compiled to WebAssembly
 // Author: Tyler (in real life)
 //
-// The C app draws into a 128x64 1-bit framebuffer; this file blits it to the
-// canvas, feeds it key presses, plays its beeps and keeps its saves in
-// IndexedDB.
+// The C app draws into a 128x64 1-bit framebuffer; this file renders it as an
+// LCD (pixel grid, response ghosting, glow, themes), plays the game's screen
+// effects (Module.onFx: shake, flash, sparkle), feeds it key presses, plays its
+// beeps and keeps its saves in IndexedDB.
 
 (function () {
     'use strict';
 
     const WASM_DIR = '/js/digiflip/';
+    const WASM_VERSION = '2.0';
     const SOUND_KEY = 'digimonSound';
-    // Lit pixels glow cyan; unlit ones are transparent so the CSS background
-    // and glow show through. When the lights are off the game fills the play
-    // field with ink, so those rows switch to a dim teal room with cyan art.
-    const INK = [139, 233, 253, 255];
-    const PAPER = [0, 0, 0, 0];
-    const ROOM_DARK = [8, 30, 38, 255];
+    const THEME_KEY = 'digimonTheme';
+    const W = 128;
+    const H = 64;
+    // When the lights are off the game fills the play field with ink; those
+    // rows render as a dim room with the art lit instead of a slab of glow.
     const FIELD_TOP = 12;
     const FIELD_BOTTOM = 52;
+
+    // Screen themes. Emissive ones glow (bloom); LCD ones are dark ink on a
+    // backlight. off = an unlit cell, on = a lit one, room = the dark room.
+    const THEMES = [
+        { id: 'cyan', label: 'cyan', bg: [4, 8, 11], off: [12, 24, 30], on: [139, 233, 253], room: [7, 26, 33], glow: '139, 233, 253', bloom: 0.75, grid: 0.55 },
+        { id: 'flipper', label: 'flipper', bg: [255, 133, 10], off: [246, 124, 6], on: [28, 14, 2], room: [120, 56, 2], glow: null, bloom: 0, grid: 0.2 },
+        { id: 'lcd', label: 'lcd', bg: [158, 176, 120], off: [148, 166, 112], on: [26, 38, 22], room: [62, 80, 52], glow: null, bloom: 0, grid: 0.22 },
+        { id: 'amber', label: 'amber', bg: [10, 6, 2], off: [28, 17, 6], on: [255, 180, 40], room: [34, 20, 4], glow: '255, 180, 40', bloom: 0.8, grid: 0.55 },
+        { id: 'ghost', label: 'phosphor', bg: [5, 7, 6], off: [16, 22, 18], on: [214, 255, 226], room: [14, 28, 20], glow: '190, 255, 210', bloom: 0.7, grid: 0.55 },
+    ];
+    // LCD response: cells light quickly and fade slowly (the ghost trail a
+    // real pet screen leaves). Rates are per 60 Hz frame.
+    const RISE = 0.62;
+    const FALL = 0.30;
+    // Module.onFx kinds (DigiflipFx in src/services/digiflip_sound.h).
+    const FX_HIT = 0, FX_CRIT = 1, FX_FLASH = 2, FX_SPARKLE = 3, FX_ALERT = 4;
+    const FX_NAMES = ['hit', 'crit', 'flash', 'sparkle', 'alert'];
 
     // Flipper keys: 0 up, 1 down, 2 right, 3 left, 4 ok, 5 back
     const KEYMAP = {
@@ -43,7 +61,21 @@
         syncAgain: false,
         syncTimer: null,
         listening: false,
+        theme: 0,
+        // LCD state: target and shown brightness per cell, and effects.
+        target: new Float32Array(W * H),
+        shown: new Float32Array(W * H),
+        room: false,
+        raf: 0,
+        last: 0,
+        shake: 0,
+        shakeMax: 0,
+        flash: 0,
+        particles: [],
+        ring: 0,
     });
+    // Older saved state (a second init after an update) may lack the LCD fields.
+    if (!state.target) { state.target = new Float32Array(W * H); state.shown = new Float32Array(W * H); state.particles = []; }
 
     function $(id) { return document.getElementById(id); }
 
@@ -64,30 +96,305 @@
     }
 
     // ---- Screen ----
-    function draw() {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const view = {
+        canvas: null, ctx: null, scale: 0,
+        lo: null, loCtx: null, loImg: null, // 128x64 colours
+        glow: null, glowCtx: null, glowImg: null, // 128x64, lit cells only
+        grid: null, glass: null, filter: false,
+    };
+
+    function theme() { return THEMES[state.theme] || THEMES[0]; }
+
+    function loadThemePref() {
+        try {
+            const id = localStorage.getItem(THEME_KEY);
+            const i = THEMES.findIndex(function (t) { return t.id === id; });
+            return i < 0 ? 0 : i;
+        } catch (e) { return 0; }
+    }
+
+    function makeCanvas(w, h) {
+        const c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        return c;
+    }
+
+    // Size the backing store to whole device pixels per cell, then rebuild
+    // the grid and glass overlays for that size.
+    function layout() {
         const canvas = $('digimon-screen');
-        if (!canvas || !state.frame) return;
-        const ctx = canvas.getContext('2d');
-        const image = ctx.createImageData(128, 64);
-        const px = image.data;
-        const fb = state.frame;
-        const lit = function (x, y) { return fb[(y >> 3) * 128 + x] & (1 << (y & 7)); };
+        if (!canvas) return false;
+        const css = canvas.clientWidth || 256;
+        const dpr = window.devicePixelRatio || 1;
+        const scale = Math.max(2, Math.min(14, Math.round((css * dpr) / W)));
+        if (view.canvas === canvas && view.scale === scale) return true;
+        view.canvas = canvas;
+        view.ctx = canvas.getContext('2d');
+        view.scale = scale;
+        canvas.width = W * scale;
+        canvas.height = H * scale;
+        if (!view.lo) {
+            view.lo = makeCanvas(W, H);
+            view.loCtx = view.lo.getContext('2d');
+            view.loImg = view.loCtx.createImageData(W, H);
+            view.glow = makeCanvas(W, H);
+            view.glowCtx = view.glow.getContext('2d');
+            view.glowImg = view.glowCtx.createImageData(W, H);
+            const probe = makeCanvas(1, 1).getContext('2d');
+            probe.filter = 'blur(1px)';
+            view.filter = probe.filter === 'blur(1px)';
+        }
+        buildOverlays();
+        return true;
+    }
+
+    function buildOverlays() {
+        const t = theme();
+        const s = view.scale;
+        const w = W * s, h = H * s;
+        // The gaps between cells: a 1px lattice (2px on big screens).
+        view.grid = makeCanvas(w, h);
+        const g = view.grid.getContext('2d');
+        const gap = s >= 9 ? 2 : 1;
+        if (s >= 3) {
+            g.fillStyle = 'rgba(' + t.bg.join(',') + ',' + t.grid + ')';
+            for (let x = 0; x < W; x++) g.fillRect(x * s + s - gap, 0, gap, h);
+            for (let y = 0; y < H; y++) g.fillRect(0, y * s + s - gap, w, gap);
+        }
+        // Glass: a soft vignette and a faint diagonal sheen.
+        view.glass = makeCanvas(w, h);
+        const q = view.glass.getContext('2d');
+        const lcd = !t.glow;
+        const v = q.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, w * 0.62);
+        v.addColorStop(0, 'rgba(0,0,0,0)');
+        v.addColorStop(1, lcd ? 'rgba(40,20,0,0.22)' : 'rgba(0,0,0,0.5)');
+        q.fillStyle = v;
+        q.fillRect(0, 0, w, h);
+        const sheen = q.createLinearGradient(0, 0, w * 0.6, h);
+        sheen.addColorStop(0, 'rgba(255,255,255,' + (lcd ? 0.10 : 0.05) + ')');
+        sheen.addColorStop(0.35, 'rgba(255,255,255,0)');
+        q.fillStyle = sheen;
+        q.fillRect(0, 0, w, h);
+        // The CSS glow around the canvas follows the theme.
+        view.canvas.style.filter = t.glow ? 'drop-shadow(0 0 ' + Math.max(2, s / 2) + 'px rgba(' + t.glow + ',0.45))' : 'none';
+        view.canvas.style.background = 'rgb(' + t.bg.join(',') + ')';
+        const wrap = view.canvas.parentElement;
+        if (wrap) wrap.dataset.screenTheme = t.id;
+    }
+
+    // A new frame from the game: set every cell's target brightness.
+    function setTargets(fb) {
         let fieldInk = 0;
         for (let y = FIELD_TOP; y < FIELD_BOTTOM; y++) {
-            for (let x = 0; x < 128; x++) if (lit(x, y)) fieldInk++;
+            for (let x = 0; x < W; x++) if (fb[(y >> 3) * W + x] & (1 << (y & 7))) fieldInk++;
         }
-        const dark = fieldInk > 0.6 * 128 * (FIELD_BOTTOM - FIELD_TOP);
-        for (let y = 0; y < 64; y++) {
-            const inRoom = dark && y >= FIELD_TOP && y < FIELD_BOTTOM;
-            const on = inRoom ? ROOM_DARK : INK;
-            const off = inRoom ? INK : PAPER;
-            for (let x = 0; x < 128; x++) {
-                const c = lit(x, y) ? on : off;
-                const i = (y * 128 + x) * 4;
-                px[i] = c[0]; px[i + 1] = c[1]; px[i + 2] = c[2]; px[i + 3] = c[3];
+        state.room = fieldInk > 0.6 * W * (FIELD_BOTTOM - FIELD_TOP);
+        const target = state.target;
+        for (let y = 0; y < H; y++) {
+            const row = (y >> 3) * W, bit = 1 << (y & 7);
+            const flip = state.room && y >= FIELD_TOP && y < FIELD_BOTTOM;
+            for (let x = 0; x < W; x++) {
+                const lit = (fb[row + x] & bit) !== 0;
+                target[y * W + x] = lit !== flip ? 1 : 0;
             }
         }
-        ctx.putImageData(image, 0, 0);
+    }
+
+    function kick() {
+        if (!state.raf) state.raf = requestAnimationFrame(tick);
+    }
+
+    function tick(now) {
+        state.raf = 0;
+        if (!layout()) return;
+        const dt = state.last ? Math.min(100, now - state.last) : 16.7;
+        state.last = now;
+        const busy = render(dt);
+        if (busy) {
+            kick();
+        } else {
+            state.last = 0;
+        }
+    }
+
+    // Ease the cells toward their targets and paint. Returns true while
+    // anything is still moving (ghosts fading, effects playing).
+    function render(dt) {
+        const t = theme();
+        const k = dt / 16.7;
+        const rise = 1 - Math.pow(1 - RISE, k);
+        const fall = 1 - Math.pow(1 - FALL, k);
+        const target = state.target, shown = state.shown;
+        const px = view.loImg.data, gx = view.glowImg.data;
+        let moving = false;
+        for (let y = 0; y < H; y++) {
+            const room = state.room && y >= FIELD_TOP && y < FIELD_BOTTOM;
+            // In the dark room the "lit" state is the room itself (dim) and
+            // the art is the bright part, so lit cells draw as art.
+            const off = room ? t.room : t.off;
+            const on = t.on;
+            for (let x = 0; x < W; x++) {
+                const i = y * W + x;
+                let v = shown[i];
+                const goal = target[i];
+                if (v !== goal) {
+                    v += (goal - v) * (goal > v ? rise : fall);
+                    if (Math.abs(goal - v) < 0.004) v = goal; else moving = true;
+                    shown[i] = v;
+                }
+                const o = i * 4;
+                px[o] = off[0] + (on[0] - off[0]) * v;
+                px[o + 1] = off[1] + (on[1] - off[1]) * v;
+                px[o + 2] = off[2] + (on[2] - off[2]) * v;
+                px[o + 3] = 255;
+                if (t.glow) {
+                    gx[o] = on[0] * v; gx[o + 1] = on[1] * v; gx[o + 2] = on[2] * v; gx[o + 3] = 255;
+                }
+            }
+        }
+        view.loCtx.putImageData(view.loImg, 0, 0);
+        if (t.glow) view.glowCtx.putImageData(view.glowImg, 0, 0);
+
+        const ctx = view.ctx;
+        const s = view.scale;
+        const w = W * s, h = H * s;
+        ctx.save();
+        ctx.fillStyle = 'rgb(' + t.bg.join(',') + ')';
+        ctx.fillRect(0, 0, w, h);
+        // Shake: the whole picture jolts inside the glass.
+        if (state.shake > 0) {
+            const amp = state.shakeMax * (state.shake / 320) * s * 0.5;
+            ctx.translate(Math.round((Math.random() * 2 - 1) * amp), Math.round((Math.random() * 2 - 1) * amp));
+            state.shake = Math.max(0, state.shake - dt);
+            moving = true;
+        }
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(view.lo, 0, 0, w, h);
+        ctx.drawImage(view.grid, 0, 0);
+        if (t.glow && t.bloom > 0) {
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.imageSmoothingEnabled = true;
+            if (view.filter) {
+                ctx.filter = 'blur(' + (s * 0.9).toFixed(1) + 'px)';
+                ctx.globalAlpha = t.bloom * 0.55;
+                ctx.drawImage(view.glow, 0, 0, w, h);
+                ctx.filter = 'blur(' + (s * 2.6).toFixed(1) + 'px)';
+                ctx.globalAlpha = t.bloom * 0.35;
+                ctx.drawImage(view.glow, 0, 0, w, h);
+                ctx.filter = 'none';
+            } else {
+                ctx.globalAlpha = t.bloom * 0.18;
+                ctx.drawImage(view.glow, 0, 0, w, h);
+            }
+            ctx.globalAlpha = 1;
+            ctx.globalCompositeOperation = 'source-over';
+        }
+        if (drawParticles(ctx, dt, t)) moving = true;
+        ctx.restore();
+        ctx.drawImage(view.glass, 0, 0);
+        if (state.flash > 0) {
+            ctx.fillStyle = t.glow ? 'rgba(' + t.glow + ',' + (state.flash * (reduceMotion ? 0.25 : 0.6)).toFixed(3) + ')'
+                : 'rgba(255,255,240,' + (state.flash * (reduceMotion ? 0.25 : 0.55)).toFixed(3) + ')';
+            ctx.fillRect(0, 0, w, h);
+            state.flash = Math.max(0, state.flash - dt / 220);
+            moving = true;
+        }
+        if (state.ring > 0) {
+            // Alert: a pulsing frame around the screen edge.
+            const a = Math.sin((1 - state.ring) * Math.PI * 4) * 0.5 + 0.5;
+            ctx.strokeStyle = t.glow ? 'rgba(' + t.glow + ',' + (a * state.ring).toFixed(3) + ')' : 'rgba(0,0,0,' + (a * state.ring * 0.6).toFixed(3) + ')';
+            ctx.lineWidth = s * 1.5;
+            ctx.strokeRect(s * 0.75, s * 0.75, w - s * 1.5, h - s * 1.5);
+            state.ring = Math.max(0, state.ring - dt / 1600);
+            moving = true;
+        }
+        return moving;
+    }
+
+    // Sparkles: four-point stars that drift up, twinkle and fade.
+    function drawParticles(ctx, dt, t) {
+        const list = state.particles;
+        if (!list.length) return false;
+        const s = view.scale;
+        const rgb = t.glow ? t.glow : t.on.join(',');
+        ctx.globalCompositeOperation = t.glow ? 'lighter' : 'source-over';
+        for (let i = list.length - 1; i >= 0; i--) {
+            const p = list[i];
+            p.life -= dt;
+            if (p.life <= 0) { list.splice(i, 1); continue; }
+            p.x += p.vx * dt / 16.7;
+            p.y += p.vy * dt / 16.7;
+            const f = p.life / p.max;
+            const twinkle = 0.55 + 0.45 * Math.sin(p.life / 45 + p.seed);
+            const r = p.size * s * (0.6 + 0.4 * twinkle);
+            ctx.fillStyle = 'rgba(' + rgb + ',' + (f * twinkle).toFixed(3) + ')';
+            const cx = p.x * s, cy = p.y * s;
+            ctx.fillRect(cx - r, cy - s * 0.25, r * 2, s * 0.5);
+            ctx.fillRect(cx - s * 0.25, cy - r, s * 0.5, r * 2);
+            ctx.fillRect(cx - s * 0.5, cy - s * 0.5, s, s);
+        }
+        ctx.globalCompositeOperation = 'source-over';
+        return list.length > 0;
+    }
+
+    function sparkle(count) {
+        for (let i = 0; i < count; i++) {
+            const max = 700 + Math.random() * 700;
+            state.particles.push({
+                x: 6 + Math.random() * (W - 12), y: 14 + Math.random() * 36,
+                vx: (Math.random() - 0.5) * 0.12, vy: -0.05 - Math.random() * 0.12,
+                size: 1.2 + Math.random() * 1.8, life: max, max: max, seed: Math.random() * 6,
+            });
+        }
+    }
+
+    function onFx(kind) {
+        switch (kind) {
+            case FX_HIT:
+                if (!reduceMotion) { state.shake = 120; state.shakeMax = 1.2; }
+                break;
+            case FX_CRIT:
+                if (!reduceMotion) { state.shake = 320; state.shakeMax = 4; }
+                state.flash = Math.max(state.flash, 0.7);
+                sparkle(reduceMotion ? 4 : 10);
+                break;
+            case FX_FLASH:
+                state.flash = 1;
+                break;
+            case FX_SPARKLE:
+                sparkle(reduceMotion ? 8 : 26);
+                break;
+            case FX_ALERT:
+                state.ring = 1;
+                if (!reduceMotion) { state.shake = 200; state.shakeMax = 1.5; }
+                break;
+            default:
+                return;
+        }
+        kick();
+        try {
+            window.dispatchEvent(new CustomEvent('digiflip:fx', { detail: { kind: FX_NAMES[kind] || String(kind) } }));
+        } catch (e) { /* ignore */ }
+    }
+
+    function draw() {
+        if (!state.frame || !layout()) return;
+        setTargets(state.frame);
+        kick();
+    }
+
+    function setTheme(index) {
+        state.theme = (index + THEMES.length) % THEMES.length;
+        try { localStorage.setItem(THEME_KEY, theme().id); } catch (e) { /* ignore */ }
+        drawThemeButton();
+        if (view.canvas) { buildOverlays(); kick(); }
+    }
+
+    function drawThemeButton() {
+        const btn = $('digimon-theme');
+        if (btn) btn.textContent = 'screen: ' + theme().label;
     }
 
     function onFrame(buffer) {
@@ -239,6 +546,12 @@
             screen.addEventListener('pointerdown', function () { screen.focus(); unlockAudio(); });
         }
 
+        const themeBtn = $('digimon-theme');
+        if (themeBtn && !themeBtn.dataset.bound) {
+            themeBtn.dataset.bound = '1';
+            themeBtn.addEventListener('click', function () { setTheme(state.theme + 1); });
+        }
+
         const sound = $('digimon-sound');
         if (sound && !sound.dataset.bound) {
             sound.dataset.bound = '1';
@@ -261,6 +574,22 @@
             if (document.visibilityState === 'hidden') { releaseAll(); saveNow(); }
         });
         window.addEventListener('pagehide', saveNow);
+        // Re-fit the cell size when the screen changes size or zoom.
+        let fit = 0;
+        window.addEventListener('resize', function () {
+            cancelAnimationFrame(fit);
+            fit = requestAnimationFrame(function () { view.scale = 0; draw(); });
+        });
+        if (window.ResizeObserver) {
+            const canvas = $('digimon-screen');
+            if (canvas) new ResizeObserver(function () { view.scale = 0; if (state.frame) draw(); }).observe(canvas);
+        }
+        // Another tab (or the home page's pet frame) changed the theme.
+        window.addEventListener('storage', function (e) {
+            if (e.key !== THEME_KEY) return;
+            const i = THEMES.findIndex(function (t) { return t.id === e.newValue; });
+            if (i >= 0 && i !== state.theme) { state.theme = i; drawThemeButton(); if (view.canvas) { buildOverlays(); kick(); } }
+        });
     }
 
     // ---- Boot ----
@@ -281,7 +610,8 @@
         setStatus('loading…');
 
         const opts = {
-            locateFile: function (path) { return WASM_DIR + path; },
+            // Versioned so a cached old .wasm never meets the new glue code.
+            locateFile: function (path) { return WASM_DIR + path + '?v=' + WASM_VERSION; },
             preRun: [function () {
                 opts.FS.mkdir('/data');
                 opts.FS.mount(opts.FS.filesystems.IDBFS, {}, '/data');
@@ -294,6 +624,7 @@
             onFrame: onFrame,
             onTone: onTone,
             onLed: function (on) { state.led = on; drawLed(); },
+            onFx: onFx,
             syncNow: syncNow,
             syncLater: syncLater,
             onLogExport: onLogExport,
@@ -302,7 +633,7 @@
             printErr: function (text) { console.warn('digiflip:', text); },
         };
 
-        loadScript(WASM_DIR + 'digiflip.js?v=1.0')
+        loadScript(WASM_DIR + 'digiflip.js?v=' + WASM_VERSION)
             .then(function () { return window.createDigiflip(opts); })
             .then(function (M) { state.module = M; })
             .catch(function (err) {
@@ -315,9 +646,12 @@
     function initDigimon() {
         if (!$('digimon-screen')) return;
         state.sound = loadSoundPref();
+        state.theme = loadThemePref();
         drawSoundButton();
+        drawThemeButton();
         bindButtons();
         bindGlobal();
+        view.scale = 0; // a new page's canvas
         if (state.frame) { setStatus(''); draw(); drawLed(); }
         start();
     }

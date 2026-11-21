@@ -121,6 +121,17 @@
         }).observe(els.soundBtn, { childList: true, characterData: true, subtree: true });
     }
 
+    // Big moments from the game (js/digimon.js relays Module.onFx): crits, wild visitors, sparkles
+    window.addEventListener('digiflip:fx', (e) => {
+        const kind = e.detail && e.detail.kind;
+        if (kind === 'crit') log('BATTLE', 'critical hit!', 'red');
+        else if (kind === 'alert') {
+            log('WILD', 'a wild digimon dropped by &mdash; battle it before it leaves', 'orange');
+            if (window.TirlEmbed) window.TirlEmbed.event({ kind: 'WILD', html: 'a wild digimon appeared', tone: 'orange', mood: 'happy', status: 'A WILD DIGIMON APPEARED' });
+        } else if (kind === 'sparkle') log('BONUS', 'something sparkly happened &#10022;', 'green');
+        else if (kind === 'flash') log('EVO', 'evolution!', 'green');
+    });
+
     // Uptime
     const tick = () => {
         const s = Math.floor((Date.now() - started) / 1000);
