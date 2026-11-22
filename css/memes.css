@@ -42,7 +42,12 @@
 .mm-btn.is-go { color: #50fa7b; border-color: rgba(80, 250, 123, 0.4); }
 .mm-btn.is-go:hover { color: #0b1117; background: #50fa7b; border-color: #50fa7b; }
 
-.mm-seg { display: flex; gap: 3px; }
+.mm-seg { display: flex; flex-wrap: wrap; gap: 3px; }
+.mm-seg.is-small button { padding: 3px 8px; font-size: 10.5px; }
+.mm-seg.is-fill button { flex: 1 1 0; }
+.mm-btn.is-small { flex: 0 1 auto; padding: 3px 8px; font-size: 10px; }
+.mm-btn.is-on { color: #0b1117; background: #50fa7b; border-color: #50fa7b; }
+.mm-btn.is-on:hover { color: #0b1117; background: #7dfc9b; }
 .mm-seg button {
     font-family: 'Share Tech Mono', ui-monospace, monospace;
     font-size: 11px;
@@ -128,7 +133,11 @@
     border-bottom: 1px solid rgba(139, 233, 253, 0.1);
 }
 .mm-hint {
+    flex: 1 1 0;
     min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: 'Share Tech Mono', ui-monospace, monospace;
     font-size: 10.5px;
     color: #5f8a99;
@@ -172,13 +181,19 @@
     height: 100%;
     display: block;
 }
-#mm-overlay { touch-action: none; }
-/* Invisible but real: a right-click that falls through the overlay lands on it, so the menu offers Copy image */
-#mm-shot { opacity: 0; object-fit: fill; }
+.mm-wrap { touch-action: none; }
+#mm-overlay { pointer-events: none; }
+/* Invisible but real and on top: every pointer event lands on it (js/memes.js handles them on the wrap), so a
+   right-click's Copy image / Save image as always gets the rendered meme */
+#mm-shot { opacity: 0; object-fit: fill; z-index: 1; -webkit-user-drag: none; user-select: none; }
 #mm-shot:not([src]) { display: none; }
-.mm-copy-now { flex: none; margin-left: auto; color: #50fa7b; border-color: rgba(80, 250, 123, 0.4); }
+.mm-tools { display: flex; gap: 5px; margin-left: auto; }
+.mm-icon { flex: none; font-size: 17px; line-height: 1; padding: 2px 9px 4px; }
+.mm-btn:disabled { opacity: 0.35; pointer-events: none; }
+.mm-copy-now { flex: none; color: #50fa7b; border-color: rgba(80, 250, 123, 0.4); }
 .mm-copy-now:hover { color: #0b1117; background: #50fa7b; border-color: #50fa7b; }
 .mm-flash {
+    z-index: 2;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -314,6 +329,85 @@
     background: none;
 }
 
+.mm-select {
+    grid-column: 2 / -1;
+    width: 100%;
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    color: #eaeaea;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(139, 233, 253, 0.25);
+    border-radius: 6px;
+    padding: 4px 6px;
+    outline: none;
+}
+.mm-select:focus { border-color: #8be9fd; }
+.mm-select option { background: #0b1117; }
+
+.mm-sub {
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(139, 233, 253, 0.12);
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: #5f8a99;
+}
+.mm-sel .mm-check { margin-top: 0; }
+.mm-sel .mm-colors .mm-btn { flex: none; }
+
+/* ---------- Layout ---------- */
+.mm-layouts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+.mm-layouts .mm-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 0 4px;
+    color: #9aafba;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(139, 233, 253, 0.18);
+    border-radius: 6px;
+    font-family: 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.mm-layout span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.mm-layout svg { width: 30px; height: 22px; fill: rgba(139, 233, 253, 0.12); stroke: currentColor; stroke-width: 1.3; }
+.mm-layout svg .i-f { fill: currentColor; fill-opacity: 0.85; stroke: none; }
+.mm-layout svg .i-k { fill: rgba(0, 0, 0, 0.6); }
+.mm-layout svg .i-t { stroke-width: 2.2; stroke-linecap: round; }
+.mm-layout svg .i-d { stroke: #0b1117; stroke-width: 2; stroke-linecap: round; }
+.mm-layout:hover { color: #fff; border-color: rgba(139, 233, 253, 0.5); }
+.mm-layout[aria-pressed="true"] { color: #8be9fd; border-color: #8be9fd; background: rgba(139, 233, 253, 0.12); box-shadow: 0 0 12px rgba(139, 233, 253, 0.25); }
+.mm-layout-opts:not(:empty) { margin-top: 10px; }
+.mm-slots { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.mm-slot { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #c9d6de; }
+.mm-slot .mm-btn { flex: none; padding: 2px 7px; font-size: 10px; }
+.mm-slot-n { width: 18px; flex: none; text-align: center; font-family: 'Share Tech Mono', ui-monospace, monospace; color: #ffb86c; }
+.mm-slot-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-slot.is-empty .mm-slot-name { color: #5f8a99; font-style: italic; }
+
+/* ---------- Stickers ---------- */
+.mm-stickers { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.mm-sticker-wide { grid-column: span 5; }
+.mm-stickers .mm-sticker {
+    aspect-ratio: 1;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.mm-sticker:hover { transform: scale(1.12); border-color: rgba(139, 233, 253, 0.4); }
+
+.is-tool .mm-wrap { box-shadow: 0 0 0 2px #50fa7b, 0 12px 40px rgba(0, 0, 0, 0.6); }
+
 /* ---------- Deep fry ---------- */
 .mm-fry-pane .g-panel-title .mm-fry-on { flex: none; padding: 1px 9px; font-size: 10px; }
 .mm-fry-on[aria-pressed="true"] {
@@ -329,11 +423,15 @@
 @media (min-width: 1360px) and (min-height: 600px) {
     .mm-stage-pane { flex: 1 1 0; min-height: 260px; margin-top: var(--g-gap); }
     .mm-stage { flex: 1 1 0; height: auto; min-height: 0; }
+    #memes .g-rail,
+    #memes .g-side { overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(139, 233, 253, 0.25) transparent; }
     .mm-source-pane,
+    .mm-layout-pane,
+    .mm-stickers-pane,
     .mm-sel-pane,
     .mm-fry-pane,
     .mm-export-pane { flex: none; }
-    .mm-layers-pane { flex: 0 1 auto; min-height: 0; }
+    .mm-layers-pane { flex: none; }
 }
 @media (max-width: 1359px) {
     .mm-stage-pane { margin-top: var(--g-gap); }
